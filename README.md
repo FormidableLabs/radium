@@ -34,3 +34,4 @@ in JS</a> by <a href="https://twitter.com/Vjeux">Christopher Chedeau</a>.
 - Styling Utilities
   - Pseudo-selector support
   - Media query support
+  - Component usage validation (enforces correct usage)
