@@ -14,9 +14,9 @@ React provides a number of benefits over traditional CSS:
 Inspired by <a href="https://speakerdeck.com/vjeux/react-css-in-js">React: CSS
 in JS</a> by <a href="https://twitter.com/Vjeux">Christopher Chedeau</a>.
 
-## What's it look like?
+## What does it look like?
 
-Write an object and you're done:
+Write a style object and you're done:
 
 ```
 Code example
