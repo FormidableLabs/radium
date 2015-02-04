@@ -15,14 +15,19 @@
   "authors": [
     "Alex Lande"
   ],
+  "scripts": {
+    "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/"
+  },
   "license": "MIT",
   "peerDependencies": {
     "react": "0.12.x"
   },
   "dependencies": {
+    "lodash.foreach": "^3.0.1",
     "lodash.merge": "^3.0.1"
   },
   "devDependencies": {
+    "jsx-loader": "^0.12.2",
     "webpack": "^1.5.3",
     "webpack-dev-server": "^1.7.0"
   }
