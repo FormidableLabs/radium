@@ -21,3 +21,12 @@ Write a style object and you're done:
 ```
 Code example
 ```
+
+## Examples
+
+To see local examples in action, do this:
+
+```
+npm install
+npm run examples
+```
