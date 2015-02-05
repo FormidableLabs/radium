@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "jsx-loader": "^0.12.2",
+    "react": "0.12.x",
     "webpack": "^1.5.3",
     "webpack-dev-server": "^1.7.0"
   }
