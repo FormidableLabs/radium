@@ -1,4 +1,35 @@
 {
   "name": "radium",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "description": "",
+  "main": "radium.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/formidablelabs/radium.git"
+  },
+  "homepage": "https://github.com/formidablelabs/radium",
+  "bugs": "https://github.com/formidablelabs/radium/issues",
+  "directories": {
+    "example": "examples"
+  },
+  "authors": [
+    "Alex Lande"
+  ],
+  "scripts": {
+    "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "0.12.x"
+  },
+  "dependencies": {
+    "lodash.foreach": "^3.0.1",
+    "lodash.merge": "^3.0.1"
+  },
+  "devDependencies": {
+    "jsx-loader": "^0.12.2",
+    "react": "0.12.x",
+    "webpack": "^1.5.3",
+    "webpack-dev-server": "^1.7.0"
+  }
 }
