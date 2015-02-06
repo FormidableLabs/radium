@@ -1,7 +1,7 @@
 var forEach = require('lodash.foreach');
 var merge = require('lodash.merge');
 
-var Radium = {
+var BrowserStateMixin = {
   getInitialState: function () {
     return {
       hover: false,
@@ -148,4 +148,4 @@ var Radium = {
   }
 };
 
-module.exports = Radium;
+module.exports = BrowserStateMixin;

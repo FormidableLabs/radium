@@ -2,7 +2,7 @@
   "name": "radium",
   "version": "0.0.1",
   "description": "",
-  "main": "radium.js",
+  "main": "modules/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/formidablelabs/radium.git"
@@ -23,6 +23,7 @@
     "react": "0.12.x"
   },
   "dependencies": {
+    "lodash.assign": "^3.0.0",
     "lodash.foreach": "^3.0.1",
     "lodash.merge": "^3.0.1"
   },
