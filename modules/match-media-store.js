@@ -2,15 +2,6 @@ var EventEmitter = require('events').EventEmitter;
 var assign = require('lodash.assign');
 var forEach = require('lodash.foreach');
 
-var MEDIA_QUERIES = {
-  sm: '(min-width: 768px)',
-  md: '(min-width: 992px)',
-  lg: '(min-width: 1200px)',
-  xsMax: '(max-width: 768px)',
-  smMax: '(max-width: 992px)',
-  mdMax: '(max-width: 1200px)'
-};
-
 var CHANGE_EVENT = 'change';
 
 var matchers = {};
@@ -19,13 +10,15 @@ var handleMediaChange = function () {
   MatchMediaStore.emitChange();
 };
 
-forEach(MEDIA_QUERIES, function (query, key) {
-  matchers[key] = window.matchMedia(query);
-
-  matchers[key].addListener(handleMediaChange);
-});
-
 var MatchMediaStore = assign({}, EventEmitter.prototype, {
+  init: function (mediaQueryOpts) {
+    forEach(mediaQueryOpts, function (query, key) {
+      matchers[key] = window.matchMedia(query);
+
+      matchers[key].addListener(handleMediaChange);
+    });
+  },
+
   emitChange: function () {
     this.emit(CHANGE_EVENT);
   },
