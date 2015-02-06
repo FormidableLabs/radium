@@ -31,8 +31,6 @@ var MatchMediaStore = assign({}, EventEmitter.prototype, {
   },
 
   addChangeListener: function (callback) {
-    console.log("HOW MANY CHANGE EVENTS ARE THERE?");
-
     this.on(CHANGE_EVENT, callback);
   },
 
@@ -50,5 +48,7 @@ var MatchMediaStore = assign({}, EventEmitter.prototype, {
     return matchedQueries;
   }
 });
+
+MatchMediaStore.setMaxListeners(0);
 
 module.exports = MatchMediaStore;

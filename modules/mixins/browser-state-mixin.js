@@ -96,6 +96,30 @@ var BrowserStateMixin = {
     return stateStyles;
   },
 
+  getBreakpointStyles: function (styles) {
+    var breakpointStyles = styles;
+
+    forEach(styles.breakpoints, function (breakpoint, key) {
+      if (this.props.breakpoints && this.props.breakpoints[key]) {
+        var breakpointValue = this.props.breakpoints[key];
+        var activeBreakpoint = breakpoint;
+
+        if (!breakpointValue || !activeBreakpoint) {
+          return;
+        }
+
+        merge(
+          breakpointStyles,
+          activeBreakpoint
+        );
+      }
+    }, this);
+
+    breakpointStyles.breakpoints = null;
+
+    return breakpointStyles;
+  },
+
   getModifierStyles: function (styles) {
     var modifierStyles = styles.standard;
 
@@ -128,6 +152,8 @@ var BrowserStateMixin = {
 
   getStaticStyles: function (styles) {
     var elementStyles = this.getModifierStyles(styles);
+
+    var mediaQueryStyles = this.getBreakpointStyles(elementStyles);
 
     return merge(
       elementStyles,

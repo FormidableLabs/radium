@@ -2,13 +2,18 @@ var MatchMediaStore = require('../match-media-store.js');
 
 var getMatchMediaState = function () {
   return {
-    mediaQueries: MatchMediaStore.getMatchedMedia()
+    breakpoints: MatchMediaStore.getMatchedMedia()
   };
 };
 
 var MatchMediaMixin = {
   _onChange: function () {
-    this.setState(getMatchMediaState());
+    var newState = getMatchMediaState();
+
+    // TODO: Do a better comparison.
+    if (JSON.stringify(this.state.breakpoints) !== JSON.stringify(newState.breakpoints)) {
+      this.setState(getMatchMediaState());
+    }
   },
 
   getInitialState: function () {
