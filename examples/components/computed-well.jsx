@@ -1,12 +1,14 @@
 var React = require('react');
 var Radium = require('../../modules/index');
-var { BrowserStateMixin, MatchMediaMixin } = Radium;
+var { StyleResolverMixin } = Radium;
 
 var ComputedWell = React.createClass({
-  mixins: [ BrowserStateMixin ],
+  mixins: [ StyleResolverMixin ],
 
   getInitialState: function () {
-    dynamicBg: null
+    return {
+      dynamicBg: null
+    }
   },
 
   getStyles: function () {

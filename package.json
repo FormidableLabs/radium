@@ -23,7 +23,6 @@
     "react": "0.12.x"
   },
   "dependencies": {
-    "lodash.assign": "^3.0.0",
     "lodash.foreach": "^3.0.1",
     "lodash.merge": "^3.0.1"
   },

@@ -1,4 +1,4 @@
-var MatchMediaStore = require('../match-media-store.js');
+var MatchMediaStore = require('../stores/match-media');
 
 var getMatchMediaState = function () {
   return {
@@ -10,9 +10,8 @@ var MatchMediaMixin = {
   _onChange: function () {
     var newState = getMatchMediaState();
 
-    // TODO: Do a better comparison.
     if (JSON.stringify(this.state.breakpoints) !== JSON.stringify(newState.breakpoints)) {
-      this.setState(getMatchMediaState());
+      this.setState(newState);
     }
   },
 

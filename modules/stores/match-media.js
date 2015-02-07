@@ -1,5 +1,5 @@
 var EventEmitter = require('events').EventEmitter;
-var assign = require('lodash.assign');
+var merge = require('lodash.merge');
 var forEach = require('lodash.foreach');
 
 var CHANGE_EVENT = 'change';
@@ -10,7 +10,7 @@ var handleMediaChange = function () {
   MatchMediaStore.emitChange();
 };
 
-var MatchMediaStore = assign({}, EventEmitter.prototype, {
+var MatchMediaStore = merge({}, EventEmitter.prototype, {
   init: function (mediaQueryOpts) {
     forEach(mediaQueryOpts, function (query, key) {
       matchers[key] = window.matchMedia(query);
