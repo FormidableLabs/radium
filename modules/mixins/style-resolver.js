@@ -22,9 +22,14 @@ var StyleResolverMixin = {
 
   getBreakpointStyles: function (styles) {
     var breakpointStyles = merge({}, styles);
+    var componentBreakpoints = this.props.breakpoints;
+
+    if (this.state && this.state.breakpoints) {
+      componentBreakpoints = this.state.breakpoints;
+    }
 
     forEach(styles.breakpoints, function (breakpoint, key) {
-      if (this.props.breakpoints && this.props.breakpoints[key]) {
+      if (componentBreakpoints && componentBreakpoints[key]) {
         var activeBreakpoint = breakpoint;
 
         if (!activeBreakpoint) {
