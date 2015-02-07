@@ -4,7 +4,7 @@ var forEach = require('lodash.foreach');
 
 var CHANGE_EVENT = 'change';
 
-var matchers = {};
+var matchers;
 
 var handleMediaChange = function () {
   MatchMediaStore.emitChange();
@@ -12,10 +12,20 @@ var handleMediaChange = function () {
 
 var MatchMediaStore = merge({}, EventEmitter.prototype, {
   init: function (mediaQueryOpts) {
+    this.destroy();
+
+    matchers = {};
+
     forEach(mediaQueryOpts, function (query, key) {
       matchers[key] = window.matchMedia(query);
 
       matchers[key].addListener(handleMediaChange);
+    });
+  },
+
+  destroy: function () {
+    forEach(matchers, function (matcher) {
+      matcher.removeListener(handleMediaChange);
     });
   },
 
