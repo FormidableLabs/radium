@@ -86,19 +86,35 @@ var StyleResolverMixin = {
       {},
       mediaQueryStyles,
       this.props.style,
-      this.getStateStyles(mediaQueryStyles.states)
+      this.getStateStyles(mediaQueryStyles.states),
+      { states: null }
     );
   },
 
+  getComputedStyles: function (styles) {
+    var computedStyles = {};
+
+    forEach(styles, function (style) {
+      if (typeof style === 'function') {
+        var computedRule = style(styles);
+
+        for (prop in computedRule) {
+          computedStyles[prop] = computedRule[prop];
+        }
+      }
+    });
+
+    return merge(
+      {},
+      styles,
+      computedStyles
+    );
+  },
+  
   buildStyles: function (styles, computedStyleFunc) {
     var staticStyles = this.getStaticStyles(styles);
-    var computedStyles;
 
-    if (computedStyleFunc) {
-      computedStyles = computedStyleFunc(staticStyles);
-    }
-
-    return merge({}, staticStyles, computedStyles);
+    return this.getComputedStyles(staticStyles);
   }
 };
 
