@@ -18,10 +18,6 @@ function getRadiumProps (radiumStyles) {
 
   // TODO: handle array case
   if (typeof radiumStyles === "object") {
-    // TODO: add logic for specific states in radiumStyles
-    // Might belong in browser-state
-    merge(styles, BrowserStateMixin.getBrowserStateEvents.call(this));
-
     // Resolve styles to styles
     // TODO: add computedStyleFunction
     merge(styles, StyleResolverMixin.buildStyles.call(this, radiumStyles));
@@ -43,7 +39,11 @@ React.createClass = function(component) {
       var renderedComponent = originalRender.apply(this, args);
       var radiumProps = getRadiumProps.call(this, this[RADIUM_STYLE_NAME]);
 
-      merge(renderedComponent.props, radiumProps);
+      // TODO: add logic for specific states in radiumStyles
+      // Might belong in browser-state
+      var radiumStateHandlers = BrowserStateMixin.getBrowserStateEvents.call(this);
+
+      merge(renderedComponent.props, radiumProps, radiumStateHandlers);
 
       // TODO: handle refs, children, etc.
 

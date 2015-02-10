@@ -2,7 +2,7 @@ var forEach = require('lodash.foreach');
 var merge = require('lodash.merge');
 
 var getStateStyles = function (states) {
-  if (!states) {
+  if (!states || !this.state) {
     return;
   }
 
