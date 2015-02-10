@@ -1,6 +1,6 @@
 var MatchMediaStore = require('../stores/match-media');
 
-var getMatchMediaState = function () {
+var _getMatchMediaState = function () {
   return {
     breakpoints: MatchMediaStore.getMatchedMedia()
   };
@@ -8,7 +8,7 @@ var getMatchMediaState = function () {
 
 var MatchMediaMixin = {
   _onChange: function () {
-    var newState = getMatchMediaState();
+    var newState = _getMatchMediaState();
 
     if (JSON.stringify(this.state.breakpoints) !== JSON.stringify(newState.breakpoints)) {
       this.setState(newState);
@@ -16,7 +16,7 @@ var MatchMediaMixin = {
   },
 
   getInitialState: function () {
-    return getMatchMediaState();
+    return _getMatchMediaState();
   },
 
   componentDidMount: function () {
