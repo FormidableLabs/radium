@@ -1,6 +1,7 @@
 var React = require('react');
 
 var Button = require('./components/button.jsx');
+var AutoButton = require('./components/auto-button.jsx');
 var ComputedWell = require("./components/computed-well.jsx");
 
 var App = React.createClass({
@@ -8,7 +9,7 @@ var App = React.createClass({
     return (
       <div>
         <p>
-          <Button>Button</Button>
+          <AutoButton>AutoButton</AutoButton>
         </p>
 
         <p>
