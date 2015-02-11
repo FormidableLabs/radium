@@ -39,6 +39,7 @@ function getRadiumProps (radiumStyles) {
   } else {
     // Not a function or an object.
     // Can't use so throw error
+    throw new Error(RADIUM_STYLE_NAME + " must be a function or an object");
   }
 }
 
