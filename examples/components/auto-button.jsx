@@ -27,6 +27,13 @@ var Button = React.createClass({
             transform: "translateY(2px)",
           }
         }
+      },
+      refs: {
+        span: {
+          standard: {
+            color: "#222"
+          }
+        }
       }
     };
   },
@@ -34,7 +41,7 @@ var Button = React.createClass({
   render: function () {
     return (
       <button>
-        {this.props.children}
+        <span ref="span">{this.props.children}</span>
       </button>
     );
   }

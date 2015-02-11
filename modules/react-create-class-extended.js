@@ -1,4 +1,7 @@
 var React = require('react');
+var findWhere = require('lodash.findWhere');
+var forEach = require('lodash.foreach');
+var isArray = require('lodash.isarray');
 var merge = require('lodash.merge');
 
 var Radium = require('./index');
@@ -10,7 +13,8 @@ var { StyleResolverMixin, BrowserStateMixin } = Radium;
 var RADIUM_STYLE_NAME = "radiumStyles";
 
 function getRadiumProps (radiumStyles) {
-  var styles ={};
+  var styles = {};
+  var browserStates;
 
   if (typeof radiumStyles === "function") {
     radiumStyles = radiumStyles.call(this);
@@ -22,11 +26,46 @@ function getRadiumProps (radiumStyles) {
     // TODO: add computedStyleFunction
     merge(styles, StyleResolverMixin.buildStyles.call(this, radiumStyles));
 
-    return {style: styles};
+    // If the current context is a rendered element, in the case of refs
+    // ignore browser state because there isn't a way to attach handlers with the appropriate context
+    // yet
+    browserStates = this._currentElement && BrowserStateMixin.getBrowserStateEvents.call(this, styles);
+
+    return {
+      style: styles,
+      refs: radiumStyles.refs,
+      stateHandlers: browserStates
+    };
   } else {
     // Not a function or an object.
     // Can't use so throw error
   }
+}
+
+function addRefStyles (refStyles, refName) {
+  // Could be abstracted to handle any child type not just ref
+  // this.props.children could be a single object or an array of child objects
+  var children = this.props.children || {};
+  var refComponent =  isArray(children) ?
+    findWhere(this.props.children, {ref: refName}) :
+    children.ref === refName && children;
+
+  if (refComponent) {
+    refComponent = mergeRadiumIntoComponent(refComponent, getRadiumProps.call(refComponent, refStyles));
+  }
+}
+
+function mergeRadiumIntoComponent(renderedComponent, radiumProps) {
+  renderedComponent.props.style = renderedComponent.props.style || {};
+
+  merge(renderedComponent.props.style, radiumProps.style);
+  merge(renderedComponent.props, radiumProps.stateHandlers);
+
+  if (radiumProps.refs) {
+    forEach(radiumProps.refs, addRefStyles.bind(renderedComponent));
+  }
+
+  return renderedComponent;
 }
 
 var originalCreateClass = React.createClass;
@@ -39,13 +78,7 @@ React.createClass = function(component) {
       var renderedComponent = originalRender.apply(this, args);
       var radiumProps = getRadiumProps.call(this, this[RADIUM_STYLE_NAME]);
 
-      // TODO: add logic for specific states in radiumStyles
-      // Might belong in browser-state
-      var radiumStateHandlers = BrowserStateMixin.getBrowserStateEvents.call(this);
-
-      merge(renderedComponent.props, radiumProps, radiumStateHandlers);
-
-      // TODO: handle refs, children, etc.
+      renderedComponent = mergeRadiumIntoComponent(renderedComponent, radiumProps);
 
       return renderedComponent;
     }

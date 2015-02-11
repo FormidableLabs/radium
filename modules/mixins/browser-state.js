@@ -7,36 +7,24 @@ var getInitialState = function () {
   };
 };
 
-var getBrowserStateEvents = function () {
-  return {
-    onMouseEnter: handleMouseEnter.bind(this),
-    onMouseLeave: handleMouseLeave.bind(this),
-    onMouseDown: handleMouseDown.bind(this),
-    onMouseUp: handleMouseUp.bind(this),
-    onFocus: handleFocus.bind(this),
-    onBlur: handleBlur.bind(this)
+var wrapHandler = function (userHandler, radiumHandler, context) {
+  if (!userHandler || !radiumHandler || !context) {
+    return;
+  }
+
+  return function () {
+    radiumHandler.apply(context, arguments);
+    userHandler.apply(context, arguments);
   };
 };
 
-var callRadiumHandler = function (handler, ev) {
-  var currentHandler = this.props[handler];
-
-  if (currentHandler) {
-    currentHandler(ev);
-  }
-};
-
 var handleMouseEnter = function (ev) {
-  callRadiumHandler.call(this, "onMouseEnter", ev);
-
   this.setState({
     hover: true
   });
 };
 
 var handleMouseLeave = function (ev) {
-  callRadiumHandler.call(this, "onMouseLeave", ev);
-
   this.setState({
     hover: false,
     active: false
@@ -44,35 +32,84 @@ var handleMouseLeave = function (ev) {
 };
 
 var handleMouseDown = function (ev) {
-  callRadiumHandler.call(this, "onMouseDown", ev);
-
   this.setState({
     active: true
   });
 };
 
 var handleMouseUp = function (ev) {
-  callRadiumHandler.call(this, "onMouseUp", ev);
-
   this.setState({
     active: false
   });
 };
 
 var handleFocus = function (ev) {
-  callRadiumHandler.call(this, "onFocus", ev);
-
   this.setState({
     focus: true
   });
 };
 
 var handleBlur = function (ev) {
-  callRadiumHandler.call(this, "onBlur", ev);
-
   this.setState({
     focus: false
   });
+};
+
+var handlerMap = {
+  onMouseEnter: {
+    state: "hover",
+    handler: handleMouseEnter
+  },
+  onMouseLeave: {
+    state: "hover",
+    handler: handleMouseLeave
+  },
+  onMouseDown: {
+    state: "active",
+    handler: handleMouseDown
+  },
+  onMouseUp: {
+    state: "active",
+    handler: handleMouseUp
+  },
+  onFocus: {
+    state: "focus",
+    handler: handleFocus
+  },
+  onBlur: {
+    state: "focus",
+    handler: handleBlur
+  }
+};
+
+var getBrowserStateEvents = function (styles, userProps) {
+  states = styles ? styles.states || {} : {}
+  userProps = userProps || {};
+
+  function getHandler(handlerName) {
+    var handlerObj = handlerMap[handlerName];
+    var userHandler = userProps[handlerName];
+
+    // Check
+    if (states[handlerObj.state]) {
+      if (userHandler) {
+        return wrapHandler(userHandler, handlerObj.handler, this);
+      }
+
+      return handlerObj.handler.bind(this);
+    }
+
+    return userHandler && userHandler.bind(this);
+  }
+
+  return {
+    onMouseEnter: getHandler.call(this, "onMouseEnter"),
+    onMouseLeave: getHandler.call(this, "onMouseLeave"),
+    onMouseDown: getHandler.call(this, "onMouseDown"),
+    onMouseUp: getHandler.call(this, "onMouseUp"),
+    onFocus: getHandler.call(this, "onFocus"),
+    onBlur: getHandler.call(this, "onBlur")
+  };
 };
 
 var BrowserStateMixin = {
@@ -80,8 +117,6 @@ var BrowserStateMixin = {
   getInitialState: getInitialState,
 
   getBrowserStateEvents: getBrowserStateEvents,
-
-  callRadiumHandler: callRadiumHandler,
 
   handleMouseEnter: handleMouseEnter,
 

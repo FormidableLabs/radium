@@ -58,7 +58,7 @@ var Button = React.createClass({
     return (
       <button
         style={styles}
-        {...this.getBrowserStateEvents()}
+        {...this.getBrowserStateEvents(styles)}
         >
         {this.props.children}
       </button>
