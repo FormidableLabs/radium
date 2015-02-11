@@ -94,15 +94,15 @@ var StyleResolverMixin = {
   getComputedStyles: function (styles) {
     var computedStyles = {};
 
-    forEach(styles, function (style) {
-      if (typeof style === 'function') {
-        var computedRule = style(styles);
-
-        for (prop in computedRule) {
-          computedStyles[prop] = computedRule[prop];
-        }
-      }
-    });
+    // `styles.computed` can be a function that returns a style object.
+    if (typeof styles.computed === 'function') {
+      computedStyles = styles.computed(styles);
+    // or it can be an object of functions mapping to individual rules.
+    } else {
+      forEach(styles.computed, function (computedCallback, key) {
+        computedStyles[key] = computedCallback(styles);
+      });
+    }
 
     return merge(
       {},
@@ -110,7 +110,7 @@ var StyleResolverMixin = {
       computedStyles
     );
   },
-  
+
   buildStyles: function (styles, computedStyleFunc) {
     var staticStyles = this.getStaticStyles(styles);
 
