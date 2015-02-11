@@ -2,7 +2,7 @@
   "name": "radium",
   "version": "0.0.1",
   "description": "",
-  "main": "radium.js",
+  "main": "modules/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/formidablelabs/radium.git"

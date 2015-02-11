@@ -1,8 +1,9 @@
 var React = require('react');
-var Radium = require('../../radium');
+var Radium = require('../../modules/index');
+var { StyleResolverMixin, BrowserStateMixin } = Radium;
 
 var Button = React.createClass({
-  mixins: [ Radium ],
+  mixins: [ StyleResolverMixin, BrowserStateMixin ],
 
   getStyles: function () {
     return {

@@ -1,11 +1,14 @@
 var React = require('react');
-var Radium = require('../../radium');
+var Radium = require('../../modules/index');
+var { StyleResolverMixin } = Radium;
 
 var ComputedWell = React.createClass({
-  mixins: [ Radium ],
+  mixins: [ StyleResolverMixin ],
 
   getInitialState: function () {
-    dynamicBg: null
+    return {
+      dynamicBg: null
+    }
   },
 
   getStyles: function () {
