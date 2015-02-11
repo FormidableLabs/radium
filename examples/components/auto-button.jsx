@@ -1,11 +1,9 @@
 var React = require('react');
-var Radium = require('../../modules/index');
-var { StyleResolverMixin, BrowserStateMixin } = Radium;
+var ReactCreateClassExtended = require('../../modules/react-create-class-extended.js');
 
 var Button = React.createClass({
-  mixins: [ StyleResolverMixin, BrowserStateMixin ],
 
-  getStyles: function () {
+  radiumStyles: function () {
     return {
       standard: {
         fontSize: 16,
@@ -30,22 +28,10 @@ var Button = React.createClass({
           }
         }
       },
-      modifiers: {
-        color: {
-          red: {
-            backgroundColor: "#d90000",
-
-            states: {
-              hover: {
-                backgroundColor: "#FF0000"
-              },
-              focus: {
-                backgroundColor: "#FF0000"
-              },
-              active: {
-                backgroundColor: "#990000"
-              }
-            }
+      refs: {
+        span: {
+          standard: {
+            color: "#222"
           }
         }
       }
@@ -53,14 +39,9 @@ var Button = React.createClass({
   },
 
   render: function () {
-    var styles = this.buildStyles(this.getStyles());
-
     return (
-      <button
-        style={styles}
-        {...this.getBrowserStateEvents(styles)}
-        >
-        {this.props.children}
+      <button>
+        <span ref="span">{this.props.children}</span>
       </button>
     );
   }
