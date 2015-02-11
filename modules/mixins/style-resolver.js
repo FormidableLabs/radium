@@ -2,7 +2,7 @@ var forEach = require('lodash.foreach');
 var merge = require('lodash.merge');
 
 var StyleResolverMixin = {
-  getStateStyles: function (states) {
+  _getStateStyles: function (states) {
     if (!states) {
       return;
     }
@@ -20,7 +20,7 @@ var StyleResolverMixin = {
     return stateStyles;
   },
 
-  getBreakpointStyles: function (styles) {
+  _getBreakpointStyles: function (styles) {
     var breakpointStyles = merge({}, styles);
     var componentBreakpoints = this.props.breakpoints;
 
@@ -48,7 +48,7 @@ var StyleResolverMixin = {
     return breakpointStyles;
   },
 
-  getModifierStyles: function (styles) {
+  _getModifierStyles: function (styles) {
     var modifierStyles = merge({}, styles.standard);
 
     forEach(styles.modifiers, function (modifier, key) {
@@ -78,20 +78,20 @@ var StyleResolverMixin = {
     return modifierStyles;
   },
 
-  getStaticStyles: function (styles) {
-    var elementStyles = this.getModifierStyles(styles);
-    var mediaQueryStyles = this.getBreakpointStyles(elementStyles);
+  _getStaticStyles: function (styles) {
+    var elementStyles = this._getModifierStyles(styles);
+    var mediaQueryStyles = this._getBreakpointStyles(elementStyles);
 
     return merge(
       {},
       mediaQueryStyles,
       this.props.style,
-      this.getStateStyles(mediaQueryStyles.states),
+      this._getStateStyles(mediaQueryStyles.states),
       { states: null }
     );
   },
 
-  getComputedStyles: function (styles) {
+  _getComputedStyles: function (styles) {
     var computedStyles = {};
 
     // `styles.computed` can be a function that returns a style object.
@@ -107,14 +107,15 @@ var StyleResolverMixin = {
     return merge(
       {},
       styles,
-      computedStyles
+      computedStyles,
+      { computed: null }
     );
   },
 
-  buildStyles: function (styles, computedStyleFunc) {
-    var staticStyles = this.getStaticStyles(styles);
+  buildStyles: function (styles) {
+    var staticStyles = this._getStaticStyles(styles);
 
-    return this.getComputedStyles(staticStyles);
+    return this._getComputedStyles(staticStyles);
   }
 };
 

@@ -9,16 +9,16 @@ var BrowserStateMixin = {
 
   getBrowserStateEvents: function () {
     return {
-      onMouseEnter: this.handleMouseEnter,
-      onMouseLeave: this.handleMouseLeave,
-      onMouseDown: this.handleMouseDown,
-      onMouseUp: this.handleMouseUp,
-      onFocus: this.handleFocus,
-      onBlur: this.handleBlur
+      onMouseEnter: this._handleMouseEnter,
+      onMouseLeave: this._handleMouseLeave,
+      onMouseDown: this._handleMouseDown,
+      onMouseUp: this._handleMouseUp,
+      onFocus: this._handleFocus,
+      onBlur: this._handleBlur
     };
   },
 
-  callRadiumHandler: function (handler, ev) {
+  _callRadiumHandler: function (handler, ev) {
     var currentHandler = this.props[handler];
 
     if (currentHandler) {
@@ -26,16 +26,16 @@ var BrowserStateMixin = {
     }
   },
 
-  handleMouseEnter: function (ev) {
-    this.callRadiumHandler("onMouseEnter", ev);
+  _handleMouseEnter: function (ev) {
+    this._callRadiumHandler("onMouseEnter", ev);
 
     this.setState({
       hover: true
     });
   },
 
-  handleMouseLeave: function (ev) {
-    this.callRadiumHandler("onMouseLeave", ev);
+  _handleMouseLeave: function (ev) {
+    this._callRadiumHandler("onMouseLeave", ev);
 
     this.setState({
       hover: false,
@@ -43,32 +43,32 @@ var BrowserStateMixin = {
     });
   },
 
-  handleMouseDown: function (ev) {
-    this.callRadiumHandler("onMouseDown", ev);
+  _handleMouseDown: function (ev) {
+    this._callRadiumHandler("onMouseDown", ev);
 
     this.setState({
       active: true
     });
   },
 
-  handleMouseUp: function (ev) {
-    this.callRadiumHandler("onMouseUp", ev);
+  _handleMouseUp: function (ev) {
+    this._callRadiumHandler("onMouseUp", ev);
 
     this.setState({
       active: false
     });
   },
 
-  handleFocus: function (ev) {
-    this.callRadiumHandler("onFocus", ev);
+  _handleFocus: function (ev) {
+    this._callRadiumHandler("onFocus", ev);
 
     this.setState({
       focus: true
     });
   },
 
-  handleBlur: function (ev) {
-    this.callRadiumHandler("onBlur", ev);
+  _handleBlur: function (ev) {
+    this._callRadiumHandler("onBlur", ev);
 
     this.setState({
       focus: false

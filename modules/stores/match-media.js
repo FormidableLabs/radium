@@ -7,7 +7,7 @@ var CHANGE_EVENT = 'change';
 var matchers;
 
 var handleMediaChange = function () {
-  MatchMediaStore.emitChange();
+  MatchMediaStore._emitChange();
 };
 
 var MatchMediaStore = merge({}, EventEmitter.prototype, {
@@ -29,7 +29,7 @@ var MatchMediaStore = merge({}, EventEmitter.prototype, {
     });
   },
 
-  emitChange: function () {
+  _emitChange: function () {
     this.emit(CHANGE_EVENT);
   },
 
