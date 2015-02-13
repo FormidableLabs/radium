@@ -48,12 +48,16 @@ var StyleResolverMixin = {
     return breakpointStyles;
   },
 
-  _getModifierStyles: function (styles) {
+  _getModifierStyles: function (styles, activeModifiers) {
+    if (!activeModifiers) {
+      return styles.standard;
+    }
+
     var modifierStyles = merge({}, styles.standard);
 
     forEach(styles.modifiers, function (modifier, key) {
-      if (this.props[key]) {
-        var modifierValue = this.props[key];
+      if (activeModifiers[key]) {
+        var modifierValue = activeModifiers[key];
         var activeModifier;
 
         if (typeof modifierValue === 'string') {
@@ -73,13 +77,13 @@ var StyleResolverMixin = {
           activeModifier
         );
       }
-    }, this);
+    });
 
     return modifierStyles;
   },
 
-  _getStaticStyles: function (styles) {
-    var elementStyles = this._getModifierStyles(styles);
+  _getStaticStyles: function (styles, activeModifiers) {
+    var elementStyles = this._getModifierStyles(styles, activeModifiers);
     var mediaQueryStyles = this._getBreakpointStyles(elementStyles);
 
     return merge(
@@ -112,8 +116,16 @@ var StyleResolverMixin = {
     );
   },
 
-  buildStyles: function (styles) {
-    var staticStyles = this._getStaticStyles(styles);
+  buildStyles: function (styles, additionalModifiers, excludeProps) {
+    var modifiers;
+
+    if (excludeProps) {
+      modifiers = additionalModifiers;
+    } else {
+      modifiers = merge({}, this.props, additionalModifiers);
+    }
+
+    var staticStyles = this._getStaticStyles(styles, modifiers);
 
     return this._getComputedStyles(staticStyles);
   }
