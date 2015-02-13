@@ -86,19 +86,36 @@ var StyleResolverMixin = {
       {},
       mediaQueryStyles,
       this.props.style,
-      this._getStateStyles(mediaQueryStyles.states)
+      this._getStateStyles(mediaQueryStyles.states),
+      { states: null }
     );
   },
 
-  buildStyles: function (styles, computedStyleFunc) {
-    var staticStyles = this._getStaticStyles(styles);
-    var computedStyles;
+  _getComputedStyles: function (styles) {
+    var computedStyles = {};
 
-    if (computedStyleFunc) {
-      computedStyles = computedStyleFunc(staticStyles);
+    // `styles.computed` can be a function that returns a style object.
+    if (typeof styles.computed === 'function') {
+      computedStyles = styles.computed(styles);
+    // or it can be an object of functions mapping to individual rules.
+    } else {
+      forEach(styles.computed, function (computedCallback, key) {
+        computedStyles[key] = computedCallback(styles);
+      });
     }
 
-    return merge({}, staticStyles, computedStyles);
+    return merge(
+      {},
+      styles,
+      computedStyles,
+      { computed: null }
+    );
+  },
+
+  buildStyles: function (styles) {
+    var staticStyles = this._getStaticStyles(styles);
+
+    return this._getComputedStyles(staticStyles);
   }
 };
 
