@@ -24,14 +24,18 @@ function buildCssString (selector, rules) {
 
 var Style = React.createClass({
   render: function () {
-    if (!this.props.selector) {
-      throw new Error("Style tag requires a 'selector' property");
+    if (!this.props.selector || typeof this.props.selector !== "string") {
+      throw new Error("Style tag requires a 'selector' string");
+    }
+
+    if (!this.props.styles || typeof this.props.styles !== "object") {
+      throw new Error("Style tag requires a 'styles' object");
     }
 
     // Build styles from standard
-    var styles = buildCssString(this.props.selector, this.props.standard)
+    var styles = buildCssString(this.props.selector, this.props.styles.standard)
 
-    forEach(this.props.states, function (rules, state) {
+    forEach(this.props.styles.states, function (rules, state) {
       styles += buildCssString(ownerSelector + ":" + state, rules);
     });
 
