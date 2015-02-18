@@ -24,25 +24,24 @@ function buildCssString (selector, rules) {
 
 var Style = React.createClass({
   render: function () {
-    if (!this.props.selector || typeof this.props.selector !== "string") {
-      throw new Error("Style tag requires a 'selector' string");
+    var styles;
+
+    // Throw error if someone passes in valid children that isn't an object
+    if (this.props.children && typeof this.props.children !== "object") {
+      throw new Error("Style tag requires an object for 'props.children'");
     }
 
-    if (!this.props.styles || typeof this.props.styles !== "object") {
-      throw new Error("Style tag requires a 'styles' object");
-    }
-
-    // Build styles from standard
-    var styles = buildCssString(this.props.selector, this.props.styles.standard)
-
-    forEach(this.props.styles.states, function (rules, state) {
-      styles += buildCssString(ownerSelector + ":" + state, rules);
+    forEach(this.props.children, function (rules, selector) {
+      styles = buildCssString(selector, rules);
     });
 
-    return (
-      <style dangerouslySetInnerHTML={{__html: styles}}>
-      </style>
-    );
+    if (styles) {
+      return (
+        <style dangerouslySetInnerHTML={{__html: styles}} />
+      );
+    } else {
+      return false;
+    }
   }
 });
 
