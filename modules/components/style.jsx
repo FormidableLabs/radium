@@ -1,6 +1,5 @@
 var React = require('react');
 var hyphenateStyleName = require('react/lib/hyphenateStyleName');
-var forEach = require('lodash.foreach');
 var reduce = require('lodash.reduce');
 
 function buildCssString (selector, rules) {
@@ -24,23 +23,21 @@ function buildCssString (selector, rules) {
 
 var Style = React.createClass({
   render: function () {
-    var styles;
-
     // Throw error if someone passes in valid children that isn't an object
     if (this.props.children && typeof this.props.children !== "object") {
       throw new Error("Style tag requires an object for 'props.children'");
     }
 
-    forEach(this.props.children, function (rules, selector) {
-      styles = buildCssString(selector, rules);
-    });
+    var styles = reduce(this.props.children, function (s, rules, selector) {
+      return s += buildCssString(selector, rules);
+    }, "");
 
     if (styles) {
       return (
         <style dangerouslySetInnerHTML={{__html: styles}} />
       );
     } else {
-      return false;
+      return null;
     }
   }
 });
