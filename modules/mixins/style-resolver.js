@@ -50,10 +50,10 @@ var StyleResolverMixin = {
 
   _getModifierStyles: function (styles, activeModifiers) {
     if (!activeModifiers) {
-      return styles.standard;
+      return styles;
     }
 
-    var modifierStyles = merge({}, styles.standard);
+    var modifierStyles = merge({}, styles);
 
     forEach(styles.modifiers, function (modifier, key) {
       if (activeModifiers[key]) {
