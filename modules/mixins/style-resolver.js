@@ -20,32 +20,32 @@ var StyleResolverMixin = {
     return stateStyles;
   },
 
-  _getBreakpointStyles: function (styles) {
-    var breakpointStyles = merge({}, styles);
-    var componentBreakpoints = this.props.breakpoints;
+  _getMediaQueryStyles: function (styles) {
+    var mediaQueryStyles = merge({}, styles);
+    var componentMediaQueries = this.props.mediaQueries;
 
-    if (this.state && this.state.breakpoints) {
-      componentBreakpoints = this.state.breakpoints;
+    if (this.state && this.state.mediaQueries) {
+      componentMediaQueries = this.state.mediaQueries;
     }
 
-    forEach(styles.breakpoints, function (breakpoint, key) {
-      if (componentBreakpoints && componentBreakpoints[key]) {
-        var activeBreakpoint = breakpoint;
+    forEach(styles.mediaQueries, function (mediaQuery, key) {
+      if (componentMediaQueries && componentMediaQueries[key]) {
+        var activeMediaQuery = mediaQuery;
 
-        if (!activeBreakpoint) {
+        if (!activeMediaQuery) {
           return;
         }
 
         merge(
-          breakpointStyles,
-          activeBreakpoint
+          mediaQueryStyles,
+          activeMediaQuery
         );
       }
     }, this);
 
-    breakpointStyles.breakpoints = null;
+    mediaQueryStyles.mediaQueries = null;
 
-    return breakpointStyles;
+    return mediaQueryStyles;
   },
 
   _getModifierStyles: function (styles, activeModifiers) {
@@ -84,7 +84,7 @@ var StyleResolverMixin = {
 
   _getStaticStyles: function (styles, activeModifiers) {
     var elementStyles = this._getModifierStyles(styles, activeModifiers);
-    var mediaQueryStyles = this._getBreakpointStyles(elementStyles);
+    var mediaQueryStyles = this._getMediaQueryStyles(elementStyles);
 
     return merge(
       {},

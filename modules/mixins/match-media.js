@@ -2,7 +2,7 @@ var MatchMediaStore = require('../stores/match-media');
 
 var _getMatchMediaState = function () {
   return {
-    breakpoints: MatchMediaStore.getMatchedMedia()
+    mediaQueries: MatchMediaStore.getMatchedMedia()
   };
 };
 
@@ -10,7 +10,7 @@ var MatchMediaMixin = {
   _onChange: function () {
     var newState = _getMatchMediaState();
 
-    if (JSON.stringify(this.state.breakpoints) !== JSON.stringify(newState.breakpoints)) {
+    if (JSON.stringify(this.state.mediaQueries) !== JSON.stringify(newState.mediaQueries)) {
       this.setState(newState);
     }
   },
