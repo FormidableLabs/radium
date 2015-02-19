@@ -1,6 +1,5 @@
 var EventEmitter = require('events').EventEmitter;
-var merge = require('lodash.merge');
-var forEach = require('lodash.foreach');
+var merge = require('lodash/object/merge');
 
 var CHANGE_EVENT = 'change';
 
@@ -12,21 +11,28 @@ var handleMediaChange = function () {
 
 var MatchMediaStore = merge({}, EventEmitter.prototype, {
   init: function (mediaQueryOpts) {
+    if (!mediaQueryOpts) {
+      return;
+    }
+
     this.destroy();
 
     matchers = {};
 
-    forEach(mediaQueryOpts, function (query, key) {
-      matchers[key] = window.matchMedia(query);
-
+    for (var key in mediaQueryOpts) {
+      matchers[key] = window.matchMedia(mediaQueryOpts[key]);
       matchers[key].addListener(handleMediaChange);
-    });
+    }
   },
 
   destroy: function () {
-    forEach(matchers, function (matcher) {
-      matcher.removeListener(handleMediaChange);
-    });
+    if (!matchers) {
+      return;
+    }
+
+    for (var key in matchers) {
+      matchers[key].removeListener(handleMediaChange);
+    }
   },
 
   _emitChange: function () {
@@ -42,11 +48,15 @@ var MatchMediaStore = merge({}, EventEmitter.prototype, {
   },
 
   getMatchedMedia: function () {
+    if (!matchers) {
+      return;
+    }
+
     var matchedQueries = {};
 
-    forEach(matchers, function (query, key) {
-      matchedQueries[key] = query.matches;
-    });
+    for (var key in matchers) {
+      matchedQueries[key] = matchers[key].matches;
+    }
 
     return matchedQueries;
   }

@@ -1,5 +1,4 @@
-var forEach = require('lodash.foreach');
-var merge = require('lodash.merge');
+var merge = require('lodash/object/merge');
 
 var StyleResolverMixin = {
   _getStateStyles: function (states) {
@@ -21,6 +20,10 @@ var StyleResolverMixin = {
   },
 
   _getMediaQueryStyles: function (styles) {
+    if (!styles.mediaQueries) {
+      return styles;
+    }
+
     var mediaQueryStyles = merge({}, styles);
     var componentMediaQueries = this.props.mediaQueries;
 
@@ -28,7 +31,11 @@ var StyleResolverMixin = {
       componentMediaQueries = this.state.mediaQueries;
     }
 
-    forEach(styles.mediaQueries, function (mediaQuery, key) {
+    // Use Object.keys + forEach instead of for...in because media queries
+    // should be iterated over in the order that the user declares them.
+    Object.keys(styles.mediaQueries).forEach(function (key) {
+      var mediaQuery = styles.mediaQueries[key];
+
       if (componentMediaQueries && componentMediaQueries[key]) {
         var activeMediaQuery = mediaQuery;
 
@@ -41,7 +48,7 @@ var StyleResolverMixin = {
           activeMediaQuery
         );
       }
-    }, this);
+    });
 
     mediaQueryStyles.mediaQueries = null;
 
@@ -49,13 +56,17 @@ var StyleResolverMixin = {
   },
 
   _getModifierStyles: function (styles, activeModifiers) {
-    if (!activeModifiers) {
+    if (!activeModifiers || !styles.modifiers) {
       return styles;
     }
 
     var modifierStyles = merge({}, styles);
 
-    forEach(styles.modifiers, function (modifier, key) {
+    // Use Object.keys + forEach instead of for...in because modifiers should
+    // be iterated over in the order that the user declares them.
+    Object.keys(styles.modifiers).forEach(function (key) {
+      var modifier = styles.modifiers[key];
+
       if (activeModifiers[key]) {
         var modifierValue = activeModifiers[key];
         var activeModifier;
@@ -96,6 +107,10 @@ var StyleResolverMixin = {
   },
 
   _getComputedStyles: function (styles) {
+    if (!styles.computed) {
+      return styles;
+    }
+
     var computedStyles = {};
 
     // `styles.computed` can be a function that returns a style object.
@@ -103,9 +118,9 @@ var StyleResolverMixin = {
       computedStyles = styles.computed(styles);
     // or it can be an object of functions mapping to individual rules.
     } else {
-      forEach(styles.computed, function (computedCallback, key) {
-        computedStyles[key] = computedCallback(styles);
-      });
+      for (var key in styles.computed) {
+        computedStyles[key] = styles.computed[key](styles);
+      }
     }
 
     return merge(
