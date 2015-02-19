@@ -2,6 +2,7 @@ var React = require('react');
 
 var Button = require('./components/button.jsx');
 var ComputedWell = require("./components/computed-well.jsx");
+var Style = require("../modules/components/style.jsx");
 
 var App = React.createClass({
   render: function () {
@@ -25,6 +26,13 @@ var App = React.createClass({
             Button
           </Button>
         </p>
+
+        <Style>{{
+          body: {
+            margin: 0,
+            fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif"
+          }
+        }}</Style>
 
         <p>
           <ComputedWell>Click me!</ComputedWell>
