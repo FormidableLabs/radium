@@ -8,17 +8,9 @@ function buildCssString (selector, rules) {
     return;
   }
 
-  var cssString = selector + "{";
-
-  // Turn rules into css properties
-  cssString += reduce(rules, function (s, val, styleName) {
-    return s + hyphenateStyleName(styleName) + ":" + val + ";"
-  }, "");
-
-  // Close selector
-  cssString += "}";
-
-  return cssString;
+  return selector + "{" + Object.keys(rules).map(function (key) {
+    return hyphenateStyleName(key) + ":" + rules[key] + ";";
+  }).join("") + "}";
 }
 
 var Style = React.createClass({
