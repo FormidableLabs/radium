@@ -13,11 +13,9 @@ var ComputedWell = React.createClass({
 
   getStyles: function () {
     return {
-      standard: {
-        padding: "1em",
-        borderRadius: 5,
-        background: "#000"
-      }
+      padding: "1em",
+      borderRadius: 5,
+      background: "#000"
     };
   },
 
