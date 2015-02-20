@@ -1,6 +1,6 @@
 var React = require('react');
 var hyphenateStyleName = require('react/lib/hyphenateStyleName');
-var reduce = require('lodash.reduce');
+var reduce = require('lodash/collection/reduce');
 
 function buildCssString (selector, rules) {
   // TODO: Better error checking for rules object
@@ -20,8 +20,14 @@ var Style = React.createClass({
       throw new Error("Style tag requires an object for 'props.children'");
     }
 
+    var scope = "";
+
+    if (this.props.scopeSelector) {
+      scope = this.props.scopeSelector + " ";
+    }
+
     var styles = reduce(this.props.children, function (s, rules, selector) {
-      return s += buildCssString(selector, rules);
+      return s += buildCssString(scope + selector, rules);
     }, "");
 
     if (styles) {

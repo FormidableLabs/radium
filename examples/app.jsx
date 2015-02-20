@@ -37,6 +37,15 @@ var App = React.createClass({
         <p>
           <ComputedWell>Click me!</ComputedWell>
         </p>
+
+        <p className="scoping-class">
+          <Style scopeSelector=".scoping-class">{{
+            span: {
+              fontFamily: "\"Lucida Console\", Monaco, monospace"
+            }
+          }}</Style>
+          <span>This content has scoped styles</span>
+        </p>
       </div>
     );
   }
