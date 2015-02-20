@@ -31,9 +31,7 @@ var StyleResolverMixin = {
       componentMediaQueries = this.state.mediaQueries;
     }
 
-    // Use Object.keys + forEach instead of for...in because media queries
-    // should be iterated over in the order that the user declares them.
-    Object.keys(styles.mediaQueries).forEach(function (key) {
+    for (var key in styles.mediaQueries) {
       var mediaQuery = styles.mediaQueries[key];
 
       if (componentMediaQueries && componentMediaQueries[key]) {
@@ -48,7 +46,7 @@ var StyleResolverMixin = {
           activeMediaQuery
         );
       }
-    });
+    }
 
     mediaQueryStyles.mediaQueries = null;
 
@@ -62,9 +60,7 @@ var StyleResolverMixin = {
 
     var modifierStyles = merge({}, styles);
 
-    // Use Object.keys + forEach instead of for...in because modifiers should
-    // be iterated over in the order that the user declares them.
-    Object.keys(styles.modifiers).forEach(function (key) {
+    for (var key in styles.modifiers) {
       var modifier = styles.modifiers[key];
 
       if (activeModifiers[key]) {
@@ -88,7 +84,7 @@ var StyleResolverMixin = {
           activeModifier
         );
       }
-    });
+    }
 
     return modifierStyles;
   },
