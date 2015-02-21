@@ -1,26 +1,27 @@
 var merge = require('lodash/object/merge');
 
 var StyleResolverMixin = {
-  _getStateStyles: function (states) {
-    if (!states) {
+  _getStateStyles: function (states, component) {
+    if (!Array.isArray(states)) {
       return;
     }
 
-    var stateStyles;
+    var stateStyles = {};
 
-    if (this.state.active) {
-      stateStyles = states.active;
-    } else if (this.state.focus) {
-      stateStyles = states.focus;
-    } else if (this.state.hover) {
-      stateStyles = states.hover;
-    }
+    states.forEach(function (stateObj) {
+      var key = Object.keys(stateObj)[0];
+      var state = stateObj[key];
+
+      if (component.state[key]) {
+        merge(stateStyles, state);
+      }
+    });
 
     return stateStyles;
   },
 
   _getMediaQueryStyles: function (styles) {
-    if (!styles.mediaQueries) {
+    if (!Array.isArray(styles.mediaQueries)) {
       return styles;
     }
 
@@ -31,8 +32,9 @@ var StyleResolverMixin = {
       componentMediaQueries = this.state.mediaQueries;
     }
 
-    for (var key in styles.mediaQueries) {
-      var mediaQuery = styles.mediaQueries[key];
+    styles.mediaQueries.forEach(function (mediaQueryObj) {
+      var key = Object.keys(mediaQueryObj)[0];
+      var mediaQuery = mediaQueryObj[key];
 
       if (componentMediaQueries && componentMediaQueries[key]) {
         var activeMediaQuery = mediaQuery;
@@ -46,7 +48,7 @@ var StyleResolverMixin = {
           activeMediaQuery
         );
       }
-    }
+    });
 
     mediaQueryStyles.mediaQueries = null;
 
@@ -54,14 +56,15 @@ var StyleResolverMixin = {
   },
 
   _getModifierStyles: function (styles, activeModifiers) {
-    if (!activeModifiers || !styles.modifiers) {
+    if (!activeModifiers || !Array.isArray(!styles.modifiers)) {
       return styles;
     }
 
     var modifierStyles = merge({}, styles);
 
-    for (var key in styles.modifiers) {
-      var modifier = styles.modifiers[key];
+    styles.modifiers.forEach(function (modifierObj) {
+      var key = Object.keys(modifierObj)[0];
+      var modifier = modifierObj[key];
 
       if (activeModifiers[key]) {
         var modifierValue = activeModifiers[key];
@@ -84,7 +87,7 @@ var StyleResolverMixin = {
           activeModifier
         );
       }
-    }
+    });
 
     return modifierStyles;
   },
@@ -97,7 +100,7 @@ var StyleResolverMixin = {
       {},
       mediaQueryStyles,
       this.props.style,
-      this._getStateStyles(mediaQueryStyles.states),
+      this._getStateStyles(mediaQueryStyles.states, this),
       { states: null }
     );
   },

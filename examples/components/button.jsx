@@ -16,38 +16,52 @@ var Button = React.createClass({
       cursor: "pointer",
       outline: "none",
 
-      states: {
-        hover: {
-          backgroundColor: "#0088FF"
+      states: [
+        {
+          hover: {
+            backgroundColor: "#0088FF"
+          }
         },
-        focus: {
-          backgroundColor: "#0088FF"
+        {
+          focus: {
+            backgroundColor: "#0088FF"
+          }
         },
-        active: {
-          backgroundColor: "#005299",
-          transform: "translateY(2px)",
+        {
+          active: {
+            backgroundColor: "#005299",
+            transform: "translateY(2px)",
+          }
         }
-      },
-      
-      modifiers: {
-        color: {
-          red: {
-            backgroundColor: "#d90000",
+      ],
 
-            states: {
-              hover: {
-                backgroundColor: "#FF0000"
-              },
-              focus: {
-                backgroundColor: "#FF0000"
-              },
-              active: {
-                backgroundColor: "#990000"
-              }
+      modifiers: [
+        {
+          color: {
+            red: {
+              backgroundColor: "#d90000",
+
+              states: [
+                {
+                  hover: {
+                    backgroundColor: "#FF0000"
+                  }
+                },
+                {
+                  focus: {
+                    backgroundColor: "#FF0000"
+                  }
+                },
+                {
+                  active: {
+                    backgroundColor: "#990000"
+                  }
+                }
+              ]
             }
           }
         }
-      }
+      ]
     };
   },
 
