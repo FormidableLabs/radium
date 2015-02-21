@@ -50,8 +50,6 @@ var StyleResolverMixin = {
       }
     });
 
-    mediaQueryStyles.mediaQueries = null;
-
     return mediaQueryStyles;
   },
 
@@ -140,6 +138,10 @@ var StyleResolverMixin = {
     }
 
     var staticStyles = this._getStaticStyles(styles, modifiers);
+
+    staticStyles.modifiers = null;
+    staticStyles.mediaQueries = null;
+    staticStyles.states = null;
 
     return this._getComputedStyles(staticStyles);
   }
