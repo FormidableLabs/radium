@@ -54,7 +54,7 @@ var StyleResolverMixin = {
   },
 
   _getModifierStyles: function (styles, activeModifiers) {
-    if (!activeModifiers || !Array.isArray(!styles.modifiers)) {
+    if (!activeModifiers || !Array.isArray(styles.modifiers)) {
       return styles;
     }
 
