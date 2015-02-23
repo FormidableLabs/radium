@@ -18,7 +18,7 @@ var Button = React.createClass({
 });
 ```
 
-Most of Radium's behavior is included in mixins that provide different types of functionality. For basic use, you'll want to start with the `StyleResolverMixin`. This mixin builds out the styles that you'll apply to your component.
+Most of Radium's behavior is included in mixins that provide different types of functionality. For basic use, you'll want to start with the `StyleResolverMixin`. This mixin builds out the styles that will apply to your component.
 
 ```js
 var Button = React.createClass({
@@ -28,19 +28,19 @@ var Button = React.createClass({
 });
 ```
 
-`StyleResolverMixin` has a method called `buildStyles()` that converts a nested Radium style object into the styles that should be applied to your component based on its props and state. A basic Radium style object looks like this:
+Radium resolves nested style objects into a flat object that can be applied directly to a React element. If you're not familiar with handling inline styles in React, see the React guide to the subject [here](http://facebook.github.io/react/tips/inline-styles.html). A basic style object looks like this:
 
 ```js
-{
-  standard: {
-    padding: '1.5em',
-    border: 0,
-    borderRadius: 4,
-    background: 'blue',
-    color: 'white',
-  }
+var radStyles = {
+  padding: '1.5em',
+  border: 0,
+  borderRadius: 4,
+  background: 'blue',
+  color: 'white'
 }
 ```
+
+`StyleResolverMixin` has a method called `buildStyles()` that converts a nested Radium style object into the styles that should be applied to your component based on its props and state.
 
 That object is passed as a parameter to `buildStyles()`. `buildStyles()` returns an object that can be applied to an element through the `style` attribute. If we assign our Radium style object to a variable called `radStyles`, that would look like this:
 
@@ -60,15 +60,24 @@ var Button = React.createClass({
 });
 ```
 
-From there, React will apply our `standard` styles to the `button` element. This is not very exciting. In fact, React does this by default, without the extra steps of nesting styles under `standard` and using `buildStyles()`. Radium becomes useful when you need to do more complex things, like handling modifiers, states, media queries, and computed properties.
+From there, React will apply our styles to the `button` element. This is not very exciting. In fact, React does this by default, without the extra step of using `buildStyles()`. Radium becomes useful when you need to do more complex things, like handling modifiers, states, media queries, and computed properties.
 
 ## Modifiers
 
-In Radium, a modifier is a set of additional CSS properties that are applied based on the component's props and state. A button might have modifiers to change its size or display property. Start by adding a `modifiers` property to your Radium style object.
+In Radium, a modifier is a set of additional CSS properties that are applied based on the component's props and state. A button might have modifiers to change its size or display property. By default, modifiers map directly to your component's props:
+
+```js
+<Button
+  size="large"
+  block={true}>
+  Cool Button!
+</Button>
+```
+
+Start by adding a `modifiers` property to your Radium style object.
 
 ```js
 {
-  standard: { ... },
   modifiers: {
     size: {
       large: {
@@ -88,14 +97,16 @@ In Radium, a modifier is a set of additional CSS properties that are applied bas
 Modifiers can reflect string or boolean values. If a modifier value is a string, you can represent different possible values as child objects with their own CSS properties:
 
 ```js
-size: {
-  // if size === 'large'
-  large: {
-    fontSize: 24
-  },
-  // if size === 'small'
-  small: {
-    fontSize: 12
+modifiers: {
+  size: {
+    // if size === 'large'
+    large: {
+      fontSize: 24
+    },
+    // if size === 'small'
+    small: {
+      fontSize: 12
+    }
   }
 }
 ```
@@ -103,20 +114,12 @@ size: {
 If a modifier value is a boolean, add CSS properties as children of the modifier name:
 
 ```js
-// if block === true
-block: {
-  display: 'block'
+modifiers: {
+  // if block === true
+  block: {
+    display: 'block'
+  }
 }
-```
-
-By default, modifiers map directly to a component's `props`:
-
-```js
-<Button
-  size="large"
-  block={true}>
-  Cool Button!
-</Button>
 ```
 
 When you pass your style object to Radium to resolve it, Radium will check all of your active modifiers and merge them together to give you the set of CSS rules that should apply to the element.
@@ -140,20 +143,18 @@ This gives you fine-grained control over your modifiers. If you want, you can ev
 
 Radium supports styling for three browser states that are targeted with pseudo-selectors in normal CSS: `:hover`, `:focus`, and `:active`.
 
-To add styles for these states, you can add a `states` property to your style object under `standard` styles or any modifiers:
+To add styles for these states, you can add a `states` property to your style object under your default styles or any modifiers:
 
 ```js
-standard: {
-  states: {
-    hover: {
-      backgroundColor: 'red'
-    },
-    focus: {
-      backgroundColor: 'green'
-    },
-    active: {
-      backgroundColor: 'yellow'
-    }
+states: {
+  hover: {
+    backgroundColor: 'red'
+  },
+  focus: {
+    backgroundColor: 'green'
+  },
+  active: {
+    backgroundColor: 'yellow'
   }
 },
 modifiers: {
