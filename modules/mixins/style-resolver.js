@@ -21,16 +21,12 @@ var StyleResolverMixin = {
   },
 
   _getMediaQueryStyles: function (styles) {
-    if (!Array.isArray(styles.mediaQueries)) {
+    if (!Array.isArray(styles.mediaQueries) || !this.context || !this.context.mediaQueries) {
       return styles;
     }
 
     var mediaQueryStyles = merge({}, styles);
-    var componentMediaQueries = this.props.mediaQueries;
-
-    if (this.state && this.state.mediaQueries) {
-      componentMediaQueries = this.state.mediaQueries;
-    }
+    var componentMediaQueries = this.context.mediaQueries;
 
     styles.mediaQueries.forEach(function (mediaQueryObj) {
       var key = Object.keys(mediaQueryObj)[0];
