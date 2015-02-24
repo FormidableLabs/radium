@@ -74,52 +74,60 @@ In Radium, a modifier is a set of additional CSS properties that are applied bas
 </Button>
 ```
 
-Start by adding a `modifiers` property to your Radium style object.
+Start by adding a `modifiers` array to your Radium style object.
 
 ```js
 {
-  modifiers: {
-    size: {
-      large: {
-        fontSize: 24
-      },
-      small: {
-        fontSize: 12
+  modifiers: [
+    {
+      size: {
+        large: {
+          fontSize: 24
+        },
+        small: {
+          fontSize: 12
+        }
       }
     },
-    block: {
-      display: 'block'
+    {
+      block: {
+        display: 'block'
+      }
     }
-  }
+  ]
 }
 ```
 
 Modifiers can reflect string or boolean values. If a modifier value is a string, you can represent different possible values as child objects with their own CSS properties:
 
 ```js
-modifiers: {
-  size: {
-    // if size === 'large'
-    large: {
-      fontSize: 24
-    },
-    // if size === 'small'
-    small: {
-      fontSize: 12
+modifiers: [
+  {
+    size: {
+      // if size === 'large'
+      large: {
+        fontSize: 24
+      },
+      // if size === 'small'
+      small: {
+        fontSize: 12
+      }
     }
   }
-}
+]
 ```
 
 If a modifier value is a boolean, add CSS properties as children of the modifier name:
 
 ```js
-modifiers: {
-  // if block === true
-  block: {
-    display: 'block'
+modifiers: [
+  {
+    // if block === true
+    block: {
+      display: 'block'
+    }
   }
-}
+]
 ```
 
 When you pass your style object to Radium to resolve it, Radium will check all of your active modifiers and merge them together to give you the set of CSS rules that should apply to the element.
@@ -143,29 +151,37 @@ This gives you fine-grained control over your modifiers. If you want, you can ev
 
 Radium supports styling for three browser states that are targeted with pseudo-selectors in normal CSS: `:hover`, `:focus`, and `:active`.
 
-To add styles for these states, you can add a `states` property to your style object under your default styles or any modifiers:
+To add styles for these states, you can add a `states` array to your style object under your default styles or any modifiers:
 
 ```js
-states: {
-  hover: {
-    backgroundColor: 'red'
+states: [
+  {
+    hover: {
+      backgroundColor: 'red'
+    }
   },
-  focus: {
-    backgroundColor: 'green'
+  {
+    focus: {
+      backgroundColor: 'green'
+    }
   },
-  active: {
-    backgroundColor: 'yellow'
+  {
+    active: {
+      backgroundColor: 'yellow'
+    }
   }
-},
-modifiers: {
-  block: {
-    states: {
-      hover: {
-        boxShadow: '0 3px 0 rgba(0,0,0,0.2)'
+],
+modifiers: [
+  {
+    block: {
+      states: {
+        hover: {
+          boxShadow: '0 3px 0 rgba(0,0,0,0.2)'
+        }
       }
     }
   }
-}
+]
 ```
 
 Radium will merge styles for any active modifiers and states together when your component is rendered.

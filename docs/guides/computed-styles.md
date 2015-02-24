@@ -8,15 +8,17 @@ To use computed styles, add a `computed` property to your Radium style object un
 
 ```js
 {
-  states {
-    hover: {
-      computed: {
-        backgroundColor: function (styles) {
-          return darken(styles.backgroundColor, 20);
+  states: [
+    {
+      hover: {
+        computed: {
+          backgroundColor: function (styles) {
+            return darken(styles.backgroundColor, 20);
+          }
         }
       }
     }
-  }
+  ]
 }
 ```
 

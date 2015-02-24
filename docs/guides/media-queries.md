@@ -31,19 +31,26 @@ var Sidebar = React.createClass({
 
 ## Styling with media queries
 
-To add styles for breakpoints, you can add a `breakpoints` property to your style object under default styles or any modifiers:
+To add styles for breakpoints, you can add a `breakpoints` array to your style object under default styles or any modifiers:
 
 ```js
-breakpoints: {
-  sm: {
-    padding: 10
+breakpoints: [
+  {
+    sm: {
+      padding: 10
+    }
   },
-  md: {
-    padding: 20
+  {
+    md: {
+      padding: 20
+    }
   },
-  lg: {
-    padding: 40
+  {
+    lg: {
+      padding: 40
+    }
   }
+]
 }
 ```
 
