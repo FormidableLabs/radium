@@ -15,3 +15,5 @@ For more information, see our [GitHub repo](https://github.com/FormidableLabs/ra
   - [Media Queries](http://github.com/formidablelabs/radium/blob/master/docs/guides/media-queries.md)
   - [Computed Styles](http://github.com/formidablelabs/radium/blob/master/docs/guides/computed-styles.md)
 - [API Docs](http://github.com/formidablelabs/radium/tree/master/docs/api)
+
+We're also working on implementing Bootstrap in Radium, and are looking for contributors: [radium-boostrap](https://github.com/formidablelabs/radium-bootstrap).
