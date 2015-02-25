@@ -207,6 +207,10 @@ img {
   margin-right: -16px;
 }
 
+.Copy .highlight pre {
+  margin-bottom: 0;
+}
+
 .Copy pre {
   background: #2b303b;
   border: 1px solid #16191F;
