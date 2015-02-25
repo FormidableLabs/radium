@@ -200,4 +200,4 @@ Then, add Radium browser state event listeners to your component:
 
 The `getBrowserStateEvents()` method returns a hash of events that Radium uses to set browser state on a component.
 
-For advanced usage, including media queries and computed styles, see our [guides](README.md).
+For advanced usage, including media queries and computed styles, see our [guides](http://github.com/formidablelabs/radium/tree/master/docs/guides).
