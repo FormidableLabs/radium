@@ -64,7 +64,7 @@ From there, React will apply our styles to the `button` element. This is not ver
 
 In Radium, a modifier is a set of additional CSS properties that are applied based on the component's props and state. A button might have modifiers to change its size or display property. By default, modifiers map directly to your component's props:
 
-```js
+```xml
 <Button
   size="large"
   block={true}>
@@ -192,7 +192,7 @@ mixins: [ StyleResolverMixin, BrowserStateMixin ]
 
 Then, add Radium browser state event listeners to your component:
 
-```js
+```xml
 <button
   {...this.getBrowserStateEvents()}
   style={styles}>

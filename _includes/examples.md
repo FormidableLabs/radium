@@ -12,7 +12,7 @@ When we say expressive, we mean it: math, concatenation, regex, conditionals, fu
 
 Before we dive in, here's what it looks like:
 
-```js
+```xml
 <Button type='primary'>Radium Button</Button>
 ```
 
