@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>{{ page.title }}</title>
+
+    {% if page.description %}
+      <meta name="description" content="{{ page.description }}">
+    {% endif %}
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <link rel="stylesheet" type="text/css"
+      href="//cloud.typography.com/6367052/709306/css/fonts.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+  </head>
+  <body>
+    <header class="Header Row">
+      <div class="Container">
+        <h1 class="Logo">
+          Radium
+        </h1>
+      </div>
+    </header>
+
+    <main class="Container Row">
+      <h1 class="u-textCenter">What now?</h1>
+
+      <div class="u-textCenter">
+        <code class="Installer">npm install radium</code>
+      </div>
+
+      <div class="Copy Row">
+        {{content}}
+      </div>
+
+      <div class="Row">
+        <h2 class="u-textCenter">Features</h2>
+
+        <div class="Grid Grid--padded u-textCenter">
+          <div class="Grid-unit u-size1of3 Copy">
+            <ul>
+              <li>Feature</li>
+              <li>Another really cool feature</li>
+            </ul>
+          </div>
+
+          <div class="Grid-unit u-size1of3 Copy">
+            <ul>
+              <li>Feature</li>
+              <li>Another really cool feature</li>
+            </ul>
+          </div>
+
+          <div class="Grid-unit u-size1of3 Copy">
+            <ul>
+              <li>Feature</li>
+              <li>Another really cool feature</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="Copy">
+          <p>"I know it, old man; these stubbs will weld together like glue from the melted bones of murderers. Quick! forge me the harpoon. And forge me first, twelve rods for its shank; then wind, and twist, and hammer these twelve together like the yarns and strands of a tow-line. Quick! I'll blow the fire."</p>
+        </div>
+      </div>
+
+      <div class="Row">
+        <h2 class="u-textCenter">Examples</h2>
+
+        <div class="Copy">
+          {% capture examples %}{% include examples.md %}{% endcapture %}
+          {{ examples | markdownify }}
+        </div>
+      </div>
+
+      <div class="Row">
+        <h2 class="u-textCenter">Documentation</h2>
+
+        <div class="Copy">
+          {% capture documentation %}{% include documentation.md %}{% endcapture %}
+          {{ documentation | markdownify }}
+        </div>
+      </div>
+    </main>
+
+    <footer class="Footer Row">
+      <div class="Container">
+
+      </div>
+    </footer>
+  </body>
+</html>

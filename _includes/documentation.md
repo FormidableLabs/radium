@@ -1,0 +1,5 @@
+- [Guides](http://github.com/formidablelabs/radium/tree/master/docs/guides)
+  - [Overview](http://github.com/formidablelabs/radium/blob/master/docs/guides/overview.md)
+  - [Media Queries](http://github.com/formidablelabs/radium/blob/master/docs/guides/media-queries.md)
+  - [Computed Styles](http://github.com/formidablelabs/radium/blob/master/docs/guides/computed-styles.md)
+- [API Docs](http://github.com/formidablelabs/radium/tree/master/docs/api)
