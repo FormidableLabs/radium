@@ -15,7 +15,7 @@ body {
   font-family: Whitney SSm A, Whitney SSm B, Helvetica Neue, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   margin: 0;
-  color: #333;
+  color: #2b303b;
 
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -51,7 +51,7 @@ summary {
 h1,h2,h3,h4,h5,h6,hgroup,
 ul,ol,dd,
 p,figure,
-pre,table,fieldset,hr {
+pre,table,fieldset,hr, .highlight {
   margin-top: 0;
   margin-bottom: 24px;
   margin-bottom: 1.5rem;
@@ -59,6 +59,21 @@ pre,table,fieldset,hr {
 
 img {
   max-width: 100%;
+}
+
+h2 {
+  font-size: 32px;
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 24px;
+  font-size: 1.5rem;
+}
+
+h4 {
+  font-size: 21px;
+  font-size: 1.3125rem;
 }
 
 /* Layout */
@@ -189,8 +204,8 @@ img {
 @media only screen and (min-width: 44em) {
   .Installer {
     padding: 24px 48px;
-    margin-top: 12px;
-    margin-bottom: 36px;
+    margin-top: 24px;
+    margin-bottom: 24px;
   }
 }
 
@@ -212,9 +227,8 @@ img {
   margin-bottom: 0;
 }
 
-.Copy pre {
+.Copy .highlight pre {
   background: #2b303b;
-  border: 1px solid #16191F;
   color: #fff;
   font-family: "Source Code Pro", monospace;
   font-size: 16px;
@@ -228,7 +242,7 @@ img {
     margin: 36px -24px;
   }
 
-  .Copy pre {
+  .Copy .highlight pre {
     padding: 24px;
   }
 }
@@ -240,6 +254,10 @@ img {
 
 .Copy ul > li {
   position: relative;
+}
+
+.Copy ul > li + li {
+  margin-top: 10px;
 }
 
 .Copy ul > li:before {
@@ -256,6 +274,7 @@ img {
 }
 
 .Copy li > ul {
+  margin-top: 10px;
   margin-bottom: 0;
 }
 
@@ -266,7 +285,18 @@ img {
 
 .Copy a:hover,
 .Copy a:focus {
-  color: #333;
+  color: #2b303b;
+}
+
+.Copy code {
+  font-family: "Source Code Pro", monospace;
+  background: #eee;
+  padding: 0 3px;
+}
+
+.highlight code {
+  background: transparent;
+  padding: 0;
 }
 
 /* Utilities */
@@ -314,6 +344,10 @@ img {
 
   .u-margin-l {
     margin-bottom: 24px;
+  }
+
+  .u-noMargin-l {
+    margin-bottom: 0;
   }
 }
 

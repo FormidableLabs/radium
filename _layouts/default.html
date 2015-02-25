@@ -27,8 +27,6 @@
 
     <main class="Container">
       <div class="Row">
-        <h1 class="u-textCenter">Get radium:</h1>
-
         <div class="u-textCenter">
           <code class="Installer">npm install radium</code>
         </div>
@@ -38,36 +36,22 @@
         </div>
 
         <div class="Row">
-          <h2 class="u-textCenter">See:</h2>
-
-          <div class="Copy u-marginModule">
-            {% capture documentation %}{% include documentation.md %}{% endcapture %}
-            {{ documentation | markdownify }}
-          </div>
-        </div>
-
-        <div class="Row">
           <h2 class="u-textCenter">Features</h2>
 
           <div class="Grid Grid--padded u-textCenter">
-            <div class="Grid-unit u-size1of3-l Copy">
-              <ul>
+            <div class="Grid-unit u-size1of2-l Copy">
+              <ul class="u-noMargin-l">
                 <li>Expressive</li>
                 <li>Expressing styles with JS means leveraging the flexibility and power of JS.</li>
-              </ul>
-            </div>
-
-            <div class="Grid-unit u-size1of3-l Copy">
-              <ul>
-                <li><pre>var button = require("buttonStyles");</pre></li>
-                <li>JS modules mean source order independence. Modules also leave behind the global variables and specificity conflicts that plagued CSS.</li>
-              </ul>
-            </div>
-
-            <div class="Grid-unit u-size1of3-l Copy">
-              <ul class="u-noMargin u-margin-l">
                 <li>Un peu du style</li>
                 <li>Dead code elimination means smaller builds.</li>
+              </ul>
+            </div>
+
+            <div class="Grid-unit u-size1of2-l Copy">
+              <ul class="u-noMargin u-margin-l">
+                <li><code>var button = require("buttonStyles");</code></li>
+                <li>JS modules mean source order independence. Modules also leave behind the global variables and specificity conflicts that plagued CSS.</li>
               </ul>
             </div>
           </div>
@@ -79,6 +63,15 @@
           <div class="Copy u-marginModule">
             {% capture examples %}{% include examples.md %}{% endcapture %}
             {{ examples | markdownify }}
+          </div>
+        </div>
+
+        <div class="Row">
+          <h2 class="u-textCenter">Using Radium</h2>
+
+          <div class="Copy u-marginModule">
+            {% capture tutorial %}{% include tutorial.md %}{% endcapture %}
+            {{ tutorial | markdownify }}
           </div>
         </div>
 
