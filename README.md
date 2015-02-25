@@ -34,6 +34,10 @@ render: function () {
   var styles = {
     padding: '1.5em',
     borderRadius: 4,
+    font-size: window.devicePixelRatio === 2 ? "16px" : "14px",
+    height: function () {
+      return window.innerWidth / 2 + "px";
+    },
 
     states: [
       { hover: { color: '#fff' }},
