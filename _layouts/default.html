@@ -25,70 +25,74 @@
       </div>
     </header>
 
-    <main class="Container Row">
-      <h1 class="u-textCenter">What now?</h1>
-
-      <div class="u-textCenter">
-        <code class="Installer">npm install radium</code>
-      </div>
-
-      <div class="Copy Row">
-        {{content}}
-      </div>
-
+    <main class="Container">
       <div class="Row">
-        <h2 class="u-textCenter">Features</h2>
+        <h1 class="u-textCenter">What now?</h1>
 
-        <div class="Grid Grid--padded u-textCenter">
-          <div class="Grid-unit u-size1of3 Copy">
-            <ul>
-              <li>Feature</li>
-              <li>Another really cool feature</li>
-            </ul>
-          </div>
+        <div class="u-textCenter">
+          <code class="Installer">npm install radium</code>
+        </div>
 
-          <div class="Grid-unit u-size1of3 Copy">
-            <ul>
-              <li>Feature</li>
-              <li>Another really cool feature</li>
-            </ul>
-          </div>
+        <div class="Copy Row u-marginModule">
+          {{content}}
+        </div>
 
-          <div class="Grid-unit u-size1of3 Copy">
-            <ul>
-              <li>Feature</li>
-              <li>Another really cool feature</li>
-            </ul>
+        <div class="Row">
+          <h2 class="u-textCenter">Features</h2>
+
+          <div class="Grid Grid--padded u-textCenter">
+            <div class="Grid-unit u-size1of3-l Copy">
+              <ul>
+                <li>Feature</li>
+                <li>Another really cool feature</li>
+              </ul>
+            </div>
+
+            <div class="Grid-unit u-size1of3-l Copy">
+              <ul>
+                <li>Feature</li>
+                <li>Another really cool feature</li>
+              </ul>
+            </div>
+
+            <div class="Grid-unit u-size1of3-l Copy">
+              <ul class="u-noMargin u-margin-l">
+                <li>Feature</li>
+                <li>Another really cool feature</li>
+              </ul>
+            </div>
           </div>
         </div>
 
-        <div class="Copy">
-          <p>"I know it, old man; these stubbs will weld together like glue from the melted bones of murderers. Quick! forge me the harpoon. And forge me first, twelve rods for its shank; then wind, and twist, and hammer these twelve together like the yarns and strands of a tow-line. Quick! I'll blow the fire."</p>
+        <div class="Row">
+          <h2 class="u-textCenter">Examples</h2>
+
+          <div class="Copy u-marginModule">
+            {% capture examples %}{% include examples.md %}{% endcapture %}
+            {{ examples | markdownify }}
+          </div>
         </div>
-      </div>
 
-      <div class="Row">
-        <h2 class="u-textCenter">Examples</h2>
+        <div class="Row">
+          <h2 class="u-textCenter">Documentation</h2>
 
-        <div class="Copy">
-          {% capture examples %}{% include examples.md %}{% endcapture %}
-          {{ examples | markdownify }}
-        </div>
-      </div>
-
-      <div class="Row">
-        <h2 class="u-textCenter">Documentation</h2>
-
-        <div class="Copy">
-          {% capture documentation %}{% include documentation.md %}{% endcapture %}
-          {{ documentation | markdownify }}
+          <div class="Copy u-marginModule">
+            {% capture documentation %}{% include documentation.md %}{% endcapture %}
+            {{ documentation | markdownify }}
+          </div>
         </div>
       </div>
     </main>
 
     <footer class="Footer Row">
-      <div class="Container">
+      <div class="Container u-textCenter">
+        <p>
+          Made with love in Seattle by
 
+          <a class="FooterLogo" href="http://formidablelabs.com">
+            <img width="300" src="/img/formidable-logo.svg" alt="Formidable Labs">
+          </a>
+        </p>
       </div>
     </footer>
   </body>

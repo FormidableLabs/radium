@@ -24,6 +24,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+html,
+body {
+  overflow-x: hidden;
+}
+
 article,
 aside,
 details,
@@ -51,11 +56,17 @@ pre,table,fieldset,hr {
   margin-bottom: 1.5rem;
 }
 
+img {
+  max-width: 100%;
+}
+
 /* Layout */
 
 .Container {
   margin: 0 auto;
   max-width: 960px;
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 .Row {
@@ -104,15 +115,15 @@ pre,table,fieldset,hr {
   content: "";
   background: #FF4136;
   box-shadow: 0 15px 0 #CC342B, 0 30px 0 #B22D26, 0 45px 0 #992720;
+  -webkit-transform: rotate(-5deg);
+  -moz-transform: rotate(-5deg);
   transform: rotate(-5deg);
-  margin-left: -5%;
-  margin-right: -5%;
   margin-top: -170px;
 
   position: absolute;
   top: 0;
-  right: 0;
-  left: 0;
+  right: -20%;
+  left: -20%;
   bottom: 0;
 }
 
@@ -140,6 +151,24 @@ pre,table,fieldset,hr {
   bottom: 0;
   left: 0;
   line-height: 1;
+  pointer-events: none;
+}
+
+/* Footer */
+
+.Footer {
+  background: #2b303b;
+  color: #fff;
+}
+
+.FooterLogo {
+  display: block;
+  margin: 16px 0;
+}
+
+.FooterLogo img {
+  display: block;
+  margin: 0 auto;
 }
 
 /* Components */
@@ -150,17 +179,32 @@ pre,table,fieldset,hr {
   border: 1px solid #16191F;
   color: #fff;
   font-family: "Source Code Pro", monospace;
-  font-size: 24px;
+  font-size: 18px;
   line-height: 1.2;
-  margin: 12px auto 36px;
-  padding: 24px 48px;
+  margin: 0 auto;
+  padding: 16px 32px;
+}
+
+@media only screen and (min-width: 44em) {
+  .Installer {
+    padding: 24px 48px;
+    margin-top: 12px;
+    margin-bottom: 36px;
+  }
 }
 
 /* Copy */
 
-.Copy {
-  font-size: 21px;
-  font-size: 1.3125rem;
+@media only screen and (min-width: 44em) {
+  .Copy {
+    font-size: 21px;
+    font-size: 1.3125rem;
+  }
+}
+
+.Copy .highlight {
+  margin-left: -16px;
+  margin-right: -16px;
 }
 
 .Copy pre {
@@ -170,11 +214,19 @@ pre,table,fieldset,hr {
   font-family: "Source Code Pro", monospace;
   font-size: 16px;
   line-height: 1.2;
-  margin: 36px -24px;
   overflow: auto;
-  padding: 24px;
+  padding: 16px;
 }
 
+@media only screen and (min-width: 44em) {
+  .Copy .highlight {
+    margin: 36px -24px;
+  }
+
+  .Copy pre {
+    padding: 24px;
+  }
+}
 
 .Copy ul {
   font-size: 21px;
@@ -199,8 +251,18 @@ pre,table,fieldset,hr {
   top: 11px;
 }
 
+.Copy li > ul {
+  margin-bottom: 0;
+}
+
 .Copy a {
   color: #B22D26;
+  font-weight: 700;
+}
+
+.Copy a:hover,
+.Copy a:focus {
+  color: #333;
 }
 
 /* Utilities */
@@ -217,6 +279,10 @@ pre,table,fieldset,hr {
   width: 66.6666%;
 }
 
+.u-noMargin {
+  margin-bottom: 0;
+}
+
 .u-textCenter {
   text-align: center;
 }
@@ -227,6 +293,24 @@ pre,table,fieldset,hr {
 
 .u-marginModule > *:last-child {
   margin-bottom: 0;
+}
+
+@media only screen and (min-width: 44em) {
+  .u-size1of2-l {
+    width: 50%;
+  }
+
+  .u-size1of3-l {
+    width: 33.3333%;
+  }
+
+  .u-size2of3-l {
+    width: 66.6666%;
+  }
+
+  .u-margin-l {
+    margin-bottom: 24px;
+  }
 }
 
 /* Syntax Highlighting */

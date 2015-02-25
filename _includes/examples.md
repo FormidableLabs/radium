@@ -9,13 +9,13 @@ render: function () {
     borderRadius: 4,
 
     states: [
-    { hover: { color: '#fff' }},
-    { focus: { boxShadow: '0 0 0 5px'}}
+      { hover: { color: '#fff' }},
+      { focus: { boxShadow: '0 0 0 5px'}}
     ],
 
     mediaQueries: [
-    { small: { margin: 10 }},
-    { large: { margin: 30 }}
+      { small: { margin: 10 }},
+      { large: { margin: 30 }}
     ],
 
     modifiers: [
