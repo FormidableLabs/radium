@@ -13,38 +13,49 @@ When we say expressive, we mean it: math, concatenation, regex, conditionals, fu
 Before we dive in, here's what it looks like:
 
 ```js
-var Message = React.createClass({
+<Button type='primary'>Radium Button</Button>
+```
+
+```js
+var Button = React.createClass({
+  mixins: [ StyleResolverMixin, BrowserStateMixin ],
+
   render: function () {
     var styles = {
-      padding: '1.5em',
+      padding: '1.5em 2em',
+      border: 0,
       borderRadius: 4,
-      fontSize: window.devicePixelRatio === 2 ? "16px" : "14px",
-      height: window.innerWidth / this.state.baz,
-      width: reusableModularizedFunction(this.props.bar),
+      color: '#fff',
+      cursor: 'pointer',
+      fontSize: 16,
+      fontWeight: 700,
 
       states: [
-        { hover: { color: '#fff' }},
-        { focus: { boxShadow: '0 0 0 5px'}}
-      ],
-
-      mediaQueries: [
-        { small: { margin: 10 }},
-        { large: { margin: 30 }}
+        { hover: { background: '#0088FF' }},
+        { focus: {
+          background: "#0088FF",
+          boxShadow: '0 0 0 3px #eee, 0 0 0 6px #0088FF',
+          outline: 'none'
+        }}
       ],
 
       modifiers: [
-      {
-        type: {
-          primary: { background: '#0074D9' },
-          warning: { background: '#FF4136' }
+        {
+          type: {
+            primary: { background: '#0074D9' },
+            warning: { background: '#FF4136' }
+          }
         }
-      }
       ]
     };
 
     return (
-      <div style={this.buildStyles(styles)} />
+      <button
+        {...this.getBrowserStateEvents()}
+        style={this.buildStyles(styles)}>
+        {this.props.children}
+      </button>
     );
   }
-})
+});
 ```

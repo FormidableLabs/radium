@@ -1,0 +1,17 @@
+{
+  "name": "radium-docs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "jsx-loader": "^0.12.2",
+    "radium": "git://github.com/FormidableLabs/radium#92351f76cdbca1f0b5da1c06b6a2e71fb19758d1",
+    "react": "^0.12.2",
+    "webpack": "^1.6.0"
+  }
+}

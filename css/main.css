@@ -303,6 +303,13 @@ h4 {
   padding: 0;
 }
 
+#radium-example {
+  background: #eee;
+  padding: 24px;
+  margin: 24px -24px 0;
+  text-align: center;
+}
+
 /* Utilities */
 
 .u-size1of2 {
