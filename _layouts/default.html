@@ -38,6 +38,15 @@
         </div>
 
         <div class="Row">
+          <h2 class="u-textCenter">See:</h2>
+
+          <div class="Copy u-marginModule">
+            {% capture documentation %}{% include documentation.md %}{% endcapture %}
+            {{ documentation | markdownify }}
+          </div>
+        </div>
+
+        <div class="Row">
           <h2 class="u-textCenter">Features</h2>
 
           <div class="Grid Grid--padded u-textCenter">
@@ -65,7 +74,7 @@
         </div>
 
         <div class="Row">
-          <h2 class="u-textCenter">Examples</h2>
+          <h2 class="u-textCenter">Overview</h2>
 
           <div class="Copy u-marginModule">
             {% capture examples %}{% include examples.md %}{% endcapture %}
@@ -73,14 +82,6 @@
           </div>
         </div>
 
-        <div class="Row">
-          <h2 class="u-textCenter">Documentation</h2>
-
-          <div class="Copy u-marginModule">
-            {% capture documentation %}{% include documentation.md %}{% endcapture %}
-            {{ documentation | markdownify }}
-          </div>
-        </div>
       </div>
     </main>
 
