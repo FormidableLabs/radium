@@ -13,7 +13,7 @@ When we say expressive, we mean it: math, concatenation, regex, conditionals, fu
 Before we dive in, here's what it looks like:
 
 ```js
-var FooComponent = React.createClass({
+var Message = React.createClass({
   render: function () {
     var styles = {
       padding: '1.5em',
