@@ -1,9 +1,12 @@
 # Radium
 
-Radium is a toolchain for handling modifiers, states, computed styles and
-responsive styles for react component styling. It allows you to handle complex
-component styling in a declarative, easy to write way. Component styling in
-React provides a number of benefits over traditional CSS:
+Radium is a *toolchain* for handling modifiers, states, computed styles and
+responsive styles when working with *inline styles in react components*
+(at Formidable, we call this _component styling_ because styles are specific to,
+and scoped to, the component rather than in external style sheets). 
+Radium allows you to handle complex component styling in a declarative, 
+easy to write way. Component styling in React provides a number of 
+benefits over traditional CSS:
 
 - Scoped styles, meaning no more global variables
 - Avoids specificity conflicts
