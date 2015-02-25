@@ -6,7 +6,7 @@ Eliminating CSS in favor of inline styles that are computed on the fly is a powe
 - Dead code elimination
 - Highly expressive
 
-Despite that, there are some common CSS features and techniques that inline styles don't easily accommodate: media queries, browser states (`:hover`, `:focus`, `:active`) and situational style modifiers. Radium offers a standard interface and abstractions for dealing with these problems.
+Despite that, there are some common CSS features and techniques that inline styles don't easily accommodate: media queries, browser states (`:hover`, `:focus`, `:active`) and modifiers (no more <code>.btn-primary</code>!). Radium offers a standard interface and abstractions for dealing with these problems.
 
 When we say expressive, we mean it: math, concatenation, regex, conditionals, functions&ndash;JavaScript is at your disposal. Modern web applications demand that the display changes when data changes, and Radium is here to help.
 
@@ -19,10 +19,8 @@ var FooComponent = React.createClass({
       padding: '1.5em',
       borderRadius: 4,
       fontSize: window.devicePixelRatio === 2 ? "16px" : "14px",
-      height: function () {
-        return window.innerWidth / 2;
-      }(),
-      width: this.props.bar * this.state.baz,
+      height: window.innerWidth / this.state.baz,
+      width: reusableModularizedFunction(this.props.bar),
 
       states: [
         { hover: { color: '#fff' }},
