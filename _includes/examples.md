@@ -19,6 +19,10 @@ Before we dive in, here's what it looks like:
 <div id="radium-example"></div>
 
 ```js
+var React = require('react');
+var { StyleResolverMixin, BrowserStateMixin } = require('radium');
+var color = require('color');
+
 var Button = React.createClass({
   mixins: [ StyleResolverMixin, BrowserStateMixin ],
 
