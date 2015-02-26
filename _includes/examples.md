@@ -13,8 +13,10 @@ When we say expressive, we mean it: math, concatenation, regex, conditionals, fu
 Before we dive in, here's what it looks like:
 
 ```xml
-<Button type='primary'>Radium Button</Button>
+<Button kind='primary'>Radium Button</Button>
 ```
+
+<div id="radium-example"></div>
 
 ```js
 var Button = React.createClass({
@@ -31,28 +33,28 @@ var Button = React.createClass({
       fontWeight: 700,
 
       states: [
-        { hover: { background: '#0088FF' }},
+        { hover: {
+          background: color('#0074d9').lighten(0.2).hexString()
+        }},
         { focus: {
-          background: "#0088FF",
-          boxShadow: '0 0 0 3px #eee, 0 0 0 6px #0088FF',
+          boxShadow: '0 0 0 3px #eee, 0 0 0 6px #0074D9',
           outline: 'none'
         }}
       ],
 
       modifiers: [
-        {
-          type: {
-            primary: { background: '#0074D9' },
-            warning: { background: '#FF4136' }
-          }
-        }
+        { kind: {
+          primary: { background: '#0074D9' },
+          warning: { background: '#FF4136' }
+        }}
       ]
     };
 
     return (
       <button
         {...this.getBrowserStateEvents()}
-        style={this.buildStyles(styles)}>
+        style={this.buildStyles(styles)}
+      >
         {this.props.children}
       </button>
     );

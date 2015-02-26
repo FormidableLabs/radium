@@ -9,6 +9,8 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "color": "^0.7.3",
+    "json-loader": "^0.5.1",
     "jsx-loader": "^0.12.2",
     "radium": "git://github.com/FormidableLabs/radium#92351f76cdbca1f0b5da1c06b6a2e71fb19758d1",
     "react": "^0.12.2",

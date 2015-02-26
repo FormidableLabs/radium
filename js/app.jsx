@@ -1,5 +1,6 @@
 var React = require('react');
 var { StyleResolverMixin, BrowserStateMixin } = require('radium');
+var color = require('color');
 
 var Button = React.createClass({
   mixins: [ StyleResolverMixin, BrowserStateMixin ],
@@ -15,21 +16,20 @@ var Button = React.createClass({
       fontWeight: 700,
 
       states: [
-        { hover: { background: '#0088FF' }},
+        { hover: {
+          background: color('#0074d9').lighten(0.2).hexString()
+        }},
         { focus: {
-          background: "#0088FF",
-          boxShadow: '0 0 0 3px #eee, 0 0 0 6px #0088FF',
+          boxShadow: '0 0 0 3px #eee, 0 0 0 6px #0074D9',
           outline: 'none'
         }}
       ],
 
       modifiers: [
-        {
-          type: {
-            primary: { background: '#0074D9' },
-            warning: { background: '#FF4136' }
-          }
-        }
+        { kind: {
+          primary: { background: '#0074D9' },
+          warning: { background: '#FF851B' }
+        }}
       ]
     };
 
@@ -46,7 +46,7 @@ var Button = React.createClass({
 
 React.render(
   <Button
-    type='primary'
+    kind='primary'
   >
     Radium Button
   </Button>,

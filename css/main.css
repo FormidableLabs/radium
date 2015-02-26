@@ -177,6 +177,16 @@ h4 {
   color: #fff;
 }
 
+.Footer a {
+  font-weight: 700;
+  color: #FF4136;
+}
+
+.Footer a:hover,
+.Footer a:focus {
+  color: #fff;
+}
+
 .FooterLogo {
   display: block;
   margin: 16px 0;
