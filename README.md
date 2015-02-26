@@ -47,6 +47,10 @@ Start by writing a style object with a combination of default styles, browser st
 ```
 
 ```js
+var React = require('react');
+var { StyleResolverMixin, BrowserStateMixin } = require('radium');
+var color = require('color');
+
 var Button = React.createClass({
   mixins: [ StyleResolverMixin, BrowserStateMixin ],
 
