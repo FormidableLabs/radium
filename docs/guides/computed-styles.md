@@ -4,7 +4,7 @@ For some use cases, you may want to compute styles with Radium based on other st
 
 For example, you might have a `<Button>` component with a hover state that darkens the Button's background color. If your button has several modifiers that could each apply different background colors, computed styles will allow you to tell Radium to darken the current background color by 20%, without knowing what the current background color is.
 
-To use computed styles, add a `computed` property to your Radium style object under your default styles, any modifier, or any browser state:
+To use computed styles, add a `computed` property to your Radium style object under your default styles, any modifier, or any browser state. In this example, we use the [color](https://www.npmjs.com/package/color) module to lighten the element's background color.
 
 ```js
 {
@@ -13,7 +13,7 @@ To use computed styles, add a `computed` property to your Radium style object un
       hover: {
         computed: {
           backgroundColor: function (styles) {
-            return darken(styles.backgroundColor, 20);
+            return color(styles.backgroundColor).lighten(0.2).hexString()
           }
         }
       }

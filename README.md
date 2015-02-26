@@ -1,21 +1,34 @@
 # Radium
 
-Radium is a **toolchain** for handling modifiers, states, computed styles and
-responsive styles when working with **inline styles in react components**
-(at Formidable, we call this _component styling_ because styles are specific to,
-and scoped to, the component rather than in external style sheets). 
-Radium allows you to handle complex component styling in a declarative, 
-easy to write way. Component styling in React provides a number of 
-benefits over traditional CSS:
+```
+npm install radium
+```
 
-- Scoped styles, meaning no more global variables
+Radium is a set of tools to manage inline styles on React elements. It gives you powerful styling capabilities without CSS.
+
+_Inspired by_ <a href="https://speakerdeck.com/vjeux/react-css-in-js">React: CSS in JS</a>
+by <a href="https://twitter.com/Vjeux">Christopher Chedeau</a>.
+
+## Overview
+
+Eliminating CSS in favor of inline styles that are computed on the fly is a powerful approach, providing a number of benefits over traditional CSS:
+
+- Scoped styles without selectors
 - Avoids specificity conflicts
 - Source order independence
 - Dead code elimination
 - Highly expressive
 
-Inspired by <a href="https://speakerdeck.com/vjeux/react-css-in-js">React: CSS
-in JS</a> by <a href="https://twitter.com/Vjeux">Christopher Chedeau</a>.
+Despite that, there are some common CSS features and techniques that inline styles don't easily accommodate: media queries, browser states (:hover, :focus, :active) and modifiers (no more .btn-primary!). Radium offers a standard interface and abstractions for dealing with these problems.
+
+When we say expressive, we mean it: math, concatenation, regex, conditionals, functions–JavaScript is at your disposal. Modern web applications demand that the display changes when data changes, and Radium is here to help.
+
+## Features
+
+* Modifier styles based on component props
+* Media queries
+* Browser state styles to support `:hover`, `:focus`, and `:active`
+* Dynamic computed styles
 
 ## Docs
 
@@ -25,47 +38,61 @@ in JS</a> by <a href="https://twitter.com/Vjeux">Christopher Chedeau</a>.
   - [Computed Styles](docs/guides/computed-styles.md)
 - [API Docs](docs/api)
 
-## What does it look like?
+## Usage
 
 Start by writing a style object with a combination of default styles, browser states, media queries, and modifiers. Pass the object to `this.buildStyles()` and Radium will determine the correct group of style rules to apply to your component.
 
-```js
-render: function () {
-  var styles = {
-    padding: '1.5em',
-    borderRadius: 4,
-    font-size: window.devicePixelRatio === 2 ? "16px" : "14px",
-    height: function () {
-      return window.innerWidth / 2 + "px";
-    },
-
-    states: [
-      { hover: { color: '#fff' }},
-      { focus: { boxShadow: '0 0 0 5px'}}
-    ],
-
-    mediaQueries: [
-      { small: { margin: 10 }},
-      { large: { margin: 30 }}
-    ],
-
-    modifiers: [
-      {
-        type: {
-          primary: { background: '#0074D9' },
-          warning: { background: '#FF4136' }
-        }
-      }
-    ]
-  };
-
-  return (
-    <div style={this.buildStyles(styles)} />
-  );
-}
+```xml
+<Button kind='primary'>Radium Button</Button>
 ```
 
-For more in-depth usage, see the [overview guide](docs/guides/overview.md).
+```js
+var React = require('react');
+var { StyleResolverMixin, BrowserStateMixin } = require('radium');
+var color = require('color');
+
+var Button = React.createClass({
+  mixins: [ StyleResolverMixin, BrowserStateMixin ],
+
+  render: function () {
+    var styles = {
+      padding: '1.5em 2em',
+      border: 0,
+      borderRadius: 4,
+      color: '#fff',
+      cursor: 'pointer',
+      fontSize: 16,
+      fontWeight: 700,
+
+      states: [
+        { hover: {
+          background: color('#0074d9').lighten(0.2).hexString()
+        }},
+        { focus: {
+          boxShadow: '0 0 0 3px #eee, 0 0 0 6px #0074D9',
+          outline: 'none'
+        }}
+      ],
+
+      modifiers: [
+        { kind: {
+          primary: { background: '#0074D9' },
+          warning: { background: '#FF4136' }
+        }}
+      ]
+    };
+
+    return (
+      <button
+        {...this.getBrowserStateEvents()}
+        style={this.buildStyles(styles)}
+      >
+        {this.props.children}
+      </button>
+    );
+  }
+});
+```
 
 ## Examples
 
