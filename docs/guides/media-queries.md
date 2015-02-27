@@ -24,17 +24,17 @@ After initializing a media query set, add the `MatchMediaItem` mixin to any comp
 
 ```js
 var Sidebar = React.createClass({
-  mixins: [ MatchMediaMixin ],
+  mixins: [ MatchMediaItem ],
   render: function () {...}
 });
 ```
 
 ## Styling with media queries
 
-To add styles for breakpoints, you can add a `breakpoints` array to your style object under default styles or any modifiers:
+To add styles for media queries, you can add a `mediaQueries` array to your style object under default styles or any modifiers:
 
 ```js
-breakpoints: [
+mediaQueries: [
   {
     sm: {
       padding: 10
