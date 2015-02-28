@@ -7,7 +7,7 @@ var ComputedWell = React.createClass({
 
   getInitialState: function () {
     return {
-      dynamicBg: null
+      dynamicBg: '#000'
     }
   },
 
@@ -15,16 +15,8 @@ var ComputedWell = React.createClass({
     return {
       padding: "1em",
       borderRadius: 5,
-      background: "#000"
+      background: this.state.dynamicBg
     };
-  },
-
-  buildComputedStyles: function (baseStyles) {
-    var computedStyles = {};
-
-    computedStyles.backgroundColor = this.state.dynamicBg;
-
-    return computedStyles;
   },
 
   handleSubmit: function (ev) {
@@ -36,7 +28,7 @@ var ComputedWell = React.createClass({
   },
 
   render: function () {
-    var styles = this.buildStyles(this.getStyles(), this.buildComputedStyles);
+    var styles = this.buildStyles(this.getStyles());
 
     return (
       <form style={styles} onSubmit={this.handleSubmit}>
