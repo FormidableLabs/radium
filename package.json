@@ -16,7 +16,7 @@
     "Alex Lande"
   ],
   "scripts": {
-    "dist": "webpack --config ./webpack.config.js",
+    "dist": "webpack",
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/"
   },
   "license": "MIT",

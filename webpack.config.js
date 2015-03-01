@@ -3,10 +3,13 @@ var webpack = require('webpack');
 
 module.exports = {
   cache: true,
-  entry: "./modules/index.js",
+  entry: path.join(__dirname, '/modules/index.js'),
+  externals: {
+    'react': 'React'
+  },
   output: {
     path: path.join(__dirname, '/dist'),
-    filename: 'Radium.js',
+    filename: 'radium.js',
     library: "Radium",
     libraryTarget: "umd"
   },
