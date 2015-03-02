@@ -226,7 +226,7 @@ A string that any included selectors in `rules` will be appended to. Use to scop
 ```js
 <div class="TestClass">
   <Style
-    scope=".TestClass"
+  scopeSelector=".TestClass"
     rules={[
       h1: {
         fontSize: "2em"
