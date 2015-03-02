@@ -1,9 +1,9 @@
 var React = require('react');
 var Radium = require('../../modules/index');
-var { StyleResolverMixin, BrowserStateMixin } = Radium;
+var { StyleResolverMixin, BrowserStateMixin, MatchMediaItem } = Radium;
 
 var Button = React.createClass({
-  mixins: [ StyleResolverMixin, BrowserStateMixin ],
+  mixins: [ StyleResolverMixin, BrowserStateMixin, MatchMediaItem ],
 
   getStyles: function () {
     return {
@@ -15,6 +15,19 @@ var Button = React.createClass({
       padding: "0.4em 1em",
       cursor: "pointer",
       outline: "none",
+
+      mediaQueries: [
+        {
+          md: {
+            padding: "0.6em 1.2em"
+          }
+        },
+        {
+          lg: {
+            padding: "0.8em 1.5em"
+          }
+        }
+      ],
 
       states: [
         {
