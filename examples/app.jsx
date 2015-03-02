@@ -2,7 +2,7 @@ var React = require('react');
 
 var Button = require('./components/button.jsx');
 var ComputedWell = require("./components/computed-well.jsx");
-var Style = require("../modules/components/style.jsx");
+var Style = require("../modules/components/style.js");
 
 var App = React.createClass({
   render: function () {
@@ -27,23 +27,32 @@ var App = React.createClass({
           </Button>
         </p>
 
-        <Style>{{
-          body: {
-            margin: 0,
-            fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif"
-          }
-        }}</Style>
+        <Style
+          rules={[
+            {
+              body: {
+                margin: 0,
+                fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif"
+              }
+            }
+          ]}
+        />
 
         <p>
           <ComputedWell>Click me!</ComputedWell>
         </p>
 
         <p className="scoping-class">
-          <Style scopeSelector=".scoping-class">{{
-            span: {
-              fontFamily: "\"Lucida Console\", Monaco, monospace"
-            }
-          }}</Style>
+          <Style
+            scopeSelector=".scoping-class"
+            rules={[
+              {
+                span: {
+                  fontFamily: "Lucida Console, Monaco, monospace"
+                }
+              }
+            ]}
+          />
           <span>This content has scoped styles</span>
         </p>
       </div>

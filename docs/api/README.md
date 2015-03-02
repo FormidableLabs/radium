@@ -192,3 +192,46 @@ MatchMediaBase.init({
 ## MatchMediaItem
 
 The match media item mixin applies media queries set in `MatchMediaBase` to a component. To use, add it as a mixin to any component that is a descendent of the component with `MatchMediaBase` that should include media query styles.
+
+## Style Component
+
+The `<Style>` component renders an HTML `<style>` tag containing a set of CSS rules. Using it, you can define an optional `scopeSelector` that all selectors in the resulting `<style>` element will include.
+
+### Props
+
+#### rules
+
+An array of CSS rules to render. Each rule is an object with a CSS selector as a key and an object of styles as a value. If rules has no length, the component will render nothing.
+
+```js
+<Style rules={[
+  {
+    body: {
+      margin: 0,
+      fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif"
+    }
+  },
+  {
+    html: {
+      background: "#ccc"
+    }
+  }
+]} />
+```
+
+#### scopeSelector
+
+A string that any included selectors in `rules` will be appended to. Use to scope styles in the component to a particular element. A good use case might be to generate a unique ID for a component to scope any styles to the particular component that owns the `<Style>` component instance.
+
+```js
+<div class="TestClass">
+  <Style
+    scope=".TestClass"
+    rules={[
+      h1: {
+        fontSize: "2em"
+      }
+    ]}
+  />
+</div>
+```
