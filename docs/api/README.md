@@ -197,6 +197,8 @@ The match media item mixin applies media queries set in `MatchMediaBase` to a co
 
 The `<Style>` component renders an HTML `<style>` tag containing a set of CSS rules. Using it, you can define an optional `scopeSelector` that all selectors in the resulting `<style>` element will include.
 
+Without the `<Style>` component, it is prohibitively difficult to write a `<style>` element in React. To write a normal `<style>` element, you need to write your CSS as a multiline string inside of the element. `<Style>` simplifies this process, and adds the ability to scope selectors.
+
 ### Props
 
 #### rules
