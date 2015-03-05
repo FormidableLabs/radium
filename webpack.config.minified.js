@@ -1,29 +1,9 @@
-var path = require('path');
 var webpack = require('webpack');
+var _ = require('lodash');
 
-module.exports = {
-  cache: true,
-  entry: path.join(__dirname, '/modules/index.js'),
-  externals: {
-    'react': 'React'
-  },
+module.exports = _.merge(require('./webpack.config.js'), {
   output: {
-    path: path.join(__dirname, '/dist'),
-    filename: 'radium.min.js',
-    library: "Radium",
-    libraryTarget: "umd"
-  },
-  module: {
-    loaders: [
-      {
-        test: /\.js$/,
-        loader: 'jsx-loader?harmony'
-      },
-      {
-        test: /\.jsx$/,
-        loader: 'jsx-loader?insertPragma=React.DOM&harmony'
-      }
-    ]
+    filename: 'radium.min.js'
   },
   plugins: [
     new webpack.optimize.UglifyJsPlugin({
@@ -32,4 +12,4 @@ module.exports = {
       }
     })
   ]
-}
+});
