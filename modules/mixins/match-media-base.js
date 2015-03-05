@@ -21,7 +21,7 @@ var MatchMediaBase = {
   },
 
   init: function (mediaQueryOpts) {
-    if (!mediaQueryOpts) {
+    if (!mediaQueryOpts || typeof window === "undefined") {
       return;
     }
 
