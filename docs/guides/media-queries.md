@@ -14,7 +14,7 @@ MatchMediaBase.init({
   lg: '(min-width: 1200px)'
 });
 
-React.createClass(App, function () {
+var App = React.createClass({
   mixins: [MatchMediaBase],
   render: function () {...}
 });
