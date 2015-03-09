@@ -1,4 +1,17 @@
+var globalMouseUp = require("./util/global-mouseup");
+var subscribeToGlobalMouseUp = globalMouseUp.subscribeToGlobalMouseUp;
+var unsubscribeFromGlobalMouseUp = globalMouseUp.unsubscribeFromGlobalMouseUp;
+
 var BrowserStateMixin = {
+
+  componentDidMount: function () {
+    subscribeToGlobalMouseUp(this);
+  },
+
+  componentWillUnmount: function () {
+    unsubscribeFromGlobalMouseUp(this);
+  },
+
   getInitialState: function () {
     return {
       hover: false,
@@ -38,8 +51,7 @@ var BrowserStateMixin = {
     this._callRadiumHandler("onMouseLeave", ev);
 
     this.setState({
-      hover: false,
-      active: false
+      hover: false
     });
   },
 
@@ -57,6 +69,17 @@ var BrowserStateMixin = {
     this.setState({
       active: false
     });
+  },
+
+  handleGlobalMouseUp: function (ev) {
+    if (ev.toElement === this.getDOMNode()) {
+      return;
+    }
+    if (this.state.active) {
+      this.setState({
+        active: false
+      });
+    }
   },
 
   _handleFocus: function (ev) {
