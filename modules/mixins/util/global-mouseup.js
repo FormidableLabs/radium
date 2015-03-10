@@ -7,7 +7,7 @@ var _includes = function (arr, item) {
 
 var _handleMouseUp = function (ev) {
   _listeningComponents.forEach(function (component) {
-    component.handleGlobalMouseUp(ev);
+    component.radiumGlobalMouseUp(ev);
   });
 };
 

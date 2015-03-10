@@ -22,12 +22,12 @@ var BrowserStateMixin = {
 
   getBrowserStateEvents: function () {
     return {
-      onMouseEnter: this._handleMouseEnter,
-      onMouseLeave: this._handleMouseLeave,
-      onMouseDown: this._handleMouseDown,
-      onMouseUp: this._handleMouseUp,
-      onFocus: this._handleFocus,
-      onBlur: this._handleBlur
+      onMouseEnter: this.radiumMouseEnter,
+      onMouseLeave: this.radiumMouseLeave,
+      onMouseDown: this.radiumMouseDown,
+      onMouseUp: this.radiumMouseUp,
+      onFocus: this.radiumFocus,
+      onBlur: this.radiumBlur
     };
   },
 
@@ -39,7 +39,7 @@ var BrowserStateMixin = {
     }
   },
 
-  _handleMouseEnter: function (ev) {
+  radiumMouseEnter: function (ev) {
     this._callRadiumHandler("onMouseEnter", ev);
 
     this.setState({
@@ -47,7 +47,7 @@ var BrowserStateMixin = {
     });
   },
 
-  _handleMouseLeave: function (ev) {
+  radiumMouseLeave: function (ev) {
     this._callRadiumHandler("onMouseLeave", ev);
 
     this.setState({
@@ -55,7 +55,7 @@ var BrowserStateMixin = {
     });
   },
 
-  _handleMouseDown: function (ev) {
+  radiumMouseDown: function (ev) {
     this._callRadiumHandler("onMouseDown", ev);
 
     this.setState({
@@ -63,7 +63,7 @@ var BrowserStateMixin = {
     });
   },
 
-  _handleMouseUp: function (ev) {
+  radiumMouseUp: function (ev) {
     this._callRadiumHandler("onMouseUp", ev);
 
     this.setState({
@@ -71,7 +71,7 @@ var BrowserStateMixin = {
     });
   },
 
-  handleGlobalMouseUp: function (ev) {
+  radiumGlobalMouseUp: function (ev) {
     if (ev.toElement === this.getDOMNode()) {
       return;
     }
@@ -82,7 +82,7 @@ var BrowserStateMixin = {
     }
   },
 
-  _handleFocus: function (ev) {
+  radiumFocus: function (ev) {
     this._callRadiumHandler("onFocus", ev);
 
     this.setState({
@@ -90,7 +90,7 @@ var BrowserStateMixin = {
     });
   },
 
-  _handleBlur: function (ev) {
+  radiumBlur: function (ev) {
     this._callRadiumHandler("onBlur", ev);
 
     this.setState({
