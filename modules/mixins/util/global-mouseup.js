@@ -1,7 +1,9 @@
-var includes = require("lodash/collection/includes");
-
 var _listeningComponents = [];
 var _mouseUpListenerIsActive = false;
+
+var _includes = function (arr, item) {
+  return arr.indexOf(item) !== -1;
+};
 
 var _handleMouseUp = function (ev) {
   _listeningComponents.forEach(function (component) {
@@ -10,7 +12,7 @@ var _handleMouseUp = function (ev) {
 };
 
 var subscribeToGlobalMouseUp = function (component) {
-  if (!includes(_listeningComponents, component)) {
+  if (!_includes(_listeningComponents, component)) {
     _listeningComponents.push(component);
   }
 
