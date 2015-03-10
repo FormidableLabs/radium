@@ -1,15 +1,13 @@
-var globalMouseUp = require("./util/global-mouseup");
-var subscribeToGlobalMouseUp = globalMouseUp.subscribeToGlobalMouseUp;
-var unsubscribeFromGlobalMouseUp = globalMouseUp.unsubscribeFromGlobalMouseUp;
+var mouseUpListener = require("./util/mouse-up-listener");
 
 var BrowserStateMixin = {
 
   componentDidMount: function () {
-    subscribeToGlobalMouseUp(this);
+    this.windowMouseUpListener = mouseUpListener.subscribe(this.radiumWindowMouseUp);
   },
 
   componentWillUnmount: function () {
-    unsubscribeFromGlobalMouseUp(this);
+    this.windowMouseUpListener.remove();
   },
 
   getInitialState: function () {
@@ -71,7 +69,7 @@ var BrowserStateMixin = {
     });
   },
 
-  radiumGlobalMouseUp: function (ev) {
+  radiumWindowMouseUp: function (ev) {
     if (ev.toElement === this.getDOMNode()) {
       return;
     }
