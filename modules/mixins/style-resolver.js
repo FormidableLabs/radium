@@ -1,7 +1,7 @@
 var merge = require('lodash/object/merge');
 
 var StyleResolverMixin = {
-  _getStateStyles: function (states, component) {
+  _getStateStyles(states, component) {
     if (!Array.isArray(states)) {
       return;
     }
@@ -20,7 +20,7 @@ var StyleResolverMixin = {
     return stateStyles;
   },
 
-  _getMediaQueryStyles: function (styles) {
+  _getMediaQueryStyles(styles) {
     if (!Array.isArray(styles.mediaQueries) || !this.context || !this.context.mediaQueries) {
       return styles;
     }
@@ -49,7 +49,7 @@ var StyleResolverMixin = {
     return mediaQueryStyles;
   },
 
-  _getModifierStyles: function (styles, activeModifiers) {
+  _getModifierStyles(styles, activeModifiers) {
     if (!activeModifiers || !Array.isArray(styles.modifiers)) {
       return styles;
     }
@@ -86,7 +86,7 @@ var StyleResolverMixin = {
     return modifierStyles;
   },
 
-  _getStaticStyles: function (styles, activeModifiers) {
+  _getStaticStyles(styles, activeModifiers) {
     var elementStyles = this._getModifierStyles(styles, activeModifiers);
     var mediaQueryStyles = this._getMediaQueryStyles(elementStyles);
 
@@ -99,7 +99,7 @@ var StyleResolverMixin = {
     );
   },
 
-  _getComputedStyles: function (styles) {
+  _getComputedStyles(styles) {
     if (!styles.computed) {
       return styles;
     }
@@ -124,7 +124,7 @@ var StyleResolverMixin = {
     );
   },
 
-  buildStyles: function (styles, additionalModifiers, excludeProps) {
+  buildStyles(styles, additionalModifiers, excludeProps) {
     var modifiers;
 
     if (excludeProps) {

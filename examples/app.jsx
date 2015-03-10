@@ -16,7 +16,7 @@ MatchMediaBase.init(MEDIA_QUERIES);
 var App = React.createClass({
   mixins: [ MatchMediaBase ],
 
-  render: function () {
+  render() {
     return (
       <div>
         <p>
