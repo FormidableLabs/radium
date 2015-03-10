@@ -1,10 +1,6 @@
 var _callbacks = [];
 var _mouseUpListenerIsActive = false;
 
-var _includes = function (arr, item) {
-  return arr.indexOf(item) !== -1;
-};
-
 var _handleMouseUp = function (ev) {
   _callbacks.forEach(function (callback) {
     callback(ev);
@@ -12,7 +8,7 @@ var _handleMouseUp = function (ev) {
 };
 
 var subscribe = function (callback) {
-  if (!_includes(_callbacks, callback)) {
+  if (_callbacks.indexOf(callback) === -1) {
     _callbacks.push(callback);
   }
 
