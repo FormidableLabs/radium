@@ -3,11 +3,11 @@ var mouseUpListener = require("./util/mouse-up-listener");
 var BrowserStateMixin = {
 
   componentDidMount: function () {
-    this.windowMouseUpListener = mouseUpListener.subscribe(this.radiumWindowMouseUp);
+    this.mouseUpListener = mouseUpListener.subscribe(this.radiumMouseUp);
   },
 
   componentWillUnmount: function () {
-    this.windowMouseUpListener.remove();
+    this.mouseUpListener.remove();
   },
 
   getInitialState: function () {
@@ -23,7 +23,6 @@ var BrowserStateMixin = {
       onMouseEnter: this.radiumMouseEnter,
       onMouseLeave: this.radiumMouseLeave,
       onMouseDown: this.radiumMouseDown,
-      onMouseUp: this.radiumMouseUp,
       onFocus: this.radiumFocus,
       onBlur: this.radiumBlur
     };
@@ -62,17 +61,6 @@ var BrowserStateMixin = {
   },
 
   radiumMouseUp: function (ev) {
-    this._callRadiumHandler("onMouseUp", ev);
-
-    this.setState({
-      active: false
-    });
-  },
-
-  radiumWindowMouseUp: function (ev) {
-    if (ev.toElement === this.getDOMNode()) {
-      return;
-    }
     if (this.state.active) {
       this.setState({
         active: false
