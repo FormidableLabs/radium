@@ -1,5 +1,5 @@
 var BrowserStateMixin = {
-  getInitialState: function () {
+  getInitialState() {
     return {
       hover: false,
       focus: false,
@@ -7,7 +7,7 @@ var BrowserStateMixin = {
     };
   },
 
-  getBrowserStateEvents: function () {
+  getBrowserStateEvents() {
     return {
       onMouseEnter: this._handleMouseEnter,
       onMouseLeave: this._handleMouseLeave,
@@ -18,7 +18,7 @@ var BrowserStateMixin = {
     };
   },
 
-  _callRadiumHandler: function (handler, ev) {
+  _callRadiumHandler(handler, ev) {
     var currentHandler = this.props[handler];
 
     if (currentHandler) {
@@ -26,7 +26,7 @@ var BrowserStateMixin = {
     }
   },
 
-  _handleMouseEnter: function (ev) {
+  _handleMouseEnter(ev) {
     this._callRadiumHandler("onMouseEnter", ev);
 
     this.setState({
@@ -34,7 +34,7 @@ var BrowserStateMixin = {
     });
   },
 
-  _handleMouseLeave: function (ev) {
+  _handleMouseLeave(ev) {
     this._callRadiumHandler("onMouseLeave", ev);
 
     this.setState({
@@ -43,7 +43,7 @@ var BrowserStateMixin = {
     });
   },
 
-  _handleMouseDown: function (ev) {
+  _handleMouseDown(ev) {
     this._callRadiumHandler("onMouseDown", ev);
 
     this.setState({
@@ -51,7 +51,7 @@ var BrowserStateMixin = {
     });
   },
 
-  _handleMouseUp: function (ev) {
+  _handleMouseUp(ev) {
     this._callRadiumHandler("onMouseUp", ev);
 
     this.setState({
@@ -59,7 +59,7 @@ var BrowserStateMixin = {
     });
   },
 
-  _handleFocus: function (ev) {
+  _handleFocus(ev) {
     this._callRadiumHandler("onFocus", ev);
 
     this.setState({
@@ -67,7 +67,7 @@ var BrowserStateMixin = {
     });
   },
 
-  _handleBlur: function (ev) {
+  _handleBlur(ev) {
     this._callRadiumHandler("onBlur", ev);
 
     this.setState({

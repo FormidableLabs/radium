@@ -14,13 +14,13 @@ var MatchMediaBase = {
     mediaQueries: React.PropTypes.object
   },
 
-  getChildContext: function () {
+  getChildContext() {
     return {
       mediaQueries: this.getMatchedMedia()
     };
   },
 
-  init: function (mediaQueryOpts) {
+  init(mediaQueryOpts) {
     if (!mediaQueryOpts || typeof window === "undefined") {
       return;
     }
@@ -31,11 +31,11 @@ var MatchMediaBase = {
     }
   },
 
-  componentWillMount: function () {
+  componentWillMount() {
     mediaChangeCallback = this.handleMediaChange;
   },
 
-  componentWillUnmount: function () {
+  componentWillUnmount() {
     mediaChangeCallback = null;
 
     if (!matchers) {
@@ -47,7 +47,7 @@ var MatchMediaBase = {
     }
   },
 
-  getMatchedMedia: function () {
+  getMatchedMedia() {
     if (!matchers) {
       return;
     }

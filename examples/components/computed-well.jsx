@@ -5,13 +5,13 @@ var { StyleResolverMixin } = Radium;
 var ComputedWell = React.createClass({
   mixins: [ StyleResolverMixin ],
 
-  getInitialState: function () {
+  getInitialState() {
     return {
       dynamicBg: '#000'
     }
   },
 
-  getStyles: function () {
+  getStyles() {
     return {
       padding: "1em",
       borderRadius: 5,
@@ -19,7 +19,7 @@ var ComputedWell = React.createClass({
     };
   },
 
-  handleSubmit: function (ev) {
+  handleSubmit(ev) {
     ev.preventDefault();
 
     this.setState({
@@ -27,7 +27,7 @@ var ComputedWell = React.createClass({
     });
   },
 
-  render: function () {
+  render() {
     var styles = this.buildStyles(this.getStyles());
 
     return (

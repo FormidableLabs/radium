@@ -18,13 +18,13 @@ var Style = React.createClass({
     rules: React.PropTypes.arrayOf(React.PropTypes.object)
   },
 
-  getDefaultProps: function () {
+  getDefaultProps() {
     return {
       scopeSelector: ""
     }
   },
 
-  render: function () {
+  render() {
     if (!this.props.rules) {
       return null;
     }

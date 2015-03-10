@@ -5,7 +5,7 @@ var { StyleResolverMixin, BrowserStateMixin, MatchMediaItem } = Radium;
 var Button = React.createClass({
   mixins: [ StyleResolverMixin, BrowserStateMixin, MatchMediaItem ],
 
-  getStyles: function () {
+  getStyles() {
     return {
       fontSize: 16,
       backgroundColor: "#0074d9",
@@ -78,7 +78,7 @@ var Button = React.createClass({
     };
   },
 
-  render: function () {
+  render() {
     var styles = this.buildStyles(this.getStyles());
 
     return (
