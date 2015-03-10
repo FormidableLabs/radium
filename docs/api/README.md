@@ -148,6 +148,38 @@ Returns a hash of browser state events handlers to set component state when the 
 
 Apply to the component with a spread operator (`{...}`).
 
+**Note**: `getBrowserStateEvents` uses the following React event listeners:
+
+- `onMouseEnter`
+- `onMouseLeave`
+- `onMouseDown`
+- `onMouseUp`
+- `onFocus`
+- `onBlur`
+
+If you need to use Radium to style browser states but also need to add your own event listeners matching any of the 6 previously listed, simply call the corresponding Radium event handler in your own event handler:
+
+React | Radium
+------|-------
+`onMouseEnter` | `radiumMouseEnter`
+`onMouseLeave` | `radiumMouseLeave`
+`onMouseDown` | `radiumMouseDown`
+`onMouseUp` | `radiumMouseUp`
+`onFocus` | `radiumFocus`
+`onBlur` | `radiumBlur`
+
+Example:
+
+```js
+handleFocus: function () {
+  this.radiumFocus();
+
+  // Your custom event behavior.
+}
+```
+
+Event listeners passed in as props from another component are handled automatically.
+
 #### Signature
 
 `getBrowserStateEvents()`
