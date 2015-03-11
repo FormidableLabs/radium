@@ -12,7 +12,7 @@ var subscribe = function (callback) {
     _callbacks.push(callback);
   }
 
-  if (_callbacks.length > 0 && !_mouseUpListenerIsActive) {
+  if (!_mouseUpListenerIsActive) {
     window.addEventListener("mouseup", _handleMouseUp);
     _mouseUpListenerIsActive = true;
   }
