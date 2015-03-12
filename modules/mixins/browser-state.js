@@ -23,6 +23,9 @@ var BrowserStateMixin = {
       onMouseEnter: this.radiumMouseEnter,
       onMouseLeave: this.radiumMouseLeave,
       onMouseDown: this.radiumMouseDown,
+      onTouchStart: this._handleMouseDown,
+      onTouchEnd: this._handleMouseUp,
+      onTouchCancel: this._handleMouseUp,
       onFocus: this.radiumFocus,
       onBlur: this.radiumBlur
     };
