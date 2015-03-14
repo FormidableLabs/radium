@@ -2,6 +2,7 @@ var React = require('react');
 var debounce = require('lodash/function/debounce');
 
 var matchers = {};
+var matchedQueries = {};
 
 var mediaChangeCallback;
 
@@ -48,20 +49,14 @@ var MatchMediaBase = {
   },
 
   getMatchedMedia: function () {
-    if (!matchers) {
-      return;
-    }
-
-    var matchedQueries = {};
-
-    for (var key in matchers) {
-      matchedQueries[key] = matchers[key].matches;
-    }
-
     return matchedQueries;
   },
 
   handleMediaChange: debounce(function () {
+    for (var key in matchers) {
+      matchedQueries[key] = matchers[key].matches;
+    }
+
     this.forceUpdate();
   }, 10, {
     maxWait: 250
