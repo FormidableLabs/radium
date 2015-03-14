@@ -111,9 +111,9 @@ var StyleResolverMixin = {
       computedStyles = styles.computed(styles);
     // or it can be an object of functions mapping to individual rules.
     } else {
-      for (var key in styles.computed) {
+      Object.keys(styles.computed).forEach(function (key) {
         computedStyles[key] = styles.computed[key](styles);
-      }
+      });
     }
 
     return merge(

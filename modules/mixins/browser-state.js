@@ -1,4 +1,4 @@
-var mouseUpListener = require("./util/mouse-up-listener");
+var mouseUpListener = require('./util/mouse-up-listener');
 
 var BrowserStateMixin = {
 
@@ -37,7 +37,7 @@ var BrowserStateMixin = {
   },
 
   radiumMouseEnter: function (ev) {
-    this._callRadiumHandler("onMouseEnter", ev);
+    this._callRadiumHandler('onMouseEnter', ev);
 
     this.setState({
       hover: true
@@ -45,7 +45,7 @@ var BrowserStateMixin = {
   },
 
   radiumMouseLeave: function (ev) {
-    this._callRadiumHandler("onMouseLeave", ev);
+    this._callRadiumHandler('onMouseLeave', ev);
 
     this.setState({
       hover: false
@@ -53,14 +53,14 @@ var BrowserStateMixin = {
   },
 
   radiumMouseDown: function (ev) {
-    this._callRadiumHandler("onMouseDown", ev);
+    this._callRadiumHandler('onMouseDown', ev);
 
     this.setState({
       active: true
     });
   },
 
-  radiumMouseUp: function (ev) {
+  radiumMouseUp: function () {
     if (this.state.active) {
       this.setState({
         active: false
@@ -69,7 +69,7 @@ var BrowserStateMixin = {
   },
 
   radiumFocus: function (ev) {
-    this._callRadiumHandler("onFocus", ev);
+    this._callRadiumHandler('onFocus', ev);
 
     this.setState({
       focus: true
@@ -77,7 +77,7 @@ var BrowserStateMixin = {
   },
 
   radiumBlur: function (ev) {
-    this._callRadiumHandler("onBlur", ev);
+    this._callRadiumHandler('onBlur', ev);
 
     this.setState({
       focus: false

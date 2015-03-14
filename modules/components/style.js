@@ -7,9 +7,9 @@ function buildCssString (selector, rules) {
     return;
   }
 
-  return selector + "{" +
+  return selector + '{' +
     CSSPropertyOperations.createMarkupForStyles(rules) +
-  "}";
+  '}';
 }
 
 var Style = React.createClass({
@@ -20,8 +20,8 @@ var Style = React.createClass({
 
   getDefaultProps: function () {
     return {
-      scopeSelector: ""
-    }
+      scopeSelector: ''
+    };
   },
 
   render: function () {
@@ -32,13 +32,13 @@ var Style = React.createClass({
     var styles = reduce(this.props.rules, function (s, item) {
       var selector = Object.keys(item)[0];
       var rules = item[selector];
-      var completeSelector = this.props.scopeSelector + " " + selector;
+      var completeSelector = this.props.scopeSelector + ' ' + selector;
 
       return s += buildCssString(completeSelector, rules);
-    }, "", this);
+    }, '', this);
 
     return React.createElement(
-      "style",
+      'style',
       {dangerouslySetInnerHTML: {__html: styles}}
     );
   }
