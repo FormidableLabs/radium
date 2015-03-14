@@ -102,3 +102,7 @@ To see local examples in action, do this:
 npm install
 npm run examples
 ```
+
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md)

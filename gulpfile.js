@@ -7,3 +7,5 @@ gulp.task('eslint', function () {
     .pipe(eslint.formatEach('stylish', process.stderr))
     .pipe(eslint.failOnError());
 });
+
+gulp.task('check', ['eslint']);
