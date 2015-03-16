@@ -32,17 +32,19 @@ var StyleResolverMixin = {
       var key = Object.keys(mediaQueryObj)[0];
       var mediaQuery = mediaQueryObj[key];
 
-      if (componentMediaQueries && componentMediaQueries[key]) {
-        var activeMediaQuery = mediaQuery;
+      if (componentMediaQueries &&
+        componentMediaQueries[key] &&
+        componentMediaQueries[key].matches) {
+          var activeMediaQuery = mediaQuery;
 
-        if (!activeMediaQuery) {
-          return;
-        }
+          if (!activeMediaQuery) {
+            return;
+          }
 
-        merge(
-          mediaQueryStyles,
-          activeMediaQuery
-        );
+          merge(
+            mediaQueryStyles,
+            activeMediaQuery
+          );
       }
     });
 
