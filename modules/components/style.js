@@ -49,27 +49,30 @@ var Style = React.createClass({
   },
 
   _buildMediaQueryString: function (mediaQueryObj) {
-    var mediaQueries = "";
+    var contextMediaQueries = this._getContextMediaQueries();
+    var mediaQueryString = "";
 
     Object.keys(mediaQueryObj).forEach(function (query) {
-      var completeQuery = this.contextMediaQueries[query] ?
-        this.contextMediaQueries[query] :
+      var completeQuery = contextMediaQueries[query] ?
+        contextMediaQueries[query] :
         query;
-      mediaQueries += "@media " + completeQuery + "{" +
+      mediaQueryString += "@media " + completeQuery + "{" +
         this._buildStyles(mediaQueryObj[query]) +
       "}";
     }.bind(this));
 
-    return mediaQueries;
+    return mediaQueryString;
   },
 
-  _prepareContextMediaQueries: function () {
-    this.contextMediaQueries = {};
+  _getContextMediaQueries: function () {
+    var contextMediaQueries = {};
     if (this.context && this.context.mediaQueries) {
       Object.keys(this.context.mediaQueries).forEach(function (query) {
-        this.contextMediaQueries[query] = this.context.mediaQueries[query].media;
+        contextMediaQueries[query] = this.context.mediaQueries[query].media;
       }.bind(this));
     }
+
+    return contextMediaQueries;
   },
 
   render: function () {
@@ -77,7 +80,6 @@ var Style = React.createClass({
       return null;
     }
 
-    this._prepareContextMediaQueries();
     var styles = this._buildStyles(this.props.rules);
 
     return React.createElement(
