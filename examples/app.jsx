@@ -8,7 +8,8 @@ var Style = require("../modules/components/style.js");
 
 var MEDIA_QUERIES = {
   md: '(min-width: 992px)',
-  lg: '(min-width: 1200px)'
+  lg: '(min-width: 1200px)',
+  smallOnly: '(max-width: 600px)'
 };
 
 MatchMediaBase.init(MEDIA_QUERIES);
@@ -44,6 +45,29 @@ var App = React.createClass({
               body: {
                 margin: 0,
                 fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif"
+              }
+            },
+            {
+              mediaQueries: {
+                smallOnly: [
+                  {
+                    body: {
+                      background: "gray"
+                    }
+                  }
+                ],
+                "(max-width: 500px)": [
+                  {
+                    body: {
+                      background: "blue"
+                    }
+                  },
+                  {
+                    "p, h1": {
+                      color: "white"
+                    }
+                  }
+                ]
               }
             }
           ]}
