@@ -8,9 +8,9 @@ function buildCssString (selector, rules) {
     return;
   }
 
-  return selector + "{" +
+  return selector + '{' +
     CSSPropertyOperations.createMarkupForStyles(rules) +
-  "}";
+  '}';
 }
 
 var Style = React.createClass({
@@ -23,8 +23,8 @@ var Style = React.createClass({
 
   getDefaultProps: function () {
     return {
-      scopeSelector: ""
-    }
+      scopeSelector: ''
+    };
   },
 
   _buildStyles: function (stylesArr) {
@@ -32,33 +32,33 @@ var Style = React.createClass({
       var selector = Object.keys(item)[0];
       var rules = item[selector];
 
-      if (selector === "mediaQueries") {
+      if (selector === 'mediaQueries') {
         accumulator += this._buildMediaQueryString(rules);
       } else {
         var completeSelector = (this.props.scopeSelector ?
-          this.props.scopeSelector + " " :
-          "") +
+          this.props.scopeSelector + ' ' :
+          '') +
           selector;
         accumulator += buildCssString(completeSelector, rules);
       }
 
       return accumulator;
-    }, "", this);
+    }, '', this);
 
     return styles;
   },
 
   _buildMediaQueryString: function (mediaQueryObj) {
     var contextMediaQueries = this._getContextMediaQueries();
-    var mediaQueryString = "";
+    var mediaQueryString = '';
 
     Object.keys(mediaQueryObj).forEach(function (query) {
       var completeQuery = contextMediaQueries[query] ?
         contextMediaQueries[query] :
         query;
-      mediaQueryString += "@media " + completeQuery + "{" +
+      mediaQueryString += '@media ' + completeQuery + '{' +
         this._buildStyles(mediaQueryObj[query]) +
-      "}";
+      '}';
     }.bind(this));
 
     return mediaQueryString;
@@ -83,7 +83,7 @@ var Style = React.createClass({
     var styles = this._buildStyles(this.props.rules);
 
     return React.createElement(
-      "style",
+      'style',
       {dangerouslySetInnerHTML: {__html: styles}}
     );
   }

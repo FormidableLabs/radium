@@ -22,14 +22,14 @@ var MatchMediaBase = {
   },
 
   init: function (mediaQueryOpts) {
-    if (!mediaQueryOpts || typeof window === "undefined") {
+    if (!mediaQueryOpts || typeof window === 'undefined') {
       return;
     }
 
-    for (var key in mediaQueryOpts) {
+    Object.keys(mediaQueryOpts).forEach(function (key) {
       matchers[key] = window.matchMedia(mediaQueryOpts[key]);
       matchers[key].addListener(onMediaChange);
-    }
+    });
   },
 
   componentWillMount: function () {
@@ -43,9 +43,9 @@ var MatchMediaBase = {
       return;
     }
 
-    for (var key in matchers) {
-      matchers[key].removeListener(handleMediaChange);
-    }
+    Object.keys(matchers).forEach(function (key) {
+      matchers[key].removeListener(onMediaChange);
+    });
   },
 
   getMatchedMedia: function () {
@@ -53,12 +53,12 @@ var MatchMediaBase = {
   },
 
   handleMediaChange: debounce(function () {
-    for (var key in matchers) {
+    Object.keys(matchers).forEach(function (key) {
       matchedQueries[key] = {
         matches: matchers[key].matches,
         media: matchers[key].media
-      }
-    }
+      };
+    });
 
     this.forceUpdate();
   }, 10, {

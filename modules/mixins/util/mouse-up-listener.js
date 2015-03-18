@@ -13,7 +13,7 @@ var subscribe = function (callback) {
   }
 
   if (!_mouseUpListenerIsActive) {
-    window.addEventListener("mouseup", _handleMouseUp);
+    window.addEventListener('mouseup', _handleMouseUp);
     _mouseUpListenerIsActive = true;
   }
 
@@ -23,11 +23,11 @@ var subscribe = function (callback) {
       _callbacks.splice(index, 1);
 
       if (_callbacks.length === 0 && _mouseUpListenerIsActive) {
-        window.removeEventListener("mouseup", _handleMouseUp);
+        window.removeEventListener('mouseup', _handleMouseUp);
         _mouseUpListenerIsActive = false;
       }
     }
-  }
+  };
 };
 
 module.exports = {
