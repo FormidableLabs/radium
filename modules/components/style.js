@@ -1,6 +1,7 @@
 var React = require('react');
 var CSSPropertyOperations = require('react/lib/CSSPropertyOperations');
 var reduce = require('lodash/collection/reduce');
+var MatchMediaItem = require('../mixins/match-media-item');
 
 function buildCssString (selector, rules) {
   if (!selector || !rules) {
@@ -13,6 +14,8 @@ function buildCssString (selector, rules) {
 }
 
 var Style = React.createClass({
+  mixins: [ MatchMediaItem ],
+
   propTypes: {
     scopeSelector: React.PropTypes.string,
     rules: React.PropTypes.arrayOf(React.PropTypes.object)
@@ -24,18 +27,60 @@ var Style = React.createClass({
     };
   },
 
+  _buildStyles: function (stylesArr) {
+    var styles = reduce(stylesArr, function (accumulator, item) {
+      var selector = Object.keys(item)[0];
+      var rules = item[selector];
+
+      if (selector === 'mediaQueries') {
+        accumulator += this._buildMediaQueryString(rules);
+      } else {
+        var completeSelector = (this.props.scopeSelector ?
+          this.props.scopeSelector + ' ' :
+          '') +
+          selector;
+        accumulator += buildCssString(completeSelector, rules);
+      }
+
+      return accumulator;
+    }, '', this);
+
+    return styles;
+  },
+
+  _buildMediaQueryString: function (mediaQueryObj) {
+    var contextMediaQueries = this._getContextMediaQueries();
+    var mediaQueryString = '';
+
+    Object.keys(mediaQueryObj).forEach(function (query) {
+      var completeQuery = contextMediaQueries[query] ?
+        contextMediaQueries[query] :
+        query;
+      mediaQueryString += '@media ' + completeQuery + '{' +
+        this._buildStyles(mediaQueryObj[query]) +
+      '}';
+    }.bind(this));
+
+    return mediaQueryString;
+  },
+
+  _getContextMediaQueries: function () {
+    var contextMediaQueries = {};
+    if (this.context && this.context.mediaQueries) {
+      Object.keys(this.context.mediaQueries).forEach(function (query) {
+        contextMediaQueries[query] = this.context.mediaQueries[query].media;
+      }.bind(this));
+    }
+
+    return contextMediaQueries;
+  },
+
   render: function () {
     if (!this.props.rules) {
       return null;
     }
 
-    var styles = reduce(this.props.rules, function (s, item) {
-      var selector = Object.keys(item)[0];
-      var rules = item[selector];
-      var completeSelector = this.props.scopeSelector + ' ' + selector;
-
-      return s += buildCssString(completeSelector, rules);
-    }, '', this);
+    var styles = this._buildStyles(this.props.rules);
 
     return React.createElement(
       'style',

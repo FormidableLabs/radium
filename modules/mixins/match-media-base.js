@@ -54,7 +54,10 @@ var MatchMediaBase = {
 
   handleMediaChange: debounce(function () {
     Object.keys(matchers).forEach(function (key) {
-      matchedQueries[key] = matchers[key].matches;
+      matchedQueries[key] = {
+        matches: matchers[key].matches,
+        media: matchers[key].media
+      };
     });
 
     this.forceUpdate();
