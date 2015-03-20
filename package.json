@@ -21,7 +21,7 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "react": "0.12.x"
+    "react": ">=0.12.0"
   },
   "dependencies": {
     "lodash": "^3.2.0"
@@ -30,7 +30,7 @@
     "gulp": "^3.8.11",
     "gulp-eslint": "^0.6.0",
     "jsx-loader": "^0.12.2",
-    "react": "0.12.x",
+    "react": ">=0.12.0",
     "webpack": "^1.5.3",
     "webpack-dev-server": "^1.7.0"
   }
