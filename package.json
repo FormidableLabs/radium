@@ -12,9 +12,6 @@
   "directories": {
     "example": "examples"
   },
-  "authors": [
-    "Alex Lande"
-  ],
   "scripts": {
     "dist": "webpack && webpack --config=webpack.config.minified.js",
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/"
