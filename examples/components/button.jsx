@@ -3,8 +3,6 @@ var Radium = require('../../modules/index');
 var { MatchMediaItem } = Radium;
 
 var Button = React.createClass(Radium.wrap({
-  mixins: [ MatchMediaItem ],
-
   propTypes: {
     color: React.PropTypes.string
   },
@@ -33,6 +31,14 @@ var styles = {
     padding: "0.4em 1em",
     cursor: "pointer",
     outline: "none",
+
+    '(min-width: 992px)': {
+      padding: "0.6em 1.2em"
+    },
+
+    '(min-width: 1200px)': {
+      padding: "0.8em 1.5em"
+    },
 
     ':hover': {
       backgroundColor: "#0088FF"

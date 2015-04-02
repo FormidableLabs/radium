@@ -5,6 +5,9 @@ var React = require('react/addons');
 var clone = require('lodash/lang/clone');
 var isArray = require('lodash/lang/isArray');
 var merge = require('lodash/object/merge');
+var omit = require('lodash/object/omit');
+
+var mediaQueryListByQueryString = {};
 
 //
 // The nucleus of Radium. resolveStyles is called on the rendered elements
@@ -40,12 +43,12 @@ function resolveStyles(component, renderedElement, existingKeyMap) {
   // Bail early if no interactive styles.
   if (
     !style ||
-    !Object.keys(style).some(function (key) { return key.indexOf(':') === 0; })
+    !Object.keys(style).some(_isSpecialKey)
   ) {
     return renderedElement;
   }
 
-  var newStyle = clone(style);
+  var newStyle = omit(style, function (value, key) { return _isSpecialKey(key); });
 
   // We need a unique key to correlate state changes due to user interaction
   // with the rendered element, so we know to apply the proper interactive
@@ -64,6 +67,42 @@ function resolveStyles(component, renderedElement, existingKeyMap) {
   }
 
   existingKeyMap[key] = true;
+
+  // Media queries
+  Object.keys(style).filter(name => name[0] === '(').map(function (name) {
+    // Create a global MediaQueryList if one doesn't already exist
+    var mql = mediaQueryListByQueryString[name];
+    if (!mql) {
+      mediaQueryListByQueryString[name] = mql = window.matchMedia(name);
+      // mql.addListener(function() { component.forceUpdate(); });
+    }
+
+    // Keep track of which keys already have listeners
+    if (!component._radiumMediaQueriesByKey) {
+      component._radiumMediaQueriesByKey = {};
+    }
+    if (!component._radiumMediaQueriesByKey[key]) {
+      component._radiumMediaQueriesByKey[key] = {};
+    }
+
+    if (!component._radiumMediaQueriesByKey[key][name]) {
+      component._radiumMediaQueriesByKey[key][name] = true;
+      // Make sure the state for this key is updated when the media changes
+      // TODO: only add one listener per component, since we know from `styles`
+      // which keys need to update.
+      mql.addListener(function(mql) {
+        var state = {};
+        state[name] = mql.matches;
+        _setStyleState(component, key, state);
+      });
+    }
+
+    // Apply media query states
+    if (_getStyleState(component, key, name)) {
+      var mediaQueryStyles = style[name];
+      merge(newStyle, mediaQueryStyles);
+    }
+  });
 
   // Only add handlers if necessary
   if (style[':hover'] || style[':active']) {
@@ -128,6 +167,10 @@ function resolveStyles(component, renderedElement, existingKeyMap) {
   return renderedElement;
 }
 
+function _isSpecialKey(key) {
+  return key[0] === ':' || key[0] === '(';
+}
+
 function _getStyleState(component, key, value) {
   return component.state &&
     component.state._radiumStyleState &&
@@ -155,7 +198,7 @@ function _mergeStyles(styles) {
     }
 
     Object.keys(style).forEach(function (name) {
-      if (name.indexOf(':') === 0) {
+      if (_isSpecialKey(name)) {
         styleProp[name] = styleProp[name] || {};
         merge(styleProp[name], style[name]);
       } else {
