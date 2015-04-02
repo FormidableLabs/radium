@@ -80,27 +80,24 @@ function resolveStyles(component, renderedElement, existingKeyMap) {
     }
 
     // Keep track of which keys already have listeners
-    if (!component._radiumMediaQueriesByKey) {
-      component._radiumMediaQueriesByKey = {};
-    }
-    if (!component._radiumMediaQueriesByKey[key]) {
-      component._radiumMediaQueriesByKey[key] = {};
+    if (!component._radiumMediaQueryListenersByQuery) {
+      component._radiumMediaQueryListenersByQuery = {};
     }
 
-    if (!component._radiumMediaQueriesByKey[key][name]) {
-      component._radiumMediaQueriesByKey[key][name] = true;
-      // Make sure the state for this key is updated when the media changes
-      // TODO: only add one listener per component, since we know from `styles`
-      // which keys need to update.
-      mql.addListener(function(mql) {
+    if (!component._radiumMediaQueryListenersByQuery[name]) {
+      var listener = function(mql) {
         var state = {};
         state[name] = mql.matches;
-        _setStyleState(component, key, state);
-      });
+        _setStyleState(component, '_all', state);
+      };
+      mql.addListener(listener);
+      component._radiumMediaQueryListenersByQuery[name] = {
+        remove: function() { mql.removeListener(listener); }
+      };
     }
 
     // Apply media query states
-    if (_getStyleState(component, key, name)) {
+    if (mql.matches) {
       var mediaQueryStyles = style[name];
       merge(newStyle, mediaQueryStyles);
     }

@@ -18,6 +18,12 @@ function wrap(config) {
       if (this._radiumMouseUpListener) {
         this._radiumMouseUpListener.remove();
       }
+
+      if (this._radiumMediaQueryListenersByQuery) {
+        for (var query in this._radiumMediaQueryListenersByQuery) {
+          this._radiumMediaQueryListenersByQuery[query].remove();
+        }
+      }
     },
 
     render: function () {

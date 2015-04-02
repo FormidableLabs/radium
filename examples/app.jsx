@@ -6,9 +6,25 @@ var Style = require("../modules/components/style.js");
 
 var App = React.createClass({
 
+  _remount: function() {
+    this.setState({shouldRenderNull: true});
+
+    setTimeout(function() {
+      this.setState({shouldRenderNull: false});
+    }.bind(this), 100);
+  },
+
   render: function () {
+    if (this.state && this.state.shouldRenderNull) {
+      return null;
+    }
+
     return (
       <div>
+        <p>
+          <Button onClick={this._remount}>Unmount and remount</Button>
+        </p>
+
         <p>
           <Button>Button</Button>
         </p>
