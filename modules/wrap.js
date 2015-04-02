@@ -12,11 +12,11 @@ function wrap(config) {
       return merge({}, existingInitialState, { _radiumStyleState: {} });
     },
 
-    componentWillUnmount() {
+    componentWillUnmount: function() {
       config.componentWillUnmount && config.componentWillUnmount.call(this);
 
-      if (component._radiumMouseUpListener) {
-        component._radiumMouseUpListener.remove();
+      if (this._radiumMouseUpListener) {
+        this._radiumMouseUpListener.remove();
       }
     },
 

@@ -69,7 +69,9 @@ function resolveStyles(component, renderedElement, existingKeyMap) {
   existingKeyMap[key] = true;
 
   // Media queries
-  Object.keys(style).filter(name => name[0] === '(').map(function (name) {
+  Object.keys(style)
+  .filter(function (name) { return name[0] === '('; })
+  .map(function (name) {
     // Create a global MediaQueryList if one doesn't already exist
     var mql = mediaQueryListByQueryString[name];
     if (!mql) {
