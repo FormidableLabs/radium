@@ -14,7 +14,8 @@ var Button = React.createClass(Radium.wrap({
       <button
         style={[
           styles.base,
-          this.props.color === 'red' && styles.red
+          this.props.color === 'red' && styles.red,
+          this.props.style
         ]}>
         {this.props.children}
       </button>
