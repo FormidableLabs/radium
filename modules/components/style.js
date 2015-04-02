@@ -1,7 +1,6 @@
 var React = require('react');
 var CSSPropertyOperations = require('react/lib/CSSPropertyOperations');
 var reduce = require('lodash/collection/reduce');
-var MatchMediaItem = require('../mixins/match-media-item');
 
 function buildCssString (selector, rules) {
   if (!selector || !rules) {
@@ -14,7 +13,6 @@ function buildCssString (selector, rules) {
 }
 
 var Style = React.createClass({
-  mixins: [ MatchMediaItem ],
 
   propTypes: {
     scopeSelector: React.PropTypes.string,
