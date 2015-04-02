@@ -1,21 +1,10 @@
 var React = require('react');
 
-var { MatchMediaBase } = require('../modules/index');
-
 var Button = require('./components/button.jsx');
 var ComputedWell = require("./components/computed-well.jsx");
 var Style = require("../modules/components/style.js");
 
-var MEDIA_QUERIES = {
-  md: '(min-width: 992px)',
-  lg: '(min-width: 1200px)',
-  smallOnly: '(max-width: 600px)'
-};
-
-MatchMediaBase.init(MEDIA_QUERIES);
-
 var App = React.createClass({
-  mixins: [ MatchMediaBase ],
 
   render: function () {
     return (
@@ -49,7 +38,7 @@ var App = React.createClass({
             },
             {
               mediaQueries: {
-                smallOnly: [
+                "(max-width: 600px)": [
                   {
                     body: {
                       background: "gray"
