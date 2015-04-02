@@ -4,12 +4,14 @@ var { MatchMediaItem } = Radium;
 
 var Button = React.createClass(Radium.wrap({
   propTypes: {
-    color: React.PropTypes.string
+    color: React.PropTypes.string,
+    onClick: React.PropTypes.func
   },
 
   render: function () {
     return (
       <button
+        onClick={this.props.onClick}
         style={[
           styles.base,
           this.props.color === 'red' && styles.red,
