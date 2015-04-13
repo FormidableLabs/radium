@@ -14,7 +14,8 @@
   },
   "scripts": {
     "dist": "webpack && webpack --config=webpack.config.minified.js",
-    "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/"
+    "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
+    "test": "jest"
   },
   "license": "MIT",
   "peerDependencies": {
@@ -26,9 +27,13 @@
   "devDependencies": {
     "gulp": "^3.8.11",
     "gulp-eslint": "^0.6.0",
+    "jest-cli": "^0.4.0",
     "jsx-loader": "^0.12.2",
     "react": ">=0.12.0 <0.14.0",
     "webpack": "^1.5.3",
     "webpack-dev-server": "^1.7.0"
+  },
+  "jest": {
+    "testPathDirs": ["__tests__"]
   }
 }
