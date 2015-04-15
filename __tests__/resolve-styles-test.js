@@ -89,130 +89,23 @@ describe('resolveStyles', function() {
   });
 
   describe(':hover', function() {
+    createPseduoStyleTests('hover', 'onMouseEnter', 'onMouseLeave');
+  });
 
-    it('strips special styles if not applied', function() {
-      var renderedElement = {props: {style: {
-        background: 'blue',
-        ':hover': {background: 'red'}
-      }}};
-
-      var result = resolveStyles(component, renderedElement);
-
-      expect(result.props.style).toEqual({background: 'blue'});
-    });
-
-    it('adds appropriate handlers for hover styles', function() {
-      var renderedElement = {props: {style: {
-        ':hover': {background: 'red'}
-      }}};
-
-      var result = resolveStyles(component, renderedElement);
-
-      expect(typeof result.props.onMouseEnter).toBe('function');
-      expect(typeof result.props.onMouseLeave).toBe('function');
-    });
-
-    it('adds hover styles on mouse enter', function() {
-      var style = {
-        background: 'blue',
-        ':hover': {background: 'red'}
-      };
-
-      var result = resolveStyles(component, {props: {style: style}});
-      expect(result.props.style.background).toEqual('blue');
-
-      result.props.onMouseEnter();
-
-      // Must create a new renderedElement each time, same as React, since
-      // resolveStyles mutates
-      result = resolveStyles(component, {props: {style: style}});
-      expect(result.props.style.background).toEqual('red');
-    });
-
-    it('removes hover styles on mouse leave', function() {
-      var style = {
-        background: 'blue',
-        ':hover': {background: 'red'}
-      };
-
-      var result = resolveStyles(component, {props: {style: style}});
-
-      result.props.onMouseEnter();
-
-      result = resolveStyles(component, {props: {style: style}});
-      expect(result.props.style.background).toEqual('red');
-
-      result.props.onMouseLeave();
-
-      result = resolveStyles(component, {props: {style: style}});
-      expect(result.props.style.background).toEqual('blue');
-    });
-
-    it('calls existing onMouseEnter handler', function() {
-      var style = {
-        background: 'blue',
-        ':hover': {background: 'red'}
-      };
-
-      var originalOnMouseEnter = jest.genMockFunction();
-
-      var result = resolveStyles(
-        component,
-        {
-          props: {
-            onMouseEnter: originalOnMouseEnter,
-            style: style
-          }
-        }
-      );
-
-      result.props.onMouseEnter();
-
-      expect(originalOnMouseEnter).toBeCalled();
-
-      result = resolveStyles(component, {props: {style: style}});
-      expect(result.props.style.background).toEqual('red');
-    });
-
-    it('calls existing onMouseLeave handler', function() {
-      var style = {
-        background: 'blue',
-        ':hover': {background: 'red'}
-      };
-
-      var originalOnMouseLeave = jest.genMockFunction();
-
-      var result = resolveStyles(
-        component,
-        {
-          props: {
-            onMouseLeave: originalOnMouseLeave,
-            style: style
-          }
-        }
-      );
-
-      result.props.onMouseEnter();
-      result.props.onMouseLeave();
-
-      expect(originalOnMouseLeave).toBeCalled();
-
-      result = resolveStyles(component, {props: {style: style}});
-      expect(result.props.style.background).toEqual('blue');
-    });
-
+  describe(':focus', function() {
+    createPseduoStyleTests('focus', 'onFocus', 'onBlur');
   });
 
   describe(':active', function() {
+    createPseduoStyleTests('active', 'onMouseDown');
 
-    it('adds appropriate handlers for active styles', function() {
+    it('subscribes to mouse up listener', function() {
       var renderedElement = {props: {style: {
         ':active': {background: 'red'}
       }}};
 
       var result = resolveStyles(component, renderedElement);
 
-      expect(typeof result.props.onMouseDown).toBe('function');
       expect(MouseUpListener.subscribe).toBeCalled();
     });
 
@@ -278,43 +171,39 @@ describe('resolveStyles', function() {
       result = resolveStyles(component, {props: {style: style}});
       expect(result.props.style.background).toEqual('red');
     });
-
   });
 
-  describe(':focus', function() {
+  function createPseduoStyleTests(pseudo, onHandlerName, offHandlerName) {
 
     it('strips special styles if not applied', function() {
-      var renderedElement = {props: {style: {
-        background: 'blue',
-        ':focus': {background: 'red'}
-      }}};
+      var style = {background: 'blue'};
+      style[':' + pseudo] = {background: 'red'};
 
-      var result = resolveStyles(component, renderedElement);
+      var result = resolveStyles(component, {props: {style: style}});
 
       expect(result.props.style).toEqual({background: 'blue'});
     });
 
-    it('adds appropriate handlers for focus styles', function() {
-      var renderedElement = {props: {style: {
-        ':focus': {background: 'red'}
-      }}};
+    it('adds appropriate handlers for ' + pseudo + ' styles', function() {
+      var style = {background: 'blue'};
+      style[':' + pseudo] = {background: 'red'};
 
-      var result = resolveStyles(component, renderedElement);
+      var result = resolveStyles(component, {props: {style: style}});
 
-      expect(typeof result.props.onFocus).toBe('function');
-      expect(typeof result.props.onBlur).toBe('function');
+      expect(typeof result.props[onHandlerName]).toBe('function');
+      if (offHandlerName) {
+        expect(typeof result.props[offHandlerName]).toBe('function');
+      }
     });
 
-    it('adds focus styles on mouse enter', function() {
-      var style = {
-        background: 'blue',
-        ':focus': {background: 'red'}
-      };
+    it('adds ' + pseudo + ' styles ' + onHandlerName, function() {
+      var style = {background: 'blue'};
+      style[':' + pseudo] = {background: 'red'};
 
       var result = resolveStyles(component, {props: {style: style}});
       expect(result.props.style.background).toEqual('blue');
 
-      result.props.onFocus();
+      result.props[onHandlerName]();
 
       // Must create a new renderedElement each time, same as React, since
       // resolveStyles mutates
@@ -322,78 +211,67 @@ describe('resolveStyles', function() {
       expect(result.props.style.background).toEqual('red');
     });
 
-    it('removes focus styles on mouse leave', function() {
-      var style = {
-        background: 'blue',
-        ':focus': {background: 'red'}
-      };
+    if (offHandlerName) {
+      it('removes ' + pseudo + ' styles ' + offHandlerName, function() {
+        var style = {background: 'blue'};
+        style[':' + pseudo] = {background: 'red'};
 
-      var result = resolveStyles(component, {props: {style: style}});
+        var result = resolveStyles(component, {props: {style: style}});
 
-      result.props.onFocus();
+        result.props[onHandlerName]();
 
-      result = resolveStyles(component, {props: {style: style}});
-      expect(result.props.style.background).toEqual('red');
+        result = resolveStyles(component, {props: {style: style}});
+        expect(result.props.style.background).toEqual('red');
 
-      result.props.onBlur();
+        result.props[offHandlerName]();
 
-      result = resolveStyles(component, {props: {style: style}});
-      expect(result.props.style.background).toEqual('blue');
-    });
+        result = resolveStyles(component, {props: {style: style}});
+        expect(result.props.style.background).toEqual('blue');
+      });
+    }
 
-    it('calls existing onFocus handler', function() {
-      var style = {
-        background: 'blue',
-        ':focus': {background: 'red'}
-      };
+    it('calls existing ' + onHandlerName + ' handler', function() {
+      var originalOnHandler = jest.genMockFunction();
 
-      var originalOnFocus = jest.genMockFunction();
+      var style = {background: 'blue'};
+      style[':' + pseudo] = {background: 'red'};
 
-      var result = resolveStyles(
-        component,
-        {
-          props: {
-            onFocus: originalOnFocus,
-            style: style
-          }
-        }
-      );
+      var renderedElement = {props: {style: style}};
+      renderedElement.props[onHandlerName] = originalOnHandler;
 
-      result.props.onFocus();
+      var result = resolveStyles(component, renderedElement);
 
-      expect(originalOnFocus).toBeCalled();
+      result.props[onHandlerName]();
+
+      expect(originalOnHandler).toBeCalled();
 
       result = resolveStyles(component, {props: {style: style}});
       expect(result.props.style.background).toEqual('red');
     });
 
-    it('calls existing onBlur handler', function() {
-      var style = {
-        background: 'blue',
-        ':focus': {background: 'red'}
-      };
+    if (offHandlerName) {
+      it('calls existing ' + offHandlerName + ' handler', function() {
+        var originalOffHandler = jest.genMockFunction();
 
-      var originalOnBlur = jest.genMockFunction();
+        var style = {background: 'blue'};
+        style[':' + pseudo] = {background: 'red'};
+        style[offHandlerName] = originalOffHandler;
 
-      var result = resolveStyles(
-        component,
-        {
-          props: {
-            onBlur: originalOnBlur,
-            style: style
-          }
-        }
-      );
+        var renderedElement = {props: {style: style}};
+        renderedElement.props[offHandlerName] = originalOffHandler;
 
-      result.props.onFocus();
-      result.props.onBlur();
+        var result = resolveStyles(component, renderedElement);
 
-      expect(originalOnBlur).toBeCalled();
+        result.props[onHandlerName]();
+        result.props[offHandlerName]();
 
-      result = resolveStyles(component, {props: {style: style}});
-      expect(result.props.style.background).toEqual('blue');
-    });
+        expect(originalOffHandler).toBeCalled();
 
-  });
+        result = resolveStyles(component, {props: {style: style}});
+        expect(result.props.style.background).toEqual('blue');
+      });
+    }
+
+  }
 
 });
