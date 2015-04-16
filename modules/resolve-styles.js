@@ -76,7 +76,6 @@ function resolveStyles(component, renderedElement, existingKeyMap) {
     var mql = mediaQueryListByQueryString[name];
     if (!mql) {
       mediaQueryListByQueryString[name] = mql = window.matchMedia(name);
-      // mql.addListener(function() { component.forceUpdate(); });
     }
 
     // Keep track of which keys already have listeners
@@ -192,7 +191,7 @@ function _mergeStyles(styles) {
   var styleProp = {};
 
   styles.forEach(function (style) {
-    if (!style || typeof style !== 'object') {
+    if (!style || typeof style !== 'object' || isArray(style)) {
       return;
     }
 
