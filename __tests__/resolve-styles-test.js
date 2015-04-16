@@ -39,15 +39,29 @@ describe('resolveStyles', function() {
 
     it('passes through normal style objects of children', function() {
       var renderedElement = {props: {
-        children: [
-          {style: {color: 'blue'}}
-        ]
+        children: [{
+          _isReactElement: true,
+          props: {style: {color: 'blue'}},
+        }]
       }};
 
       var result = resolveStyles(component, renderedElement);
 
-      expect(result.props.children[0].style)
-        .toBe(renderedElement.props.children[0].style);
+      expect(result.props.children[0].props.style)
+        .toBe(renderedElement.props.children[0].props.style);
+    });
+
+    it('ignores invalid children', function() {
+      var renderedElement = {props: {
+        children: [{
+          props: {style: {color: 'blue'}},
+        }]
+      }};
+
+      var result = resolveStyles(component, renderedElement);
+
+      expect(result.props.children[0].props.style)
+        .toBe(renderedElement.props.children[0].props.style);
     });
 
   });
@@ -65,6 +79,38 @@ describe('resolveStyles', function() {
       expect(result.props.style).toEqual({
         background: 'white',
         color: 'blue'
+      });
+    });
+
+    it('skips falsy and non-object entries', function() {
+      var renderedElement = {props: {style: [
+        {background: 'white'},
+        false,
+        null,
+        undefined,
+        '',
+        [1,2,3],
+        {color: 'blue'},
+      ]}};
+
+      var result = resolveStyles(component, renderedElement);
+
+      expect(result.props.style).toEqual({
+        background: 'white',
+        color: 'blue'
+      });
+    });
+
+    it('overwrites earlier styles with later ones', function() {
+      var renderedElement = {props: {style: [
+        {background: 'white'},
+        {background: 'blue'},
+      ]}};
+
+      var result = resolveStyles(component, renderedElement);
+
+      expect(result.props.style).toEqual({
+        background: 'blue'
       });
     });
 
@@ -209,6 +255,66 @@ describe('resolveStyles', function() {
       // resolveStyles mutates
       result = resolveStyles(component, {props: {style: style}});
       expect(result.props.style.background).toEqual('red');
+    });
+
+    it('throws if multiple elements have the same key', function() {
+      var style = {background: 'blue'};
+      style[':' + pseudo] = {background: 'red'};
+
+      var getRenderedElement = function() {
+        return {props: {children: [
+          {_isReactElement: true, key: 'foo', props: {style: style}},
+          {_isReactElement: true, key: 'foo', props: {style: style}},
+        ]}};
+      };
+
+      expect(function() {
+        resolveStyles(component, getRenderedElement());
+      }).toThrow();
+    });
+
+    it('adds ' + pseudo + ' styles to correct element by key', function() {
+      var style = {background: 'blue'};
+      style[':' + pseudo] = {background: 'red'};
+
+      var getRenderedElement = function() {
+        return {props: {children: [
+          {_isReactElement: true, key: 'foo', props: {}},
+          {_isReactElement: true, key: 'bar', props: {style: style}},
+        ]}};
+      };
+
+      var result = resolveStyles(component, getRenderedElement());
+      expect(result.props.children[0].props.style).toEqual(null);
+      expect(result.props.children[1].props.style.background).toEqual('blue');
+
+      result.props.children[1].props[onHandlerName]();
+
+      result = resolveStyles(component, getRenderedElement());
+      expect(result.props.children[0].props.style).toEqual(null);
+      expect(result.props.children[1].props.style.background).toEqual('red');
+    });
+
+    it('adds ' + pseudo + ' styles to correct element by ref', function() {
+      var style = {background: 'blue'};
+      style[':' + pseudo] = {background: 'red'};
+
+      var getRenderedElement = function() {
+        return {props: {children: [
+          {_isReactElement: true, ref: 'foo', props: {}},
+          {_isReactElement: true, ref: 'bar', props: {style: style}},
+        ]}};
+      };
+
+      var result = resolveStyles(component, getRenderedElement());
+      expect(result.props.children[0].props.style).toEqual(null);
+      expect(result.props.children[1].props.style.background).toEqual('blue');
+
+      result.props.children[1].props[onHandlerName]();
+
+      result = resolveStyles(component, getRenderedElement());
+      expect(result.props.children[0].props.style).toEqual(null);
+      expect(result.props.children[1].props.style.background).toEqual('red');
     });
 
     if (offHandlerName) {
