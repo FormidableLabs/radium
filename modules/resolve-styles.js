@@ -19,6 +19,10 @@ var mediaQueryListByQueryString = {};
 function resolveStyles(component, renderedElement, existingKeyMap) {
   existingKeyMap = existingKeyMap || {};
 
+  if (!renderedElement) {
+    return renderedElement;
+  }
+
   // Recurse over children first in case we bail early. Could be optimized to be
   // iterative if needed. Note that children only include those rendered in
   // `this` component. Child nodes in other components will not be here, so each
@@ -48,7 +52,10 @@ function resolveStyles(component, renderedElement, existingKeyMap) {
     return renderedElement;
   }
 
-  var newStyle = omit(style, function (value, key) { return _isSpecialKey(key); });
+  var newStyle = omit(
+    style,
+    function (value, key) { return _isSpecialKey(key); }
+  );
 
   // We need a unique key to correlate state changes due to user interaction
   // with the rendered element, so we know to apply the proper interactive
@@ -69,38 +76,7 @@ function resolveStyles(component, renderedElement, existingKeyMap) {
   existingKeyMap[key] = true;
 
   // Media queries
-  Object.keys(style)
-  .filter(function (name) { return name[0] === '('; })
-  .map(function (name) {
-    // Create a global MediaQueryList if one doesn't already exist
-    var mql = mediaQueryListByQueryString[name];
-    if (!mql) {
-      mediaQueryListByQueryString[name] = mql = window.matchMedia(name);
-    }
-
-    // Keep track of which keys already have listeners
-    if (!component._radiumMediaQueryListenersByQuery) {
-      component._radiumMediaQueryListenersByQuery = {};
-    }
-
-    if (!component._radiumMediaQueryListenersByQuery[name]) {
-      var listener = function(mql) {
-        var state = {};
-        state[name] = mql.matches;
-        _setStyleState(component, '_all', state);
-      };
-      mql.addListener(listener);
-      component._radiumMediaQueryListenersByQuery[name] = {
-        remove: function() { mql.removeListener(listener); }
-      };
-    }
-
-    // Apply media query states
-    if (mql.matches) {
-      var mediaQueryStyles = style[name];
-      merge(newStyle, mediaQueryStyles);
-    }
-  });
+  _resolveMediaQueryStyles(component, style, newStyle);
 
   // Only add handlers if necessary
   if (style[':hover'] || style[':active']) {
@@ -215,5 +191,48 @@ function _mouseUp(component) {
     }
   });
 }
+
+function _resolveMediaQueryStyles(component, style, newStyle) {
+  Object.keys(style)
+  .filter(function (name) { return name[0] === '('; })
+  .map(function (query) {
+    // Create a global MediaQueryList if one doesn't already exist
+    var mql = mediaQueryListByQueryString[query];
+    if (!mql) {
+      mediaQueryListByQueryString[query] = mql = window.matchMedia(query);
+    }
+
+    // Keep track of which keys already have listeners
+    if (!component._radiumMediaQueryListenersByQuery) {
+      component._radiumMediaQueryListenersByQuery = {};
+    }
+
+    if (!component._radiumMediaQueryListenersByQuery[query]) {
+      var listener = _onMediaQueryChange.bind(null, component, query);
+      mql.addListener(listener);
+      component._radiumMediaQueryListenersByQuery[query] = {
+        remove: function() { mql.removeListener(listener); }
+      };
+    }
+
+    // Apply media query states
+    if (mql.matches) {
+      var mediaQueryStyles = style[query];
+      merge(newStyle, mediaQueryStyles);
+    }
+  });
+}
+
+function _onMediaQueryChange(component, query, mediaQueryList) {
+  var state = {};
+  state[name] = mediaQueryList.matches;
+  _setStyleState(component, '_all', state);
+}
+
+// Exposing methods for tests is ugly, but the alternative, re-requiring the
+// module each time, is too slow
+resolveStyles.__clearStateForTests = function() {
+  mediaQueryListByQueryString = {};
+};
 
 module.exports = resolveStyles;
