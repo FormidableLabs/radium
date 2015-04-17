@@ -1,7 +1,7 @@
 'use strict';
 
 var merge = require('lodash/object/merge');
-var resolveStyles = require('./resolve-styles');
+var resolveStyles = require('./resolve-styles.js');
 
 function wrap(config) {
   var newConfig = {

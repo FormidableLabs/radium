@@ -34,11 +34,15 @@
     "webpack-dev-server": "^1.7.0"
   },
   "jest": {
-    "testPathDirs": ["__tests__"],
+    "testPathDirs": ["modules"],
     "collectCoverage": true,
     "collectCoverageOnlyFrom": {
       "modules/resolve-styles.js": true,
       "modules/wrap.js": true
-    }
+    },
+    "unmockedModulePathPatterns": [
+      "lodash",
+      "react"
+    ]
   }
 }
