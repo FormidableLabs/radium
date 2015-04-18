@@ -601,4 +601,72 @@ describe('resolveStyles', function() {
     });
   });
 
+  describe.only('multiple states triggered at once', function() {
+
+    describe('applies pseudo styles in the defined order', function() {
+      var component = genComponent();
+      var stylePermutations = permutate([
+        {name: ':active', style: {background: 'red'}},
+        {name: ':focus', style: {background: 'yellow'}},
+        {name: ':hover', style: {background: 'blue'}},
+      ]);
+      var onHandlerPermutations = permutate([
+        'onFocus',
+        'onMouseDown',
+        'onMouseEnter',
+      ]);
+
+      stylePermutations.forEach(function(pseudoStyles) {
+        onHandlerPermutations.forEach(function(onHandlers) {
+          createMultiPseudoTest(pseudoStyles, onHandlers);
+        });
+      });
+
+      function createMultiPseudoTest(pseudoStyles, onHandlers) {
+        var name = 'applies pseudo styles in the defined order: ' +
+          pseudoStyles.map(function(pseudo) { return pseudo.name; }).join(', ') +
+          ' when handlers called in order: ' + onHandlers.join(', ');
+        it(name, function() {
+          var getRenderedElement = function() {
+            var renderedElement = {props: {style: {}}};
+            pseudoStyles.forEach(function(pseudo) {
+              renderedElement.props.style[pseudo.name] = pseudo.style;
+            });
+            return renderedElement;
+          };
+
+          var result = resolveStyles(component, getRenderedElement());
+
+          onHandlers.forEach(function(onHandler) {
+            result.props[onHandler]();
+          });
+
+          result = resolveStyles(component, getRenderedElement());
+
+          expect(result.props.style.background).toBe(
+            pseudoStyles[pseudoStyles.length - 1].style.background
+          );
+        });
+      }
+    });
+  });
+
 });
+
+// http://stackoverflow.com/a/25395068/13932
+function permutate(arr) {
+  var permutations = [];
+  if (arr.length === 1) {
+    return [arr];
+  }
+
+  for (var i = 0; i < arr.length; i++) {
+    var subPerms = permutate(arr.slice(0, i).concat(arr.slice(i + 1)));
+    for (var j = 0; j < subPerms.length; j++) {
+      subPerms[j].unshift(arr[i]);
+      permutations.push(subPerms[j]);
+    }
+  }
+
+  return permutations;
+}

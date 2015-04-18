@@ -101,15 +101,6 @@ function resolveStyles(component, renderedElement, existingKeyMap) {
       component._lastMouseDown = Date.now();
       _setStyleState(component, key, { isActive: true });
     };
-
-    // Merge in the styles if needed
-    if (_getStyleState(component, key, 'isHovering')) {
-      merge(newStyle, style[':hover']);
-    }
-
-    if (_getStyleState(component, key, 'isActive')) {
-      merge(newStyle, style[':active']);
-    }
   }
 
   if (style[':focus']) {
@@ -124,11 +115,18 @@ function resolveStyles(component, renderedElement, existingKeyMap) {
       existingOnBlur && existingOnBlur(e);
       _setStyleState(component, key, { isFocused: false });
     };
-
-    if (_getStyleState(component, key, 'isFocused')) {
-      merge(newStyle, style[':focus']);
-    }
   }
+
+  // Merge the styles in the order they were defined
+  Object.keys(style).forEach(function(name) {
+    if (
+      (name === ':active' && _getStyleState(component, key, 'isActive')) ||
+      (name === ':hover' && _getStyleState(component, key, 'isHovering')) ||
+      (name === ':focus' && _getStyleState(component, key, 'isFocused'))
+    ) {
+      merge(newStyle, style[name]);
+    }
+  });
 
   if (style[':active'] && !component._radiumMouseUpListener) {
     component._radiumMouseUpListener = MouseUpListener.subscribe(
