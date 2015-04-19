@@ -52,11 +52,6 @@ function resolveStyles(component, renderedElement, existingKeyMap) {
     return renderedElement;
   }
 
-  var newStyle = omit(
-    style,
-    function (value, key) { return _isSpecialKey(key); }
-  );
-
   // We need a unique key to correlate state changes due to user interaction
   // with the rendered element, so we know to apply the proper interactive
   // styles.
@@ -75,8 +70,13 @@ function resolveStyles(component, renderedElement, existingKeyMap) {
 
   existingKeyMap[key] = true;
 
-  // Media queries
-  _resolveMediaQueryStyles(component, style, newStyle);
+  // Media queries can contain pseudo styles, like :hover
+  style = _resolveMediaQueryStyles(component, style);
+
+  var newStyle = omit(
+    style,
+    function (value, key) { return _isSpecialKey(key); }
+  );
 
   // Only add handlers if necessary
   if (style[':hover'] || style[':active']) {
@@ -190,7 +190,7 @@ function _mouseUp(component) {
   });
 }
 
-function _resolveMediaQueryStyles(component, style, newStyle) {
+function _resolveMediaQueryStyles(component, style) {
   Object.keys(style)
   .filter(function (name) { return name[0] === '('; })
   .map(function (query) {
@@ -216,9 +216,11 @@ function _resolveMediaQueryStyles(component, style, newStyle) {
     // Apply media query states
     if (mql.matches) {
       var mediaQueryStyles = style[query];
-      merge(newStyle, mediaQueryStyles);
+      style = _mergeStyles([style, mediaQueryStyles]);
     }
   });
+
+  return style;
 }
 
 function _onMediaQueryChange(component, query, mediaQueryList) {
