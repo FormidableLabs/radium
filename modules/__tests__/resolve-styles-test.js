@@ -523,10 +523,9 @@ describe('resolveStyles', function() {
 
     it('applies styles when media query matches', function() {
       var component = genComponent();
-      var addListener = jest.genMockFunction();
       window.matchMedia = jest.genMockFunction().mockImplementation(function() {
         return {
-          addListener: addListener,
+          addListener: jest.genMockFunction(),
           matches: true,
         };
       });
@@ -540,6 +539,41 @@ describe('resolveStyles', function() {
 
       var result = resolveStyles(component, getRenderedElement());
       expect(result.props.style.background).toEqual('red');
+    });
+
+    it('merges nested pseudo styles', function() {
+      var component = genComponent();
+      window.matchMedia = jest.genMockFunction().mockImplementation(function() {
+        return {
+          addListener: jest.genMockFunction(),
+          matches: true,
+        };
+      });
+
+      var getRenderedElement = function() {
+        return {props: {style: {
+          background: 'blue',
+          ':hover': {
+            background: 'green',
+            color: 'green'
+          },
+          '(max-width: 400px)': {
+            background: 'red',
+            ':hover': {
+              background: 'yellow'
+            }
+          }
+        }}};
+      };
+
+      var result = resolveStyles(component, getRenderedElement());
+      expect(result.props.style.background).toEqual('red');
+
+      result.props.onMouseEnter();
+
+      result = resolveStyles(component, getRenderedElement());
+      expect(result.props.style.background).toEqual('yellow');
+      expect(result.props.style.color).toEqual('green');
     });
 
     it('calls component setState when media query changes', function() {
@@ -601,7 +635,7 @@ describe('resolveStyles', function() {
     });
   });
 
-  describe.only('multiple states triggered at once', function() {
+  describe('multiple states triggered at once', function() {
 
     describe('applies pseudo styles in the defined order', function() {
       var component = genComponent();
