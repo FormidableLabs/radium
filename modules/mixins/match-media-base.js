@@ -34,6 +34,7 @@ var MatchMediaBase = {
 
   componentWillMount: function () {
     mediaChangeCallback = this.handleMediaChange;
+    mediaChangeCallback();
   },
 
   componentWillUnmount: function () {
