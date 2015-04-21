@@ -3,8 +3,9 @@ var React = require('react');
 var Button = require('./components/button.jsx');
 var ComputedWell = require("./components/computed-well.jsx");
 var Style = require("../modules/components/style.js");
+var Radium = require("../modules");
 
-var App = React.createClass({
+var App = React.createClass(Radium.wrap({
 
   _remount: function() {
     this.setState({shouldRenderNull: true});
@@ -43,6 +44,13 @@ var App = React.createClass({
             Button
           </Button>
         </p>
+
+        <div style={{width: 220}}>
+          {Array.apply(null, Array(100)).map(function(_, i) {
+            return <div style={tileStyle} key={'tile' + i}/>
+          })}
+          <div style={{clear:'both'}} />
+        </div>
 
         <Style
           rules={[
@@ -98,6 +106,21 @@ var App = React.createClass({
       </div>
     );
   }
-});
+}));
+
+var tileStyle = {
+  display: 'block',
+  float: 'left',
+  background: '#ccc',
+  width: 20,
+  height: 20,
+  textAlign: 'center',
+  border: '1px solid white',
+  cursor: 'pointer',
+
+  ':hover' : {
+    background: '#999'
+  }
+};
 
 React.render(<App />, document.getElementById('app'));
