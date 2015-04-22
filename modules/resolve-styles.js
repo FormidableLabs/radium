@@ -10,7 +10,7 @@ var omit = require('lodash/object/omit');
 var mediaQueryListByQueryString = {};
 
 var _isSpecialKey = function (key) {
-  return key[0] === ':' || key[0] === '(';
+  return key[0] === ':' || key[0] === '@';
 };
 
 var _getStyleState = function (component, key, value) {
@@ -68,8 +68,11 @@ var _onMediaQueryChange = function (component, query, mediaQueryList) {
 
 var _resolveMediaQueryStyles = function (component, style) {
   Object.keys(style)
-  .filter(function (name) { return name[0] === '('; })
+  .filter(function (name) { return name[0] === '@'; })
   .map(function (query) {
+    var mediaQueryStyles = style[query];
+    query = query.replace('@media ', '');
+
     // Create a global MediaQueryList if one doesn't already exist
     var mql = mediaQueryListByQueryString[query];
     if (!mql) {
@@ -91,7 +94,6 @@ var _resolveMediaQueryStyles = function (component, style) {
 
     // Apply media query states
     if (mql.matches) {
-      var mediaQueryStyles = style[query];
       style = _mergeStyles([style, mediaQueryStyles]);
     }
   });
