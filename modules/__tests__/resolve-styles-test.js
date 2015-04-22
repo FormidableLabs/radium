@@ -485,7 +485,7 @@ describe('resolveStyles', function () {
 
       var getRenderedElement = function () {
         return {props: {style: {
-          '(max-width: 400px)': {background: 'red'}
+          '@media (max-width: 400px)': {background: 'red'}
         }}};
       };
 
@@ -503,7 +503,7 @@ describe('resolveStyles', function () {
 
       var getRenderedElement = function () {
         return {props: {style: {
-          '(max-width: 400px)': {background: 'red'}
+          '@media (max-width: 400px)': {background: 'red'}
         }}};
       };
 
@@ -527,12 +527,12 @@ describe('resolveStyles', function () {
           {
             _isReactElement: true,
             key: 'first',
-            props: {style: {'(max-width: 400px)': {background: 'red'}}}
+            props: {style: {'@media (max-width: 400px)': {background: 'red'}}}
           },
           {
             _isReactElement: true,
             key: 'second',
-            props: {style: {'(max-width: 400px)': {background: 'red'}}}
+            props: {style: {'@media (max-width: 400px)': {background: 'red'}}}
           }
         ]}};
       };
@@ -556,7 +556,7 @@ describe('resolveStyles', function () {
       var getRenderedElement = function () {
         return {props: {style: {
           background: 'blue',
-          '(max-width: 400px)': {background: 'red'}
+          '@media (max-width: 400px)': {background: 'red'}
         }}};
       };
 
@@ -580,7 +580,7 @@ describe('resolveStyles', function () {
             background: 'green',
             color: 'green'
           },
-          '(max-width: 400px)': {
+          '@media (max-width: 400px)': {
             background: 'red',
             ':hover': {
               background: 'yellow'
@@ -616,7 +616,7 @@ describe('resolveStyles', function () {
       var getRenderedElement = function () {
         return {props: {style: {
           background: 'blue',
-          '(max-width: 400px)': {background: 'red'}
+          '@media (max-width: 400px)': {background: 'red'}
         }}};
       };
 
@@ -642,7 +642,7 @@ describe('resolveStyles', function () {
       var getRenderedElement = function () {
         return {props: {style: {
           background: 'blue',
-          '(max-width: 400px)': {background: 'red'}
+          '@media (max-width: 400px)': {background: 'red'}
         }}};
       };
 

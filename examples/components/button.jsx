@@ -34,11 +34,11 @@ var styles = {
     cursor: "pointer",
     outline: "none",
 
-    '(min-width: 992px)': {
+    '@media (min-width: 992px)': {
       padding: "0.6em 1.2em"
     },
 
-    '(min-width: 1200px)': {
+    '@media (min-width: 1200px)': {
       padding: "0.8em 1.5em"
     },
 
