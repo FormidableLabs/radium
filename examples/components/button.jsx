@@ -68,20 +68,7 @@ var styles = {
     ':active': {
       backgroundColor: "#990000"
     }
-  },
-
-  mediaQueries: [
-    {
-      md: {
-        padding: "0.6em 1.2em"
-      }
-    },
-    {
-      lg: {
-        padding: "0.8em 1.5em"
-      }
-    }
-  ],
+  }
 };
 
 module.exports = Button;
