@@ -122,9 +122,7 @@ rules:
     #                                                                         #
     ###########################################################################
 
-    global-strict: [2, "never"] # require or disallow the "use strict" pragma in the global scope
-    no-extra-strict: 2          # disallow use of "use strict" when already in strict mode
-    strict: 0                   # require that all functions are run in strict mode
+    strict: [2, "global"]     # require that all modules have use strict
 
     ###########################################################################
     #                                                                         #
@@ -177,7 +175,7 @@ rules:
     consistent-this: [2, "self"]   # enforces consistent naming when capturing the current execution context
     eol-last: 2                    # enforce newline at the end of file, with no multiple empty lines
     func-names: 0                  # require function expressions to have a name
-    func-style: 0                  # enforces use of function declarations or expressions
+    func-style: [2, "expression"] # enforces use of function expressions
     key-spacing: 2                 # enforces spacing between keys and values in object literal properties
     max-nested-callbacks: [2, 4]   # specify the maximum depth callbacks can be nested
     new-cap: 2                     # require a capital letter for constructors
@@ -211,6 +209,7 @@ rules:
     spaced-line-comment: 2         # require or disallow a space immediately following
                                    #    the // in a line comment
     wrap-regex: 0                  # require regex literals to be wrapped in parentheses
+    space-before-function-paren: [2, "always"]
 
     ###########################################################################
     #                                                                         #
