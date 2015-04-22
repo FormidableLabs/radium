@@ -34,7 +34,9 @@
     "webpack-dev-server": "^1.7.0"
   },
   "jest": {
-    "testPathDirs": ["modules"],
+    "testPathDirs": [
+      "modules"
+    ],
     "collectCoverage": true,
     "collectCoverageOnlyFrom": {
       "modules/resolve-styles.js": true,
