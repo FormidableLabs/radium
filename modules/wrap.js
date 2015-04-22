@@ -3,7 +3,7 @@
 var merge = require('lodash/object/merge');
 var resolveStyles = require('./resolve-styles.js');
 
-function wrap(config) {
+var wrap = function (config) {
   var newConfig = {
     getInitialState: function () {
       var existingInitialState = config.getInitialState ?
@@ -12,7 +12,7 @@ function wrap(config) {
       return merge({}, existingInitialState, { _radiumStyleState: {} });
     },
 
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
       config.componentWillUnmount && config.componentWillUnmount.call(this);
 
       if (this._radiumMouseUpListener) {
@@ -20,19 +20,19 @@ function wrap(config) {
       }
 
       if (this._radiumMediaQueryListenersByQuery) {
-        for (var query in this._radiumMediaQueryListenersByQuery) {
+        this._radiumMediaQueryListenersByQuery.forEach(function (query) {
           this._radiumMediaQueryListenersByQuery[query].remove();
-        }
+        });
       }
     },
 
     render: function () {
       var renderedElement = config.render.call(this);
       return resolveStyles(this, renderedElement);
-    },
+    }
   };
 
   return merge({}, config, newConfig);
-}
+};
 
 module.exports = wrap;

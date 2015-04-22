@@ -1,33 +1,56 @@
+/* eslint-env jasmine */
+/* global jest */
+
+'use strict';
+
 jest.dontMock('../resolve-styles.js');
 
 var MouseUpListener = require('../mouse-up-listener.js');
 var merge = require('lodash/object/merge');
 var resolveStyles = require('../resolve-styles.js');
 
-function genComponent() {
+var genComponent = function () {
   return {
-    setState: jest.genMockFunction().mockImplementation(function(newState) {
+    setState: jest.genMockFunction().mockImplementation(function (newState) {
       this.state = merge(this.state, newState);
     }),
     state: {}
   };
-}
+};
 
-describe('resolveStyles', function() {
+// http://stackoverflow.com/a/25395068/13932
+var permutate = function (arr) {
+  var permutations = [];
+  if (arr.length === 1) {
+    return [arr];
+  }
 
-  beforeEach(function() {
+  for (var i = 0; i < arr.length; i++) {
+    var subPerms = permutate(arr.slice(0, i).concat(arr.slice(i + 1)));
+    for (var j = 0; j < subPerms.length; j++) {
+      subPerms[j].unshift(arr[i]);
+      permutations.push(subPerms[j]);
+    }
+  }
+
+  return permutations;
+};
+
+describe('resolveStyles', function () {
+
+  beforeEach(function () {
     MouseUpListener.subscribe = jest.genMockFunction();
   });
 
-  describe('no-op behavior', function() {
+  describe('no-op behavior', function () {
 
-    it('handles null rendered element', function() {
+    it('handles null rendered element', function () {
       var component = genComponent();
 
-      var result = resolveStyles(component, null);
+      resolveStyles(component, null);
     });
 
-    it('doesn\'t explode', function() {
+    it('doesn\'t explode', function () {
       var component = genComponent();
       var renderedElement = {props: {}};
 
@@ -37,7 +60,7 @@ describe('resolveStyles', function() {
       expect(result.props).toBe(renderedElement.props);
     });
 
-    it('passes through normal style objects', function() {
+    it('passes through normal style objects', function () {
       var component = genComponent();
       var renderedElement = {props: {style: {color: 'blue'}}};
 
@@ -46,12 +69,12 @@ describe('resolveStyles', function() {
       expect(result.props.style).toBe(renderedElement.props.style);
     });
 
-    it('passes through normal style objects of children', function() {
+    it('passes through normal style objects of children', function () {
       var component = genComponent();
       var renderedElement = {props: {
         children: [{
           _isReactElement: true,
-          props: {style: {color: 'blue'}},
+          props: {style: {color: 'blue'}}
         }]
       }};
 
@@ -61,11 +84,11 @@ describe('resolveStyles', function() {
         .toBe(renderedElement.props.children[0].props.style);
     });
 
-    it('ignores invalid children', function() {
+    it('ignores invalid children', function () {
       var component = genComponent();
       var renderedElement = {props: {
         children: [{
-          props: {style: {color: 'blue'}},
+          props: {style: {color: 'blue'}}
         }]
       }};
 
@@ -77,13 +100,13 @@ describe('resolveStyles', function() {
 
   });
 
-  describe('style array', function() {
+  describe('style array', function () {
 
-    it('merges an array of style objects', function() {
+    it('merges an array of style objects', function () {
       var component = genComponent();
       var renderedElement = {props: {style: [
         {background: 'white'},
-        {color: 'blue'},
+        {color: 'blue'}
       ]}};
 
       var result = resolveStyles(component, renderedElement);
@@ -94,16 +117,16 @@ describe('resolveStyles', function() {
       });
     });
 
-    it('skips falsy and non-object entries', function() {
+    it('skips falsy and non-object entries', function () {
       var component = genComponent();
       var renderedElement = {props: {style: [
         {background: 'white'},
         false,
         null,
-        undefined,
+        ''.someUndefinedVar,
         '',
-        [1,2,3],
-        {color: 'blue'},
+        [1, 2, 3],
+        {color: 'blue'}
       ]}};
 
       var result = resolveStyles(component, renderedElement);
@@ -114,11 +137,11 @@ describe('resolveStyles', function() {
       });
     });
 
-    it('overwrites earlier styles with later ones', function() {
+    it('overwrites earlier styles with later ones', function () {
       var component = genComponent();
       var renderedElement = {props: {style: [
         {background: 'white'},
-        {background: 'blue'},
+        {background: 'blue'}
       ]}};
 
       var result = resolveStyles(component, renderedElement);
@@ -128,12 +151,12 @@ describe('resolveStyles', function() {
       });
     });
 
-    it('merges nested special styles', function() {
+    it('merges nested special styles', function () {
       var component = genComponent();
-      var getRenderedElement = function() {
+      var getRenderedElement = function () {
         return {props: {style: [
           {':hover': { background: 'white'}},
-          {':hover': {color: 'blue'}},
+          {':hover': {color: 'blue'}}
         ]}};
       };
 
@@ -149,29 +172,220 @@ describe('resolveStyles', function() {
 
   });
 
-  describe(':hover', function() {
+  var createPseduoStyleTests = function (pseudo, onHandlerName, offHandlerName) {
+
+    it('strips special styles if not applied', function () {
+      var component = genComponent();
+      var style = {background: 'blue'};
+      style[':' + pseudo] = {background: 'red'};
+
+      var result = resolveStyles(component, {props: {style: style}});
+
+      expect(result.props.style).toEqual({background: 'blue'});
+    });
+
+    it('adds appropriate handlers for ' + pseudo + ' styles', function () {
+      var component = genComponent();
+      var style = {background: 'blue'};
+      style[':' + pseudo] = {background: 'red'};
+
+      var result = resolveStyles(component, {props: {style: style}});
+
+      expect(typeof result.props[onHandlerName]).toBe('function');
+      if (offHandlerName) {
+        expect(typeof result.props[offHandlerName]).toBe('function');
+      }
+    });
+
+    it('adds ' + pseudo + ' styles ' + onHandlerName, function () {
+      var component = genComponent();
+      var style = {background: 'blue'};
+      style[':' + pseudo] = {background: 'red'};
+
+      var result = resolveStyles(component, {props: {style: style}});
+      expect(result.props.style.background).toEqual('blue');
+
+      result.props[onHandlerName]();
+
+      expect(component.setState).toBeCalled();
+
+      // Must create a new renderedElement each time, same as React, since
+      // resolveStyles mutates
+      result = resolveStyles(component, {props: {style: style}});
+      expect(result.props.style.background).toEqual('red');
+    });
+
+    it('throws if multiple elements have the same key', function () {
+      var component = genComponent();
+      var style = {background: 'blue'};
+      style[':' + pseudo] = {background: 'red'};
+
+      var getRenderedElement = function () {
+        return {props: {children: [
+          {_isReactElement: true, key: 'foo', props: {style: style}},
+          {_isReactElement: true, key: 'foo', props: {style: style}}
+        ]}};
+      };
+
+      expect(function () {
+        resolveStyles(component, getRenderedElement());
+      }).toThrow();
+    });
+
+    it('throws if multiple elements have no key', function () {
+      var component = genComponent();
+      var style = {background: 'blue'};
+      style[':' + pseudo] = {background: 'red'};
+
+      var getRenderedElement = function () {
+        return {props: {children: [
+          {_isReactElement: true, props: {style: style}},
+          {_isReactElement: true, props: {style: style}}
+        ]}};
+      };
+
+      expect(function () {
+        resolveStyles(component, getRenderedElement());
+      }).toThrow();
+    });
+
+    it('adds ' + pseudo + ' styles to correct element by key', function () {
+      var component = genComponent();
+      var style = {background: 'blue'};
+      style[':' + pseudo] = {background: 'red'};
+
+      var getRenderedElement = function () {
+        return {props: {children: [
+          {_isReactElement: true, key: 'foo', props: {}},
+          {_isReactElement: true, key: 'bar', props: {style: style}}
+        ]}};
+      };
+
+      var result = resolveStyles(component, getRenderedElement());
+      expect(result.props.children[0].props.style).toEqual(null);
+      expect(result.props.children[1].props.style.background).toEqual('blue');
+
+      result.props.children[1].props[onHandlerName]();
+
+      result = resolveStyles(component, getRenderedElement());
+      expect(result.props.children[0].props.style).toEqual(null);
+      expect(result.props.children[1].props.style.background).toEqual('red');
+    });
+
+    it('adds ' + pseudo + ' styles to correct element by ref', function () {
+      var component = genComponent();
+      var style = {background: 'blue'};
+      style[':' + pseudo] = {background: 'red'};
+
+      var getRenderedElement = function () {
+        return {props: {children: [
+          {_isReactElement: true, ref: 'foo', props: {}},
+          {_isReactElement: true, ref: 'bar', props: {style: style}}
+        ]}};
+      };
+
+      var result = resolveStyles(component, getRenderedElement());
+      expect(result.props.children[0].props.style).toEqual(null);
+      expect(result.props.children[1].props.style.background).toEqual('blue');
+
+      result.props.children[1].props[onHandlerName]();
+
+      result = resolveStyles(component, getRenderedElement());
+      expect(result.props.children[0].props.style).toEqual(null);
+      expect(result.props.children[1].props.style.background).toEqual('red');
+    });
+
+    if (offHandlerName) {
+      it('removes ' + pseudo + ' styles ' + offHandlerName, function () {
+        var component = genComponent();
+        var style = {background: 'blue'};
+        style[':' + pseudo] = {background: 'red'};
+
+        var result = resolveStyles(component, {props: {style: style}});
+
+        result.props[onHandlerName]();
+
+        result = resolveStyles(component, {props: {style: style}});
+        expect(result.props.style.background).toEqual('red');
+
+        result.props[offHandlerName]();
+
+        expect(component.setState).toBeCalled();
+
+        result = resolveStyles(component, {props: {style: style}});
+        expect(result.props.style.background).toEqual('blue');
+      });
+    }
+
+    it('calls existing ' + onHandlerName + ' handler', function () {
+      var component = genComponent();
+      var originalOnHandler = jest.genMockFunction();
+
+      var style = {background: 'blue'};
+      style[':' + pseudo] = {background: 'red'};
+
+      var renderedElement = {props: {style: style}};
+      renderedElement.props[onHandlerName] = originalOnHandler;
+
+      var result = resolveStyles(component, renderedElement);
+
+      result.props[onHandlerName]();
+
+      expect(originalOnHandler).toBeCalled();
+
+      result = resolveStyles(component, {props: {style: style}});
+      expect(result.props.style.background).toEqual('red');
+    });
+
+    if (offHandlerName) {
+      it('calls existing ' + offHandlerName + ' handler', function () {
+        var component = genComponent();
+        var originalOffHandler = jest.genMockFunction();
+
+        var style = {background: 'blue'};
+        style[':' + pseudo] = {background: 'red'};
+        style[offHandlerName] = originalOffHandler;
+
+        var renderedElement = {props: {style: style}};
+        renderedElement.props[offHandlerName] = originalOffHandler;
+
+        var result = resolveStyles(component, renderedElement);
+
+        result.props[onHandlerName]();
+        result.props[offHandlerName]();
+
+        expect(originalOffHandler).toBeCalled();
+
+        result = resolveStyles(component, {props: {style: style}});
+        expect(result.props.style.background).toEqual('blue');
+      });
+    }
+
+  };
+
+  describe(':hover', function () {
     createPseduoStyleTests('hover', 'onMouseEnter', 'onMouseLeave');
   });
 
-  describe(':focus', function() {
+  describe(':focus', function () {
     createPseduoStyleTests('focus', 'onFocus', 'onBlur');
   });
 
-  describe(':active', function() {
+  describe(':active', function () {
     createPseduoStyleTests('active', 'onMouseDown');
 
-    it('subscribes to mouse up listener', function() {
+    it('subscribes to mouse up listener', function () {
       var component = genComponent();
       var renderedElement = {props: {style: {
         ':active': {background: 'red'}
       }}};
 
-      var result = resolveStyles(component, renderedElement);
+      resolveStyles(component, renderedElement);
 
       expect(MouseUpListener.subscribe).toBeCalled();
     });
 
-    it('adds active styles on mouse down', function() {
+    it('adds active styles on mouse down', function () {
       var component = genComponent();
       var style = {
         background: 'blue',
@@ -189,7 +403,7 @@ describe('resolveStyles', function() {
       expect(result.props.style.background).toEqual('red');
     });
 
-    it('removes active styles on mouse up', function() {
+    it('removes active styles on mouse up', function () {
       var component = genComponent();
       var style = {
         background: 'blue',
@@ -210,7 +424,7 @@ describe('resolveStyles', function() {
       expect(result.props.style.background).toEqual('blue');
     });
 
-    it('ignores mouse up if no active styles', function() {
+    it('ignores mouse up if no active styles', function () {
       var component = genComponent();
       var style = {
         background: 'blue',
@@ -229,7 +443,7 @@ describe('resolveStyles', function() {
       expect(result.props.style.background).toEqual('blue');
     });
 
-    it('calls existing onMouseDown handler', function() {
+    it('calls existing onMouseDown handler', function () {
       var component = genComponent();
       var style = {
         background: 'blue',
@@ -257,228 +471,37 @@ describe('resolveStyles', function() {
     });
   });
 
-  function createPseduoStyleTests(pseudo, onHandlerName, offHandlerName) {
-
-    it('strips special styles if not applied', function() {
-      var component = genComponent();
-      var style = {background: 'blue'};
-      style[':' + pseudo] = {background: 'red'};
-
-      var result = resolveStyles(component, {props: {style: style}});
-
-      expect(result.props.style).toEqual({background: 'blue'});
-    });
-
-    it('adds appropriate handlers for ' + pseudo + ' styles', function() {
-      var component = genComponent();
-      var style = {background: 'blue'};
-      style[':' + pseudo] = {background: 'red'};
-
-      var result = resolveStyles(component, {props: {style: style}});
-
-      expect(typeof result.props[onHandlerName]).toBe('function');
-      if (offHandlerName) {
-        expect(typeof result.props[offHandlerName]).toBe('function');
-      }
-    });
-
-    it('adds ' + pseudo + ' styles ' + onHandlerName, function() {
-      var component = genComponent();
-      var style = {background: 'blue'};
-      style[':' + pseudo] = {background: 'red'};
-
-      var result = resolveStyles(component, {props: {style: style}});
-      expect(result.props.style.background).toEqual('blue');
-
-      result.props[onHandlerName]();
-
-      expect(component.setState).toBeCalled();
-
-      // Must create a new renderedElement each time, same as React, since
-      // resolveStyles mutates
-      result = resolveStyles(component, {props: {style: style}});
-      expect(result.props.style.background).toEqual('red');
-    });
-
-    it('throws if multiple elements have the same key', function() {
-      var component = genComponent();
-      var style = {background: 'blue'};
-      style[':' + pseudo] = {background: 'red'};
-
-      var getRenderedElement = function() {
-        return {props: {children: [
-          {_isReactElement: true, key: 'foo', props: {style: style}},
-          {_isReactElement: true, key: 'foo', props: {style: style}},
-        ]}};
-      };
-
-      expect(function() {
-        resolveStyles(component, getRenderedElement());
-      }).toThrow();
-    });
-
-    it('throws if multiple elements have no key', function() {
-      var component = genComponent();
-      var style = {background: 'blue'};
-      style[':' + pseudo] = {background: 'red'};
-
-      var getRenderedElement = function() {
-        return {props: {children: [
-          {_isReactElement: true, props: {style: style}},
-          {_isReactElement: true, props: {style: style}},
-        ]}};
-      };
-
-      expect(function() {
-        resolveStyles(component, getRenderedElement());
-      }).toThrow();
-    });
-
-    it('adds ' + pseudo + ' styles to correct element by key', function() {
-      var component = genComponent();
-      var style = {background: 'blue'};
-      style[':' + pseudo] = {background: 'red'};
-
-      var getRenderedElement = function() {
-        return {props: {children: [
-          {_isReactElement: true, key: 'foo', props: {}},
-          {_isReactElement: true, key: 'bar', props: {style: style}},
-        ]}};
-      };
-
-      var result = resolveStyles(component, getRenderedElement());
-      expect(result.props.children[0].props.style).toEqual(null);
-      expect(result.props.children[1].props.style.background).toEqual('blue');
-
-      result.props.children[1].props[onHandlerName]();
-
-      result = resolveStyles(component, getRenderedElement());
-      expect(result.props.children[0].props.style).toEqual(null);
-      expect(result.props.children[1].props.style.background).toEqual('red');
-    });
-
-    it('adds ' + pseudo + ' styles to correct element by ref', function() {
-      var component = genComponent();
-      var style = {background: 'blue'};
-      style[':' + pseudo] = {background: 'red'};
-
-      var getRenderedElement = function() {
-        return {props: {children: [
-          {_isReactElement: true, ref: 'foo', props: {}},
-          {_isReactElement: true, ref: 'bar', props: {style: style}},
-        ]}};
-      };
-
-      var result = resolveStyles(component, getRenderedElement());
-      expect(result.props.children[0].props.style).toEqual(null);
-      expect(result.props.children[1].props.style.background).toEqual('blue');
-
-      result.props.children[1].props[onHandlerName]();
-
-      result = resolveStyles(component, getRenderedElement());
-      expect(result.props.children[0].props.style).toEqual(null);
-      expect(result.props.children[1].props.style.background).toEqual('red');
-    });
-
-    if (offHandlerName) {
-      it('removes ' + pseudo + ' styles ' + offHandlerName, function() {
-        var component = genComponent();
-        var style = {background: 'blue'};
-        style[':' + pseudo] = {background: 'red'};
-
-        var result = resolveStyles(component, {props: {style: style}});
-
-        result.props[onHandlerName]();
-
-        result = resolveStyles(component, {props: {style: style}});
-        expect(result.props.style.background).toEqual('red');
-
-        result.props[offHandlerName]();
-
-        expect(component.setState).toBeCalled();
-
-        result = resolveStyles(component, {props: {style: style}});
-        expect(result.props.style.background).toEqual('blue');
-      });
-    }
-
-    it('calls existing ' + onHandlerName + ' handler', function() {
-      var component = genComponent();
-      var originalOnHandler = jest.genMockFunction();
-
-      var style = {background: 'blue'};
-      style[':' + pseudo] = {background: 'red'};
-
-      var renderedElement = {props: {style: style}};
-      renderedElement.props[onHandlerName] = originalOnHandler;
-
-      var result = resolveStyles(component, renderedElement);
-
-      result.props[onHandlerName]();
-
-      expect(originalOnHandler).toBeCalled();
-
-      result = resolveStyles(component, {props: {style: style}});
-      expect(result.props.style.background).toEqual('red');
-    });
-
-    if (offHandlerName) {
-      it('calls existing ' + offHandlerName + ' handler', function() {
-        var component = genComponent();
-        var originalOffHandler = jest.genMockFunction();
-
-        var style = {background: 'blue'};
-        style[':' + pseudo] = {background: 'red'};
-        style[offHandlerName] = originalOffHandler;
-
-        var renderedElement = {props: {style: style}};
-        renderedElement.props[offHandlerName] = originalOffHandler;
-
-        var result = resolveStyles(component, renderedElement);
-
-        result.props[onHandlerName]();
-        result.props[offHandlerName]();
-
-        expect(originalOffHandler).toBeCalled();
-
-        result = resolveStyles(component, {props: {style: style}});
-        expect(result.props.style.background).toEqual('blue');
-      });
-    }
-
-  }
-
-  describe('media queries', function() {
-    beforeEach(function() {
+  describe('media queries', function () {
+    beforeEach(function () {
       resolveStyles.__clearStateForTests();
     });
 
-    it('listens for media queries', function() {
+    it('listens for media queries', function () {
       var component = genComponent();
       var addListener = jest.genMockFunction();
-      window.matchMedia = jest.genMockFunction().mockImplementation(function() {
+      window.matchMedia = jest.genMockFunction().mockImplementation(function () {
         return {addListener: addListener};
       });
 
-      var getRenderedElement = function() {
+      var getRenderedElement = function () {
         return {props: {style: {
           '(max-width: 400px)': {background: 'red'}
         }}};
       };
 
-      var result = resolveStyles(component, getRenderedElement());
+      resolveStyles(component, getRenderedElement());
       expect(window.matchMedia).lastCalledWith('(max-width: 400px)');
       expect(addListener).lastCalledWith(jasmine.any('function'));
     });
 
-    it('only listens once for a single element', function() {
+    it('only listens once for a single element', function () {
       var component = genComponent();
       var addListener = jest.genMockFunction();
-      window.matchMedia = jest.genMockFunction().mockImplementation(function() {
+      window.matchMedia = jest.genMockFunction().mockImplementation(function () {
         return {addListener: addListener};
       });
 
-      var getRenderedElement = function() {
+      var getRenderedElement = function () {
         return {props: {style: {
           '(max-width: 400px)': {background: 'red'}
         }}};
@@ -491,15 +514,15 @@ describe('resolveStyles', function() {
       expect(addListener.mock.calls.length).toBe(1);
     });
 
-    it('listens once per component', function() {
+    it('listens once per component', function () {
       var component1 = genComponent();
       var component2 = genComponent();
       var addListener = jest.genMockFunction();
-      window.matchMedia = jest.genMockFunction().mockImplementation(function() {
+      window.matchMedia = jest.genMockFunction().mockImplementation(function () {
         return {addListener: addListener};
       });
 
-      var getRenderedElement = function() {
+      var getRenderedElement = function () {
         return {props: {children: [
           {
             _isReactElement: true,
@@ -510,7 +533,7 @@ describe('resolveStyles', function() {
             _isReactElement: true,
             key: 'second',
             props: {style: {'(max-width: 400px)': {background: 'red'}}}
-          },
+          }
         ]}};
       };
 
@@ -521,16 +544,16 @@ describe('resolveStyles', function() {
       expect(addListener.mock.calls.length).toBe(2);
     });
 
-    it('applies styles when media query matches', function() {
+    it('applies styles when media query matches', function () {
       var component = genComponent();
-      window.matchMedia = jest.genMockFunction().mockImplementation(function() {
+      window.matchMedia = jest.genMockFunction().mockImplementation(function () {
         return {
           addListener: jest.genMockFunction(),
-          matches: true,
+          matches: true
         };
       });
 
-      var getRenderedElement = function() {
+      var getRenderedElement = function () {
         return {props: {style: {
           background: 'blue',
           '(max-width: 400px)': {background: 'red'}
@@ -541,16 +564,16 @@ describe('resolveStyles', function() {
       expect(result.props.style.background).toEqual('red');
     });
 
-    it('merges nested pseudo styles', function() {
+    it('merges nested pseudo styles', function () {
       var component = genComponent();
-      window.matchMedia = jest.genMockFunction().mockImplementation(function() {
+      window.matchMedia = jest.genMockFunction().mockImplementation(function () {
         return {
           addListener: jest.genMockFunction(),
-          matches: true,
+          matches: true
         };
       });
 
-      var getRenderedElement = function() {
+      var getRenderedElement = function () {
         return {props: {style: {
           background: 'blue',
           ':hover': {
@@ -576,21 +599,21 @@ describe('resolveStyles', function() {
       expect(result.props.style.color).toEqual('green');
     });
 
-    it('calls component setState when media query changes', function() {
+    it('calls component setState when media query changes', function () {
       var component1 = genComponent();
       var component2 = genComponent();
       var listeners = [];
       var addListener = jest.genMockFunction().mockImplementation(
-        function(listener) {
+        function (listener) {
           listeners.push(listener);
         }
       );
       var mql = {addListener: addListener};
-      window.matchMedia = jest.genMockFunction().mockImplementation(function() {
+      window.matchMedia = jest.genMockFunction().mockImplementation(function () {
         return mql;
       });
 
-      var getRenderedElement = function() {
+      var getRenderedElement = function () {
         return {props: {style: {
           background: 'blue',
           '(max-width: 400px)': {background: 'red'}
@@ -600,23 +623,23 @@ describe('resolveStyles', function() {
       resolveStyles(component1, getRenderedElement());
       resolveStyles(component2, getRenderedElement());
 
-      listeners.forEach(function(listener) { listener(mql); });
+      listeners.forEach(function (listener) { listener(mql); });
 
       expect(component1.setState).toBeCalled();
       expect(component2.setState).toBeCalled();
     });
 
-    it('saves listeners on component for later removal', function() {
+    it('saves listeners on component for later removal', function () {
       var component = genComponent();
       var mql = {
         addListener: jest.genMockFunction(),
-        removeListener: jest.genMockFunction(),
+        removeListener: jest.genMockFunction()
       };
-      window.matchMedia = jest.genMockFunction().mockImplementation(function() {
+      window.matchMedia = jest.genMockFunction().mockImplementation(function () {
         return mql;
       });
 
-      var getRenderedElement = function() {
+      var getRenderedElement = function () {
         return {props: {style: {
           background: 'blue',
           '(max-width: 400px)': {background: 'red'}
@@ -626,7 +649,7 @@ describe('resolveStyles', function() {
       resolveStyles(component, getRenderedElement());
 
       Object.keys(component._radiumMediaQueryListenersByQuery).forEach(
-        function(key) {
+        function (key) {
           component._radiumMediaQueryListenersByQuery[key].remove();
         }
       );
@@ -635,35 +658,29 @@ describe('resolveStyles', function() {
     });
   });
 
-  describe('multiple states triggered at once', function() {
+  describe('multiple states triggered at once', function () {
 
-    describe('applies pseudo styles in the defined order', function() {
+    describe('applies pseudo styles in the defined order', function () {
       var component = genComponent();
       var stylePermutations = permutate([
         {name: ':active', style: {background: 'red'}},
         {name: ':focus', style: {background: 'yellow'}},
-        {name: ':hover', style: {background: 'blue'}},
+        {name: ':hover', style: {background: 'blue'}}
       ]);
       var onHandlerPermutations = permutate([
         'onFocus',
         'onMouseDown',
-        'onMouseEnter',
+        'onMouseEnter'
       ]);
 
-      stylePermutations.forEach(function(pseudoStyles) {
-        onHandlerPermutations.forEach(function(onHandlers) {
-          createMultiPseudoTest(pseudoStyles, onHandlers);
-        });
-      });
-
-      function createMultiPseudoTest(pseudoStyles, onHandlers) {
+      var createMultiPseudoTest = function (pseudoStyles, onHandlers) {
         var name = 'applies pseudo styles in the defined order: ' +
-          pseudoStyles.map(function(pseudo) { return pseudo.name; }).join(', ') +
+          pseudoStyles.map(function (pseudo) { return pseudo.name; }).join(', ') +
           ' when handlers called in order: ' + onHandlers.join(', ');
-        it(name, function() {
-          var getRenderedElement = function() {
+        it(name, function () {
+          var getRenderedElement = function () {
             var renderedElement = {props: {style: {}}};
-            pseudoStyles.forEach(function(pseudo) {
+            pseudoStyles.forEach(function (pseudo) {
               renderedElement.props.style[pseudo.name] = pseudo.style;
             });
             return renderedElement;
@@ -671,7 +688,7 @@ describe('resolveStyles', function() {
 
           var result = resolveStyles(component, getRenderedElement());
 
-          onHandlers.forEach(function(onHandler) {
+          onHandlers.forEach(function (onHandler) {
             result.props[onHandler]();
           });
 
@@ -681,26 +698,14 @@ describe('resolveStyles', function() {
             pseudoStyles[pseudoStyles.length - 1].style.background
           );
         });
-      }
+      };
+
+      stylePermutations.forEach(function (pseudoStyles) {
+        onHandlerPermutations.forEach(function (onHandlers) {
+          createMultiPseudoTest(pseudoStyles, onHandlers);
+        });
+      });
     });
   });
 
 });
-
-// http://stackoverflow.com/a/25395068/13932
-function permutate(arr) {
-  var permutations = [];
-  if (arr.length === 1) {
-    return [arr];
-  }
-
-  for (var i = 0; i < arr.length; i++) {
-    var subPerms = permutate(arr.slice(0, i).concat(arr.slice(i + 1)));
-    for (var j = 0; j < subPerms.length; j++) {
-      subPerms[j].unshift(arr[i]);
-      permutations.push(subPerms[j]);
-    }
-  }
-
-  return permutations;
-}
