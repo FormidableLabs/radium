@@ -1,6 +1,8 @@
 'use strict';
 
 var MouseUpListener = require('./mouse-up-listener');
+var prefix = require('./prefix');
+
 var React = require('react/addons');
 var clone = require('lodash/lang/clone');
 var isArray = require('lodash/lang/isArray');
@@ -137,7 +139,8 @@ var resolveStyles = function (component, renderedElement, existingKeyMap) {
     !Object.keys(style).some(_isSpecialKey)
   ) {
     if (style) {
-      newProps.style = style;
+      // Still perform vendor prefixing, though.
+      newProps.style = prefix(style);
       return React.cloneElement(renderedElement, newProps, newChildren);
     } else if (newChildren) {
       return React.cloneElement(renderedElement, {}, newChildren);
@@ -230,7 +233,7 @@ var resolveStyles = function (component, renderedElement, existingKeyMap) {
     );
   }
 
-  newProps.style = newStyle;
+  newProps.style = prefix(newStyle);
 
   return React.cloneElement(renderedElement, newProps, newChildren);
 };
