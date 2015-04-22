@@ -20,9 +20,12 @@ var wrap = function (config) {
       }
 
       if (this._radiumMediaQueryListenersByQuery) {
-        this._radiumMediaQueryListenersByQuery.forEach(function (query) {
-          this._radiumMediaQueryListenersByQuery[query].remove();
-        });
+        Object.keys(this._radiumMediaQueryListenersByQuery).forEach(
+          function (query) {
+            this._radiumMediaQueryListenersByQuery[query].remove();
+          },
+          this
+        );
       }
     },
 
