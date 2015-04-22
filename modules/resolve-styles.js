@@ -9,6 +9,96 @@ var omit = require('lodash/object/omit');
 
 var mediaQueryListByQueryString = {};
 
+var _isSpecialKey = function (key) {
+  return key[0] === ':' || key[0] === '(';
+};
+
+var _getStyleState = function (component, key, value) {
+  return component.state &&
+    component.state._radiumStyleState &&
+      component.state._radiumStyleState[key] &&
+        component.state._radiumStyleState[key][value];
+};
+
+var _setStyleState = function (component, key, newState) {
+  var existing = component.state && component.state._radiumStyleState || {};
+  var state = { _radiumStyleState: clone(existing) };
+  state._radiumStyleState[key] = state._radiumStyleState[key] || {};
+  merge(state._radiumStyleState[key], newState);
+  component.setState(state);
+};
+
+// Merge style objects. Special casing for props starting with ';'; the values
+// should be objects, and are merged with others of the same name (instead of
+// overwriting).
+var _mergeStyles = function (styles) {
+  var styleProp = {};
+
+  styles.forEach(function (style) {
+    if (!style || typeof style !== 'object' || isArray(style)) {
+      return;
+    }
+
+    Object.keys(style).forEach(function (name) {
+      if (_isSpecialKey(name)) {
+        styleProp[name] = styleProp[name] || {};
+        merge(styleProp[name], style[name]);
+      } else {
+        styleProp[name] = style[name];
+      }
+    });
+  });
+
+  return styleProp;
+};
+
+var _mouseUp = function (component) {
+  Object.keys(component.state._radiumStyleState).forEach(function (key) {
+    if (_getStyleState(component, key, 'isActive')) {
+      _setStyleState(component, key, {isActive: false});
+    }
+  });
+};
+
+var _onMediaQueryChange = function (component, query, mediaQueryList) {
+  var state = {};
+  state[name] = mediaQueryList.matches;
+  _setStyleState(component, '_all', state);
+};
+
+var _resolveMediaQueryStyles = function (component, style) {
+  Object.keys(style)
+  .filter(function (name) { return name[0] === '('; })
+  .map(function (query) {
+    // Create a global MediaQueryList if one doesn't already exist
+    var mql = mediaQueryListByQueryString[query];
+    if (!mql) {
+      mediaQueryListByQueryString[query] = mql = window.matchMedia(query);
+    }
+
+    // Keep track of which keys already have listeners
+    if (!component._radiumMediaQueryListenersByQuery) {
+      component._radiumMediaQueryListenersByQuery = {};
+    }
+
+    if (!component._radiumMediaQueryListenersByQuery[query]) {
+      var listener = _onMediaQueryChange.bind(null, component, query);
+      mql.addListener(listener);
+      component._radiumMediaQueryListenersByQuery[query] = {
+        remove: function () { mql.removeListener(listener); }
+      };
+    }
+
+    // Apply media query states
+    if (mql.matches) {
+      var mediaQueryStyles = style[query];
+      style = _mergeStyles([style, mediaQueryStyles]);
+    }
+  });
+
+  return style;
+};
+
 //
 // The nucleus of Radium. resolveStyles is called on the rendered elements
 // before they are returned in render. It iterates over the elements and
@@ -16,7 +106,7 @@ var mediaQueryListByQueryString = {};
 // interactions (e.g. mouse over). It also replaces the style prop because it
 // adds in the various interaction styles (e.g. :hover).
 //
-function resolveStyles(component, renderedElement, existingKeyMap) {
+var resolveStyles = function (component, renderedElement, existingKeyMap) {
   existingKeyMap = existingKeyMap || {};
 
   if (!renderedElement) {
@@ -75,7 +165,7 @@ function resolveStyles(component, renderedElement, existingKeyMap) {
 
   var newStyle = omit(
     style,
-    function (value, key) { return _isSpecialKey(key); }
+    function (value, styleKey) { return _isSpecialKey(styleKey); }
   );
 
   // Only add handlers if necessary
@@ -118,7 +208,7 @@ function resolveStyles(component, renderedElement, existingKeyMap) {
   }
 
   // Merge the styles in the order they were defined
-  Object.keys(style).forEach(function(name) {
+  Object.keys(style).forEach(function (name) {
     if (
       (name === ':active' && _getStyleState(component, key, 'isActive')) ||
       (name === ':hover' && _getStyleState(component, key, 'isHovering')) ||
@@ -137,101 +227,11 @@ function resolveStyles(component, renderedElement, existingKeyMap) {
   props.style = newStyle;
 
   return renderedElement;
-}
-
-function _isSpecialKey(key) {
-  return key[0] === ':' || key[0] === '(';
-}
-
-function _getStyleState(component, key, value) {
-  return component.state &&
-    component.state._radiumStyleState &&
-      component.state._radiumStyleState[key] &&
-        component.state._radiumStyleState[key][value];
-}
-
-function _setStyleState(component, key, newState) {
-  var existing = component.state && component.state._radiumStyleState || {};
-  var state = { _radiumStyleState: clone(existing) };
-  state._radiumStyleState[key] = state._radiumStyleState[key] || {};
-  merge(state._radiumStyleState[key], newState);
-  component.setState(state);
-}
-
-// Merge style objects. Special casing for props starting with ';'; the values
-// should be objects, and are merged with others of the same name (instead of
-// overwriting).
-function _mergeStyles(styles) {
-  var styleProp = {};
-
-  styles.forEach(function (style) {
-    if (!style || typeof style !== 'object' || isArray(style)) {
-      return;
-    }
-
-    Object.keys(style).forEach(function (name) {
-      if (_isSpecialKey(name)) {
-        styleProp[name] = styleProp[name] || {};
-        merge(styleProp[name], style[name]);
-      } else {
-        styleProp[name] = style[name];
-      }
-    });
-  });
-
-  return styleProp;
-}
-
-function _mouseUp(component) {
-  Object.keys(component.state._radiumStyleState).forEach(function (key) {
-    if (_getStyleState(component, key, 'isActive')) {
-      _setStyleState(component, key, {isActive: false});
-    }
-  });
-}
-
-function _resolveMediaQueryStyles(component, style) {
-  Object.keys(style)
-  .filter(function (name) { return name[0] === '('; })
-  .map(function (query) {
-    // Create a global MediaQueryList if one doesn't already exist
-    var mql = mediaQueryListByQueryString[query];
-    if (!mql) {
-      mediaQueryListByQueryString[query] = mql = window.matchMedia(query);
-    }
-
-    // Keep track of which keys already have listeners
-    if (!component._radiumMediaQueryListenersByQuery) {
-      component._radiumMediaQueryListenersByQuery = {};
-    }
-
-    if (!component._radiumMediaQueryListenersByQuery[query]) {
-      var listener = _onMediaQueryChange.bind(null, component, query);
-      mql.addListener(listener);
-      component._radiumMediaQueryListenersByQuery[query] = {
-        remove: function() { mql.removeListener(listener); }
-      };
-    }
-
-    // Apply media query states
-    if (mql.matches) {
-      var mediaQueryStyles = style[query];
-      style = _mergeStyles([style, mediaQueryStyles]);
-    }
-  });
-
-  return style;
-}
-
-function _onMediaQueryChange(component, query, mediaQueryList) {
-  var state = {};
-  state[name] = mediaQueryList.matches;
-  _setStyleState(component, '_all', state);
-}
+};
 
 // Exposing methods for tests is ugly, but the alternative, re-requiring the
 // module each time, is too slow
-resolveStyles.__clearStateForTests = function() {
+resolveStyles.__clearStateForTests = function () {
   mediaQueryListByQueryString = {};
 };
 
