@@ -6,18 +6,28 @@
 var camelCase = require('lodash/string/camelCase');
 var kebabCase = require('lodash/string/kebabCase');
 
+var jsCssMap = {
+    Webkit: '-webkit-',
+    Moz: '-moz-',
+    // IE did it wrong again ...
+    ms: '-ms-',
+    O: '-o-'
+};
+var testProp = 'Transform';
+
 var domStyle = document.createElement('p').style;
 var prefixedPropertyCache = {};
 var prefixedValueCache = {};
-var vendorPrefix = '';
+var propertyVendorPrefix = '';
+var valueVendorPrefix = '';
 
-['Webkit', 'Moz', 'ms', 'O'].some(function(prefix) {
-  if ((prefix + 'Transform') in domStyle) {
-    vendorPrefix = prefix;
-    return true;
+for (var js in jsCssMap) {
+  if ((js + testProp) in domStyle) {
+    propertyVendorPrefix = js;
+    valueVendorPrefix = jsCssMap[js];
+    break
   }
-  return false;
-});
+}
 
 function _getPrefixedProperty(property) {
   if (prefixedPropertyCache[property]) {
@@ -30,7 +40,7 @@ function _getPrefixedProperty(property) {
   }
 
   var newProperty =
-    vendorPrefix + property[0].toUpperCase() + property.slice(1);
+    propertyVendorPrefix + property[0].toUpperCase() + property.slice(1);
   if (newProperty in domStyle) {
     // prefixed
     return prefixedPropertyCache[property] = newProperty;
@@ -69,7 +79,7 @@ function _getPrefixedValue(property, value) {
   }
 
   // Test value with vendor prefix.
-  value = vendorPrefix + value;
+  value = valueVendorPrefix + value;
   domStyle[property] = value;
 
   // Value is supported with vendor prefix.
