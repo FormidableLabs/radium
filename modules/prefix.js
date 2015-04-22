@@ -129,4 +129,7 @@ function prefix(style, mode /* 'css' or 'js' */) {
   return newStyle;
 }
 
+prefix.js = jsVendorPrefix;
+prefix.css = cssVendorPrefix;
+
 module.exports = prefix;
