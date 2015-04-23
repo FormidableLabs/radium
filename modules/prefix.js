@@ -3,7 +3,8 @@
  * shenanigans.
  */
 
-var camelCase = require('lodash/string/camelCase');
+'use strict';
+
 var kebabCase = require('lodash/string/kebabCase');
 
 var jsCssMap = {
@@ -25,11 +26,11 @@ for (var js in jsCssMap) {
   if ((js + testProp) in domStyle) {
     jsVendorPrefix = js;
     cssVendorPrefix = jsCssMap[js];
-    break
+    break;
   }
 }
 
-function _getPrefixedProperty(property) {
+var _getPrefixedProperty = function (property) {
   if (prefixedPropertyCache.hasOwnProperty(property)) {
     return prefixedPropertyCache[property];
   }
@@ -56,9 +57,9 @@ function _getPrefixedProperty(property) {
 
   // unsupported
   return prefixedPropertyCache[property] = false;
-}
+};
 
-function _getPrefixedValue(property, value) {
+var _getPrefixedValue = function (property, value) {
   // don't test numbers or numbers with units (e.g. 10em)
   if (typeof value !== 'string' || !isNaN(parseInt(value, 10))) {
     return value;
@@ -97,16 +98,15 @@ function _getPrefixedValue(property, value) {
   }
 
   return prefixedValueCache[cacheKey] = false;
-}
+};
 
-/**
- * Returns a new style object with vendor prefixes added to property names
- * and values.
- */
-function prefix(style, mode /* 'css' or 'js' */) {
+// Returns a new style object with vendor prefixes added to property names
+// and values.
+/*eslint-disable no-console */
+var prefix = function (style, mode /* 'css' or 'js' */) {
   mode = mode || 'js';
   var newStyle = {};
-  Object.keys(style).forEach(function(property) {
+  Object.keys(style).forEach(function (property) {
     var value = style[property];
 
     var newProperty = _getPrefixedProperty(property);
@@ -127,6 +127,7 @@ function prefix(style, mode /* 'css' or 'js' */) {
     newStyle[newProperty[mode]] = newValue;
   });
   return newStyle;
-}
+};
+/*eslint-enable no-console */
 
 module.exports = prefix;
