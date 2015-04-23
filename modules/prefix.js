@@ -18,32 +18,40 @@ var testProp = 'Transform';
 var domStyle = document.createElement('p').style;
 var prefixedPropertyCache = {};
 var prefixedValueCache = {};
-var propertyVendorPrefix = '';
-var valueVendorPrefix = '';
+var jsVendorPrefix = '';
+var cssVendorPrefix = '';
 
 for (var js in jsCssMap) {
   if ((js + testProp) in domStyle) {
-    propertyVendorPrefix = js;
-    valueVendorPrefix = jsCssMap[js];
+    jsVendorPrefix = js;
+    cssVendorPrefix = jsCssMap[js];
     break
   }
 }
 
 function _getPrefixedProperty(property) {
-  if (prefixedPropertyCache[property]) {
+  if (prefixedPropertyCache.hasOwnProperty(property)) {
     return prefixedPropertyCache[property];
   }
 
   if (property in domStyle) {
     // unprefixed
-    return prefixedPropertyCache[property] = property;
+    prefixedPropertyCache[property] = {
+      css: kebabCase(property),
+      js: property
+    };
+    return prefixedPropertyCache[property];
   }
 
   var newProperty =
-    propertyVendorPrefix + property[0].toUpperCase() + property.slice(1);
+    jsVendorPrefix + property[0].toUpperCase() + property.slice(1);
   if (newProperty in domStyle) {
     // prefixed
-    return prefixedPropertyCache[property] = newProperty;
+    prefixedPropertyCache[property] = {
+      css: cssVendorPrefix + kebabCase(property),
+      js: newProperty
+    };
+    return prefixedPropertyCache[property];
   }
 
   // unsupported
@@ -58,7 +66,7 @@ function _getPrefixedValue(property, value) {
 
   var cacheKey = property + value;
 
-  if (prefixedValueCache[cacheKey]) {
+  if (prefixedValueCache.hasOwnProperty(cacheKey)) {
     return prefixedValueCache[cacheKey];
   }
 
@@ -79,7 +87,7 @@ function _getPrefixedValue(property, value) {
   }
 
   // Test value with vendor prefix.
-  value = valueVendorPrefix + value;
+  value = cssVendorPrefix + value;
   domStyle[property] = value;
 
   // Value is supported with vendor prefix.
@@ -95,7 +103,8 @@ function _getPrefixedValue(property, value) {
  * Returns a new style object with vendor prefixes added to property names
  * and values.
  */
-function prefix(style) {
+function prefix(style, mode /* 'css' or 'js' */) {
+  mode = mode || 'js';
   var newStyle = {};
   Object.keys(style).forEach(function(property) {
     var value = style[property];
@@ -107,7 +116,7 @@ function prefix(style) {
       return;
     }
 
-    var newValue = _getPrefixedValue(newProperty, value);
+    var newValue = _getPrefixedValue(newProperty.js, value);
     if (newValue === false) {
       // Ignore unsupported values
       console.warn(
@@ -115,7 +124,7 @@ function prefix(style) {
       );
     }
 
-    newStyle[newProperty] = newValue;
+    newStyle[newProperty[mode]] = newValue;
   });
   return newStyle;
 }
