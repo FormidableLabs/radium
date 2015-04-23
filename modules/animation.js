@@ -2,9 +2,9 @@
 
 var prefix = require('./prefix');
 
-var CSSPropertyOperations = require('react/lib/CSSPropertyOperations');
 var kebabCase = require('lodash/string/kebabCase');
 
+var msPrefix = /^ms-/;
 var animationIndex = 1;
 var animationStyleSheet = null;
 var keyframesPrefixed = null;
@@ -21,6 +21,13 @@ if (document) {
   }
 }
 
+var createMarkupForStyles = function (style) {
+  return Object.keys(style).map(function(property) {
+    return kebabCase(property).replace(msPrefix, '-ms-') + ': ' +
+      style[property] + ';';
+  }).join('\n');
+};
+
 // Simple animation helper that injects CSS into a style object containing the
 // keyframes, and returns a string with the generated animation name.
 var animation = function (keyframes) {
@@ -34,9 +41,8 @@ var animation = function (keyframes) {
   var rule = '@' + keyframesPrefixed + ' ' + name + ' {\n' +
     Object.keys(keyframes).map(function (percentage) {
       var props = keyframes[percentage];
-      var serializedProps = CSSPropertyOperations.createMarkupForStyles(
-        prefix(props, 'css')
-      );
+      var prefixedProps = prefix(props, 'css');
+      var serializedProps = createMarkupForStyles(prefixedProps);
       return '  ' + percentage + ' {\n  ' + serializedProps + '\n  }';
     }).join('\n') +
     '\n}\n';
