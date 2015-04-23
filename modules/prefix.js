@@ -67,8 +67,7 @@ function _getPrefixedValue(property, value) {
   var cacheKey = property + value;
 
   if (prefixedValueCache.hasOwnProperty(cacheKey)) {
-    return prefixedValueCache[cacheKey] &&
-      prefixedValueCache[cacheKey][mode];
+    return prefixedValueCache[cacheKey];
   }
 
   // Clear style first
