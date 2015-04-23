@@ -35,7 +35,7 @@ var animation = function (keyframes) {
     Object.keys(keyframes).map(function (percentage) {
       var props = keyframes[percentage];
       var serializedProps = CSSPropertyOperations.createMarkupForStyles(
-        prefix(props)
+        prefix(props, 'css')
       );
       return '  ' + percentage + ' {\n  ' + serializedProps + '\n  }';
     }).join('\n') +
