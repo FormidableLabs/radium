@@ -2,7 +2,7 @@ var React = require('react');
 var debounce = require('lodash/function/debounce');
 
 var matchers = {};
-var matchedQueries = {};
+var matchedQueries;
 
 var mediaChangeCallback;
 
@@ -22,49 +22,58 @@ var MatchMediaBase = {
   },
 
   init: function (mediaQueryOpts) {
-    if (!mediaQueryOpts || typeof window === 'undefined') {
+    if (!mediaQueryOpts) {
       return;
     }
 
     Object.keys(mediaQueryOpts).forEach(function (key) {
-      matchers[key] = window.matchMedia(mediaQueryOpts[key]);
-      matchers[key].addListener(onMediaChange);
+      matchers[key] = (typeof window === 'undefined') ? {
+        matches: false,
+        media: mediaQueryOpts[key]
+      } : window.matchMedia(mediaQueryOpts[key]);
+      if (matchers[key].addListener) {
+        matchers[key].addListener(onMediaChange);
+      }
     });
   },
 
   componentWillMount: function () {
     mediaChangeCallback = this.handleMediaChange;
-    mediaChangeCallback();
   },
 
   componentWillUnmount: function () {
     mediaChangeCallback = null;
 
-    if (!matchers) {
-      return;
-    }
-
     Object.keys(matchers).forEach(function (key) {
-      matchers[key].removeListener(onMediaChange);
+      if (matchers[key].removeListener) {
+        matchers[key].removeListener(onMediaChange);
+      }
     });
   },
 
   getMatchedMedia: function () {
-    return matchedQueries;
+    return matchedQueries || this._updateMatchedMedia();
   },
 
   handleMediaChange: debounce(function () {
+    this._updateMatchedMedia();
+    this.forceUpdate();
+  }, 10, {
+    maxWait: 250
+  }),
+
+  _updateMatchedMedia: function () {
     Object.keys(matchers).forEach(function (key) {
+      if (!matchedQueries) {
+        matchedQueries = {};
+      }
       matchedQueries[key] = {
         matches: matchers[key].matches,
         media: matchers[key].media
       };
     });
-
-    this.forceUpdate();
-  }, 10, {
-    maxWait: 250
-  })
+    return matchedQueries;
+  }
 };
 
 module.exports = MatchMediaBase;
