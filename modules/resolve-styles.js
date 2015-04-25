@@ -32,24 +32,13 @@ var _setStyleState = function (component, key, newState) {
 // should be objects, and are merged with others of the same name (instead of
 // overwriting).
 var _mergeStyles = function (styles) {
-  var styleProp = {};
-
-  styles.forEach(function (style) {
-    if (!style || typeof style !== 'object' || isArray(style)) {
-      return;
-    }
-
-    Object.keys(style).forEach(function (name) {
-      if (_isSpecialKey(name)) {
-        styleProp[name] = styleProp[name] || {};
-        merge(styleProp[name], style[name]);
-      } else {
-        styleProp[name] = style[name];
-      }
-    });
+  var validStyles = styles.filter(function (style) {
+    return style && typeof style === 'object' && !isArray(style);
   });
 
-  return styleProp;
+  // lodash merge is recursive, which handles :hover styles and even :hover
+  // within media queries.
+  return merge.apply(null, [{}].concat(validStyles));
 };
 
 var _mouseUp = function (component) {

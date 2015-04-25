@@ -574,19 +574,32 @@ describe('resolveStyles', function () {
       });
 
       var getRenderedElement = function () {
-        return {props: {style: {
-          background: 'blue',
-          ':hover': {
-            background: 'green',
-            color: 'green'
-          },
-          '@media (max-width: 400px)': {
-            background: 'red',
-            ':hover': {
-              background: 'yellow'
-            }
+        return {
+          props: {
+            style: [
+              {
+                background: 'blue',
+                ':hover': {
+                  background: 'green',
+                  color: 'green'
+                },
+                '@media (max-width: 400px)': {
+                  background: 'red',
+                  ':hover': {
+                    background: 'yellow'
+                  }
+                }
+              },
+              {
+                '@media (max-width: 400px)': {
+                  ':hover': {
+                    color: 'white'
+                  }
+                }
+              }
+            ]
           }
-        }}};
+        };
       };
 
       var result = resolveStyles(component, getRenderedElement());
@@ -596,7 +609,7 @@ describe('resolveStyles', function () {
 
       result = resolveStyles(component, getRenderedElement());
       expect(result.props.style.background).toEqual('yellow');
-      expect(result.props.style.color).toEqual('green');
+      expect(result.props.style.color).toEqual('white');
     });
 
     it('calls component setState when media query changes', function () {
