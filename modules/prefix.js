@@ -130,4 +130,7 @@ var prefix = function (style, mode /* 'css' or 'js' */) {
 };
 /*eslint-enable no-console */
 
+prefix.css = cssVendorPrefix;
+prefix.js = jsVendorPrefix;
+
 module.exports = prefix;
