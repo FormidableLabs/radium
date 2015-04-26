@@ -76,6 +76,25 @@ var MyComponent = React.createClass(Radium.wrap({
 }));
 ```
 
+## Radium.getState(state, elementKey, value)
+
+Query Radium's knowledge of the browser state for a given element key. This is particularly useful if you would like to set styles for one element when another element is in a particular state, e.g. show a message when a button is hovered.
+
+Note that the target element specified by `elementKey` must have the state you'd like to check defined in its style object so that Radium knows to add the handlers. It can be empty, e.g. `':hover': {}`.
+
+Parameters:
+
+- **state** - you'll usually pass `this.state`, but sometimes you may want to pass a previous state, like in `shouldComponentUpdate`, `componentWillUpdate`, and `componentDidUpdate`
+- **elementKey** - if you used multiple elements, pass the same `key=""` or `ref=""`. If you only have one element, you can leave it blank (`'main'` will be inferred)
+- **value** - one of the following: `:active`, `:focus`, and `:hover`
+- **returns** `true` or `false`
+
+Usage:
+
+```javascript
+    Radium.getState(this.state, 'button', ':hover')
+```
+
 ## Style Component
 
 The `<Style>` component renders an HTML `<style>` tag containing a set of CSS rules. Using it, you can define an optional `scopeSelector` that all selectors in the resulting `<style>` element will include.

@@ -41,6 +41,7 @@
     ],
     "collectCoverage": true,
     "collectCoverageOnlyFrom": {
+      "modules/get-state.js": true,
       "modules/resolve-styles.js": true,
       "modules/wrap.js": true
     },
