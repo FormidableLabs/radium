@@ -1,3 +1,5 @@
+[![Travis Status](https://api.travis-ci.org/FormidableLabs/radium.svg)](https://travis-ci.org/FormidableLabs/radium)
+
 # Radium
 
 ```
