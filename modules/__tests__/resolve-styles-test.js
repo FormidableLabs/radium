@@ -5,6 +5,7 @@
 
 jest.dontMock('../resolve-styles.js');
 
+var React = require('react');
 var MouseUpListener = require('../mouse-up-listener.js');
 var merge = require('lodash/object/merge');
 var resolveStyles = require('../resolve-styles.js');
@@ -34,6 +35,14 @@ var permutate = function (arr) {
   }
 
   return permutations;
+};
+
+var getChildrenArray = function (children) {
+  var childrenArray = [];
+  React.Children.forEach(children, function (child) {
+    childrenArray.push(child);
+  });
+  return childrenArray;
 };
 
 describe('resolveStyles', function () {
@@ -79,23 +88,21 @@ describe('resolveStyles', function () {
       }};
 
       var result = resolveStyles(component, renderedElement);
-
-      expect(result.props.children[0].props.style)
+      var children = getChildrenArray(result.props.children);
+      expect(children[0].props.style)
         .toBe(renderedElement.props.children[0].props.style);
     });
 
     it('ignores invalid children', function () {
       var component = genComponent();
       var renderedElement = {props: {
-        children: [{
-          props: {style: {color: 'blue'}}
-        }]
+        children: [null]
       }};
 
       var result = resolveStyles(component, renderedElement);
+      var children = getChildrenArray(result.props.children);
 
-      expect(result.props.children[0].props.style)
-        .toBe(renderedElement.props.children[0].props.style);
+      expect(children[0]).toBe(null);
     });
 
   });
@@ -153,16 +160,14 @@ describe('resolveStyles', function () {
 
     it('merges nested special styles', function () {
       var component = genComponent();
-      var getRenderedElement = function () {
-        return {props: {style: [
-          {':hover': { background: 'white'}},
-          {':hover': {color: 'blue'}}
-        ]}};
-      };
+      var renderedElement = {props: {style: [
+        {':hover': { background: 'white'}},
+        {':hover': {color: 'blue'}}
+      ]}};
 
-      var result = resolveStyles(component, getRenderedElement());
+      var result = resolveStyles(component, renderedElement);
       result.props.onMouseEnter();
-      result = resolveStyles(component, getRenderedElement());
+      result = resolveStyles(component, renderedElement);
 
       expect(result.props.style).toEqual({
         background: 'white',
@@ -178,8 +183,9 @@ describe('resolveStyles', function () {
       var component = genComponent();
       var style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
+      var renderedElement = {props: {style: style}};
 
-      var result = resolveStyles(component, {props: {style: style}});
+      var result = resolveStyles(component, renderedElement);
 
       expect(result.props.style).toEqual({background: 'blue'});
     });
@@ -188,8 +194,9 @@ describe('resolveStyles', function () {
       var component = genComponent();
       var style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
+      var renderedElement = {props: {style: style}};
 
-      var result = resolveStyles(component, {props: {style: style}});
+      var result = resolveStyles(component, renderedElement);
 
       expect(typeof result.props[onHandlerName]).toBe('function');
       if (offHandlerName) {
@@ -201,8 +208,9 @@ describe('resolveStyles', function () {
       var component = genComponent();
       var style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
+      var renderedElement = {props: {style: style}};
 
-      var result = resolveStyles(component, {props: {style: style}});
+      var result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).toEqual('blue');
 
       result.props[onHandlerName]();
@@ -211,7 +219,7 @@ describe('resolveStyles', function () {
 
       // Must create a new renderedElement each time, same as React, since
       // resolveStyles mutates
-      result = resolveStyles(component, {props: {style: style}});
+      result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).toEqual('red');
     });
 
@@ -220,15 +228,15 @@ describe('resolveStyles', function () {
       var style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
 
-      var getRenderedElement = function () {
-        return {props: {children: [
-          {_isReactElement: true, key: 'foo', props: {style: style}},
-          {_isReactElement: true, key: 'foo', props: {style: style}}
-        ]}};
-      };
+      // Use ref instead of key here because React.Children.map will discard
+      // the duplicate keyed element.
+      var renderedElement = {props: {children: [
+        {_isReactElement: true, ref: 'foo', props: {style: style}},
+        {_isReactElement: true, ref: 'foo', props: {style: style}}
+      ]}};
 
       expect(function () {
-        resolveStyles(component, getRenderedElement());
+        resolveStyles(component, renderedElement);
       }).toThrow();
     });
 
@@ -237,15 +245,13 @@ describe('resolveStyles', function () {
       var style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
 
-      var getRenderedElement = function () {
-        return {props: {children: [
-          {_isReactElement: true, props: {style: style}},
-          {_isReactElement: true, props: {style: style}}
-        ]}};
-      };
+      var renderedElement = {props: {children: [
+        {_isReactElement: true, props: {style: style}},
+        {_isReactElement: true, props: {style: style}}
+      ]}};
 
       expect(function () {
-        resolveStyles(component, getRenderedElement());
+        resolveStyles(component, renderedElement);
       }).toThrow();
     });
 
@@ -254,22 +260,22 @@ describe('resolveStyles', function () {
       var style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
 
-      var getRenderedElement = function () {
-        return {props: {children: [
-          {_isReactElement: true, key: 'foo', props: {}},
-          {_isReactElement: true, key: 'bar', props: {style: style}}
-        ]}};
-      };
+      var renderedElement = {props: {children: [
+        {_isReactElement: true, key: 'foo', props: {}},
+        {_isReactElement: true, key: 'bar', props: {style: style}}
+      ]}};
 
-      var result = resolveStyles(component, getRenderedElement());
-      expect(result.props.children[0].props.style).toEqual(null);
-      expect(result.props.children[1].props.style.background).toEqual('blue');
+      var result = resolveStyles(component, renderedElement);
+      var children = getChildrenArray(result.props.children);
+      expect(children[0].props.style).toEqual(null);
+      expect(children[1].props.style.background).toEqual('blue');
 
-      result.props.children[1].props[onHandlerName]();
+      children[1].props[onHandlerName]();
 
-      result = resolveStyles(component, getRenderedElement());
-      expect(result.props.children[0].props.style).toEqual(null);
-      expect(result.props.children[1].props.style.background).toEqual('red');
+      result = resolveStyles(component, renderedElement);
+      children = getChildrenArray(result.props.children);
+      expect(children[0].props.style).toEqual(null);
+      expect(children[1].props.style.background).toEqual('red');
     });
 
     it('adds ' + pseudo + ' styles to correct element by ref', function () {
@@ -277,22 +283,22 @@ describe('resolveStyles', function () {
       var style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
 
-      var getRenderedElement = function () {
-        return {props: {children: [
-          {_isReactElement: true, ref: 'foo', props: {}},
-          {_isReactElement: true, ref: 'bar', props: {style: style}}
-        ]}};
-      };
+      var renderedElement = {props: {children: [
+        {_isReactElement: true, ref: 'foo', props: {}},
+        {_isReactElement: true, ref: 'bar', props: {style: style}}
+      ]}};
 
-      var result = resolveStyles(component, getRenderedElement());
-      expect(result.props.children[0].props.style).toEqual(null);
-      expect(result.props.children[1].props.style.background).toEqual('blue');
+      var result = resolveStyles(component, renderedElement);
+      var children = getChildrenArray(result.props.children);
+      expect(children[0].props.style).toEqual(null);
+      expect(children[1].props.style.background).toEqual('blue');
 
-      result.props.children[1].props[onHandlerName]();
+      children[1].props[onHandlerName]();
 
-      result = resolveStyles(component, getRenderedElement());
-      expect(result.props.children[0].props.style).toEqual(null);
-      expect(result.props.children[1].props.style.background).toEqual('red');
+      result = resolveStyles(component, renderedElement);
+      children = getChildrenArray(result.props.children);
+      expect(children[0].props.style).toEqual(null);
+      expect(children[1].props.style.background).toEqual('red');
     });
 
     if (offHandlerName) {
@@ -300,19 +306,20 @@ describe('resolveStyles', function () {
         var component = genComponent();
         var style = {background: 'blue'};
         style[':' + pseudo] = {background: 'red'};
+      var renderedElement = {props: {style: style}};
 
-        var result = resolveStyles(component, {props: {style: style}});
+        var result = resolveStyles(component, renderedElement);
 
         result.props[onHandlerName]();
 
-        result = resolveStyles(component, {props: {style: style}});
+        result = resolveStyles(component, renderedElement);
         expect(result.props.style.background).toEqual('red');
 
         result.props[offHandlerName]();
 
         expect(component.setState).toBeCalled();
 
-        result = resolveStyles(component, {props: {style: style}});
+        result = resolveStyles(component, renderedElement);
         expect(result.props.style.background).toEqual('blue');
       });
     }
@@ -333,7 +340,7 @@ describe('resolveStyles', function () {
 
       expect(originalOnHandler).toBeCalled();
 
-      result = resolveStyles(component, {props: {style: style}});
+      result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).toEqual('red');
     });
 
@@ -356,7 +363,7 @@ describe('resolveStyles', function () {
 
         expect(originalOffHandler).toBeCalled();
 
-        result = resolveStyles(component, {props: {style: style}});
+        result = resolveStyles(component, renderedElement);
         expect(result.props.style.background).toEqual('blue');
       });
     }
@@ -391,15 +398,15 @@ describe('resolveStyles', function () {
         background: 'blue',
         ':active': {background: 'red'}
       };
+      var renderedElement = {props: {style: style}};
 
-      var result = resolveStyles(component, {props: {style: style}});
+      var result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).toEqual('blue');
 
       result.props.onMouseDown();
 
-      // Must create a new renderedElement each time, same as React, since
-      // resolveStyles mutates
-      result = resolveStyles(component, {props: {style: style}});
+
+      result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).toEqual('red');
     });
 
@@ -409,18 +416,19 @@ describe('resolveStyles', function () {
         background: 'blue',
         ':active': {background: 'red'}
       };
+      var renderedElement = {props: {style: style}};
 
-      var result = resolveStyles(component, {props: {style: style}});
+      var result = resolveStyles(component, renderedElement);
 
       result.props.onMouseDown();
 
-      result = resolveStyles(component, {props: {style: style}});
+      result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).toEqual('red');
 
       // tigger global mouseup handler
       MouseUpListener.subscribe.mock.calls[0][0]();
 
-      result = resolveStyles(component, {props: {style: style}});
+      result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).toEqual('blue');
     });
 
@@ -430,8 +438,9 @@ describe('resolveStyles', function () {
         background: 'blue',
         ':active': {background: 'red'}
       };
+      var renderedElement = {props: {style: style}};
 
-      var result = resolveStyles(component, {props: {style: style}});
+      var result = resolveStyles(component, renderedElement);
 
       result.props.onMouseDown();
 
@@ -439,7 +448,7 @@ describe('resolveStyles', function () {
       MouseUpListener.subscribe.mock.calls[0][0]();
       MouseUpListener.subscribe.mock.calls[0][0]();
 
-      result = resolveStyles(component, {props: {style: style}});
+      result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).toEqual('blue');
     });
 
@@ -449,6 +458,7 @@ describe('resolveStyles', function () {
         background: 'blue',
         ':active': {background: 'red'}
       };
+      var renderedElement = {props: {style: style}};
 
       var originalOnMouseDown = jest.genMockFunction();
 
@@ -466,7 +476,7 @@ describe('resolveStyles', function () {
 
       expect(originalOnMouseDown).toBeCalled();
 
-      result = resolveStyles(component, {props: {style: style}});
+      result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).toEqual('red');
     });
   });
@@ -483,13 +493,11 @@ describe('resolveStyles', function () {
         return {addListener: addListener};
       });
 
-      var getRenderedElement = function () {
-        return {props: {style: {
-          '@media (max-width: 400px)': {background: 'red'}
-        }}};
-      };
+      var renderedElement = {props: {style: {
+        '@media (max-width: 400px)': {background: 'red'}
+      }}};
 
-      resolveStyles(component, getRenderedElement());
+      resolveStyles(component, renderedElement);
       expect(window.matchMedia).lastCalledWith('(max-width: 400px)');
       expect(addListener).lastCalledWith(jasmine.any('function'));
     });
@@ -501,14 +509,12 @@ describe('resolveStyles', function () {
         return {addListener: addListener};
       });
 
-      var getRenderedElement = function () {
-        return {props: {style: {
-          '@media (max-width: 400px)': {background: 'red'}
-        }}};
-      };
+      var renderedElement = {props: {style: {
+        '@media (max-width: 400px)': {background: 'red'}
+      }}};
 
-      resolveStyles(component, getRenderedElement());
-      resolveStyles(component, getRenderedElement());
+      resolveStyles(component, renderedElement);
+      resolveStyles(component, renderedElement);
 
       expect(window.matchMedia.mock.calls.length).toBe(1);
       expect(addListener.mock.calls.length).toBe(1);
@@ -522,23 +528,21 @@ describe('resolveStyles', function () {
         return {addListener: addListener};
       });
 
-      var getRenderedElement = function () {
-        return {props: {children: [
-          {
-            _isReactElement: true,
-            key: 'first',
-            props: {style: {'@media (max-width: 400px)': {background: 'red'}}}
-          },
-          {
-            _isReactElement: true,
-            key: 'second',
-            props: {style: {'@media (max-width: 400px)': {background: 'red'}}}
-          }
-        ]}};
-      };
+      var renderedElement = {props: {children: [
+        {
+          _isReactElement: true,
+          key: 'first',
+          props: {style: {'@media (max-width: 400px)': {background: 'red'}}}
+        },
+        {
+          _isReactElement: true,
+          key: 'second',
+          props: {style: {'@media (max-width: 400px)': {background: 'red'}}}
+        }
+      ]}};
 
-      resolveStyles(component1, getRenderedElement());
-      resolveStyles(component2, getRenderedElement());
+      resolveStyles(component1, renderedElement);
+      resolveStyles(component2, renderedElement);
 
       expect(window.matchMedia.mock.calls.length).toBe(1);
       expect(addListener.mock.calls.length).toBe(2);
@@ -553,14 +557,12 @@ describe('resolveStyles', function () {
         };
       });
 
-      var getRenderedElement = function () {
-        return {props: {style: {
-          background: 'blue',
-          '@media (max-width: 400px)': {background: 'red'}
-        }}};
-      };
+      var renderedElement = {props: {style: {
+        background: 'blue',
+        '@media (max-width: 400px)': {background: 'red'}
+      }}};
 
-      var result = resolveStyles(component, getRenderedElement());
+      var result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).toEqual('red');
     });
 
@@ -573,41 +575,39 @@ describe('resolveStyles', function () {
         };
       });
 
-      var getRenderedElement = function () {
-        return {
-          props: {
-            style: [
-              {
-                background: 'blue',
-                ':hover': {
-                  background: 'green',
-                  color: 'green'
-                },
-                '@media (max-width: 400px)': {
-                  background: 'red',
-                  ':hover': {
-                    background: 'yellow'
-                  }
-                }
+      var renderedElement = {
+        props: {
+          style: [
+            {
+              background: 'blue',
+              ':hover': {
+                background: 'green',
+                color: 'green'
               },
-              {
-                '@media (max-width: 400px)': {
-                  ':hover': {
-                    color: 'white'
-                  }
+              '@media (max-width: 400px)': {
+                background: 'red',
+                ':hover': {
+                  background: 'yellow'
                 }
               }
-            ]
-          }
-        };
+            },
+            {
+              '@media (max-width: 400px)': {
+                ':hover': {
+                  color: 'white'
+                }
+              }
+            }
+          ]
+        }
       };
 
-      var result = resolveStyles(component, getRenderedElement());
+      var result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).toEqual('red');
 
       result.props.onMouseEnter();
 
-      result = resolveStyles(component, getRenderedElement());
+      result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).toEqual('yellow');
       expect(result.props.style.color).toEqual('white');
     });
@@ -626,15 +626,13 @@ describe('resolveStyles', function () {
         return mql;
       });
 
-      var getRenderedElement = function () {
-        return {props: {style: {
-          background: 'blue',
-          '@media (max-width: 400px)': {background: 'red'}
-        }}};
-      };
+      var renderedElement = {props: {style: {
+        background: 'blue',
+        '@media (max-width: 400px)': {background: 'red'}
+      }}};
 
-      resolveStyles(component1, getRenderedElement());
-      resolveStyles(component2, getRenderedElement());
+      resolveStyles(component1, renderedElement);
+      resolveStyles(component2, renderedElement);
 
       listeners.forEach(function (listener) { listener(mql); });
 
@@ -652,14 +650,12 @@ describe('resolveStyles', function () {
         return mql;
       });
 
-      var getRenderedElement = function () {
-        return {props: {style: {
-          background: 'blue',
-          '@media (max-width: 400px)': {background: 'red'}
-        }}};
-      };
+      var renderedElement = {props: {style: {
+        background: 'blue',
+        '@media (max-width: 400px)': {background: 'red'}
+      }}};
 
-      resolveStyles(component, getRenderedElement());
+      resolveStyles(component, renderedElement);
 
       Object.keys(component._radiumMediaQueryListenersByQuery).forEach(
         function (key) {
@@ -691,21 +687,18 @@ describe('resolveStyles', function () {
           pseudoStyles.map(function (pseudo) { return pseudo.name; }).join(', ') +
           ' when handlers called in order: ' + onHandlers.join(', ');
         it(name, function () {
-          var getRenderedElement = function () {
-            var renderedElement = {props: {style: {}}};
-            pseudoStyles.forEach(function (pseudo) {
-              renderedElement.props.style[pseudo.name] = pseudo.style;
-            });
-            return renderedElement;
-          };
+          var renderedElement = {props: {style: {}}};
+          pseudoStyles.forEach(function (pseudo) {
+            renderedElement.props.style[pseudo.name] = pseudo.style;
+          });
 
-          var result = resolveStyles(component, getRenderedElement());
+          var result = resolveStyles(component, renderedElement);
 
           onHandlers.forEach(function (onHandler) {
             result.props[onHandler]();
           });
 
-          result = resolveStyles(component, getRenderedElement());
+          result = resolveStyles(component, renderedElement);
 
           expect(result.props.style.background).toBe(
             pseudoStyles[pseudoStyles.length - 1].style.background

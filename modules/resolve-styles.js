@@ -108,21 +108,27 @@ var resolveStyles = function (component, renderedElement, existingKeyMap) {
   // iterative if needed. Note that children only include those rendered in
   // `this` component. Child nodes in other components will not be here, so each
   // component needs to use Radium.wrap.
+  var newChildren = null;
   if (renderedElement.props.children) {
-    React.Children.forEach(renderedElement.props.children, function (child) {
-      if (React.isValidElement(child)) {
-        resolveStyles(component, child, existingKeyMap);
+    newChildren = React.Children.map(
+      renderedElement.props.children,
+      function (child) {
+        if (React.isValidElement(child)) {
+          return resolveStyles(component, child, existingKeyMap);
+        }
+        return child;
       }
-    });
+    );
   }
 
   var props = renderedElement.props;
   var style = props.style;
+  var newProps = {};
 
   // Convenient syntax for multiple styles: `style={[style1, style2, etc]}`
   // Ignores non-objects, so you can do `this.state.isCool && styles.cool`.
   if (isArray(style)) {
-    props.style = style = _mergeStyles(style);
+    style = _mergeStyles(style);
   }
 
   // Bail early if no interactive styles.
@@ -130,6 +136,13 @@ var resolveStyles = function (component, renderedElement, existingKeyMap) {
     !style ||
     !Object.keys(style).some(_isSpecialKey)
   ) {
+    if (style) {
+      newProps.style = style;
+      return React.cloneElement(renderedElement, newProps, newChildren);
+    } else if (newChildren) {
+      return React.cloneElement(renderedElement, {}, newChildren);
+    }
+
     return renderedElement;
   }
 
@@ -165,19 +178,21 @@ var resolveStyles = function (component, renderedElement, existingKeyMap) {
     // This code, and the very similar ones below, could be abstracted a bit
     // more, but it hurts readability IMO.
     var existingOnMouseEnter = props.onMouseEnter;
-    props.onMouseEnter = function (e) {
+    newProps.onMouseEnter = function (e) {
       existingOnMouseEnter && existingOnMouseEnter(e);
       _setStyleState(component, key, { isHovering: true });
     };
 
     var existingOnMouseLeave = props.onMouseLeave;
-    props.onMouseLeave = function (e) {
+    newProps.onMouseLeave = function (e) {
       existingOnMouseLeave && existingOnMouseLeave(e);
       _setStyleState(component, key, { isHovering: false });
     };
+  }
 
+  if (style[':active']) {
     var existingOnMouseDown = props.onMouseDown;
-    props.onMouseDown = function (e) {
+    newProps.onMouseDown = function (e) {
       existingOnMouseDown && existingOnMouseDown(e);
       component._lastMouseDown = Date.now();
       _setStyleState(component, key, { isActive: true });
@@ -186,13 +201,13 @@ var resolveStyles = function (component, renderedElement, existingKeyMap) {
 
   if (style[':focus']) {
     var existingOnFocus = props.onFocus;
-    props.onFocus = function (e) {
+    newProps.onFocus = function (e) {
       existingOnFocus && existingOnFocus(e);
       _setStyleState(component, key, { isFocused: true });
     };
 
     var existingOnBlur = props.onBlur;
-    props.onBlur = function (e) {
+    newProps.onBlur = function (e) {
       existingOnBlur && existingOnBlur(e);
       _setStyleState(component, key, { isFocused: false });
     };
@@ -215,9 +230,9 @@ var resolveStyles = function (component, renderedElement, existingKeyMap) {
     );
   }
 
-  props.style = newStyle;
+  newProps.style = newStyle;
 
-  return renderedElement;
+  return React.cloneElement(renderedElement, newProps, newChildren);
 };
 
 // Exposing methods for tests is ugly, but the alternative, re-requiring the
