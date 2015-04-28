@@ -9,7 +9,7 @@ npm install radium
 Radium is a set of tools to manage inline styles on React elements. It gives you powerful styling capabilities without CSS.
 
 _Inspired by_ <a href="https://speakerdeck.com/vjeux/react-css-in-js">React: CSS in JS</a>
-by <a href="https://twitter.com/Vjeux">Christopher Chedeau</a>.
+by <a href="https://twitter.com/Vjeux">vjeux</a>.
 
 ## Overview
 
