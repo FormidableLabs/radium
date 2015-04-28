@@ -2,7 +2,7 @@
 
 ## Sample Style Object
 
-```js
+```as
 {
 var styles = {
   base: {
@@ -88,7 +88,7 @@ Without the `<Style>` component, it is prohibitively difficult to write a `<styl
 
 An array of CSS rules to render. Each rule is an object with a CSS selector as a key and an object of styles as a value. If rules has no length, the component will render nothing.
 
-```js
+```as
 <Style rules={[
   {
     body: {
@@ -108,7 +108,7 @@ An array of CSS rules to render. Each rule is an object with a CSS selector as a
 
 A string that any included selectors in `rules` will be appended to. Use to scope styles in the component to a particular element. A good use case might be to generate a unique ID for a component to scope any styles to the particular component that owns the `<Style>` component instance.
 
-```js
+```as
 <div class="TestClass">
   <Style
   scopeSelector=".TestClass"

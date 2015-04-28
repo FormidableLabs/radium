@@ -6,7 +6,7 @@ Radium is a toolset for easily writing React component styles. It resolves brows
 
 Let's create a fictional `<Button>` component. It will have a set of default styles, will adjust its appearance based on modifiers, and will include hover, focus, and active states.
 
-```js
+```as
 var Button = React.createClass({
   render: function () {
     return (
@@ -20,7 +20,7 @@ var Button = React.createClass({
 
 Radium is activated by wrapping your component configuration:
 
-```js
+```as
 var Button = React.createClass(Radium.wrap({
   render: function () { ... }
 }));
@@ -28,7 +28,7 @@ var Button = React.createClass(Radium.wrap({
 
 Radium resolves nested style objects into a flat object that can be applied directly to a React element. If you're not familiar with handling inline styles in React, see the React guide to the subject [here](http://facebook.github.io/react/tips/inline-styles.html). A basic style object looks like this:
 
-```js
+```as
 var baseStyles = {
   background: 'blue',
   border: 0,
@@ -40,7 +40,7 @@ var baseStyles = {
 
 We usually nest styles inside a shared `styles` object for easy access:
 
-```js
+```as
 var styles = {
   base: {
     background: 'blue',
@@ -54,7 +54,7 @@ var styles = {
 
 Next, simply pass your styles to the `style` attribute of an element:
 
-```js
+```as
 var Button = React.createClass(Radium.wrap({
   render: function () {
     return (
@@ -72,7 +72,7 @@ From there, React will apply our styles to the `button` element. This is not ver
 
 Radium provides one shorthand for dealing with styles that are modified by your props or state. You can pass an array of style objects to the `style` attribute, and they will be merged together intelligently (`:hover` states, for instance, will merge instead of overwrite). This works the same way as it does in [React Native](https://facebook.github.io/react-native/docs/style.html#using-styles).
 
-```js
+```as
 <Button
   size="large"
   block={true}>
@@ -82,7 +82,7 @@ Radium provides one shorthand for dealing with styles that are modified by your 
 
 Start by adding another style to your `styles` object:
 
-```js
+```as
 var styles = {
   base: {
     background: 'blue',
@@ -100,7 +100,7 @@ var styles = {
 
 Then, include that style object in the array passed to the `style` attribute if the conditions match:
 
-```js
+```as
 var Button = React.createClass(Radium.wrap({
   render: function () {
     return (
@@ -124,7 +124,7 @@ Radium supports styling for three browser states that are targeted with pseudo-s
 
 To add styles for these states, add a special key to your style object with the additional rules:
 
-```js
+```as
 var styles = {
   base: {
     background: 'blue',
@@ -176,7 +176,7 @@ Radium will apply the correct styles for the currently active media queries.
 
 Media query styles can also contain nested browser states:
 
-```js
+```as
 var style = {
   width: '25%',
 
@@ -194,7 +194,7 @@ var style = {
 
 Radium allows you to style multiple elements in the same component. You just have to give each element that has browser state modifiers like :hover or media queries a unique `key` or `ref` attribute:
 
-```js
+```as
 var TwoSquares = React.createClass(Radium.wrap({
   render: function () {
     return (
