@@ -1,6 +1,8 @@
 'use strict';
 
 var MouseUpListener = require('./mouse-up-listener');
+var getState = require('./get-state');
+
 var React = require('react/addons');
 var clone = require('lodash/lang/clone');
 var isArray = require('lodash/lang/isArray');
@@ -14,10 +16,7 @@ var _isSpecialKey = function (key) {
 };
 
 var _getStyleState = function (component, key, value) {
-  return component.state &&
-    component.state._radiumStyleState &&
-      component.state._radiumStyleState[key] &&
-        component.state._radiumStyleState[key][value];
+  return getState(component.state, key, value);
 };
 
 var _setStyleState = function (component, key, newState) {
@@ -43,8 +42,8 @@ var _mergeStyles = function (styles) {
 
 var _mouseUp = function (component) {
   Object.keys(component.state._radiumStyleState).forEach(function (key) {
-    if (_getStyleState(component, key, 'isActive')) {
-      _setStyleState(component, key, {isActive: false});
+    if (_getStyleState(component, key, ':active')) {
+      _setStyleState(component, key, {':active': false});
     }
   });
 };
@@ -180,13 +179,13 @@ var resolveStyles = function (component, renderedElement, existingKeyMap) {
     var existingOnMouseEnter = props.onMouseEnter;
     newProps.onMouseEnter = function (e) {
       existingOnMouseEnter && existingOnMouseEnter(e);
-      _setStyleState(component, key, { isHovering: true });
+      _setStyleState(component, key, {':hover': true});
     };
 
     var existingOnMouseLeave = props.onMouseLeave;
     newProps.onMouseLeave = function (e) {
       existingOnMouseLeave && existingOnMouseLeave(e);
-      _setStyleState(component, key, { isHovering: false });
+      _setStyleState(component, key, {':hover': false});
     };
   }
 
@@ -195,7 +194,7 @@ var resolveStyles = function (component, renderedElement, existingKeyMap) {
     newProps.onMouseDown = function (e) {
       existingOnMouseDown && existingOnMouseDown(e);
       component._lastMouseDown = Date.now();
-      _setStyleState(component, key, { isActive: true });
+      _setStyleState(component, key, {':active': true});
     };
   }
 
@@ -203,22 +202,22 @@ var resolveStyles = function (component, renderedElement, existingKeyMap) {
     var existingOnFocus = props.onFocus;
     newProps.onFocus = function (e) {
       existingOnFocus && existingOnFocus(e);
-      _setStyleState(component, key, { isFocused: true });
+      _setStyleState(component, key, {':focus': true});
     };
 
     var existingOnBlur = props.onBlur;
     newProps.onBlur = function (e) {
       existingOnBlur && existingOnBlur(e);
-      _setStyleState(component, key, { isFocused: false });
+      _setStyleState(component, key, {':focus': false});
     };
   }
 
   // Merge the styles in the order they were defined
   Object.keys(style).forEach(function (name) {
     if (
-      (name === ':active' && _getStyleState(component, key, 'isActive')) ||
-      (name === ':hover' && _getStyleState(component, key, 'isHovering')) ||
-      (name === ':focus' && _getStyleState(component, key, 'isFocused'))
+      (name === ':active' && _getStyleState(component, key, ':active')) ||
+      (name === ':hover' && _getStyleState(component, key, ':hover')) ||
+      (name === ':focus' && _getStyleState(component, key, ':focus'))
     ) {
       merge(newStyle, style[name]);
     }

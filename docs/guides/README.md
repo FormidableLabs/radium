@@ -225,3 +225,31 @@ var styles = {
   }
 };
 ```
+
+## Styling one element depending on another's state
+
+You can query Radium's state using `Radium.getState`. This allows you to style or render one element based on the state of another, e.g. showing a message when a button is hovered.
+
+```js
+var HoverMessage = React.createClass(Radium.wrap({
+  render: function () {
+    return (
+      <div>
+        <button key="button" style={[styles.button]}>Hover me!</button>
+        {Radium.getState(this.state, 'button', ':hover') ? (
+          <span>{' '}Hovering!</span>
+        ) : null}
+      </div>
+    )
+  }
+}));
+
+var styles = {
+  button: {
+    // Even though we don't have any special styles on the button, we need
+    // to add empty :hover styles here to tell Radium to track this element's
+    // state.
+    ':hover': {}
+  }
+};
+```

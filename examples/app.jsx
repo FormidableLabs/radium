@@ -5,6 +5,31 @@ var ComputedWell = require("./components/computed-well.jsx");
 var Style = require("../modules/components/style.js");
 var Radium = require("../modules");
 
+var HoverMessage = React.createClass(Radium.wrap({
+  render: function () {
+    return (
+      <div>
+        <button key="button" style={{':hover': {}}}>Hover me!</button>
+        {Radium.getState(this.state, 'button', ':hover') ? (
+          <span>{' '}Hovering!</span>
+        ) : null}
+      </div>
+    )
+  }
+}));
+
+var TwoSquares = React.createClass(Radium.wrap({
+  render: function () {
+    return (
+      <div>
+        <div key="one" style={[squareStyles.both, squareStyles.one]} />
+        <div key="two" style={[squareStyles.both, squareStyles.two]} />
+        <div style={{clear: 'both'}} />
+      </div>
+    )
+  }
+}));
+
 var App = React.createClass(Radium.wrap({
 
   _remount: function() {
@@ -22,6 +47,10 @@ var App = React.createClass(Radium.wrap({
 
     return (
       <div>
+        <p><TwoSquares /></p>
+
+        <p><HoverMessage /></p>
+
         <p>
           <Button onClick={this._remount}>Unmount and remount</Button>
         </p>
@@ -107,6 +136,26 @@ var App = React.createClass(Radium.wrap({
     );
   }
 }));
+
+var squareStyles = {
+  both: {
+    background: 'black',
+    border: 'solid 1px white',
+    float: 'left',
+    height: 100,
+    width: 100
+  },
+  one: {
+    ':hover': {
+      background: 'blue',
+    }
+  },
+  two: {
+    ':hover': {
+      background: 'red',
+    }
+  }
+};
 
 var tileStyle = {
   display: 'block',
