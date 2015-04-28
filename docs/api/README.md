@@ -6,51 +6,56 @@
 {
 var styles = {
   base: {
-    backgroundColor: "#0074d9",
+    backgroundColor: '#0074d9',
     border: 0,
-    borderRadius: "0.3em",
-    color: "#fff",
-    cursor: "pointer",
+    borderRadius: '0.3em',
+    color: '#fff',
+    cursor: 'pointer',
     fontSize: 16,
-    outline: "none",
-    padding: "0.4em 1em",
-
-    // Media queries must start with @media, and follow the same syntax as CSS
-    '@media (min-width: 992px)': {
-      padding: "0.6em 1.2em"
-    },
-
-    '@media (min-width: 1200px)': {
-      padding: "0.8em 1.5em"
-    },
+    outline: 'none',
+    padding: '0.4em 1em',
 
     ':hover': {
-      backgroundColor: "#0088FF"
+      backgroundColor: '#0088FF'
     },
 
     ':focus': {
-      backgroundColor: "#0088FF"
+      backgroundColor: '#0088FF'
     },
 
     ':active': {
-      backgroundColor: "#005299",
-      transform: "translateY(2px)",
+      backgroundColor: '#005299',
+      transform: 'translateY(2px)',
+    },
+
+    // Media queries must start with @media, and follow the same syntax as CSS
+    '@media (min-width: 992px)': {
+      padding: '0.6em 1.2em'
+    },
+
+    '@media (min-width: 1200px)': {
+      padding: '0.8em 1.5em',
+
+      // Media queries can also have nested :hover, :focus, or :active states
+      ':hover': {
+        backgroundColor: '#329FFF'
+      }
     }
   },
 
   red: {
-    backgroundColor: "#d90000",
+    backgroundColor: '#d90000',
 
     ':hover': {
-      backgroundColor: "#FF0000"
+      backgroundColor: '#FF0000'
     },
 
     ':focus': {
-      backgroundColor: "#FF0000"
+      backgroundColor: '#FF0000'
     },
 
     ':active': {
-      backgroundColor: "#990000"
+      backgroundColor: '#990000'
     }
   }
 };
@@ -69,6 +74,7 @@ Usage is simple:
 var MyComponent = React.createClass(Radium.wrap({
   // write your component as normal
 }));
+```
 
 ## Style Component
 
@@ -87,12 +93,12 @@ An array of CSS rules to render. Each rule is an object with a CSS selector as a
   {
     body: {
       margin: 0,
-      fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif"
+      fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
     }
   },
   {
     html: {
-      background: "#ccc"
+      background: '#ccc'
     }
   }
 ]} />
@@ -108,7 +114,7 @@ A string that any included selectors in `rules` will be appended to. Use to scop
   scopeSelector=".TestClass"
     rules={[
       h1: {
-        fontSize: "2em"
+        fontSize: '2em'
       }
     ]}
   />
