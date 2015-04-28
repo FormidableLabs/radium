@@ -17,4 +17,4 @@ branches:
     - master
 
 script:
-  - node_modules/.bin/gulp check
+  - npm run lint
