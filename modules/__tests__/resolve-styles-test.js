@@ -3,6 +3,7 @@
 
 'use strict';
 
+jest.dontMock('../get-state.js');
 jest.dontMock('../resolve-styles.js');
 
 var React = require('react');

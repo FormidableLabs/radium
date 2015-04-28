@@ -23,8 +23,9 @@ describe('wrap', function () {
       render: function () { return null; }
     });
 
+
     expect(wrapped.getInitialState()).toEqual(
-      {_radiumStyleState: {}, foo: 'bar'}
+      {foo: 'bar', _radiumStyleState: {}}
     );
   });
 

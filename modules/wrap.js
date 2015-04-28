@@ -1,7 +1,8 @@
 'use strict';
 
-var merge = require('lodash/object/merge');
 var resolveStyles = require('./resolve-styles.js');
+
+var merge = require('lodash/object/merge');
 
 var wrap = function (config) {
   var newConfig = {
@@ -9,7 +10,7 @@ var wrap = function (config) {
       var existingInitialState = config.getInitialState ?
         config.getInitialState.call(this) :
         {};
-      return merge({}, existingInitialState, { _radiumStyleState: {} });
+      return merge({}, existingInitialState, {_radiumStyleState: {}});
     },
 
     componentWillUnmount: function () {
