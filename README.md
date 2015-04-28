@@ -40,11 +40,11 @@ When we say expressive, we mean it: math, concatenation, regex, conditionals, fu
 
 Start by adding `Radium.wrap()` around the config you pass to `React.createClass`. Then, write a style object as you normally would with inline styles, and add in styles for interactive states and media queries. Pass the style object to your component via `style={...}` and let Radium do the rest!
 
-```xml
+```as
 <Button kind="primary">Radium Button</Button>
 ```
 
-```js
+```as
 var Radium = require('radium');
 var React = require('react');
 var color = require('color');
