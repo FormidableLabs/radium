@@ -1,10 +1,10 @@
-Radium is a toolset for easily writing React component styles. It resolves modifiers, browser states, and media queries to apply the correct styles to your components, all without selectors, specificity, or source order dependence.
+Radium is a toolset for easily writing React component styles. It resolves browser states and media queries to apply the correct styles to your components, all without selectors, specificity, or source order dependence.
 
 ### How do I do it, then?
 
 Let's create a fictional `<Button>` component. It will have a set of default styles, will adjust its appearance based on modifiers, and will include hover, focus, and active states.
 
-```js
+```as
 var Button = React.createClass({
   render: function () {
     return (
@@ -16,55 +16,61 @@ var Button = React.createClass({
 });
 ```
 
-Most of Radium's behavior is included in mixins that provide different types of functionality. For basic use, you'll want to start with the `StyleResolverMixin`. This mixin builds out the styles that will apply to your component.
+Radium is activated by wrapping your component configuration:
 
-```js
-var Button = React.createClass({
-  mixins: [ StyleResolverMixin ],
-
+```as
+var Button = React.createClass(Radium.wrap({
   render: function () { ... }
-});
+}));
 ```
 
 Radium resolves nested style objects into a flat object that can be applied directly to a React element. If you're not familiar with handling inline styles in React, see the React guide to the subject [here](http://facebook.github.io/react/tips/inline-styles.html). A basic style object looks like this:
 
-```js
-var radStyles = {
-  padding: '1.5em',
+```as
+var baseStyles = {
+  background: 'blue',
   border: 0,
   borderRadius: 4,
-  background: 'blue',
-  color: 'white'
-}
+  color: 'white',
+  padding: '1.5em'
+};
 ```
 
-`StyleResolverMixin` has a method called `buildStyles()` that converts a nested Radium style object into the styles that should be applied to your component based on its props and state.
+We usually nest styles inside a shared `styles` object for easy access:
 
-That object is passed as a parameter to `buildStyles()`. `buildStyles()` returns an object that can be applied to an element through the `style` attribute. If we assign our Radium style object to a variable called `radStyles`, that would look like this:
+```as
+var styles = {
+  base: {
+    background: 'blue',
+    border: 0,
+    borderRadius: 4,
+    color: 'white',
+    padding: '1.5em'
+  }
+};
+```
 
-```js
-var Button = React.createClass({
-  mixins: [ StyleResolverMixin ],
+Next, simply pass your styles to the `style` attribute of an element:
 
+```as
+var Button = React.createClass(Radium.wrap({
   render: function () {
-    var styles = this.buildStyles(radStyles);
-
     return (
-      <button style={styles}>
+      <button style={styles.base}>
         {this.props.children}
       </button>
     )
   }
-});
+}));
 ```
 
-From there, React will apply our styles to the `button` element. This is not very exciting. In fact, React does this by default, without the extra step of using `buildStyles()`. Radium becomes useful when you need to do more complex things, like handling modifiers, states, media queries, and computed properties.
+From there, React will apply our styles to the `button` element. This is not very exciting. In fact, React does this by default, without the extra step of using `Radium.wrap()`. Radium becomes useful when you need to do more complex things, like handling modifiers, states, and media queries.
 
 ### Modifiers
 
-In Radium, a modifier is a set of additional CSS properties that are applied based on the component's props and state. A button might have modifiers to change its size or display property. By default, modifiers map directly to your component's props:
+Radium provides one shorthand for dealing with styles that are modified by your props or state. You can pass an array of style objects to the `style` attribute, and they will be merged together intelligently (`:hover` states, for instance, will merge instead of overwrite). This works the same way as it does in [React Native](https://facebook.github.io/react-native/docs/style.html#using-styles).
 
-```xml
+```as
 <Button
   size="large"
   block={true}>
@@ -72,132 +78,148 @@ In Radium, a modifier is a set of additional CSS properties that are applied bas
 </Button>
 ```
 
-Start by adding a `modifiers` array to your Radium style object.
+Start by adding another style to your `styles` object:
 
-```js
-{
-  modifiers: [
-    {
-      size: {
-        large: {
-          fontSize: 24
-        },
-        small: {
-          fontSize: 12
-        }
-      }
-    },
-    {
-      block: {
-        display: 'block'
-      }
-    }
-  ]
-}
-```
+```as
+var styles = {
+  base: {
+    background: 'blue',
+    border: 0,
+    borderRadius: 4,
+    color: 'white',
+    padding: '1.5em'
+  },
 
-Modifiers can reflect string or boolean values. If a modifier value is a string, you can represent different possible values as child objects with their own CSS properties:
-
-```js
-modifiers: [
-  {
-    size: {
-      // if size === 'large'
-      large: {
-        fontSize: 24
-      },
-      // if size === 'small'
-      small: {
-        fontSize: 12
-      }
-    }
+  block: {
+    display: 'block'
   }
-]
+};
 ```
 
-If a modifier value is a boolean, add CSS properties as children of the modifier name:
+Then, include that style object in the array passed to the `style` attribute if the conditions match:
 
-```js
-modifiers: [
-  {
-    // if block === true
-    block: {
-      display: 'block'
-    }
+```as
+var Button = React.createClass(Radium.wrap({
+  render: function () {
+    return (
+      <button
+        style={[
+          styles.base,
+          this.props.block && styles.block
+        ]}>
+        {this.props.children}
+      </button>
+    )
   }
-]
+}));
 ```
 
-When you pass your style object to Radium to resolve it, Radium will check all of your active modifiers and merge them together to give you the set of CSS rules that should apply to the element.
-
-#### Assigning modifiers
-
-For advanced use-cases, you may need to base modifiers on more than just `props`. For example, a modifier may need to be set based on the presence of two different props, or a state, or a combination of the two.
-
-To handle this behavior, `buildStyles()` takes a second parameter-- an object of additional modifiers.
-
-```js
-var styles = this.buildStyles(radStyles, {
-  selected: this.state.selected,
-  largeBlock: this.props.block && this.props.size === "large"
-});
-```
-
-This gives you fine-grained control over your modifiers. If you want, you can even use this interface alone to set modifiers, without basing them directly on `props`.
+Radium will ignore any elements of the array that aren't objects, such as the result of `this.props.block && styles.block` when `this.props.block` is `false` or `undefined`.
 
 ### Browser States
 
 Radium supports styling for three browser states that are targeted with pseudo-selectors in normal CSS: `:hover`, `:focus`, and `:active`.
 
-To add styles for these states, you can add a `states` array to your style object under your default styles or any modifiers:
+To add styles for these states, add a special key to your style object with the additional rules:
 
-```js
-states: [
-  {
-    hover: {
+```as
+var styles = {
+  base: {
+    background: 'blue',
+    border: 0,
+    borderRadius: 4,
+    color: 'white',
+    padding: '1.5em',
+
+    ':hover': {
       backgroundColor: 'red'
-    }
-  },
-  {
-    focus: {
+    },
+
+    ':focus': {
       backgroundColor: 'green'
+    },
+
+    ':active': {
+      backgroundColor: 'yellow'
+    },
+  },
+
+  block: {
+    display: 'block',
+
+    ':hover': {
+      boxShadow: '0 3px 0 rgba(0,0,0,0.2)'
     }
   },
-  {
-    active: {
-      backgroundColor: 'yellow'
+};
+```
+
+Radium will merge styles for any active states when your component is rendered.
+
+### Media queries
+
+Add media queries to your style objects the same way as you would add browser state modifiers like  `:hover`. The key must start with `@media`, and the [syntax](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Media_queries) is identical to CSS:
+
+var style = {
+  width: '25%',
+
+  '@media (min-width: 320px)': {
+    width: '100%'
+  }
+};
+
+Radium will apply the correct styles for the currently active media queries.
+
+### Nested browser states
+
+Media query styles can also contain nested browser states:
+
+```as
+var style = {
+  width: '25%',
+
+  '@media (min-width: 320px)': {
+    width: '100%',
+
+    ':hover': {
+      background: 'white'
     }
   }
-],
-modifiers: [
-  {
-    block: {
-      states: {
-        hover: {
-          boxShadow: '0 3px 0 rgba(0,0,0,0.2)'
-        }
-      }
+};
+```
+
+### Styling multiple elements in a single component
+
+Radium allows you to style multiple elements in the same component. You just have to give each element that has browser state modifiers like :hover or media queries a unique `key` or `ref` attribute:
+
+```as
+var TwoSquares = React.createClass(Radium.wrap({
+  render: function () {
+    return (
+      <div>
+        <div key="one" style={[styles.both, styles.one]} />
+        <div key="two" style={[styles.both, styles.two]} />
+      </div>
+    )
+  }
+}));
+
+var styles = {
+  both: {
+    background: 'black',
+    border: 'solid 1px white',
+    height: 100,
+    width: 100
+  },
+  one: {
+    ':hover': {
+      background: 'blue',
+    }
+  },
+  two: {
+    ':hover': {
+      background: 'red',
     }
   }
-]
+};
 ```
-
-Radium will merge styles for any active modifiers and states together when your component is rendered.
-
-Radium provides a mixin to set these states on your component based on user behavior. First, add the mixin to your component's `mixins` array:
-
-```js
-mixins: [ StyleResolverMixin, BrowserStateMixin ]
-```
-
-Then, add Radium browser state event listeners to your component:
-
-```xml
-<button
-  {...this.getBrowserStateEvents()}
-  style={styles}>
-```
-
-The `getBrowserStateEvents()` method returns a hash of events that Radium uses to set browser state on a component.
-
-For advanced usage, including media queries and computed styles, see our [guides](http://github.com/formidablelabs/radium/tree/master/docs/guides).

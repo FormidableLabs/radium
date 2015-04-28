@@ -12,13 +12,13 @@ When we say expressive, we mean it: math, concatenation, regex, conditionals, fu
 
 Before we dive in, here's what it looks like:
 
-```xml
+```as
 <Button kind='primary'>Radium Button</Button>
 ```
 
 <div id="radium-example"></div>
 
-```js
+```as
 var React = require('react');
 var { StyleResolverMixin, BrowserStateMixin } = require('radium');
 var color = require('color');
