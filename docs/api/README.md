@@ -4,226 +4,77 @@
 
 ```js
 {
-  // Default styles
-  margin: 0,
+var styles = {
+  base: {
+    backgroundColor: '#0074d9',
+    border: 0,
+    borderRadius: '0.3em',
+    color: '#fff',
+    cursor: 'pointer',
+    fontSize: 16,
+    outline: 'none',
+    padding: '0.4em 1em',
 
-  // Default browser states
-  states: [
-    {
-      hover: {
-        background: '#000'
-      }
+    ':hover': {
+      backgroundColor: '#0088FF'
     },
-    {
-      focus: {
-        background: '#333'
-      }
+
+    ':focus': {
+      backgroundColor: '#0088FF'
     },
-    {
-      active: {
-        background: '#666'
+
+    ':active': {
+      backgroundColor: '#005299',
+      transform: 'translateY(2px)',
+    },
+
+    // Media queries must start with @media, and follow the same syntax as CSS
+    '@media (min-width: 992px)': {
+      padding: '0.6em 1.2em'
+    },
+
+    '@media (min-width: 1200px)': {
+      padding: '0.8em 1.5em',
+
+      // Media queries can also have nested :hover, :focus, or :active states
+      ':hover': {
+        backgroundColor: '#329FFF'
       }
     }
-  ],
+  },
 
-  // Default media queries
-  mediaQueries: [
-    {
-      small: {
-        padding: 10
-      }
+  red: {
+    backgroundColor: '#d90000',
+
+    ':hover': {
+      backgroundColor: '#FF0000'
     },
-    {
-      large: {
-        padding: 20
-      }
-    }
-  ],
 
-  modifiers: [
-    {
-      // Modifier with string value
-      theme: {
-        // <Component theme="coffee" />
-        coffee: {
-          color: '#fff',
-
-          // Modifier browser states
-          states: [
-            {
-              hover: {
-                color: '#ccc',
-
-                // Computed style callbacks, evaluated after the rest of the
-                // styles are resolved.
-                computed: {
-                  // Computed background color callback
-                  // `styles`: The resolved styles object.
-                  background: function (styles) {
-                    return styles.borderColor;
-                  }
-                }
-              }
-            }
-          ],
-
-          // Modifier media queries
-          mediaQueries: [
-            {
-              large: {
-                padding: 24
-              }
-            }
-          ]
-        }
-      }
+    ':focus': {
+      backgroundColor: '#FF0000'
     },
-    {
-      // Modifier with boolean value
-      // <Component block={true} />
-      block: {
-        display: 'block'
-      }
+
+    ':active': {
+      backgroundColor: '#990000'
     }
-  ]
-}
+  }
+};
 ```
 
-## StyleResolverMixin
+## Radium.wrap
 
-The style resolver mixin resolves a [style object](#sample-style-object) based on currently active modifiers, states, media queries, and computed styles.
+The essence of using Radium. Wrapping the component configuration allows Radium to:
+- Provide initial state
+- Process the `style` attribute after `render()`
+- Clean up any resources when the component unmounts
 
-### buildStyles
+Usage is simple:
 
-Resolves a style object into an object that can be set as the value of an element's `style` attribute.
-
-#### Signature
-
-`buildStyles(styles, additionalModifiers, excludeProps)`
-
-#### Arguments
-
-##### styles
-
-Type: `Object`
-
-A Radium [style object](#sample-style-object).
-
-##### additionalModifiers
-
-Type: `Object` (Optional)
-
-An object of modifiers used in style resolution. Passed in modifiers take precedence over modifiers from `this.props`.
-
-##### excludeProps
-
-Type: `Boolean` Default: `false` (Optional)
-
-A flag to exclude `this.props` from component modifiers (meaning that only `additionalModifiers` will be used).
-
-#### Examples
-
-```js
-// Standard usage
-var styles = this.buildStyles(radStyles);
-
-// Including additional modifiers
-var customModifierStyles = this.buildStyles(radStyles, {
-  active: this.state.active
-});
-
-// Excluding this.props
-var noPropsStyles = this.buildStyles(radStyles, {
-  active: this.state.active
-}, true);
+```javascript
+var MyComponent = React.createClass(Radium.wrap({
+  // write your component as normal
+}));
 ```
-
-## BrowserStateMixin
-
-The browser state mixin manages hover, active, and focus states. If a component should include browser state styles, add it as a mixin and include `this.getBrowserStateEvents()` on the element that should listen for events.
-
-### getBrowserStateEvents
-
-Returns a hash of browser state events handlers to set component state when the element is hovered, focused, or active.
-
-Apply to the component with a spread operator (`{...}`).
-
-**Note**: `getBrowserStateEvents` uses the following React event listeners:
-
-- `onMouseEnter`
-- `onMouseLeave`
-- `onMouseDown`
-- `onMouseUp`
-- `onFocus`
-- `onBlur`
-
-If you need to use Radium to style browser states but also need to add your own event listeners matching any of the 6 previously listed, simply call the corresponding Radium event handler in your own event handler:
-
-React | Radium
-------|-------
-`onMouseEnter` | `radiumMouseEnter`
-`onMouseLeave` | `radiumMouseLeave`
-`onMouseDown` | `radiumMouseDown`
-`onMouseUp` | `radiumMouseUp`
-`onFocus` | `radiumFocus`
-`onBlur` | `radiumBlur`
-
-Example:
-
-```js
-handleFocus: function () {
-  this.radiumFocus();
-
-  // Your custom event behavior.
-}
-```
-
-Event listeners passed in as props from another component are handled automatically.
-
-#### Signature
-
-`getBrowserStateEvents()`
-
-#### Examples
-
-```js
-<Component
-  {...this.getBrowserStateEvents()}
-/>
-```
-
-## MatchMediaBase
-
-The match media base mixin sets and manages media queries for your application. Add it as a mixin at the top level of your app and initialize with `MatchMediaBase.init()`.
-
-### init
-
-Initialize a set of media queries. Should be initialized outside of the top level React component.
-
-#### Signature
-
-`MatchMediaBase.init(mediaQueries)`
-
-#### Arguments
-
-##### mediaQueries
-
-Type: 'Object'
-
-An object of media query names and strings.
-
-#### Examples
-
-```js
-MatchMediaBase.init({
-  medium: '(min-width: 768px)',
-  large: '(min-width: 1200px)'
-});
-```
-
-## MatchMediaItem
-
-The match media item mixin applies media queries set in `MatchMediaBase` to a component. To use, add it as a mixin to any component that is a descendent of the component with `MatchMediaBase` that should include media query styles.
 
 ## Style Component
 
@@ -242,12 +93,12 @@ An array of CSS rules to render. Each rule is an object with a CSS selector as a
   {
     body: {
       margin: 0,
-      fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif"
+      fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
     }
   },
   {
     html: {
-      background: "#ccc"
+      background: '#ccc'
     }
   }
 ]} />
@@ -263,7 +114,7 @@ A string that any included selectors in `rules` will be appended to. Use to scop
   scopeSelector=".TestClass"
     rules={[
       h1: {
-        fontSize: "2em"
+        fontSize: '2em'
       }
     ]}
   />

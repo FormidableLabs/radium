@@ -6,7 +6,7 @@ Run `npm run examples` to run a webpack dev server with Radium examples.
 
 ## Lint
 
-Run `gulp check` before committing to lint files.
+Run `npm run lint` before committing to lint files.
 
 ## Dist
 

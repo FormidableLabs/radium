@@ -1,10 +1,7 @@
 var React = require('react');
 var Radium = require('../../modules/index');
-var { StyleResolverMixin } = Radium;
 
-var ComputedWell = React.createClass({
-  mixins: [ StyleResolverMixin ],
-
+var ComputedWell = React.createClass(Radium.wrap({
   getInitialState: function () {
     return {
       dynamicBg: '#000'
@@ -28,16 +25,14 @@ var ComputedWell = React.createClass({
   },
 
   render: function () {
-    var styles = this.buildStyles(this.getStyles());
-
     return (
-      <form style={styles} onSubmit={this.handleSubmit}>
+      <form style={this.getStyles()} onSubmit={this.handleSubmit}>
         <input ref='input' type='text' placeholder="black" />
 
         <button>Change Background Color</button>
       </form>
     );
   }
-});
+}));
 
 module.exports = ComputedWell;

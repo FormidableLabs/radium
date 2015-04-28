@@ -1,25 +1,31 @@
 var React = require('react');
 
-var { MatchMediaBase } = require('../modules/index');
-
 var Button = require('./components/button.jsx');
 var ComputedWell = require("./components/computed-well.jsx");
 var Style = require("../modules/components/style.js");
+var Radium = require("../modules");
 
-var MEDIA_QUERIES = {
-  md: '(min-width: 992px)',
-  lg: '(min-width: 1200px)',
-  smallOnly: '(max-width: 600px)'
-};
+var App = React.createClass(Radium.wrap({
 
-MatchMediaBase.init(MEDIA_QUERIES);
+  _remount: function() {
+    this.setState({shouldRenderNull: true});
 
-var App = React.createClass({
-  mixins: [ MatchMediaBase ],
+    setTimeout(function() {
+      this.setState({shouldRenderNull: false});
+    }.bind(this), 100);
+  },
 
   render: function () {
+    if (this.state && this.state.shouldRenderNull) {
+      return null;
+    }
+
     return (
       <div>
+        <p>
+          <Button onClick={this._remount}>Unmount and remount</Button>
+        </p>
+
         <p>
           <Button>Button</Button>
         </p>
@@ -39,6 +45,13 @@ var App = React.createClass({
           </Button>
         </p>
 
+        <div style={{width: 220}}>
+          {Array.apply(null, Array(100)).map(function(_, i) {
+            return <div style={tileStyle} key={'tile' + i}/>
+          })}
+          <div style={{clear:'both'}} />
+        </div>
+
         <Style
           rules={[
             {
@@ -49,7 +62,7 @@ var App = React.createClass({
             },
             {
               mediaQueries: {
-                smallOnly: [
+                "(max-width: 600px)": [
                   {
                     body: {
                       background: "gray"
@@ -93,6 +106,21 @@ var App = React.createClass({
       </div>
     );
   }
-});
+}));
+
+var tileStyle = {
+  display: 'block',
+  float: 'left',
+  background: '#ccc',
+  width: 20,
+  height: 20,
+  textAlign: 'center',
+  border: '1px solid white',
+  cursor: 'pointer',
+
+  ':hover' : {
+    background: '#999'
+  }
+};
 
 React.render(<App />, document.getElementById('app'));
