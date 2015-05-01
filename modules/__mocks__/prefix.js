@@ -1,6 +1,6 @@
 'use strict';
 
-var prefixMock = function(style, mode) {
+var prefixMock = function (style) {
   return style;
 };
 
