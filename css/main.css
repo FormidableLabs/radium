@@ -123,6 +123,7 @@ h4 {
 
 .Header {
   position: relative;
+  padding-top: 70px;
   padding-bottom: 45px;
   margin-bottom: 3rem;
 }
@@ -318,6 +319,22 @@ h4 {
   padding: 24px;
   margin: 24px -24px 0;
   text-align: center;
+}
+
+.Formidabanner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  padding: 10px;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgb(29, 34, 39);
+  color: rgb(255, 255, 255);
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  background: rgb(43, 48, 59);
 }
 
 /* Utilities */
