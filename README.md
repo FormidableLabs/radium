@@ -32,6 +32,8 @@ When we say expressive, we mean it: math, concatenation, regex, conditionals, fu
 * Conceptually simple extension of normal inline styles
 * Browser state styles to support `:hover`, `:focus`, and `:active`
 * Media queries
+* Automatic vendor prefixing
+* Keyframes animation helper
 
 ## Docs
 
@@ -61,7 +63,8 @@ var Button = React.createClass(Radium.wrap({
     // the styles in order. We use this feature here to apply the primary
     // or warning styles depending on the value of the `kind` prop. Since its
     // all just JavaScript, you can use whatever logic you want to decide which
-    // styles are applied (props, state, context, etc).
+    // styles are applied (props, state, context, etc). Radium also adds vendor
+    // prefixes automatically where needed.
     return (
       <button
         style={[

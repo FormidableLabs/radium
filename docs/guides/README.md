@@ -66,7 +66,7 @@ var Button = React.createClass(Radium.wrap({
 }));
 ```
 
-From there, React will apply our styles to the `button` element. This is not very exciting. In fact, React does this by default, without the extra step of using `Radium.wrap()`. Radium becomes useful when you need to do more complex things, like handling modifiers, states, and media queries.
+From there, React will apply our styles to the `button` element. This is not very exciting. In fact, React does this by default, without the extra step of using `Radium.wrap()`. Radium becomes useful when you need to do more complex things, like handling modifiers, states, and media queries. But, even without those complex things, Radium will still merge an array of styles and automatically apply vendor prefixes for you.
 
 ## Modifiers
 
@@ -189,6 +189,10 @@ var style = {
   }
 };
 ```
+
+### Known issues with media queries
+
+If you use the query `@media print`, your print styles will not show up on Firefox at all, or in Chrome when triggering `window.print` from JavaScript. See [Issue 132](https://github.com/FormidableLabs/radium/issues/132#issuecomment-99805511) for more details.
 
 ## Styling multiple elements in a single component
 

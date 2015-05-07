@@ -30,6 +30,16 @@ var TwoSquares = React.createClass(Radium.wrap({
   }
 }));
 
+var Spinner = React.createClass(Radium.wrap({
+  render: function () {
+    return (
+      <div>
+        <div style={spinnerStyles.inner} />
+      </div>
+    );
+  }
+}));
+
 var App = React.createClass(Radium.wrap({
 
   _remount: function() {
@@ -50,6 +60,8 @@ var App = React.createClass(Radium.wrap({
         <p><TwoSquares /></p>
 
         <p><HoverMessage /></p>
+
+        <p><Spinner /></p>
 
         <p>
           <Button onClick={this._remount}>Unmount and remount</Button>
@@ -169,6 +181,21 @@ var tileStyle = {
 
   ':hover' : {
     background: '#999'
+  }
+};
+
+var pulseKeyframes = Radium.keyframes({
+  '0%': {width: '10%'},
+  '50%': {width: '50%'},
+  '100%': {width: '10%'},
+});
+
+var spinnerStyles = {
+  inner: {
+    animation: pulseKeyframes + ' 3s ease 0s infinite',
+    background: 'blue',
+    height: '4px',
+    margin: '0 auto',
   }
 };
 
