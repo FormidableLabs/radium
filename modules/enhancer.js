@@ -1,14 +1,21 @@
+'use strict';
+
 var resolveStyles = require('./resolve-styles.js');
 var wrapUtils = require('./wrap-utils.js');
 
-module.exports = function enhanceWithRadium(ComposedComponent) {
-  function RadiumEnhancer () {
+var enhanceWithRadium = function (ComposedComponent) {
+  var RadiumEnhancer = function () {
     ComposedComponent.prototype.constructor.call(this);
+
+    if (!this.state) {
+      this.state = {};
+    }
+
     var radiumInitialState = wrapUtils.getInitialState();
     Object.keys(radiumInitialState).forEach(function (key) {
       this.state[key] = radiumInitialState[key];
     }, this);
-  }
+  };
 
   RadiumEnhancer.prototype = new ComposedComponent();
   RadiumEnhancer.prototype.constructor = RadiumEnhancer;
@@ -31,3 +38,5 @@ module.exports = function enhanceWithRadium(ComposedComponent) {
 
   return RadiumEnhancer;
 };
+
+module.exports = enhanceWithRadium;

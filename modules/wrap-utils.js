@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   getInitialState: function () {
     return {_radiumStyleState: {}};
