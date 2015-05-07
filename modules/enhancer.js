@@ -33,6 +33,7 @@ var enhanceWithRadium = function (ComposedComponent) {
     wrapUtils.componentWillUnmount(this);
   };
 
+  RadiumEnhancer.defaultProps = ComposedComponent.defaultProps;
   RadiumEnhancer.propTypes = ComposedComponent.propTypes;
   RadiumEnhancer.contextTypes = ComposedComponent.contextTypes;
 
