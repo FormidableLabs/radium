@@ -2,7 +2,10 @@ language: node_js
 
 node_js:
   - 0.10
-  - 0.12
+  # TODO: Re-enable v0.12 builds.
+  # Radium Ticket: https://github.com/FormidableLabs/radium/issues/138
+  # Upstream Jest Ticket: https://github.com/facebook/jest/issues/243
+  #- 0.12
 
 # Use container-based Travis infrastructure.
 sudo: false
