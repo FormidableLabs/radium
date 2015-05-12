@@ -31,6 +31,7 @@
     "jest-cli": "^0.4.0",
     "jsx-loader": "^0.12.2",
     "react": ">=0.12.0 <0.14.0",
+    "react-tools": "^0.13.3",
     "webpack": "^1.5.3",
     "webpack-dev-server": "^1.7.0"
   },
