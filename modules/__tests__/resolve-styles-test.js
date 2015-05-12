@@ -718,4 +718,15 @@ describe('resolveStyles', function () {
     });
   });
 
+  describe('React.Children.only', function () {
+    it.only('doesn\'t break React.Children.only', function () {
+      var component = genComponent();
+      var renderedElement = <div><span /></div>;
+
+      var result = resolveStyles(component, renderedElement);
+
+      expect(React.Children.only(result.props.children)).toBeTruthy();
+    });
+  });
+
 });

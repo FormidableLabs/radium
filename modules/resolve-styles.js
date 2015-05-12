@@ -109,16 +109,22 @@ var resolveStyles = function (component, renderedElement, existingKeyMap) {
   // `this` component. Child nodes in other components will not be here, so each
   // component needs to use Radium.wrap.
   var newChildren = null;
-  if (renderedElement.props.children) {
-    newChildren = React.Children.map(
-      renderedElement.props.children,
-      function (child) {
-        if (React.isValidElement(child)) {
-          return resolveStyles(component, child, existingKeyMap);
+  var oldChildren = renderedElement.props.children;
+  if (oldChildren) {
+    if (React.Children.count(oldChildren) === 1) {
+      var child = React.Children.only(oldChildren);
+      newChildren = resolveStyles(component, child, existingKeyMap);
+    } else {
+      newChildren = React.Children.map(
+        oldChildren,
+        function (child) {
+          if (React.isValidElement(child)) {
+            return resolveStyles(component, child, existingKeyMap);
+          }
+          return child;
         }
-        return child;
-      }
-    );
+      );
+    }
   }
 
   var props = renderedElement.props;
