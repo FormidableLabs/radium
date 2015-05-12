@@ -129,7 +129,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md)
 
 [trav_img]: https://api.travis-ci.org/FormidableLabs/radium.svg
 [trav_site]: https://travis-ci.org/FormidableLabs/radium
-[cov_img]: https://coveralls.io/repos/FormidableLabs/radium/badge.svg
+[cov_img]: https://img.shields.io/coveralls/FormidableLabs/radium.svg
 [cov_site]: https://coveralls.io/r/FormidableLabs/radium
 [npm_img]: https://img.shields.io/npm/v/radium.svg
 [npm_site]: https://www.npmjs.org/package/radium
