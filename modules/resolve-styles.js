@@ -111,9 +111,12 @@ var resolveStyles = function (component, renderedElement, existingKeyMap) {
   var newChildren = null;
   var oldChildren = renderedElement.props.children;
   if (oldChildren) {
-    if (React.Children.count(oldChildren) === 1) {
-      var child = React.Children.only(oldChildren);
-      newChildren = resolveStyles(component, child, existingKeyMap);
+    // If a React Element is an only child, don't wrap it in an array for
+    // React.Children.map() for React.Children.only() compatibility.
+    if (React.Children.count(oldChildren) === 1 && oldChildren.type) {
+      var onlyChild = React.Children.only(oldChildren);
+
+      newChildren = resolveStyles(component, onlyChild, existingKeyMap);
     } else {
       newChildren = React.Children.map(
         oldChildren,
@@ -121,6 +124,7 @@ var resolveStyles = function (component, renderedElement, existingKeyMap) {
           if (React.isValidElement(child)) {
             return resolveStyles(component, child, existingKeyMap);
           }
+
           return child;
         }
       );
