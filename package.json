@@ -16,7 +16,7 @@
     "dist": "webpack && webpack --config=webpack.config.minified.js",
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
     "test": "jest",
-    "lint": "eslint modules/"
+    "lint": "eslint modules"
   },
   "license": "MIT",
   "peerDependencies": {
@@ -26,6 +26,7 @@
     "lodash": "^3.2.0"
   },
   "devDependencies": {
+    "coveralls": "^2.11.2",
     "eslint": "^0.19.0",
     "jest-cli": "^0.4.0",
     "jsx-loader": "^0.12.2",

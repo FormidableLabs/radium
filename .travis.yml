@@ -2,7 +2,10 @@ language: node_js
 
 node_js:
   - 0.10
-  - 0.12
+  # TODO: Re-enable v0.12 builds.
+  # Radium Ticket: https://github.com/FormidableLabs/radium/issues/138
+  # Upstream Jest Ticket: https://github.com/facebook/jest/issues/243
+  #- 0.12
 
 # Use container-based Travis infrastructure.
 sudo: false
@@ -18,3 +21,6 @@ branches:
 
 script:
   - npm run lint
+  - npm run test
+  # Upload to coveralls, but don't _fail_ if coveralls is down.
+  - cat coverage/lcov.info node_modules/.bin/coveralls || echo "Coveralls upload failed"

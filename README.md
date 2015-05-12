@@ -1,6 +1,7 @@
-[![Travis Status](https://api.travis-ci.org/FormidableLabs/radium.svg)](https://travis-ci.org/FormidableLabs/radium)
-[![npm package](https://img.shields.io/npm/v/radium.svg)](https://www.npmjs.org/package/radium)
-[![dependency status](https://img.shields.io/david/FormidableLabs/radium.svg)](https://david-dm.org/FormidableLabs/radium)
+[![Travis Status][trav_img]][trav_site]
+[![Coverage Status][cov_img]][cov_site]
+[![NPM Package][npm_img]][npm_site]
+[![Dependency Status][david_img]][david_site]
 
 # Radium
 
@@ -125,3 +126,12 @@ npm run examples
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md)
+
+[trav_img]: https://api.travis-ci.org/FormidableLabs/radium.svg
+[trav_site]: https://travis-ci.org/FormidableLabs/radium
+[cov_img]: https://img.shields.io/coveralls/FormidableLabs/radium.svg
+[cov_site]: https://coveralls.io/r/FormidableLabs/radium
+[npm_img]: https://img.shields.io/npm/v/radium.svg
+[npm_site]: https://www.npmjs.org/package/radium
+[david_img]: https://img.shields.io/david/FormidableLabs/radium.svg
+[david_site]: https://david-dm.org/FormidableLabs/radium
