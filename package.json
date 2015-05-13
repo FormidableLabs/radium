@@ -2,7 +2,7 @@
   "name": "radium",
   "version": "0.11.1",
   "description": "A set of tools to manage inline styles on React elements",
-  "main": "modules/index.js",
+  "main": "lib/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/formidablelabs/radium.git"
@@ -14,6 +14,7 @@
   },
   "scripts": {
     "dist": "webpack && webpack --config=webpack.config.minified.js",
+    "lib": "rm -rf ./lib && babel ./modules -d lib && rm -rf ./lib/__tests__ ./lib/__mocks__",
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
     "test": "jest",
     "lint": "eslint modules"
@@ -26,10 +27,12 @@
     "lodash": "^3.2.0"
   },
   "devDependencies": {
+    "babel": "^5.3.1",
+    "babel-core": "^5.3.1",
+    "babel-loader": "^5.0.0",
     "coveralls": "^2.11.2",
     "eslint": "^0.19.0",
     "jest-cli": "^0.4.0",
-    "jsx-loader": "^0.12.2",
     "react": ">=0.12.0 <0.14.0",
     "react-tools": "^0.13.3",
     "webpack": "^1.5.3",
