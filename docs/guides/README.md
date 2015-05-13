@@ -6,6 +6,20 @@ Radium is a toolset for easily writing React component styles. It resolves brows
 
 Let's create a fictional `<Button>` component. It will have a set of default styles, will adjust its appearance based on modifiers, and will include hover, focus, and active states.
 
+**Using ES6 classes**
+```as
+class Button extends React.Component {
+  render() {
+    return (
+      <button>
+        {this.props.children}
+      </button>
+    );
+  }
+}
+```
+
+**Using createClass**
 ```as
 var Button = React.createClass({
   render: function () {
@@ -18,8 +32,23 @@ var Button = React.createClass({
 });
 ```
 
-Radium is activated by wrapping your component configuration:
+Radium is activated by wrapping your component or its configuration:
 
+**Using ES6 classes**
+```as
+module.exports = Radium.Enhancer(Button);
+
+// or
+Button = Radium.Enhancer(Button);
+
+// or if using Decorators (Stage 1, Babel)
+@Radium.Enhancer
+class Button extends React.Component {
+  // ...
+}
+```
+
+**Using createClass**
 ```as
 var Button = React.createClass(Radium.wrap({
   render: function () { ... }
@@ -55,15 +84,12 @@ var styles = {
 Next, simply pass your styles to the `style` attribute of an element:
 
 ```as
-var Button = React.createClass(Radium.wrap({
-  render: function () {
-    return (
-      <button style={styles.base}>
-        {this.props.children}
-      </button>
-    )
-  }
-}));
+// Inside render
+return (
+  <button style={styles.base}>
+    {this.props.children}
+  </button>
+);
 ```
 
 From there, React will apply our styles to the `button` element. This is not very exciting. In fact, React does this by default, without the extra step of using `Radium.wrap()`. Radium becomes useful when you need to do more complex things, like handling modifiers, states, and media queries. But, even without those complex things, Radium will still merge an array of styles and automatically apply vendor prefixes for you.
@@ -101,19 +127,16 @@ var styles = {
 Then, include that style object in the array passed to the `style` attribute if the conditions match:
 
 ```as
-var Button = React.createClass(Radium.wrap({
-  render: function () {
-    return (
-      <button
-        style={[
-          styles.base,
-          this.props.block && styles.block
-        ]}>
-        {this.props.children}
-      </button>
-    )
-  }
-}));
+// Inside render
+return (
+  <button
+    style={[
+      styles.base,
+      this.props.block && styles.block
+    ]}>
+    {this.props.children}
+  </button>
+);
 ```
 
 Radium will ignore any elements of the array that aren't objects, such as the result of `this.props.block && styles.block` when `this.props.block` is `false` or `undefined`.
@@ -201,16 +224,13 @@ If you use the query `@media print`, your print styles will not show up on Firef
 Radium allows you to style multiple elements in the same component. You just have to give each element that has browser state modifiers like :hover or media queries a unique `key` or `ref` attribute:
 
 ```as
-var TwoSquares = React.createClass(Radium.wrap({
-  render: function () {
-    return (
-      <div>
-        <div key="one" style={[styles.both, styles.one]} />
-        <div key="two" style={[styles.both, styles.two]} />
-      </div>
-    )
-  }
-}));
+// Inside render
+return (
+  <div>
+    <div key="one" style={[styles.both, styles.one]} />
+    <div key="two" style={[styles.both, styles.two]} />
+  </div>
+);
 
 var styles = {
   both: {
@@ -237,18 +257,15 @@ var styles = {
 You can query Radium's state using `Radium.getState`. This allows you to style or render one element based on the state of another, e.g. showing a message when a button is hovered.
 
 ```js
-var HoverMessage = React.createClass(Radium.wrap({
-  render: function () {
-    return (
-      <div>
-        <button key="button" style={[styles.button]}>Hover me!</button>
-        {Radium.getState(this.state, 'button', ':hover') ? (
-          <span>{' '}Hovering!</span>
-        ) : null}
-      </div>
-    )
-  }
-}));
+// Inside render
+return (
+  <div>
+    <button key="button" style={[styles.button]}>Hover me!</button>
+    {Radium.getState(this.state, 'button', ':hover') ? (
+      <span>{' '}Hovering!</span>
+    ) : null}
+  </div>
+);
 
 var styles = {
   button: {
