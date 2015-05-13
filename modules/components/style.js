@@ -82,9 +82,8 @@ var Style = React.createClass({
 
     var styles = this._buildStyles(this.props.rules);
 
-    return React.createElement(
-      'style',
-      {dangerouslySetInnerHTML: {__html: styles}}
+    return (
+      <style dangerouslySetInnerHTML={{__html: styles}} />
     );
   }
 });
