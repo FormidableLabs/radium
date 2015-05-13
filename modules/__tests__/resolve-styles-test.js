@@ -727,6 +727,13 @@ describe('resolveStyles', function () {
 
       expect(React.Children.only(result.props.children)).toBeTruthy();
     });
+
+    it.only('doesn\'t break when only child isn\'t ReactElement', function () {
+      var component = genComponent();
+      var renderedElement = <div>Foo</div>;
+
+      resolveStyles(component, renderedElement);
+    });
   });
 
 });

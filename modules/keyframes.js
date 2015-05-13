@@ -30,7 +30,7 @@ var createMarkupForStyles = function (style) {
 
 // Simple animation helper that injects CSS into a style object containing the
 // keyframes, and returns a string with the generated animation name.
-var keyframes = function (keyframes) {
+var keyframes = function (keyframeRules) {
   var name = 'Animation' + animationIndex;
   animationIndex += 1;
 
@@ -39,8 +39,8 @@ var keyframes = function (keyframes) {
   }
 
   var rule = '@' + keyframesPrefixed + ' ' + name + ' {\n' +
-    Object.keys(keyframes).map(function (percentage) {
-      var props = keyframes[percentage];
+    Object.keys(keyframeRules).map(function (percentage) {
+      var props = keyframeRules[percentage];
       var prefixedProps = prefix(props, 'css');
       var serializedProps = createMarkupForStyles(prefixedProps);
       return '  ' + percentage + ' {\n  ' + serializedProps + '\n  }';
