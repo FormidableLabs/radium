@@ -162,6 +162,7 @@ Radium will merge styles for any active states when your component is rendered.
 
 Add media queries to your style objects the same way as you would add browser state modifiers like  `:hover`. The key must start with `@media`, and the [syntax](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Media_queries) is identical to CSS:
 
+```as
 var style = {
   width: '25%',
 
@@ -169,6 +170,7 @@ var style = {
     width: '100%'
   }
 };
+```
 
 Radium will apply the correct styles for the currently active media queries.
 
