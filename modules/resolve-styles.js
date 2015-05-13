@@ -51,7 +51,7 @@ var _mouseUp = function (component) {
 
 var _onMediaQueryChange = function (component, query, mediaQueryList) {
   var state = {};
-  state[name] = mediaQueryList.matches;
+  state[query] = mediaQueryList.matches;
   _setStyleState(component, '_all', state);
 };
 
