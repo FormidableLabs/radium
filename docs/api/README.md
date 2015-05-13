@@ -2,11 +2,28 @@
 
 **Table of Contents**
 
+- [Enhancer](#enhancer)
 - [getState](#getstate)
 - [keyframes](#keyframes)
 - [wrap](#wrap)
   - [Sample Style Object](#sample-style-object)
 - [Style Component](#style-component)
+
+## Enhancer
+```as
+module.exports = Radium.Enhancer(Button);
+
+// or
+Button = Radium.Enhancer(Button);
+
+// or if using Decorators (Stage 1, Babel)
+@Radium.Enhancer
+class Button extends React.Component {
+  // ...
+}
+```
+
+`Enhancer` is the ES6 verison of `wrap`. See [documentation for wrap](#wrap) to see how it works.
 
 ## getState
 

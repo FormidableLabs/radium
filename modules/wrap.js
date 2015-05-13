@@ -1,6 +1,7 @@
 'use strict';
 
 var resolveStyles = require('./resolve-styles.js');
+var wrapUtils = require('./wrap-utils.js');
 
 var merge = require('lodash/object/merge');
 
@@ -10,24 +11,13 @@ var wrap = function (config) {
       var existingInitialState = config.getInitialState ?
         config.getInitialState.call(this) :
         {};
-      return merge({}, existingInitialState, {_radiumStyleState: {}});
+      var radiumInitialState = wrapUtils.getInitialState();
+      return merge({}, existingInitialState, radiumInitialState);
     },
 
     componentWillUnmount: function () {
       config.componentWillUnmount && config.componentWillUnmount.call(this);
-
-      if (this._radiumMouseUpListener) {
-        this._radiumMouseUpListener.remove();
-      }
-
-      if (this._radiumMediaQueryListenersByQuery) {
-        Object.keys(this._radiumMediaQueryListenersByQuery).forEach(
-          function (query) {
-            this._radiumMediaQueryListenersByQuery[query].remove();
-          },
-          this
-        );
-      }
+      wrapUtils.componentWillUnmount(this);
     },
 
     render: function () {
