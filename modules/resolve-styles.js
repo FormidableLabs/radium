@@ -4,6 +4,7 @@ var MouseUpListener = require('./mouse-up-listener');
 var getState = require('./get-state');
 var prefix = require('./prefix');
 
+var ExecutionEnvironment = require('exenv');
 var React = require('react/addons');
 var clone = require('lodash/lang/clone');
 var isArray = require('lodash/lang/isArray');
@@ -56,6 +57,10 @@ var _onMediaQueryChange = function (component, query, mediaQueryList) {
 };
 
 var _resolveMediaQueryStyles = function (component, style) {
+  if (!ExecutionEnvironment.canUseDOM) {
+    return style;
+  }
+
   Object.keys(style)
   .filter(function (name) { return name[0] === '@'; })
   .map(function (query) {
@@ -235,7 +240,11 @@ var resolveStyles = function (component, renderedElement, existingKeyMap) {
     }
   });
 
-  if (style[':active'] && !component._radiumMouseUpListener) {
+  if (
+    style[':active'] &&
+    !component._radiumMouseUpListener &&
+    ExecutionEnvironment.canUseEventListeners
+  ) {
     component._radiumMouseUpListener = MouseUpListener.subscribe(
       _mouseUp.bind(null, component)
     );

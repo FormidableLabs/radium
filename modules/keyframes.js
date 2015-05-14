@@ -2,6 +2,7 @@
 
 var prefix = require('./prefix');
 
+var ExecutionEnvironment = require('exenv');
 var kebabCase = require('lodash/string/kebabCase');
 
 var msPrefix = /^ms-/;
@@ -9,7 +10,7 @@ var animationIndex = 1;
 var animationStyleSheet = null;
 var keyframesPrefixed = null;
 
-if (document) {
+if (ExecutionEnvironment.canUseDOM) {
   animationStyleSheet = document.createElement('style');
   document.head.appendChild(animationStyleSheet);
 
@@ -34,7 +35,7 @@ var keyframes = function (keyframeRules) {
   var name = 'Animation' + animationIndex;
   animationIndex += 1;
 
-  if (!document) {
+  if (!ExecutionEnvironment.canUseDOM) {
     return name;
   }
 

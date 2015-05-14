@@ -5,6 +5,7 @@
 
 'use strict';
 
+var ExecutionEnvironment = require('exenv');
 var kebabCase = require('lodash/string/kebabCase');
 
 var jsCssMap = {
@@ -16,17 +17,21 @@ var jsCssMap = {
 };
 var testProp = 'Transform';
 
-var domStyle = document.createElement('p').style;
+var domStyle;
 var prefixedPropertyCache = {};
 var prefixedValueCache = {};
 var jsVendorPrefix = '';
 var cssVendorPrefix = '';
 
-for (var js in jsCssMap) {
-  if ((js + testProp) in domStyle) {
-    jsVendorPrefix = js;
-    cssVendorPrefix = jsCssMap[js];
-    break;
+if (ExecutionEnvironment.canUseDOM) {
+  domStyle = document.createElement('p').style;
+
+  for (var js in jsCssMap) {
+    if ((js + testProp) in domStyle) {
+      jsVendorPrefix = js;
+      cssVendorPrefix = jsCssMap[js];
+      break;
+    }
   }
 }
 
@@ -104,6 +109,10 @@ var _getPrefixedValue = function (property, value) {
 // and values.
 /*eslint-disable no-console */
 var prefix = function (style, mode /* 'css' or 'js' */) {
+  if (!ExecutionEnvironment.canUseDOM) {
+    return style;
+  }
+
   mode = mode || 'js';
   var newStyle = {};
   Object.keys(style).forEach(function (property) {
