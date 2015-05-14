@@ -121,9 +121,11 @@ var prefix = function (style, mode /* 'css' or 'js' */) {
     var newValue = _getPrefixedValue(newProperty.js, value);
     if (newValue === false) {
       // Ignore unsupported values
-      console.warn(
-        'Unsupported CSS value ' + value + ' for property ' + property
-      );
+      if (console && console.warn) {
+        console.warn(
+          'Unsupported CSS value ' + value + ' for property ' + property
+        );
+      }
     }
 
     newStyle[newProperty[mode]] = newValue;
