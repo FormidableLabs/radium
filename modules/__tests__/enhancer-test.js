@@ -23,7 +23,7 @@ describe('Enhancer', () => {
 
   it('merges with existing state', () => {
     class Composed extends Component {
-      constructor() {
+      constructor () {
         super();
         this.state = {foo: 'bar'};
       }
@@ -41,7 +41,7 @@ describe('Enhancer', () => {
   it('calls existing render function, then resolveStyles', () => {
     var renderMock = jest.genMockFunction();
     class Composed extends Component {
-      render() {
+      render () {
         renderMock();
         return null;
       }
@@ -58,7 +58,7 @@ describe('Enhancer', () => {
   it('calls existing componentWillUnmount function', () => {
     var existingComponentWillUnmount = jest.genMockFunction();
     class Composed extends Component {
-      componentWillUnmount() {
+      componentWillUnmount () {
         existingComponentWillUnmount();
       }
     }
@@ -73,7 +73,7 @@ describe('Enhancer', () => {
   it('removes mouse up listener on componentWillUnmount', () => {
     var removeMouseUpListener = jest.genMockFunction();
     class Composed extends Component {
-      constructor() {
+      constructor () {
         super();
         this._radiumMouseUpListener = { remove: removeMouseUpListener };
       }
@@ -93,7 +93,7 @@ describe('Enhancer', () => {
       '(min-resolution: 2dppx)': { remove: jest.genMockFunction() }
     };
     class Composed extends Component {
-      constructor() {
+      constructor () {
         super();
         this._radiumMediaQueryListenersByQuery = mediaQueryListenersByQuery;
       }
