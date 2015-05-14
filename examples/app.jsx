@@ -5,8 +5,11 @@ var ComputedWell = require("./components/computed-well.jsx");
 var Style = require("../modules/components/style.js");
 var Radium = require("../modules");
 
-var HoverMessage = React.createClass(Radium.wrap({
-  render: function () {
+//
+// Radium with ES6 class syntax
+//
+class HoverMessage extends React.Component {
+  render() {
     return (
       <div>
         <button key="button" style={{':hover': {}}}>Hover me!</button>
@@ -16,7 +19,8 @@ var HoverMessage = React.createClass(Radium.wrap({
       </div>
     )
   }
-}));
+}
+HoverMessage = Radium.Enhancer(HoverMessage);
 
 var TwoSquares = React.createClass(Radium.wrap({
   render: function () {
@@ -57,9 +61,9 @@ var App = React.createClass(Radium.wrap({
 
     return (
       <div>
-        <p><TwoSquares /></p>
-
         <p><HoverMessage /></p>
+
+        <p><TwoSquares /></p>
 
         <p><Spinner /></p>
 
