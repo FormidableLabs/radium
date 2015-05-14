@@ -112,7 +112,9 @@ var prefix = function (style, mode /* 'css' or 'js' */) {
     var newProperty = _getPrefixedProperty(property);
     if (newProperty === false) {
       // Ignore unsupported properties
-      console.warn('Unsupported CSS property ' + property);
+      if (console && console.warn) {
+        console.warn('Unsupported CSS property ' + property);
+      }
       return;
     }
 
