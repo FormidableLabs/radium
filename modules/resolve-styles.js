@@ -1,5 +1,7 @@
 'use strict';
 
+var ExecutionEnvironment = require('react/lib/ExecutionEnvironment');
+
 var MouseUpListener = require('./mouse-up-listener');
 var getState = require('./get-state');
 var prefix = require('./prefix');
@@ -64,7 +66,7 @@ var _resolveMediaQueryStyles = function (component, style) {
 
     // Create a global MediaQueryList if one doesn't already exist
     var mql = mediaQueryListByQueryString[query];
-    if (!mql) {
+    if (ExecutionEnvironment.canUseDOM && !mql) {
       mediaQueryListByQueryString[query] = mql = window.matchMedia(query);
     }
 
@@ -75,14 +77,14 @@ var _resolveMediaQueryStyles = function (component, style) {
 
     if (!component._radiumMediaQueryListenersByQuery[query]) {
       var listener = _onMediaQueryChange.bind(null, component, query);
-      mql.addListener(listener);
+      mql && mql.addListener && mql.addListener(listener);
       component._radiumMediaQueryListenersByQuery[query] = {
-        remove: function () { mql.removeListener(listener); }
+        remove: function () { mql && mql.removeListener && mql.removeListener(listener); }
       };
     }
 
     // Apply media query states
-    if (mql.matches) {
+    if (mql && mql.matches) {
       style = _mergeStyles([style, mediaQueryStyles]);
     }
   });
