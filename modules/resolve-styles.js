@@ -5,7 +5,7 @@ var getState = require('./get-state');
 var prefix = require('./prefix');
 
 var ExecutionEnvironment = require('exenv');
-var React = require('react/addons');
+var React = require('react');
 var clone = require('lodash/lang/clone');
 var isArray = require('lodash/lang/isArray');
 var merge = require('lodash/object/merge');
