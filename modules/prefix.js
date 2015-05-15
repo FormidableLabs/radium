@@ -17,7 +17,7 @@ var jsCssMap = {
 };
 var testProp = 'Transform';
 
-var domStyle;
+var domStyle = {};
 var prefixedPropertyCache = {};
 var prefixedValueCache = {};
 var jsVendorPrefix = '';
@@ -26,10 +26,10 @@ var cssVendorPrefix = '';
 if (ExecutionEnvironment.canUseDOM) {
   domStyle = document.createElement('p').style;
 
-  for (var js in jsCssMap) {
-    if ((js + testProp) in domStyle) {
-      jsVendorPrefix = js;
-      cssVendorPrefix = jsCssMap[js];
+  for (var jsPrefix in jsCssMap) {
+    if ((jsPrefix + testProp) in domStyle) {
+      jsVendorPrefix = jsPrefix;
+      cssVendorPrefix = jsCssMap[jsPrefix];
       break;
     }
   }
@@ -40,7 +40,10 @@ var _getPrefixedProperty = function (property) {
     return prefixedPropertyCache[property];
   }
 
-  if (property in domStyle) {
+  if (
+    !ExecutionEnvironment.canUseDOM ||
+    property in domStyle
+  ) {
     // unprefixed
     prefixedPropertyCache[property] = {
       css: kebabCase(property),
@@ -109,10 +112,6 @@ var _getPrefixedValue = function (property, value) {
 // and values.
 /*eslint-disable no-console */
 var prefix = function (style, mode /* 'css' or 'js' */) {
-  if (!ExecutionEnvironment.canUseDOM) {
-    return style;
-  }
-
   mode = mode || 'js';
   var newStyle = {};
   Object.keys(style).forEach(function (property) {

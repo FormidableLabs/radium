@@ -57,7 +57,11 @@ var _onMediaQueryChange = function (component, query, mediaQueryList) {
 };
 
 var _resolveMediaQueryStyles = function (component, style) {
-  if (!ExecutionEnvironment.canUseDOM) {
+  if (
+    !ExecutionEnvironment.canUseDOM ||
+    !window ||
+    !window.matchMedia
+  ) {
     return style;
   }
 
