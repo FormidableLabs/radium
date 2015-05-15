@@ -5,6 +5,7 @@
 
 'use strict';
 
+var ExecutionEnvironment = require('react/lib/ExecutionEnvironment');
 var kebabCase = require('lodash/string/kebabCase');
 
 var jsCssMap = {
@@ -16,7 +17,7 @@ var jsCssMap = {
 };
 var testProp = 'Transform';
 
-var domStyle = document.createElement('p').style;
+var domStyle = ExecutionEnvironment.canUseDOM ? document.createElement('p').style : {};
 var prefixedPropertyCache = {};
 var prefixedValueCache = {};
 var jsVendorPrefix = '';
@@ -35,7 +36,7 @@ var _getPrefixedProperty = function (property) {
     return prefixedPropertyCache[property];
   }
 
-  if (property in domStyle) {
+  if (!ExecutionEnvironment.canUseDOM || property in domStyle) {
     // unprefixed
     prefixedPropertyCache[property] = {
       css: kebabCase(property),

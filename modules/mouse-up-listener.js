@@ -1,5 +1,7 @@
 'use strict';
 
+var ExecutionEnvironment = require('react/lib/ExecutionEnvironment');
+
 var _callbacks = [];
 var _mouseUpListenerIsActive = false;
 
@@ -14,7 +16,7 @@ var subscribe = function (callback) {
     _callbacks.push(callback);
   }
 
-  if (!_mouseUpListenerIsActive) {
+  if (ExecutionEnvironment.canUseDOM && !_mouseUpListenerIsActive) {
     window.addEventListener('mouseup', _handleMouseUp);
     _mouseUpListenerIsActive = true;
   }
@@ -24,7 +26,7 @@ var subscribe = function (callback) {
       var index = _callbacks.indexOf(callback);
       _callbacks.splice(index, 1);
 
-      if (_callbacks.length === 0 && _mouseUpListenerIsActive) {
+      if (ExecutionEnvironment.canUseDOM && _callbacks.length === 0 && _mouseUpListenerIsActive) {
         window.removeEventListener('mouseup', _handleMouseUp);
         _mouseUpListenerIsActive = false;
       }
