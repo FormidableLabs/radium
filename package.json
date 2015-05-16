@@ -17,6 +17,7 @@
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
     "lib": "rimraf lib && babel modules/ -d lib/ && rimraf lib/__tests__ lib/__mocks__",
     "lint": "eslint modules",
+    "postinstall": "node -e \"require('fs').readdir('lib',function(e){e&&require('child_process').spawn('npm', ['run', 'prepublish'], {stdio: 'inherit'})})\"",
     "prepublish": "npm run lib",
     "test": "jest"
   },
