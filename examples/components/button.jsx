@@ -1,14 +1,8 @@
+var Radium = require('../../modules');
 var React = require('react');
-var Radium = require('../../modules/index');
-var { MatchMediaItem } = Radium;
 
-var Button = React.createClass(Radium.wrap({
-  propTypes: {
-    color: React.PropTypes.string,
-    onClick: React.PropTypes.func
-  },
-
-  render: function () {
+class Button extends React.Component {
+  render() {
     return (
       <button
         onClick={this.props.onClick}
@@ -21,7 +15,12 @@ var Button = React.createClass(Radium.wrap({
       </button>
     );
   }
-}));
+}
+
+Button.propTypes = {
+  color: React.PropTypes.string,
+  onClick: React.PropTypes.func
+};
 
 var styles = {
   base: {
@@ -71,4 +70,4 @@ var styles = {
   }
 };
 
-module.exports = Button;
+module.exports = Radium.Enhancer(Button);

@@ -35,6 +35,7 @@ When we say expressive, we mean it: math, concatenation, regex, conditionals, fu
 * Media queries
 * Automatic vendor prefixing
 * Keyframes animation helper
+* ES6 class and `createClass` support
 
 ## Docs
 
@@ -43,7 +44,7 @@ When we say expressive, we mean it: math, concatenation, regex, conditionals, fu
 
 ## Usage
 
-Start by adding `Radium.wrap()` around the config you pass to `React.createClass`. Then, write a style object as you normally would with inline styles, and add in styles for interactive states and media queries. Pass the style object to your component via `style={...}` and let Radium do the rest!
+Start by adding `Radium.Enhancer()` around your component, like `module.exports = Radium.Enhancer(Component)`, or `Component = Radium.Enhancer(Component)`. Alternatively, if using `createClass`, add `Radium.wrap()` around the config you pass to `React.createClass`. Then, write a style object as you normally would with inline styles, and add in styles for interactive states and media queries. Pass the style object to your component via `style={...}` and let Radium do the rest!
 
 ```as
 <Button kind="primary">Radium Button</Button>
@@ -54,18 +55,42 @@ var Radium = require('radium');
 var React = require('react');
 var color = require('color');
 
-var Button = React.createClass(Radium.wrap({
-  propTypes: {
-    kind: React.PropTypes.oneOf(['primary', 'warning']).isRequired
-  },
-
-  render: function () {
+// Radium is the cleanest when using ES6 classes with React.
+class Button extends React.Component {
+  render() {
     // Radium extends the style attribute to accept an array. It will merge
     // the styles in order. We use this feature here to apply the primary
     // or warning styles depending on the value of the `kind` prop. Since its
     // all just JavaScript, you can use whatever logic you want to decide which
     // styles are applied (props, state, context, etc). Radium also adds vendor
     // prefixes automatically where needed.
+    return (
+      <button
+        style={[
+          styles.base,
+          this.props.kind === 'primary' && styles.primary,
+          this.props.kind === 'warning' && styles.warning
+        ]}>
+        {this.props.children}
+      </button>
+    );
+  }
+}
+Button.propTypes = {
+  kind: React.PropTypes.oneOf(['primary', 'warning']).isRequired
+};
+
+// Add Radium support to your ES6 class component
+module.exports = Radium.Enhancer(Button);
+
+
+// You can also use React.createClass
+var Button = React.createClass(Radium.wrap({
+  propTypes: {
+    kind: React.PropTypes.oneOf(['primary', 'warning']).isRequired
+  },
+
+  render: function () {
     return (
       <button
         style={[

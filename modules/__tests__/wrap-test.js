@@ -4,6 +4,7 @@
 'use strict';
 
 jest.dontMock('../wrap.js');
+jest.dontMock('../wrap-utils.js');
 
 var resolveStyles = require('../resolve-styles.js');
 var wrap = require('../wrap.js');

@@ -719,7 +719,7 @@ describe('resolveStyles', function () {
   });
 
   describe('React.Children.only', function () {
-    it.only('doesn\'t break React.Children.only', function () {
+    it('doesn\'t break React.Children.only', function () {
       var component = genComponent();
       var renderedElement = <div><span /></div>;
 
@@ -728,7 +728,7 @@ describe('resolveStyles', function () {
       expect(React.Children.only(result.props.children)).toBeTruthy();
     });
 
-    it.only('doesn\'t break when only child isn\'t ReactElement', function () {
+    it('doesn\'t break when only child isn\'t ReactElement', function () {
       var component = genComponent();
       var renderedElement = <div>Foo</div>;
 

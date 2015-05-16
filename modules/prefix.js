@@ -5,6 +5,7 @@
 
 'use strict';
 
+var ExecutionEnvironment = require('exenv');
 var kebabCase = require('lodash/string/kebabCase');
 
 var jsCssMap = {
@@ -16,17 +17,21 @@ var jsCssMap = {
 };
 var testProp = 'Transform';
 
-var domStyle = document.createElement('p').style;
+var domStyle = {};
 var prefixedPropertyCache = {};
 var prefixedValueCache = {};
 var jsVendorPrefix = '';
 var cssVendorPrefix = '';
 
-for (var js in jsCssMap) {
-  if ((js + testProp) in domStyle) {
-    jsVendorPrefix = js;
-    cssVendorPrefix = jsCssMap[js];
-    break;
+if (ExecutionEnvironment.canUseDOM) {
+  domStyle = document.createElement('p').style;
+
+  for (var jsPrefix in jsCssMap) {
+    if ((jsPrefix + testProp) in domStyle) {
+      jsVendorPrefix = jsPrefix;
+      cssVendorPrefix = jsCssMap[jsPrefix];
+      break;
+    }
   }
 }
 
@@ -35,7 +40,10 @@ var _getPrefixedProperty = function (property) {
     return prefixedPropertyCache[property];
   }
 
-  if (property in domStyle) {
+  if (
+    !ExecutionEnvironment.canUseDOM ||
+    property in domStyle
+  ) {
     // unprefixed
     prefixedPropertyCache[property] = {
       css: kebabCase(property),
@@ -112,16 +120,20 @@ var prefix = function (style, mode /* 'css' or 'js' */) {
     var newProperty = _getPrefixedProperty(property);
     if (newProperty === false) {
       // Ignore unsupported properties
-      console.warn('Unsupported CSS property ' + property);
+      if (console && console.warn) {
+        console.warn('Unsupported CSS property ' + property);
+      }
       return;
     }
 
     var newValue = _getPrefixedValue(newProperty.js, value);
     if (newValue === false) {
       // Ignore unsupported values
-      console.warn(
-        'Unsupported CSS value ' + value + ' for property ' + property
-      );
+      if (console && console.warn) {
+        console.warn(
+          'Unsupported CSS value ' + value + ' for property ' + property
+        );
+      }
     }
 
     newStyle[newProperty[mode]] = newValue;
