@@ -1,6 +1,6 @@
 {
   "name": "radium",
-  "version": "0.11.1",
+  "version": "0.12.0",
   "description": "A set of tools to manage inline styles on React elements",
   "main": "lib/index.js",
   "repository": {
@@ -14,10 +14,12 @@
   },
   "scripts": {
     "dist": "webpack && webpack --config=webpack.config.minified.js",
-    "lib": "rm -rf ./lib && babel ./modules -d lib && rm -rf ./lib/__tests__ ./lib/__mocks__",
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
-    "test": "jest",
-    "lint": "eslint modules"
+    "lib": "rimraf lib && babel modules/ -d lib/ && rimraf lib/__tests__ lib/__mocks__",
+    "lint": "eslint modules",
+    "postinstall": "node -e \"require('fs').readdir('lib',function(e){e&&require('child_process').spawn('npm', ['run', 'prepublish'], {stdio: 'inherit'})})\"",
+    "prepublish": "npm run lib",
+    "test": "jest"
   },
   "license": "MIT",
   "peerDependencies": {
@@ -36,6 +38,7 @@
     "eslint": "^0.19.0",
     "jest-cli": "^0.4.0",
     "react": ">=0.12.0 <0.14.0",
+    "rimraf": "^2.3.3",
     "webpack": "^1.5.3",
     "webpack-dev-server": "^1.7.0"
   },

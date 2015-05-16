@@ -1,6 +1,6 @@
 {
   "name": "radium",
-  "version": "0.11.1",
+  "version": "0.12.0",
   "homepage": "https://github.com/FormidableLabs/radium",
   "description": "A set of tools to manage inline styles on React elements",
   "main": "dist/radium.js",
