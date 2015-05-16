@@ -3,7 +3,7 @@
 var resolveStyles = require('./resolve-styles.js');
 var wrapUtils = require('./wrap-utils.js');
 
-var merge = require('lodash/object/merge');
+var objectAssign = require('object-assign');
 
 var wrap = function (config) {
   var newConfig = {
@@ -12,7 +12,7 @@ var wrap = function (config) {
         config.getInitialState.call(this) :
         {};
       var radiumInitialState = wrapUtils.getInitialState();
-      return merge({}, existingInitialState, radiumInitialState);
+      return objectAssign({}, existingInitialState, radiumInitialState);
     },
 
     componentWillUnmount: function () {
@@ -26,7 +26,7 @@ var wrap = function (config) {
     }
   };
 
-  return merge({}, config, newConfig);
+  return objectAssign({}, config, newConfig);
 };
 
 module.exports = wrap;

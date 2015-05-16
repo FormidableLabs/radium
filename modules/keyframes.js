@@ -3,9 +3,7 @@
 var prefix = require('./prefix');
 
 var ExecutionEnvironment = require('exenv');
-var kebabCase = require('lodash/string/kebabCase');
 
-var msPrefix = /^ms-/;
 var animationIndex = 1;
 var animationStyleSheet = null;
 var keyframesPrefixed = null;
@@ -24,8 +22,7 @@ if (ExecutionEnvironment.canUseDOM) {
 
 var createMarkupForStyles = function (style) {
   return Object.keys(style).map(function (property) {
-    return kebabCase(property).replace(msPrefix, '-ms-') + ': ' +
-      style[property] + ';';
+    return property + ': ' + style[property] + ';';
   }).join('\n');
 };
 
