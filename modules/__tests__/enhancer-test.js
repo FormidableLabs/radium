@@ -38,6 +38,19 @@ describe('Enhancer', () => {
     );
   });
 
+  it('receives the given props', () => {
+    class Composed extends Component {
+      constructor (props) {
+        super(props);
+      }
+    }
+    var Enhanced = Enhancer(Composed);
+
+    var instance = new Enhanced({foo: 'bar'});
+
+    expect(instance.props).toEqual({foo: 'bar'});
+  });
+
   it('calls existing render function, then resolveStyles', () => {
     var renderMock = jest.genMockFunction();
     class Composed extends Component {
@@ -53,6 +66,30 @@ describe('Enhancer', () => {
 
     expect(renderMock).toBeCalled();
     expect(resolveStyles).toBeCalled();
+  });
+
+  it('calls existing constructor only once', () => {
+    var constructorMock = jest.genMockFunction();
+    class Composed extends Component {
+      constructor () {
+        super();
+        constructorMock();
+      }
+    }
+    var Enhanced = Enhancer(Composed);
+
+    new Enhanced(); // eslint-disable-line no-new
+
+    expect(constructorMock.mock.calls.length).toBe(1);
+  });
+
+  it('refers to the existing displayName', () => {
+    class Composed extends Component {}
+    Composed.displayName = 'Composed';
+
+    var Enhanced = Enhancer(Composed);
+
+    expect(Enhanced.displayName).toContain(Composed.displayName);
   });
 
   it('calls existing componentWillUnmount function', () => {
