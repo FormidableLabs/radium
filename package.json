@@ -49,11 +49,12 @@
     ],
     "collectCoverage": true,
     "collectCoverageOnlyFrom": {
+      "modules/enhancer.js": true,
       "modules/get-state.js": true,
+      "modules/prefix.js": true,
       "modules/resolve-styles.js": true,
-      "modules/wrap.js": true,
       "modules/wrap-utils.js": true,
-      "modules/enhancer.js": true
+      "modules/wrap.js": true
     },
     "unmockedModulePathPatterns": [
       "exenv",

@@ -1,42 +1,79 @@
 /**
- * Based on https://github.com/jsstyles/css-vendor, but without any dash-case
- * shenanigans.
+ * Based on https://github.com/jsstyles/css-vendor, but without having to
+ * convert between different cases all the time.
  */
 
 'use strict';
 
 var ExecutionEnvironment = require('exenv');
-var kebabCase = require('lodash/string/kebabCase');
 
-var jsCssMap = {
-    Webkit: '-webkit-',
-    Moz: '-moz-',
-    // IE did it wrong again ...
-    ms: '-ms-',
-    O: '-o-'
+var infoByCssPrefix = {
+  '-moz-': {
+    cssPrefix: '-moz-',
+    jsPrefix: 'Moz'
+  },
+  '-ms-': {
+    cssPrefix: '-ms-',
+    jsPrefix: 'ms'
+  },
+  '-o-': {
+    cssPrefix: '-o-',
+    jsPrefix: 'O'
+  },
+  '-webkit-': {
+    cssPrefix: '-webkit-',
+    jsPrefix: 'Webkit'
+  }
 };
-var testProp = 'Transform';
 
 var domStyle = {};
 var prefixedPropertyCache = {};
 var prefixedValueCache = {};
-var jsVendorPrefix = '';
-var cssVendorPrefix = '';
+var prefixInfo = {
+  cssPrefix: '',
+  jsPrefix: ''
+};
 
 if (ExecutionEnvironment.canUseDOM) {
   domStyle = document.createElement('p').style;
 
-  for (var jsPrefix in jsCssMap) {
-    if ((jsPrefix + testProp) in domStyle) {
-      jsVendorPrefix = jsPrefix;
-      cssVendorPrefix = jsCssMap[jsPrefix];
-      break;
-    }
-  }
+  // Based on http://davidwalsh.name/vendor-prefix
+  var windowStyles = window.getComputedStyle(document.documentElement, '');
+  var prefixMatch = Array.prototype.slice.call(windowStyles)
+    .join('')
+    .match(/-(moz|webkit|ms|o)-/);
+  var cssVendorPrefix = prefixMatch && prefixMatch[0];
+
+  prefixInfo = infoByCssPrefix[cssVendorPrefix] || prefixInfo;
 }
+
+var _camelCaseRegex = /([a-z])?([A-Z])/g;
+var _camelCaseReplacer = function (match, p1, p2) {
+  return p1 + '-' + p2.toLowerCase();
+};
+var _camelCaseToDashCase = function (s) {
+  return s.replace(_camelCaseRegex, _camelCaseReplacer);
+};
 
 var _getPrefixedProperty = function (property) {
   if (prefixedPropertyCache.hasOwnProperty(property)) {
+    return prefixedPropertyCache[property];
+  }
+
+  // Try the prefixed version first. Chrome in particular has the `filter` and
+  // `webkitFilter` properties availalbe on the style object, but only the
+  // prefixed version actually works.
+  var prefixedProperty =
+    prefixInfo.jsPrefix + property[0].toUpperCase() + property.slice(1);
+  if (
+    ExecutionEnvironment.canUseDOM &&
+    prefixedProperty in domStyle
+  ) {
+    // prefixed
+    prefixedPropertyCache[property] = {
+      css: prefixInfo.cssPrefix + _camelCaseToDashCase(property),
+      js: prefixedProperty
+    };
     return prefixedPropertyCache[property];
   }
 
@@ -46,19 +83,8 @@ var _getPrefixedProperty = function (property) {
   ) {
     // unprefixed
     prefixedPropertyCache[property] = {
-      css: kebabCase(property),
+      css: _camelCaseToDashCase(property),
       js: property
-    };
-    return prefixedPropertyCache[property];
-  }
-
-  var newProperty =
-    jsVendorPrefix + property[0].toUpperCase() + property.slice(1);
-  if (newProperty in domStyle) {
-    // prefixed
-    prefixedPropertyCache[property] = {
-      css: cssVendorPrefix + kebabCase(property),
-      js: newProperty
     };
     return prefixedPropertyCache[property];
   }
@@ -85,32 +111,41 @@ var _getPrefixedValue = function (property, value) {
   // Test value as it is.
   domStyle[property] = value;
 
+  // Assume unprefixed
+  prefixedValueCache[cacheKey] = value;
+
   // Value is supported as it is. Note that we just make sure it is not an empty
   // string. Browsers will sometimes rewrite values, but still accept them. They
   // will set the value to an empty string if not supported.
   // E.g. for border, "solid 1px black" becomes "1px solid black"
   //      but "foobar" becomes "", since it is not supported.
   if (domStyle[property]) {
-    prefixedValueCache[cacheKey] = value;
-    return value;
+    return prefixedValueCache[cacheKey];
   }
 
   // Test value with vendor prefix.
-  value = cssVendorPrefix + value;
-  domStyle[property] = value;
+  var prefixedValue = prefixInfo.cssPrefix + value;
+  domStyle[property] = prefixedValue;
 
   // Value is supported with vendor prefix.
   if (domStyle[property]) {
-    prefixedValueCache[cacheKey] = value;
-    return value;
+    prefixedValueCache[cacheKey] = prefixedValue;
+    return prefixedValue;
   }
 
-  return prefixedValueCache[cacheKey] = false;
+  // Unsupported, assume unprefixed but warn
+  /*eslint-disable no-console */
+  if (console && console.warn) {
+    console.warn(
+      'Unsupported CSS value "' + value + '" for property "' + property + '"'
+    );
+  }
+  /*eslint-enable no-console */
+  return prefixedValueCache[cacheKey];
 };
 
 // Returns a new style object with vendor prefixes added to property names
 // and values.
-/*eslint-disable no-console */
 var prefix = function (style, mode /* 'css' or 'js' */) {
   mode = mode || 'js';
   var newStyle = {};
@@ -120,29 +155,22 @@ var prefix = function (style, mode /* 'css' or 'js' */) {
     var newProperty = _getPrefixedProperty(property);
     if (newProperty === false) {
       // Ignore unsupported properties
+      /*eslint-disable no-console */
       if (console && console.warn) {
-        console.warn('Unsupported CSS property ' + property);
+        console.warn('Unsupported CSS property "' + property + '"');
       }
+      /*eslint-enable no-console */
       return;
     }
 
     var newValue = _getPrefixedValue(newProperty.js, value);
-    if (newValue === false) {
-      // Ignore unsupported values
-      if (console && console.warn) {
-        console.warn(
-          'Unsupported CSS value ' + value + ' for property ' + property
-        );
-      }
-    }
 
     newStyle[newProperty[mode]] = newValue;
   });
   return newStyle;
 };
-/*eslint-enable no-console */
 
-prefix.css = cssVendorPrefix;
-prefix.js = jsVendorPrefix;
+prefix.css = prefixInfo.cssPrefix;
+prefix.js = prefixInfo.jsPrefix;
 
 module.exports = prefix;
