@@ -2,7 +2,6 @@
 
 var React = require('react');
 var CSSPropertyOperations = require('react/lib/CSSPropertyOperations');
-var reduce = require('lodash/collection/reduce');
 
 var buildCssString = function (selector, rules) {
   if (!selector || !rules) {
@@ -28,7 +27,7 @@ var Style = React.createClass({
   },
 
   _buildStyles: function (stylesArr) {
-    var styles = reduce(stylesArr, function (accumulator, item) {
+    var styles = stylesArr.reduce((accumulator, item) => {
       var selector = Object.keys(item)[0];
       var rules = item[selector];
 
@@ -43,7 +42,7 @@ var Style = React.createClass({
       }
 
       return accumulator;
-    }, '', this);
+    }, '');
 
     return styles;
   },

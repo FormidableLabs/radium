@@ -6,10 +6,7 @@ var prefix = require('./prefix');
 
 var ExecutionEnvironment = require('exenv');
 var React = require('react');
-var clone = require('lodash/lang/clone');
-var isArray = require('lodash/lang/isArray');
-var merge = require('lodash/object/merge');
-var omit = require('lodash/object/omit');
+var objectAssign = require('object-assign');
 
 var mediaQueryListByQueryString = {};
 
@@ -23,9 +20,9 @@ var _getStyleState = function (component, key, value) {
 
 var _setStyleState = function (component, key, newState) {
   var existing = component.state && component.state._radiumStyleState || {};
-  var state = { _radiumStyleState: clone(existing) };
+  var state = { _radiumStyleState: objectAssign({}, existing) };
   state._radiumStyleState[key] = state._radiumStyleState[key] || {};
-  merge(state._radiumStyleState[key], newState);
+  objectAssign(state._radiumStyleState[key], newState);
   component.setState(state);
 };
 
@@ -33,13 +30,23 @@ var _setStyleState = function (component, key, newState) {
 // should be objects, and are merged with others of the same name (instead of
 // overwriting).
 var _mergeStyles = function (styles) {
-  var validStyles = styles.filter(function (style) {
-    return style && typeof style === 'object' && !isArray(style);
+  var result = {};
+
+  styles.forEach(function (style) {
+    if (!style || typeof style !== 'object' || Array.isArray(style)) {
+      return;
+    }
+
+    Object.keys(style).forEach(function (key) {
+      if (_isSpecialKey(key) && result[key]) {
+        result[key] = _mergeStyles([result[key], style[key]]);
+      } else {
+        result[key] = style[key];
+      }
+    });
   });
 
-  // lodash merge is recursive, which handles :hover styles and even :hover
-  // within media queries.
-  return merge.apply(null, [{}].concat(validStyles));
+  return result;
 };
 
 var _mouseUp = function (component) {
@@ -146,7 +153,7 @@ var resolveStyles = function (component, renderedElement, existingKeyMap) {
 
   // Convenient syntax for multiple styles: `style={[style1, style2, etc]}`
   // Ignores non-objects, so you can do `this.state.isCool && styles.cool`.
-  if (isArray(style)) {
+  if (Array.isArray(style)) {
     style = _mergeStyles(style);
   }
 
@@ -187,10 +194,12 @@ var resolveStyles = function (component, renderedElement, existingKeyMap) {
   // Media queries can contain pseudo styles, like :hover
   style = _resolveMediaQueryStyles(component, style);
 
-  var newStyle = omit(
-    style,
-    function (value, styleKey) { return _isSpecialKey(styleKey); }
-  );
+  var newStyle = {};
+  Object.keys(style).forEach(function (styleKey) {
+    if (!_isSpecialKey(styleKey)) {
+      newStyle[styleKey] = style[styleKey];
+    }
+  });
 
   // Only add handlers if necessary
   if (style[':hover'] || style[':active']) {
@@ -234,15 +243,19 @@ var resolveStyles = function (component, renderedElement, existingKeyMap) {
   }
 
   // Merge the styles in the order they were defined
-  Object.keys(style).forEach(function (name) {
-    if (
-      (name === ':active' && _getStyleState(component, key, ':active')) ||
-      (name === ':hover' && _getStyleState(component, key, ':hover')) ||
-      (name === ':focus' && _getStyleState(component, key, ':focus'))
-    ) {
-      merge(newStyle, style[name]);
-    }
-  });
+  var interactionStyles = Object.keys(style)
+    .filter(function (name) {
+      return (
+        (name === ':active' && _getStyleState(component, key, ':active')) ||
+        (name === ':hover' && _getStyleState(component, key, ':hover')) ||
+        (name === ':focus' && _getStyleState(component, key, ':focus'))
+      );
+    })
+    .map(function (name) { return style[name]; });
+
+  if (interactionStyles.length) {
+    newStyle = _mergeStyles([newStyle].concat(interactionStyles));
+  }
 
   if (
     style[':active'] &&
