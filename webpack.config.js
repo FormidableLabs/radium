@@ -17,7 +17,7 @@ module.exports = {
     loaders: [
       {
         test: /\.js(x|)?$/,
-        loader: 'babel-loader'
+        loader: 'babel-loader?stage=0'
       }
     ]
   }

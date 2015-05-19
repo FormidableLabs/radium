@@ -5,8 +5,14 @@ var wrapUtils = require('./wrap-utils.js');
 var objectAssign = require('object-assign');
 
 var enhanceWithRadium = function (ComposedComponent) {
+  const displayName =
+    ComposedComponent.displayName ||
+    ComposedComponent.name ||
+    'Component';
 
   class RadiumEnhancer extends ComposedComponent {
+    static displayName = `Radium(${displayName})`;
+
     constructor (props) {
       super(props);
 
@@ -27,13 +33,6 @@ var enhanceWithRadium = function (ComposedComponent) {
       wrapUtils.componentWillUnmount(this);
     }
   }
-
-  const displayName =
-    ComposedComponent.displayName ||
-    ComposedComponent.name ||
-    'Component';
-
-  RadiumEnhancer.displayName = `Radium(${displayName})`;
 
   return RadiumEnhancer;
 };
