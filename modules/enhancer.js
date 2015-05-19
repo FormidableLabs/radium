@@ -2,17 +2,16 @@
 
 var resolveStyles = require('./resolve-styles.js');
 var wrapUtils = require('./wrap-utils.js');
-var assign = require('lodash/object/assign');
+var objectAssign = require('object-assign');
 
 var enhanceWithRadium = function (ComposedComponent) {
 
   class RadiumEnhancer extends ComposedComponent {
-
     constructor (props) {
       super(props);
 
       var radiumInitialState = wrapUtils.getInitialState();
-      this.state = assign(this.state || {}, radiumInitialState);
+      this.state = objectAssign(this.state || {}, radiumInitialState);
     }
 
     render () {
