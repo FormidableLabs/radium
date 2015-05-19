@@ -8,13 +8,13 @@ jest.dontMock('../resolve-styles.js');
 
 var React = require('react');
 var MouseUpListener = require('../mouse-up-listener.js');
-var merge = require('lodash/object/merge');
+var objectAssign = require('object-assign');
 var resolveStyles = require('../resolve-styles.js');
 
 var genComponent = function () {
   return {
     setState: jest.genMockFunction().mockImplementation(function (newState) {
-      this.state = merge(this.state, newState);
+      objectAssign(this.state, newState);
     }),
     state: {}
   };
