@@ -26,6 +26,7 @@
     "react": ">=0.12.0 <0.14.0"
   },
   "dependencies": {
+    "array-find": "^0.1.1",
     "exenv": "^1.1.0",
     "object-assign": "^2.0.0"
   },
@@ -58,6 +59,7 @@
       "modules/wrap.js": true
     },
     "unmockedModulePathPatterns": [
+      "array-find",
       "exenv",
       "lodash",
       "object-assign",
