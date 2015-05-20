@@ -13,8 +13,8 @@ var enhanceWithRadium = function (ComposedComponent) {
   class RadiumEnhancer extends ComposedComponent {
     static displayName = `Radium(${displayName})`;
 
-    constructor (props) {
-      super(props);
+    constructor () {
+      super(...arguments);
 
       var radiumInitialState = wrapUtils.getInitialState();
       this.state = objectAssign(this.state || {}, radiumInitialState);
