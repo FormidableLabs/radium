@@ -10,6 +10,6 @@ module.exports = {
       return src;
     }
 
-    return  babel.transform(src).code;
+    return  babel.transform(src, {stage: 0}).code;
   }
 };

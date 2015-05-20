@@ -2,40 +2,37 @@
 
 var resolveStyles = require('./resolve-styles.js');
 var wrapUtils = require('./wrap-utils.js');
+var objectAssign = require('object-assign');
 
 var enhanceWithRadium = function (ComposedComponent) {
-  var RadiumEnhancer = function () {
-    ComposedComponent.prototype.constructor.call(this);
+  const displayName =
+    ComposedComponent.displayName ||
+    ComposedComponent.name ||
+    'Component';
 
-    if (!this.state) {
-      this.state = {};
+  class RadiumEnhancer extends ComposedComponent {
+    static displayName = `Radium(${displayName})`;
+
+    constructor () {
+      super(...arguments);
+
+      var radiumInitialState = wrapUtils.getInitialState();
+      this.state = objectAssign(this.state || {}, radiumInitialState);
     }
 
-    var radiumInitialState = wrapUtils.getInitialState();
-    Object.keys(radiumInitialState).forEach(function (key) {
-      this.state[key] = radiumInitialState[key];
-    }, this);
-  };
-
-  RadiumEnhancer.prototype = new ComposedComponent();
-  RadiumEnhancer.prototype.constructor = RadiumEnhancer;
-
-  RadiumEnhancer.prototype.render = function () {
-    var renderedElement = ComposedComponent.prototype.render.call(this);
-    return resolveStyles(this, renderedElement);
-  };
-
-  RadiumEnhancer.prototype.componentWillUnmount = function () {
-    if (ComposedComponent.prototype.componentWillUnmount) {
-      ComposedComponent.prototype.componentWillUnmount.call(this);
+    render () {
+      var renderedElement = super.render();
+      return resolveStyles(this, renderedElement);
     }
 
-    wrapUtils.componentWillUnmount(this);
-  };
+    componentWillUnmount () {
+      if (super.componentWillUnmount) {
+        super.componentWillUnmount();
+      }
 
-  RadiumEnhancer.defaultProps = ComposedComponent.defaultProps;
-  RadiumEnhancer.propTypes = ComposedComponent.propTypes;
-  RadiumEnhancer.contextTypes = ComposedComponent.contextTypes;
+      wrapUtils.componentWillUnmount(this);
+    }
+  }
 
   return RadiumEnhancer;
 };
