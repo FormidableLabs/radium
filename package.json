@@ -13,14 +13,15 @@
     "example": "examples"
   },
   "scripts": {
+    "babel": "rimraf lib && babel --stage 0 modules/ -d lib/",
     "dist": "webpack && webpack --config=webpack.config.minified.js",
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
-    "lib": "rimraf lib && babel --stage 0 modules/ -d lib/ && rimraf lib/__tests__ lib/__mocks__",
+    "lib": "npm run babel && rimraf lib/__tests__ lib/__mocks__",
     "lint": "eslint modules",
     "postinstall": "node -e \"require('fs').readdir('lib',function(e){e&&require('child_process').spawn('npm', ['run', 'prepublish'], {stdio: 'inherit'})})\"",
     "prepublish": "npm run lib",
     "test": "jest",
-    "test-coverage": "jest --coverage"
+    "test-coverage": "npm run babel && jest --config jest/coverage-config.json"
   },
   "license": "MIT",
   "peerDependencies": {
@@ -50,15 +51,6 @@
     "testPathDirs": [
       "modules"
     ],
-    "collectCoverage": false,
-    "collectCoverageOnlyFrom": {
-      "modules/enhancer.js": true,
-      "modules/get-state.js": true,
-      "modules/prefix.js": true,
-      "modules/resolve-styles.js": true,
-      "modules/wrap-utils.js": true,
-      "modules/wrap.js": true
-    },
     "unmockedModulePathPatterns": [
       "exenv",
       "lodash",
