@@ -1,11 +1,18 @@
+/* @flow */
+
 'use strict';
 
+declare class RadiumComponent extends ReactComponent {
+  _radiumMediaQueryListenersByQuery: Object<string, {remove: () => void}>,
+  _radiumMouseUpListener: {remove: () => void},
+}
+
 module.exports = {
-  getInitialState: function () {
+  getInitialState (): {_radiumStyleState: Object} {
     return {_radiumStyleState: {}};
   },
 
-  componentWillUnmount: function (component) {
+  componentWillUnmount (component: RadiumComponent) {
     if (component._radiumMouseUpListener) {
       component._radiumMouseUpListener.remove();
     }

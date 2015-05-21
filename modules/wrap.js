@@ -1,3 +1,5 @@
+/* @flow */
+
 'use strict';
 
 var resolveStyles = require('./resolve-styles.js');
@@ -5,7 +7,13 @@ var wrapUtils = require('./wrap-utils.js');
 
 var objectAssign = require('object-assign');
 
-var wrap = function (config) {
+declare class ReactComponentConfig {
+  getInitialState?: () => Object;
+  componentWillUnmount?: () => void;
+  render: () => ReactElement;
+}
+
+var wrap = function (config: ReactComponentConfig) {
   var newConfig = {
     getInitialState: function () {
       var existingInitialState = config.getInitialState ?

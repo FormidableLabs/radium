@@ -1,3 +1,5 @@
+/* @flow */
+
 'use strict';
 
 var prefix = require('./prefix');
@@ -9,7 +11,7 @@ var animationStyleSheet = null;
 var keyframesPrefixed = null;
 
 if (ExecutionEnvironment.canUseDOM) {
-  animationStyleSheet = document.createElement('style');
+  animationStyleSheet = (document.createElement('style'): any);
   document.head.appendChild(animationStyleSheet);
 
   // Test if prefix needed for keyframes (copied from PrefixFree)
@@ -28,7 +30,9 @@ var createMarkupForStyles = function (style) {
 
 // Simple animation helper that injects CSS into a style object containing the
 // keyframes, and returns a string with the generated animation name.
-var keyframes = function (keyframeRules) {
+var keyframes = function (
+  keyframeRules: Object<string, Object<string, string|number>>,
+): string {
   var name = 'Animation' + animationIndex;
   animationIndex += 1;
 
@@ -44,6 +48,12 @@ var keyframes = function (keyframeRules) {
       return '  ' + percentage + ' {\n  ' + serializedProps + '\n  }';
     }).join('\n') +
     '\n}\n';
+
+  // for flow
+  /* istanbul ignore next */
+  if (!animationStyleSheet) {
+    throw new Error('keyframes not initialized properly');
+  }
 
   animationStyleSheet.sheet.insertRule(
     rule,

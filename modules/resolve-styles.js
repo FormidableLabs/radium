@@ -1,3 +1,5 @@
+/* @flow */
+
 'use strict';
 
 var MouseUpListener = require('./mouse-up-listener');
@@ -7,6 +9,12 @@ var prefix = require('./prefix');
 var ExecutionEnvironment = require('exenv');
 var React = require('react');
 var objectAssign = require('object-assign');
+
+declare class RadiumComponent extends ReactComponent {
+  _lastMouseDown: number,
+  _radiumMediaQueryListenersByQuery: Object<string, {remove: () => void}>,
+  _radiumMouseUpListener: {remove: () => void},
+}
 
 var mediaQueryListByQueryString = {};
 
@@ -113,7 +121,11 @@ var _resolveMediaQueryStyles = function (component, style) {
 // interactions (e.g. mouse over). It also replaces the style prop because it
 // adds in the various interaction styles (e.g. :hover).
 //
-var resolveStyles = function (component, renderedElement, existingKeyMap) {
+var resolveStyles = function (
+  component: RadiumComponent,
+  renderedElement: ReactElement,
+  existingKeyMap?: Object<string, string>
+): ReactElement {
   existingKeyMap = existingKeyMap || {};
 
   if (!renderedElement) {

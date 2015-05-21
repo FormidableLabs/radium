@@ -1,10 +1,12 @@
+/* @flow */
+
 'use strict';
 
 var resolveStyles = require('./resolve-styles.js');
 var wrapUtils = require('./wrap-utils.js');
 var objectAssign = require('object-assign');
 
-var enhanceWithRadium = function (ComposedComponent) {
+var enhanceWithRadium = function (ComposedComponent: constructor) {
   const displayName =
     ComposedComponent.displayName ||
     ComposedComponent.name ||

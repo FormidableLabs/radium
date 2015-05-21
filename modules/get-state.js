@@ -1,8 +1,14 @@
+/* @flow */
+
 'use strict';
 
 var VALID_KEYS = [':active', ':focus', ':hover'];
 
-var getState = function (state, elementKey, value) {
+var getState = function (
+  state: {_radiumStyleState: Object<string, Object<string, boolean>>},
+  elementKey: string,
+  value: string,
+): boolean {
   elementKey = elementKey || 'main';
 
   if (VALID_KEYS.indexOf(value) === -1) {
