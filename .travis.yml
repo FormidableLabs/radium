@@ -21,6 +21,6 @@ branches:
 
 script:
   - npm run lint
-  - npm run test
+  - npm run test-coverage
   # Upload to coveralls, but don't _fail_ if coveralls is down.
   - cat coverage/lcov.info | node_modules/.bin/coveralls || echo "Coveralls upload failed"
