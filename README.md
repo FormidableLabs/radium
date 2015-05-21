@@ -28,6 +28,8 @@ Despite that, there are some common CSS features and techniques that inline styl
 
 When we say expressive, we mean it: math, concatenation, regex, conditionals, functions–JavaScript is at your disposal. Modern web applications demand that the display changes when data changes, and Radium is here to help.
 
+For a short technical explanation, see [How does Radium work?](#how-does-radium-work).
+
 ## Features
 
 * Conceptually simple extension of normal inline styles
@@ -147,6 +149,17 @@ To see local examples in action, do this:
 npm install
 npm run examples
 ```
+
+## How does Radium work?
+
+Following is a short technical explanation of Radium's inner workings:
+
+- Wrap the `render` function
+- Recurse into the result of the original `render`
+- For each element:
+  - Add handlers to props if interactive styles are specified, e.g. `onMouseEnter` for `:hover`, wrapping existing handlers if necessary
+  - If any of the handlers are triggered, e.g. by hovering, Radium calls `setState` to update a Radium-specific field on the components state object
+  - On re-render, resolve any interactive styles that apply, e.g. `:hover`, by looking up the element's key or ref in the Radium-specific state
 
 ## Contributing
 
