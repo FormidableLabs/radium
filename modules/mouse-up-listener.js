@@ -1,3 +1,5 @@
+/* @flow */
+
 'use strict';
 
 var _callbacks = [];
@@ -9,7 +11,7 @@ var _handleMouseUp = function (ev) {
   });
 };
 
-var subscribe = function (callback) {
+var subscribe = function (callback: () => void): {remove: () => void} {
   if (_callbacks.indexOf(callback) === -1) {
     _callbacks.push(callback);
   }
