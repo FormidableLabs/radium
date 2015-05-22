@@ -6,15 +6,34 @@
 'use strict';
 
 var ExecutionEnvironment = require('exenv');
+var arrayFind = require('array-find');
 
 var infoByCssPrefix = {
   '-moz-': {
     cssPrefix: '-moz-',
-    jsPrefix: 'Moz'
+    jsPrefix: 'Moz',
+    alternativeProperties: {
+      // OLD - Firefox 19-
+      flex: [{css: '-moz-box-flex', js: 'MozBoxFlex'}],
+      order: [{css: '-moz-box-ordinal-group', js: 'MozBoxOrdinalGroup'}]
+    },
+    alternativeValues: {
+      display: {
+        // OLD - Firefox 19-
+        flex: ['-moz-box']
+      }
+    }
   },
   '-ms-': {
     cssPrefix: '-ms-',
-    jsPrefix: 'ms'
+    jsPrefix: 'ms',
+    alternativeValues: {
+      display: {
+        // TWEENER - IE 10
+        flex: ['-ms-flexbox'],
+        order: ['-ms-flex-order']
+      }
+    }
   },
   '-o-': {
     cssPrefix: '-o-',
@@ -22,7 +41,17 @@ var infoByCssPrefix = {
   },
   '-webkit-': {
     cssPrefix: '-webkit-',
-    jsPrefix: 'Webkit'
+    jsPrefix: 'Webkit',
+    alternativeProperties: {
+      // OLD - iOS 6-, Safari 3.1-6
+      flex: [{css: '-webkit-box-flex', js: 'WebkitBoxFlex'}],
+      order: [{css: '-webkit-box-ordinal-group', js: 'WebkitBoxOrdinalGroup'}]
+    },
+    alternativeValues: {
+      display: {
+        flex: ['-webkit-box'] // OLD - iOS 6-, Safari 3.1-6
+      }
+    }
   }
 };
 
@@ -60,40 +89,47 @@ var _getPrefixedProperty = function (property) {
     return prefixedPropertyCache[property];
   }
 
+  var unprefixed = {
+    css: _camelCaseToDashCase(property),
+    js: property,
+    isDefaultForServer: true
+  };
+
   // Try the prefixed version first. Chrome in particular has the `filter` and
   // `webkitFilter` properties availalbe on the style object, but only the
   // prefixed version actually works.
-  var prefixedProperty =
-    prefixInfo.jsPrefix + property[0].toUpperCase() + property.slice(1);
-  if (
-    ExecutionEnvironment.canUseDOM &&
-    prefixedProperty in domStyle
-  ) {
-    // prefixed
-    prefixedPropertyCache[property] = {
+  var possiblePropertyNames = [
+    // Prefixed
+    {
       css: prefixInfo.cssPrefix + _camelCaseToDashCase(property),
-      js: prefixedProperty
-    };
-    return prefixedPropertyCache[property];
-  }
+      js: prefixInfo.jsPrefix + property[0].toUpperCase() + property.slice(1)
+    },
+    unprefixed
+  ];
 
+  // Alternative property names
   if (
-    !ExecutionEnvironment.canUseDOM ||
-    property in domStyle
+    prefixInfo.alternativeProperties &&
+    prefixInfo.alternativeProperties[property]
   ) {
-    // unprefixed
-    prefixedPropertyCache[property] = {
-      css: _camelCaseToDashCase(property),
-      js: property
-    };
-    return prefixedPropertyCache[property];
+    possiblePropertyNames = possiblePropertyNames.concat(
+      prefixInfo.alternativeProperties[property]
+    );
   }
 
-  // unsupported
-  return prefixedPropertyCache[property] = false;
+  var workingProperty = arrayFind(
+    possiblePropertyNames,
+    function (possiblePropertyName) {
+      if (possiblePropertyName.js in domStyle) {
+        return possiblePropertyName;
+      }
+    }
+  ) || false;
+
+  return prefixedPropertyCache[property] = workingProperty;
 };
 
-var _getPrefixedValue = function (property, value) {
+var _getPrefixedValue = function (property, value, originalProperty) {
   // don't test numbers or numbers with units (e.g. 10em)
   if (typeof value !== 'string' || !isNaN(parseInt(value, 10))) {
     return value;
@@ -105,42 +141,55 @@ var _getPrefixedValue = function (property, value) {
     return prefixedValueCache[cacheKey];
   }
 
-  // Clear style first
-  domStyle[property] = '';
+  var possibleValues = [
+    // Unprefixed
+    value,
+    // Prefixed
+    prefixInfo.cssPrefix + value
+  ];
 
-  // Test value as it is.
-  domStyle[property] = value;
-
-  // Assume unprefixed
-  prefixedValueCache[cacheKey] = value;
-
-  // Value is supported as it is. Note that we just make sure it is not an empty
-  // string. Browsers will sometimes rewrite values, but still accept them. They
-  // will set the value to an empty string if not supported.
-  // E.g. for border, "solid 1px black" becomes "1px solid black"
-  //      but "foobar" becomes "", since it is not supported.
-  if (domStyle[property]) {
-    return prefixedValueCache[cacheKey];
-  }
-
-  // Test value with vendor prefix.
-  var prefixedValue = prefixInfo.cssPrefix + value;
-  domStyle[property] = prefixedValue;
-
-  // Value is supported with vendor prefix.
-  if (domStyle[property]) {
-    prefixedValueCache[cacheKey] = prefixedValue;
-    return prefixedValue;
-  }
-
-  // Unsupported, assume unprefixed but warn
-  /*eslint-disable no-console */
-  if (console && console.warn) {
-    console.warn(
-      'Unsupported CSS value "' + value + '" for property "' + property + '"'
+  // Alternative values
+  if (
+    prefixInfo.alternativeValues &&
+    prefixInfo.alternativeValues[originalProperty] &&
+    prefixInfo.alternativeValues[originalProperty][value]
+  ) {
+    possibleValues = possibleValues.concat(
+      prefixInfo.alternativeValues[originalProperty][value]
     );
   }
-  /*eslint-enable no-console */
+
+  // Test possible value in order
+  var workingValue = arrayFind(
+    possibleValues,
+    function (possibleValue) {
+      domStyle[property] = '';
+      domStyle[property] = possibleValue;
+
+      // Note that we just make sure it is not an empty string. Browsers will
+      // sometimes rewrite values, but still accept them. They will set the value
+      // to an empty string if not supported.
+      // E.g. for border, "solid 1px black" becomes "1px solid black"
+      //      but "foobar" becomes "", since it is not supported.
+      return !!domStyle[property];
+    }
+  );
+
+  if (workingValue) {
+    prefixedValueCache[cacheKey] = workingValue;
+  } else {
+    // Unsupported, assume unprefixed works, but warn
+    prefixedValueCache[cacheKey] = value;
+
+    /* eslint-disable no-console */
+    if (console && console.warn) {
+      console.warn(
+        'Unsupported CSS value "' + value + '" for property "' + property + '"'
+      );
+    }
+    /* eslint-enable no-console */
+  }
+
   return prefixedValueCache[cacheKey];
 };
 
@@ -148,6 +197,11 @@ var _getPrefixedValue = function (property, value) {
 // and values.
 var prefix = function (style, mode /* 'css' or 'js' */) {
   mode = mode || 'js';
+
+  if (!ExecutionEnvironment.canUseDOM) {
+    return style;
+  }
+
   var newStyle = {};
   Object.keys(style).forEach(function (property) {
     var value = style[property];
@@ -155,15 +209,15 @@ var prefix = function (style, mode /* 'css' or 'js' */) {
     var newProperty = _getPrefixedProperty(property);
     if (newProperty === false) {
       // Ignore unsupported properties
-      /*eslint-disable no-console */
+      /* eslint-disable no-console */
       if (console && console.warn) {
         console.warn('Unsupported CSS property "' + property + '"');
       }
-      /*eslint-enable no-console */
+      /* eslint-enable no-console */
       return;
     }
 
-    var newValue = _getPrefixedValue(newProperty.js, value);
+    var newValue = _getPrefixedValue(newProperty.js, value, property);
 
     newStyle[newProperty[mode]] = newValue;
   });

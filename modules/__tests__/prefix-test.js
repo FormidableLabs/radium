@@ -59,7 +59,11 @@ describe('prefix', () => {
       canUseDOM: false,
       canUseEventListeners: false
     });
+
     var prefix = require('../prefix.js');
+    var result = prefix({display: 'flex'});
+
+    expect(result).toEqual({display: 'flex'});
     expect(prefix.css).toBe('');
     expect(prefix.js).toBe('');
     expect(document.createElement).not.toBeCalled();
@@ -97,6 +101,13 @@ describe('prefix', () => {
     mockStyle = { WebkitTransform: '' };
     var prefix = require('../prefix.js');
     expect(prefix({transform: 'foo'})).toEqual({WebkitTransform: 'foo'});
+  });
+
+  it('uses alternative properties if no others available', () => {
+    browserPrefix = '-moz-';
+    mockStyle = { MozBoxFlex: '' };
+    var prefix = require('../prefix.js');
+    expect(prefix({flex: 1})).toEqual({MozBoxFlex: 1});
   });
 
   it('uses prefixed property if both in style object', () => {
@@ -138,7 +149,7 @@ describe('prefix', () => {
     expect(prefix({lineHeight: '2em'})).toEqual({lineHeight: '2em'});
   });
 
-  it('uses prefixed value if unprefixed setter fails', () => {
+  it('uses prefixed value if unprefixed setter fails and it works', () => {
     browserPrefix = '-webkit-';
     var flexValue = '';
     mockStyle = {
@@ -153,6 +164,23 @@ describe('prefix', () => {
     };
     var prefix = require('../prefix.js');
     expect(prefix({display: 'flex'})).toEqual({display: '-webkit-flex'});
+  });
+
+  it('uses alternative value if all others fail and it works', () => {
+    browserPrefix = '-webkit-';
+    var flexValue = '';
+    mockStyle = {
+      get display () { return flexValue; },
+      set display (value) {
+        if (value === '-webkit-box') {
+          flexValue = '-webkit-box';
+        } else {
+          flexValue = '';
+        }
+      }
+    };
+    var prefix = require('../prefix.js');
+    expect(prefix({display: 'flex'})).toEqual({display: '-webkit-box'});
   });
 
   it('uses dash-case if mode is css', () => {
