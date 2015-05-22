@@ -1,5 +1,37 @@
 # Radium Changelog
 
+## 0.12.2 (May 22, 2015)
+
+### New Features
+
+- Support prefixing for old flexbox implementations
+
+### Bug Fixes
+
+- Stop using react internals `CSSPropertyOperations.createMarkupForStyles`, which further reduces the build size
+
+## 0.12.1 (May 22, 2015)
+
+### Bug Fixes
+
+- Fix Enhancer (displayName, etc) #165
+- Reduce size of distributed build
+- Tests for prefixing, fix #161
+
+## 0.12.0 (May 16, 2015)
+
+### New Features
+
+- Support for ES6 classes with Radium.Enhancer
+- Vendor-prefixing
+- Keyframes animation helper
+- Radium.getState API
+
+### Bug Fixes
+
+- Fix errors during server-side rendering #141
+- Fix passing a single child or string #139
+
 ## 0.11.1 (April 28, 2015)
 
 ### Bug Fixes
