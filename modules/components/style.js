@@ -1,16 +1,19 @@
 'use strict';
 
+var createMarkupForStyles = require('../create-markup-for-styles');
+var prefix = require('../prefix');
+
 var React = require('react');
-var CSSPropertyOperations = require('react/lib/CSSPropertyOperations');
 
 var buildCssString = function (selector, rules) {
   if (!selector || !rules) {
     return;
   }
 
-  return selector + '{' +
-    CSSPropertyOperations.createMarkupForStyles(rules) +
-  '}';
+  var prefixedRules = prefix(rules, 'css');
+  var serializedRules = createMarkupForStyles(prefixedRules);
+
+  return selector + '{' + serializedRules + '}';
 };
 
 var Style = React.createClass({

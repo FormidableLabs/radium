@@ -2,6 +2,7 @@
 
 'use strict';
 
+var createMarkupForStyles = require('./create-markup-for-styles');
 var prefix = require('./prefix');
 
 var ExecutionEnvironment = require('exenv');
@@ -21,12 +22,6 @@ if (ExecutionEnvironment.canUseDOM) {
     keyframesPrefixed = prefix.css + 'keyframes';
   }
 }
-
-var createMarkupForStyles = function (style) {
-  return Object.keys(style).map(function (property) {
-    return property + ': ' + style[property] + ';';
-  }).join('\n');
-};
 
 // Simple animation helper that injects CSS into a style object containing the
 // keyframes, and returns a string with the generated animation name.
