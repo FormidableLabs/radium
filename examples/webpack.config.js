@@ -16,11 +16,11 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
-        loader: 'babel-loader'
+        loader: 'babel-loader?stage=0'
       },
       {
         test: /\.jsx$/,
-        loader: 'babel-loader'
+        loader: 'babel-loader?stage=0'
       }
     ]
   }
