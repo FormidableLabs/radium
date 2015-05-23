@@ -70,8 +70,7 @@ class Button extends React.Component {
       <button
         style={[
           styles.base,
-          this.props.kind === 'primary' && styles.primary,
-          this.props.kind === 'warning' && styles.warning
+          styles[this.props.kind]
         ]}>
         {this.props.children}
       </button>
