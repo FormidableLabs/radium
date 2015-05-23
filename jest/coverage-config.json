@@ -8,6 +8,7 @@
   "collectCoverageOnlyFrom": {
     "lib/enhancer.js": true,
     "lib/get-state.js": true,
+    "lib/keyframes.js": true,
     "lib/prefix.js": true,
     "lib/resolve-styles.js": true,
     "lib/wrap-utils.js": true,

@@ -39,7 +39,7 @@ var keyframes = function (
     Object.keys(keyframeRules).map(function (percentage) {
       var props = keyframeRules[percentage];
       var prefixedProps = prefix(props, 'css');
-      var serializedProps = createMarkupForStyles(prefixedProps);
+      var serializedProps = createMarkupForStyles(prefixedProps, '  ');
       return '  ' + percentage + ' {\n  ' + serializedProps + '\n  }';
     }).join('\n') +
     '\n}\n';

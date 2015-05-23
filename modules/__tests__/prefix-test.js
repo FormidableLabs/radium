@@ -5,6 +5,9 @@
 
 jest.dontMock('../prefix.js');
 
+var originalDocumentCreateElement = document.createElement;
+var originalWindowGetComputedStyle = window.getComputedStyle;
+
 var browserPrefix = '';
 var mockStyle = {};
 
@@ -24,6 +27,11 @@ describe('prefix', () => {
       canUseDOM: true,
       canUseEventListeners: true
     });
+  });
+
+  afterEach(() => {
+    document.createElement = originalDocumentCreateElement;
+    window.getComputedStyle = originalWindowGetComputedStyle;
   });
 
   it('detects Firefox prefix', () => {

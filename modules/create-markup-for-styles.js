@@ -2,9 +2,10 @@
 
 'use strict';
 
-var createMarkupForStyles = function (style) {
+var createMarkupForStyles = function (style, spaces) {
+  spaces = spaces || '';
   return Object.keys(style).map(function (property) {
-    return property + ': ' + style[property] + ';';
+    return spaces + property + ': ' + style[property] + ';';
   }).join('\n');
 };
 
