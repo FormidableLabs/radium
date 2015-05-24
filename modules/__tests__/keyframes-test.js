@@ -37,12 +37,25 @@ describe('keyframes', () => {
     window.getComputedStyle = originalWindowGetComputedStyle;
   });
 
-  it('doesn\t touch the DOM if not available', () => {
+  it('doesn\'t touch the DOM if DOM not available', () => {
     jest.setMock('exenv', {
       canUseDOM: false,
       canUseEventListeners: false
     });
 
+    var keyframes = require('../keyframes.js');
+
+    expect(document.createElement).not.toBeCalled();
+    expect(document.head.appendChild).not.toBeCalled();
+
+    var name = keyframes({});
+
+    expect(name.length).toBeGreaterThan(0);
+  });
+
+  it('doesn\'t touch the DOM if animation not supported (IE9)', () => {
+    var Prefixer = require('../prefixer.js');
+    Prefixer.__setNextPrefixedPropertyName(false);
     var keyframes = require('../keyframes.js');
 
     expect(document.createElement).not.toBeCalled();
@@ -59,13 +72,24 @@ describe('keyframes', () => {
     expect(name.length).toBeGreaterThan(0);
   });
 
-  it('prefixes @keyframes', () => {
+  it('prefixes @keyframes if needed', () => {
     var keyframes = require('../keyframes.js');
     var name = keyframes({});
 
     expect(styleElement.sheet.insertRule).lastCalledWith(
       '@-webkit-keyframes ' + name + ' {\n\n}\n',
       0
+    );
+  });
+
+  it('doesn\'t prefix @keyframes if not needed', () => {
+    styleElement.sheet.cssRules = [{cssText: 'blah'}];
+    var keyframes = require('../keyframes.js');
+    var name = keyframes({});
+
+    expect(styleElement.sheet.insertRule).lastCalledWith(
+      '@keyframes ' + name + ' {\n\n}\n',
+      1
     );
   });
 

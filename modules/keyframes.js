@@ -3,15 +3,18 @@
 'use strict';
 
 var createMarkupForStyles = require('./create-markup-for-styles');
-var prefix = require('./prefix');
+var Prefixer = require('./prefixer');
 
 var ExecutionEnvironment = require('exenv');
+
+var isAnimationSupported = ExecutionEnvironment.canUseDOM &&
+  Prefixer.getPrefixedPropertyName('animation') !== false;
 
 var animationIndex = 1;
 var animationStyleSheet = null;
 var keyframesPrefixed = null;
 
-if (ExecutionEnvironment.canUseDOM) {
+if (isAnimationSupported) {
   animationStyleSheet = (document.createElement('style'): any);
   document.head.appendChild(animationStyleSheet);
 
@@ -19,7 +22,7 @@ if (ExecutionEnvironment.canUseDOM) {
   keyframesPrefixed = 'keyframes';
   animationStyleSheet.textContent = '@keyframes {}';
   if (!animationStyleSheet.sheet.cssRules.length) {
-    keyframesPrefixed = prefix.css + 'keyframes';
+    keyframesPrefixed = Prefixer.cssPrefix + 'keyframes';
   }
 }
 
@@ -31,14 +34,14 @@ var keyframes = function (
   var name = 'Animation' + animationIndex;
   animationIndex += 1;
 
-  if (!ExecutionEnvironment.canUseDOM) {
+  if (!isAnimationSupported) {
     return name;
   }
 
   var rule = '@' + keyframesPrefixed + ' ' + name + ' {\n' +
     Object.keys(keyframeRules).map(function (percentage) {
       var props = keyframeRules[percentage];
-      var prefixedProps = prefix(props, 'css');
+      var prefixedProps = Prefixer.getPrefixedStyle(props, 'css');
       var serializedProps = createMarkupForStyles(prefixedProps, '  ');
       return '  ' + percentage + ' {\n  ' + serializedProps + '\n  }';
     }).join('\n') +

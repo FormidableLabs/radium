@@ -4,7 +4,7 @@
 
 var MouseUpListener = require('./mouse-up-listener');
 var getState = require('./get-state');
-var prefix = require('./prefix');
+var Prefixer = require('./prefixer');
 
 var ExecutionEnvironment = require('exenv');
 var React = require('react');
@@ -176,7 +176,7 @@ var resolveStyles = function (
   ) {
     if (style) {
       // Still perform vendor prefixing, though.
-      newProps.style = prefix(style);
+      newProps.style = Prefixer.getPrefixedStyle(style);
       return React.cloneElement(renderedElement, newProps, newChildren);
     } else if (newChildren) {
       return React.cloneElement(renderedElement, {}, newChildren);
@@ -279,7 +279,7 @@ var resolveStyles = function (
     );
   }
 
-  newProps.style = prefix(newStyle);
+  newProps.style = Prefixer.getPrefixedStyle(newStyle);
 
   return React.cloneElement(renderedElement, newProps, newChildren);
 };
