@@ -1,5 +1,5 @@
-var Radium = require('radium');
 var React = require('react');
+var Radium = require('radium');
 var color = require('color');
 
 var Button = React.createClass(Radium.wrap({
@@ -19,8 +19,7 @@ var Button = React.createClass(Radium.wrap({
       <button
         style={[
           styles.base,
-          this.props.kind === 'primary' && styles.primary,
-          this.props.kind === 'warning' && styles.warning
+          styles[this.props.kind]
         ]}>
         {this.props.children}
       </button>
