@@ -3,7 +3,7 @@
 
 'use strict';
 
-jest.dontMock('../prefix.js');
+jest.dontMock('../prefixer.js');
 
 var originalDocumentCreateElement = document.createElement;
 var originalWindowGetComputedStyle = window.getComputedStyle;
@@ -11,7 +11,7 @@ var originalWindowGetComputedStyle = window.getComputedStyle;
 var browserPrefix = '';
 var mockStyle = {};
 
-describe('prefix', () => {
+describe('Prefixer', () => {
   beforeEach(() => {
     browserPrefix = '';
     mockStyle = {};
@@ -36,30 +36,30 @@ describe('prefix', () => {
 
   it('detects Firefox prefix', () => {
     browserPrefix = '-moz-';
-    var prefix = require('../prefix.js');
-    expect(prefix.css).toBe('-moz-');
-    expect(prefix.js).toBe('Moz');
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.cssPrefix).toBe('-moz-');
+    expect(Prefixer.jsPrefix).toBe('Moz');
   });
 
   it('detects IE prefix', () => {
     browserPrefix = '-ms-';
-    var prefix = require('../prefix.js');
-    expect(prefix.css).toBe('-ms-');
-    expect(prefix.js).toBe('ms');
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.cssPrefix).toBe('-ms-');
+    expect(Prefixer.jsPrefix).toBe('ms');
   });
 
   it('detects Opera prefix', () => {
     browserPrefix = '-o-';
-    var prefix = require('../prefix.js');
-    expect(prefix.css).toBe('-o-');
-    expect(prefix.js).toBe('O');
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.cssPrefix).toBe('-o-');
+    expect(Prefixer.jsPrefix).toBe('O');
   });
 
   it('detects Webkit prefix', () => {
     browserPrefix = '-webkit-';
-    var prefix = require('../prefix.js');
-    expect(prefix.css).toBe('-webkit-');
-    expect(prefix.js).toBe('Webkit');
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.cssPrefix).toBe('-webkit-');
+    expect(Prefixer.jsPrefix).toBe('Webkit');
   });
 
   it('doesn\'t detect prefix if not in browser', () => {
@@ -68,12 +68,12 @@ describe('prefix', () => {
       canUseEventListeners: false
     });
 
-    var prefix = require('../prefix.js');
-    var result = prefix({display: 'flex'});
+    var Prefixer = require('../prefixer.js');
+    var result = Prefixer.getPrefixedStyle({display: 'flex'});
 
     expect(result).toEqual({display: 'flex'});
-    expect(prefix.css).toBe('');
-    expect(prefix.js).toBe('');
+    expect(Prefixer.cssPrefix).toBe('');
+    expect(Prefixer.jsPrefix).toBe('');
     expect(document.createElement).not.toBeCalled();
     expect(window.getComputedStyle).not.toBeCalled();
   });
@@ -81,8 +81,8 @@ describe('prefix', () => {
   it('uses unprefixed property if in style object', () => {
     browserPrefix = '-webkit-';
     mockStyle = { transform: '' };
-    var prefix = require('../prefix.js');
-    expect(prefix({transform: 'foo'})).toEqual({transform: 'foo'});
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.getPrefixedStyle({transform: 'foo'})).toEqual({transform: 'foo'});
   });
 
   it('caches property and value checks', () => {
@@ -92,30 +92,30 @@ describe('prefix', () => {
       get transform () { return transformGetter(); },
       set transform (value) { }
     };
-    var prefix = require('../prefix.js');
-    prefix({transform: 'foo'});
-    prefix({transform: 'foo'});
+    var Prefixer = require('../prefixer.js');
+    Prefixer.getPrefixedStyle({transform: 'foo'});
+    Prefixer.getPrefixedStyle({transform: 'foo'});
     expect(transformGetter.mock.calls.length).toBe(1);
   });
 
   it('ignores property if not in style object', () => {
-    var prefix = require('../prefix.js');
+    var Prefixer = require('../prefixer.js');
     mockStyle = {};
-    expect(prefix({transform: 'foo'})).toEqual({});
+    expect(Prefixer.getPrefixedStyle({transform: 'foo'})).toEqual({});
   });
 
   it('uses prefixed property if unprefixed not in style object', () => {
     browserPrefix = '-webkit-';
     mockStyle = { WebkitTransform: '' };
-    var prefix = require('../prefix.js');
-    expect(prefix({transform: 'foo'})).toEqual({WebkitTransform: 'foo'});
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.getPrefixedStyle({transform: 'foo'})).toEqual({WebkitTransform: 'foo'});
   });
 
   it('uses alternative properties if no others available', () => {
     browserPrefix = '-moz-';
     mockStyle = { MozBoxFlex: '' };
-    var prefix = require('../prefix.js');
-    expect(prefix({flex: 1})).toEqual({MozBoxFlex: 1});
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.getPrefixedStyle({flex: 1})).toEqual({MozBoxFlex: 1});
   });
 
   it('uses prefixed property if both in style object', () => {
@@ -124,15 +124,15 @@ describe('prefix', () => {
       transform: '',
       WebkitTransform: ''
     };
-    var prefix = require('../prefix.js');
-    expect(prefix({transform: 'foo'})).toEqual({WebkitTransform: 'foo'});
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.getPrefixedStyle({transform: 'foo'})).toEqual({WebkitTransform: 'foo'});
   });
 
   it('uses unprefixed value if setter works', () => {
     browserPrefix = '-webkit-';
     mockStyle = { transform: '' };
-    var prefix = require('../prefix.js');
-    expect(prefix({transform: 'foo'})).toEqual({transform: 'foo'});
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.getPrefixedStyle({transform: 'foo'})).toEqual({transform: 'foo'});
   });
 
   it('ignores unsupported values', () => {
@@ -141,20 +141,20 @@ describe('prefix', () => {
       get transform () { return ''; },
       set transform (value) { }
     };
-    var prefix = require('../prefix.js');
-    expect(prefix({transform: 'foo'})).toEqual({transform: 'foo'});
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.getPrefixedStyle({transform: 'foo'})).toEqual({transform: 'foo'});
   });
 
   it('ignores number values', () => {
     mockStyle = { lineHeight: '' };
-    var prefix = require('../prefix.js');
-    expect(prefix({lineHeight: 2})).toEqual({lineHeight: 2});
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.getPrefixedStyle({lineHeight: 2})).toEqual({lineHeight: 2});
   });
 
   it('ignores numbers with units', () => {
     mockStyle = { lineHeight: '' };
-    var prefix = require('../prefix.js');
-    expect(prefix({lineHeight: '2em'})).toEqual({lineHeight: '2em'});
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.getPrefixedStyle({lineHeight: '2em'})).toEqual({lineHeight: '2em'});
   });
 
   it('uses prefixed value if unprefixed setter fails and it works', () => {
@@ -170,8 +170,8 @@ describe('prefix', () => {
         }
       }
     };
-    var prefix = require('../prefix.js');
-    expect(prefix({display: 'flex'})).toEqual({display: '-webkit-flex'});
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.getPrefixedStyle({display: 'flex'})).toEqual({display: '-webkit-flex'});
   });
 
   it('uses alternative value if all others fail and it works', () => {
@@ -187,16 +187,16 @@ describe('prefix', () => {
         }
       }
     };
-    var prefix = require('../prefix.js');
-    expect(prefix({display: 'flex'})).toEqual({display: '-webkit-box'});
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.getPrefixedStyle({display: 'flex'})).toEqual({display: '-webkit-box'});
   });
 
   it('uses dash-case if mode is css', () => {
     mockStyle = {
       borderWidth: '1px'
     };
-    var prefix = require('../prefix.js');
-    expect(prefix({borderWidth: '1px'}, 'css')).toEqual(
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.getPrefixedStyle({borderWidth: '1px'}, 'css')).toEqual(
       {'border-width': '1px'}
     );
   });
@@ -206,8 +206,8 @@ describe('prefix', () => {
     mockStyle = {
       WebkitBorderWidth: ''
     };
-    var prefix = require('../prefix.js');
-    expect(prefix({borderWidth: '1px'}, 'css')).toEqual(
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.getPrefixedStyle({borderWidth: '1px'}, 'css')).toEqual(
       {'-webkit-border-width': '1px'}
     );
   });

@@ -84,7 +84,7 @@ var _camelCaseToDashCase = function (s) {
   return s.replace(_camelCaseRegex, _camelCaseReplacer);
 };
 
-var _getPrefixedProperty = function (property) {
+var getPrefixedPropertyName = function (property) {
   if (prefixedPropertyCache.hasOwnProperty(property)) {
     return prefixedPropertyCache[property];
   }
@@ -195,7 +195,7 @@ var _getPrefixedValue = function (property, value, originalProperty) {
 
 // Returns a new style object with vendor prefixes added to property names
 // and values.
-var prefix = function (style, mode /* 'css' or 'js' */) {
+var getPrefixedStyle = function (style, mode /* 'css' or 'js' */) {
   mode = mode || 'js';
 
   if (!ExecutionEnvironment.canUseDOM) {
@@ -206,7 +206,7 @@ var prefix = function (style, mode /* 'css' or 'js' */) {
   Object.keys(style).forEach(function (property) {
     var value = style[property];
 
-    var newProperty = _getPrefixedProperty(property);
+    var newProperty = getPrefixedPropertyName(property);
     if (newProperty === false) {
       // Ignore unsupported properties
       /* eslint-disable no-console */
@@ -224,7 +224,10 @@ var prefix = function (style, mode /* 'css' or 'js' */) {
   return newStyle;
 };
 
-prefix.css = prefixInfo.cssPrefix;
-prefix.js = prefixInfo.jsPrefix;
 
-module.exports = prefix;
+module.exports = {
+  getPrefixedPropertyName,
+  getPrefixedStyle,
+  cssPrefix: prefixInfo.cssPrefix,
+  jsPrefix: prefixInfo.jsPrefix
+};

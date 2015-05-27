@@ -1,7 +1,7 @@
 'use strict';
 
 var createMarkupForStyles = require('../create-markup-for-styles');
-var prefix = require('../prefix');
+var Prefixer = require('../prefixer');
 
 var React = require('react');
 
@@ -10,7 +10,7 @@ var buildCssString = function (selector, rules) {
     return;
   }
 
-  var prefixedRules = prefix(rules, 'css');
+  var prefixedRules = Prefixer.getPrefixedStyle(rules, 'css');
   var serializedRules = createMarkupForStyles(prefixedRules);
 
   return selector + '{' + serializedRules + '}';
