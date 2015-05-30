@@ -6,6 +6,9 @@ environment:
 install:
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
+  # Install and use local, modern NPM
+  - npm install npm@next
+  - set PATH=%APPDATA%\npm;%PATH%
   # install modules
   - npm install
 
