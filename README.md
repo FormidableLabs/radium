@@ -30,6 +30,8 @@ When we say expressive, we mean it: math, concatenation, regex, conditionals, fu
 
 For a short technical explanation, see [How does Radium work?](#how-does-radium-work).
 
+Convinced about CSS in JS with React, but not Radium? Check out our comprehensive [comparison of 14+ alternatives](docs/comparison).
+
 ## Features
 
 * Conceptually simple extension of normal inline styles
