@@ -18,7 +18,7 @@
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
     "lib": "npm run babel && rimraf lib/__tests__ lib/__mocks__",
     "lint": "eslint modules",
-    "postinstall": "node -e \"require('fs').stat('lib', function(e,s){process.exit(e || !s.isDirectory() ? 0 : 1)})\" && npm run prepublish || true",
+    "postinstall": "node -e \"require('fs').stat('lib', function(e,s){process.exit(e || !s.isDirectory() ? 1 : 0)})\" || npm run prepublish",
     "prepublish": "npm run lib",
     "test": "jest",
     "test-coverage": "npm run babel && jest --config jest/coverage-config.json"
