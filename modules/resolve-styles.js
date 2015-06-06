@@ -135,7 +135,7 @@ var resolveStyles = function (
   // Recurse over children first in case we bail early. Could be optimized to be
   // iterative if needed. Note that children only include those rendered in
   // `this` component. Child nodes in other components will not be here, so each
-  // component needs to use Radium.wrap.
+  // component needs to use Radium.
   var newChildren = null;
   var oldChildren = renderedElement.props.children;
   if (oldChildren) {

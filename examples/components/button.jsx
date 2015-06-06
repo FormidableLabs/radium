@@ -1,6 +1,7 @@
 var Radium = require('../../modules');
 var React = require('react');
 
+@Radium
 class Button extends React.Component {
   render() {
     return (
@@ -70,4 +71,4 @@ var styles = {
   }
 };
 
-module.exports = Radium.Enhancer(Button);
+module.exports = Button;

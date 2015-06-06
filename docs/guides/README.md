@@ -6,7 +6,6 @@ Radium is a toolset for easily writing React component styles. It resolves brows
 
 Let's create a fictional `<Button>` component. It will have a set of default styles, will adjust its appearance based on modifiers, and will include hover, focus, and active states.
 
-**Using ES6 classes**
 ```as
 class Button extends React.Component {
   render() {
@@ -19,40 +18,21 @@ class Button extends React.Component {
 }
 ```
 
-**Using createClass**
+Radium is activated by using a decorator or wrapping your component:
+
 ```as
-var Button = React.createClass({
-  render: function () {
-    return (
-      <button>
-        {this.props.children}
-      </button>
-    );
-  }
-});
-```
-
-Radium is activated by wrapping your component or its configuration:
-
-**Using ES6 classes**
-```as
-module.exports = Radium.Enhancer(Button);
-
-// or
-Button = Radium.Enhancer(Button);
-
-// or if using Decorators (Stage 1, Babel)
-@Radium.Enhancer
+@Radium
 class Button extends React.Component {
   // ...
 }
-```
 
-**Using createClass**
-```as
-var Button = React.createClass(Radium.wrap({
-  render: function () { ... }
-}));
+// or
+
+module.exports = Radium(Button);
+
+// or
+
+Button = Radium(Button);
 ```
 
 Radium resolves nested style objects into a flat object that can be applied directly to a React element. If you're not familiar with handling inline styles in React, see the React guide to the subject [here](http://facebook.github.io/react/tips/inline-styles.html). A basic style object looks like this:
@@ -92,7 +72,7 @@ return (
 );
 ```
 
-From there, React will apply our styles to the `button` element. This is not very exciting. In fact, React does this by default, without the extra step of using `Radium.wrap()`. Radium becomes useful when you need to do more complex things, like handling modifiers, states, and media queries. But, even without those complex things, Radium will still merge an array of styles and automatically apply vendor prefixes for you.
+From there, React will apply our styles to the `button` element. This is not very exciting. In fact, React does this by default, without the extra step of using Radium. Radium becomes useful when you need to do more complex things, like handling modifiers, states, and media queries. But, even without those complex things, Radium will still merge an array of styles and automatically apply vendor prefixes for you.
 
 ## Modifiers
 
