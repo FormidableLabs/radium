@@ -20,7 +20,7 @@ var Style = React.createClass({
 
   propTypes: {
     scopeSelector: React.PropTypes.string,
-    rules: React.PropTypes.arrayOf(React.PropTypes.object)
+    rules: React.PropTypes.object
   },
 
   getDefaultProps: function () {
@@ -29,10 +29,9 @@ var Style = React.createClass({
     };
   },
 
-  _buildStyles: function (stylesArr) {
-    var styles = stylesArr.reduce((accumulator, item) => {
-      var selector = Object.keys(item)[0];
-      var rules = item[selector];
+  _buildStyles: function (styles) {
+    var styles = Object.keys(styles).reduce((accumulator, selector) => {
+      var rules = styles[selector];
 
       if (selector === 'mediaQueries') {
         accumulator += this._buildMediaQueryString(rules);
@@ -54,14 +53,14 @@ var Style = React.createClass({
     var contextMediaQueries = this._getContextMediaQueries();
     var mediaQueryString = '';
 
-    Object.keys(mediaQueryObj).forEach(function (query) {
+    Object.keys(mediaQueryObj).forEach(query => {
       var completeQuery = contextMediaQueries[query] ?
         contextMediaQueries[query] :
         query;
       mediaQueryString += '@media ' + completeQuery + '{' +
         this._buildStyles(mediaQueryObj[query]) +
-      '}';
-    }.bind(this));
+        '}';
+    });
 
     return mediaQueryString;
   },

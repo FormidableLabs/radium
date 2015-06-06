@@ -1,9 +1,9 @@
 var React = require('react');
 
 var Button = require('./components/button.jsx');
-var ComputedWell = require("./components/computed-well.jsx");
-var Style = require("../modules/components/style.js");
-var Radium = require("../modules");
+var ComputedWell = require('./components/computed-well.jsx');
+var Style = require('../modules/components/style.js');
+var Radium = require('../modules');
 
 //
 // Radium with ES6 class syntax
@@ -82,7 +82,7 @@ var App = React.createClass(Radium.wrap({
         <p>
           <Button
             style={{
-              fontSize: "1.5em",
+              fontSize: '1.5em',
               borderRadius: 3
             }}
           >
@@ -98,37 +98,27 @@ var App = React.createClass(Radium.wrap({
         </div>
 
         <Style
-          rules={[
-            {
+          rules={{
               body: {
                 margin: 0,
-                fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif"
-              }
-            },
-            {
+                fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
+              },
               mediaQueries: {
-                "(max-width: 600px)": [
-                  {
-                    body: {
-                      background: "gray"
-                    }
+                '(max-width: 600px)': {
+                  body: {
+                    background: 'gray'
                   }
-                ],
-                "(max-width: 500px)": [
-                  {
-                    body: {
-                      background: "blue"
-                    }
+                },
+                '(max-width: 500px)': {
+                  body: {
+                    background: 'blue'
                   },
-                  {
-                    "p, h1": {
-                      color: "white"
-                    }
+                  'p, h1': {
+                    color: 'white'
                   }
-                ]
+                }
               }
-            }
-          ]}
+          }}
         />
 
         <p>
@@ -138,13 +128,11 @@ var App = React.createClass(Radium.wrap({
         <p className="scoping-class">
           <Style
             scopeSelector=".scoping-class"
-            rules={[
-              {
-                span: {
-                  fontFamily: "Lucida Console, Monaco, monospace"
-                }
+            rules={{
+              span: {
+                fontFamily: 'Lucida Console, Monaco, monospace'
               }
-            ]}
+            }}
           />
           <span>This content has scoped styles</span>
         </p>

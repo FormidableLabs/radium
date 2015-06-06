@@ -164,31 +164,27 @@ var styles = {
 
 The `<Style>` component renders an HTML `<style>` tag containing a set of CSS rules. Using it, you can define an optional `scopeSelector` that all selectors in the resulting `<style>` element will include.
 
-Without the `<Style>` component, it is prohibitively difficult to write a `<style>` element in React. To write a normal `<style>` element, you need to write your CSS as a multiline string inside of the element. `<Style>` simplifies this process, and adds the ability to scope selectors.
+Without the `<Style>` component, it is prohibitively difficult to write a `<style>` element in React. To write a normal `<style>` element, you need to write your CSS as a multiline string inside of the element. `<Style>` simplifies this process, and adds prefixing and the ability to scope selectors.
 
 ### Props
 
 #### rules
 
-An array of CSS rules to render. Each rule is an object with a CSS selector as a key and an object of styles as a value. If rules has no length, the component will render nothing.
+An object of CSS rules to render. Each key of the rules object is a CSS selector and the value is an object of styles. If rules is empty, the component will render nothing.
 
 ```as
 var Radium = require('radium');
 var Style = Radium.Style;
 
-<Style rules={[
-  {
-    body: {
-      margin: 0,
-      fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
-    }
+<Style rules={{
+  body: {
+    margin: 0,
+    fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
   },
-  {
-    html: {
-      background: '#ccc'
-    }
+  html: {
+    background: '#ccc'
   }
-]} />
+}} />
 ```
 
 #### scopeSelector
@@ -199,11 +195,11 @@ A string that any included selectors in `rules` will be appended to. Use to scop
 <div class="TestClass">
   <Style
   scopeSelector=".TestClass"
-    rules={[
+    rules={{
       h1: {
         fontSize: '2em'
       }
-    ]}
+    }}
   />
 </div>
 ```
