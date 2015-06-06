@@ -217,7 +217,13 @@ var style = {
 
 ### Known issues with media queries
 
+#### @media print
+
 If you use the query `@media print`, your print styles will not show up on Firefox at all, or in Chrome when triggering `window.print` from JavaScript. See [Issue 132](https://github.com/FormidableLabs/radium/issues/132#issuecomment-99805511) for more details.
+
+#### IE9 Suppert
+
+IE9 supprts CSS media queries, but doesnt support the `matchMedia` API. You'll need a [polyfill that includes addListener](https://github.com/paulirish/matchMedia.js/).
 
 ## Styling multiple elements in a single component
 
