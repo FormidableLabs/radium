@@ -131,17 +131,26 @@ var getPrefixedPropertyName = function (property) {
 
 var _getPrefixedValue = function (property, value, originalProperty) {
   // don't test numbers or numbers with units (e.g. 10em)
-  if (typeof value !== 'string' || !isNaN(parseInt(value, 10))) {
+  if (
+    !(Array.isArray(value) || typeof value === 'string') ||
+    !isNaN(parseInt(value, 10))
+  ) {
     return value;
   }
 
-  var cacheKey = property + value;
+  var cacheKey = Array.isArray(value) ? (
+    value.join(' || ')
+  ) : (
+    property + value
+  );
 
   if (prefixedValueCache.hasOwnProperty(cacheKey)) {
     return prefixedValueCache[cacheKey];
   }
 
-  var possibleValues = [
+  var possibleValues = Array.isArray(value) ? (
+    value.concat(value.map(v => prefixInfo.cssPrefix + v))
+  ) : [
     // Unprefixed
     value,
     // Prefixed

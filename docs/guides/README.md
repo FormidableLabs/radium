@@ -262,7 +262,7 @@ var styles = {
 
 You can query Radium's state using `Radium.getState`. This allows you to style or render one element based on the state of another, e.g. showing a message when a button is hovered.
 
-```js
+```as
 // Inside render
 return (
   <div>
@@ -281,4 +281,25 @@ var styles = {
     ':hover': {}
   }
 };
+```
+
+## Fallback values
+
+Sometimes you need to provide an additional value for a single CSS property in case the first one isn't applied successfully. Simply pass an array of values, and Radium will test them and apply the first one that works:
+
+```as
+var styles = {
+  button: {
+    background: ['rgba(255, 255, 255, .5)', '#fff']
+  }
+};
+```
+
+Is equivalent to the following CSS (note that the order is reversed):
+
+```css
+.button {
+  background: #fff;
+  background: rgba(255, 255, 255, .5);
+}
 ```

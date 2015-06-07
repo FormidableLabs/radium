@@ -191,6 +191,25 @@ describe('Prefixer', () => {
     expect(Prefixer.getPrefixedStyle({display: 'flex'})).toEqual({display: '-webkit-box'});
   });
 
+  it('uses fallback in value array if first value fails and it works', () => {
+    browserPrefix = '-webkit-';
+    var flexValue = '';
+    mockStyle = {
+      get color () { return flexValue; },
+      set color (value) {
+        if (value === '#fff') {
+          flexValue = '#fff';
+        } else {
+          flexValue = '';
+        }
+      }
+    };
+    var Prefixer = require('../prefixer.js');
+    expect(
+      Prefixer.getPrefixedStyle({color: ['rgba(255, 255, 255, .5)', '#fff']})
+    ).toEqual({color: '#fff'});
+  });
+
   it('uses dash-case if mode is css', () => {
     mockStyle = {
       borderWidth: '1px'
