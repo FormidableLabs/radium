@@ -1,5 +1,23 @@
 # Radium Changelog
 
+## 0.13.0 (June 7, 2015)
+
+### Breaking changes
+
+- `Radium.wrap` and `Radium.Enhancer` have been merged and moved to `Radium()`. Just wrap your component, `Button = Radium(Button);`, or use the decorator `@Radium`
+- `Style` component `rules` prop now takes an object instead of an array
+
+### New Features
+
+- Support fallback values (e.g. `#fff` for `rgba(...)`)
+
+### Bug Fixes
+
+- Fix react external in webpack config
+- Fix keyframes throwing on IE9 (now does feature detection)
+- Fix windows build
+- `string` and `number` children are no longer wrapped in an extraneous `<span>`
+
 ## 0.12.2 (May 22, 2015)
 
 ### New Features
