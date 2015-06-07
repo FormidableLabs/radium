@@ -17,7 +17,6 @@ var buildCssString = function (selector, rules) {
 };
 
 var Style = React.createClass({
-
   propTypes: {
     scopeSelector: React.PropTypes.string,
     rules: React.PropTypes.object
@@ -30,23 +29,22 @@ var Style = React.createClass({
   },
 
   _buildStyles: function (styles) {
-    var styles = Object.keys(styles).reduce((accumulator, selector) => {
+    return Object.keys(styles).reduce((accumulator, selector) => {
       var rules = styles[selector];
 
       if (selector === 'mediaQueries') {
         accumulator += this._buildMediaQueryString(rules);
       } else {
-        var completeSelector = (this.props.scopeSelector ?
-          this.props.scopeSelector + ' ' :
-          '') +
-          selector;
+        var completeSelector = (
+          this.props.scopeSelector ?
+            this.props.scopeSelector + ' ' :
+            ''
+          ) + selector;
         accumulator += buildCssString(completeSelector, rules);
       }
 
       return accumulator;
     }, '');
-
-    return styles;
   },
 
   _buildMediaQueryString: function (mediaQueryObj) {

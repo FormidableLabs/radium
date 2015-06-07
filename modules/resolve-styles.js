@@ -10,11 +10,14 @@ var ExecutionEnvironment = require('exenv');
 var React = require('react');
 var objectAssign = require('object-assign');
 
-declare class RadiumComponent extends ReactComponent {
-  _lastMouseDown: number,
-  _radiumMediaQueryListenersByQuery: Object<string, {remove: () => void}>,
-  _radiumMouseUpListener: {remove: () => void},
-}
+// babel-eslint 3.1.7 fails here for some reason, error:
+//   0:0  error  Cannot call method 'isSequenceExpression' of undefined
+//
+// declare class RadiumComponent extends ReactComponent {
+//   _lastMouseDown: number,
+//   _radiumMediaQueryListenersByQuery: Object<string, {remove: () => void}>,
+//   _radiumMouseUpListener: {remove: () => void},
+// }
 
 var mediaQueryListByQueryString = {};
 
@@ -122,10 +125,10 @@ var _resolveMediaQueryStyles = function (component, style) {
 // adds in the various interaction styles (e.g. :hover).
 //
 var resolveStyles = function (
-  component: RadiumComponent,
-  renderedElement: ReactElement,
+  component: any, // ReactComponent, flow+eslint complaining
+  renderedElement: any, // ReactElement
   existingKeyMap?: Object<string, string>
-): ReactElement {
+): any { // ReactElement
   existingKeyMap = existingKeyMap || {};
 
   if (!renderedElement) {
