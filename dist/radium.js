@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("React"));
+		module.exports = factory(require("react"));
 	else if(typeof define === 'function' && define.amd)
-		define(["React"], factory);
+		define(["react"], factory);
 	else if(typeof exports === 'object')
-		exports["Radium"] = factory(require("React"));
+		exports["Radium"] = factory(require("react"));
 	else
 		root["Radium"] = factory(root["React"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_6__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_8__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -56,11 +56,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	exports.Enhancer = __webpack_require__(7);
-	exports.Style = __webpack_require__(2);
-	exports.getState = __webpack_require__(3);
-	exports.keyframes = __webpack_require__(4);
-	exports.wrap = __webpack_require__(5);
+	var Enhancer = __webpack_require__(1);
+
+	module.exports = function (ComposedComponent) {
+	  return Enhancer(ComposedComponent);
+	};
+	module.exports.Style = __webpack_require__(10);
+	module.exports.getState = __webpack_require__(5);
+	module.exports.keyframes = __webpack_require__(12);
 
 /***/ },
 /* 1 */
@@ -70,13 +73,90 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var MouseUpListener = __webpack_require__(13);
-	var getState = __webpack_require__(3);
-	var prefix = __webpack_require__(10);
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var ExecutionEnvironment = __webpack_require__(12);
-	var React = __webpack_require__(6);
-	var objectAssign = __webpack_require__(11);
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var resolveStyles = __webpack_require__(2);
+
+	var enhanceWithRadium = function enhanceWithRadium(ComposedComponent) {
+	  var displayName = ComposedComponent.displayName || ComposedComponent.name || 'Component';
+
+	  var RadiumEnhancer = (function (_ComposedComponent) {
+	    function RadiumEnhancer() {
+	      _classCallCheck(this, RadiumEnhancer);
+
+	      _get(Object.getPrototypeOf(RadiumEnhancer.prototype), 'constructor', this).apply(this, arguments);
+
+	      this.state = this.state || {};
+	      this.state._radiumStyleState = {};
+	    }
+
+	    _inherits(RadiumEnhancer, _ComposedComponent);
+
+	    _createClass(RadiumEnhancer, [{
+	      key: 'render',
+	      value: function render() {
+	        var renderedElement = _get(Object.getPrototypeOf(RadiumEnhancer.prototype), 'render', this).call(this);
+	        return resolveStyles(this, renderedElement);
+	      }
+	    }, {
+	      key: 'componentWillUnmount',
+	      value: function componentWillUnmount() {
+	        if (_get(Object.getPrototypeOf(RadiumEnhancer.prototype), 'componentWillUnmount', this)) {
+	          _get(Object.getPrototypeOf(RadiumEnhancer.prototype), 'componentWillUnmount', this).call(this);
+	        }
+
+	        if (this._radiumMouseUpListener) {
+	          this._radiumMouseUpListener.remove();
+	        }
+
+	        if (this._radiumMediaQueryListenersByQuery) {
+	          Object.keys(this._radiumMediaQueryListenersByQuery).forEach(function (query) {
+	            this._radiumMediaQueryListenersByQuery[query].remove();
+	          }, this);
+	        }
+	      }
+	    }]);
+
+	    return RadiumEnhancer;
+	  })(ComposedComponent);
+
+	  RadiumEnhancer.displayName = 'Radium(' + displayName + ')';
+
+	  return RadiumEnhancer;
+	};
+
+	module.exports = enhanceWithRadium;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* @flow */
+
+	'use strict';
+
+	var MouseUpListener = __webpack_require__(4);
+	var getState = __webpack_require__(5);
+	var Prefixer = __webpack_require__(6);
+
+	var ExecutionEnvironment = __webpack_require__(3);
+	var React = __webpack_require__(8);
+	var objectAssign = __webpack_require__(9);
+
+	// babel-eslint 3.1.7 fails here for some reason, error:
+	//   0:0  error  Cannot call method 'isSequenceExpression' of undefined
+	//
+	// declare class RadiumComponent extends ReactComponent {
+	//   _lastMouseDown: number,
+	//   _radiumMediaQueryListenersByQuery: Object<string, {remove: () => void}>,
+	//   _radiumMouseUpListener: {remove: () => void},
+	// }
 
 	var mediaQueryListByQueryString = {};
 
@@ -181,25 +261,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	// interactions (e.g. mouse over). It also replaces the style prop because it
 	// adds in the various interaction styles (e.g. :hover).
 	//
-	var resolveStyles = function resolveStyles(component, renderedElement, existingKeyMap) {
+	var resolveStyles = function resolveStyles(component, // ReactComponent, flow+eslint complaining
+	renderedElement, // ReactElement
+	existingKeyMap) {
+	  // ReactElement
 	  existingKeyMap = existingKeyMap || {};
 
 	  if (!renderedElement) {
 	    return renderedElement;
 	  }
 
-	  // Recurse over children first in case we bail early. Could be optimized to be
-	  // iterative if needed. Note that children only include those rendered in
-	  // `this` component. Child nodes in other components will not be here, so each
-	  // component needs to use Radium.wrap.
+	  // Recurse over children first in case we bail early. Note that children only
+	  // include those rendered in `this` component. Child nodes in other components
+	  // will not be here, so each component needs to use Radium.
 	  var newChildren = null;
 	  var oldChildren = renderedElement.props.children;
 	  if (oldChildren) {
-	    // If a React Element is an only child, don't wrap it in an array for
-	    // React.Children.map() for React.Children.only() compatibility.
-	    if (React.Children.count(oldChildren) === 1 && oldChildren.type) {
+	    var childrenType = typeof oldChildren;
+	    if (childrenType === 'string' || childrenType === 'number') {
+	      // Don't do anything with a single primitive child
+	      newChildren = oldChildren;
+	    } else if (React.Children.count(oldChildren) === 1 && oldChildren.type) {
+	      // If a React Element is an only child, don't wrap it in an array for
+	      // React.Children.map() for React.Children.only() compatibility.
 	      var onlyChild = React.Children.only(oldChildren);
-
 	      newChildren = resolveStyles(component, onlyChild, existingKeyMap);
 	    } else {
 	      newChildren = React.Children.map(oldChildren, function (child) {
@@ -226,7 +311,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (!style || !Object.keys(style).some(_isSpecialKey)) {
 	    if (style) {
 	      // Still perform vendor prefixing, though.
-	      newProps.style = prefix(style);
+	      newProps.style = Prefixer.getPrefixedStyle(style);
 	      return React.cloneElement(renderedElement, newProps, newChildren);
 	    } else if (newChildren) {
 	      return React.cloneElement(renderedElement, {}, newChildren);
@@ -313,7 +398,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    component._radiumMouseUpListener = MouseUpListener.subscribe(_mouseUp.bind(null, component));
 	  }
 
-	  newProps.style = prefix(newStyle);
+	  newProps.style = Prefixer.getPrefixedStyle(newStyle);
 
 	  return React.cloneElement(renderedElement, newProps, newChildren);
 	};
@@ -327,99 +412,91 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = resolveStyles;
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2015 Jed Watson.
+	  Based on code that is Copyright 2013-2015, Facebook, Inc.
+	  All rights reserved.
+	*/
 
 	'use strict';
 
-	var createMarkupForStyles = __webpack_require__(9);
-	var prefix = __webpack_require__(10);
+	(function () {
+		'use strict';
 
-	var React = __webpack_require__(6);
+		var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
 
-	var buildCssString = function buildCssString(selector, rules) {
-	  if (!selector || !rules) {
-	    return;
-	  }
+		var ExecutionEnvironment = {
 
-	  var prefixedRules = prefix(rules, 'css');
-	  var serializedRules = createMarkupForStyles(prefixedRules);
+			canUseDOM: canUseDOM,
 
-	  return selector + '{' + serializedRules + '}';
-	};
+			canUseWorkers: typeof Worker !== 'undefined',
 
-	var Style = React.createClass({
-	  displayName: 'Style',
+			canUseEventListeners: canUseDOM && !!(window.addEventListener || window.attachEvent),
 
-	  propTypes: {
-	    scopeSelector: React.PropTypes.string,
-	    rules: React.PropTypes.arrayOf(React.PropTypes.object)
-	  },
+			canUseViewport: canUseDOM && !!window.screen
 
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      scopeSelector: ''
-	    };
-	  },
+		};
 
-	  _buildStyles: function _buildStyles(stylesArr) {
-	    var _this = this;
-
-	    var styles = stylesArr.reduce(function (accumulator, item) {
-	      var selector = Object.keys(item)[0];
-	      var rules = item[selector];
-
-	      if (selector === 'mediaQueries') {
-	        accumulator += _this._buildMediaQueryString(rules);
-	      } else {
-	        var completeSelector = (_this.props.scopeSelector ? _this.props.scopeSelector + ' ' : '') + selector;
-	        accumulator += buildCssString(completeSelector, rules);
-	      }
-
-	      return accumulator;
-	    }, '');
-
-	    return styles;
-	  },
-
-	  _buildMediaQueryString: function _buildMediaQueryString(mediaQueryObj) {
-	    var contextMediaQueries = this._getContextMediaQueries();
-	    var mediaQueryString = '';
-
-	    Object.keys(mediaQueryObj).forEach((function (query) {
-	      var completeQuery = contextMediaQueries[query] ? contextMediaQueries[query] : query;
-	      mediaQueryString += '@media ' + completeQuery + '{' + this._buildStyles(mediaQueryObj[query]) + '}';
-	    }).bind(this));
-
-	    return mediaQueryString;
-	  },
-
-	  _getContextMediaQueries: function _getContextMediaQueries() {
-	    var contextMediaQueries = {};
-	    if (this.context && this.context.mediaQueries) {
-	      Object.keys(this.context.mediaQueries).forEach((function (query) {
-	        contextMediaQueries[query] = this.context.mediaQueries[query].media;
-	      }).bind(this));
-	    }
-
-	    return contextMediaQueries;
-	  },
-
-	  render: function render() {
-	    if (!this.props.rules) {
-	      return null;
-	    }
-
-	    var styles = this._buildStyles(this.props.rules);
-
-	    return React.createElement('style', { dangerouslySetInnerHTML: { __html: styles } });
-	  }
-	});
-
-	module.exports = Style;
+		if (true) {
+			!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return ExecutionEnvironment;
+			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else if (typeof module !== 'undefined' && module.exports) {
+			module.exports = ExecutionEnvironment;
+		} else {
+			window.ExecutionEnvironment = ExecutionEnvironment;
+		}
+	})();
 
 /***/ },
-/* 3 */
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* @flow */
+
+	'use strict';
+
+	var _callbacks = [];
+	var _mouseUpListenerIsActive = false;
+
+	var _handleMouseUp = function _handleMouseUp(ev) {
+	  _callbacks.forEach(function (callback) {
+	    callback(ev);
+	  });
+	};
+
+	var subscribe = function subscribe(callback) {
+	  if (_callbacks.indexOf(callback) === -1) {
+	    _callbacks.push(callback);
+	  }
+
+	  if (!_mouseUpListenerIsActive) {
+	    window.addEventListener('mouseup', _handleMouseUp);
+	    _mouseUpListenerIsActive = true;
+	  }
+
+	  return {
+	    remove: function remove() {
+	      var index = _callbacks.indexOf(callback);
+	      _callbacks.splice(index, 1);
+
+	      if (_callbacks.length === 0 && _mouseUpListenerIsActive) {
+	        window.removeEventListener('mouseup', _handleMouseUp);
+	        _mouseUpListenerIsActive = false;
+	      }
+	    }
+	  };
+	};
+
+	module.exports = {
+	  subscribe: subscribe
+	};
+
+/***/ },
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* @flow */
@@ -435,220 +512,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    throw new Error('Radium.getState invalid value param: `' + value + '`');
 	  }
 
-	  return state && state._radiumStyleState && state._radiumStyleState[elementKey] && state._radiumStyleState[elementKey][value] || false;
+	  return !!(state && state._radiumStyleState && state._radiumStyleState[elementKey] && state._radiumStyleState[elementKey][value]) || false;
 	};
 
 	module.exports = getState;
 
 /***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* @flow */
-
-	'use strict';
-
-	var createMarkupForStyles = __webpack_require__(9);
-	var prefix = __webpack_require__(10);
-
-	var ExecutionEnvironment = __webpack_require__(12);
-
-	var animationIndex = 1;
-	var animationStyleSheet = null;
-	var keyframesPrefixed = null;
-
-	if (ExecutionEnvironment.canUseDOM) {
-	  animationStyleSheet = document.createElement('style');
-	  document.head.appendChild(animationStyleSheet);
-
-	  // Test if prefix needed for keyframes (copied from PrefixFree)
-	  keyframesPrefixed = 'keyframes';
-	  animationStyleSheet.textContent = '@keyframes {}';
-	  if (!animationStyleSheet.sheet.cssRules.length) {
-	    keyframesPrefixed = prefix.css + 'keyframes';
-	  }
-	}
-
-	// Simple animation helper that injects CSS into a style object containing the
-	// keyframes, and returns a string with the generated animation name.
-	var keyframes = function keyframes(keyframeRules) {
-	  var name = 'Animation' + animationIndex;
-	  animationIndex += 1;
-
-	  if (!ExecutionEnvironment.canUseDOM) {
-	    return name;
-	  }
-
-	  var rule = '@' + keyframesPrefixed + ' ' + name + ' {\n' + Object.keys(keyframeRules).map(function (percentage) {
-	    var props = keyframeRules[percentage];
-	    var prefixedProps = prefix(props, 'css');
-	    var serializedProps = createMarkupForStyles(prefixedProps);
-	    return '  ' + percentage + ' {\n  ' + serializedProps + '\n  }';
-	  }).join('\n') + '\n}\n';
-
-	  // for flow
-	  /* istanbul ignore next */
-	  if (!animationStyleSheet) {
-	    throw new Error('keyframes not initialized properly');
-	  }
-
-	  animationStyleSheet.sheet.insertRule(rule, animationStyleSheet.sheet.cssRules.length);
-	  return name;
-	};
-
-	module.exports = keyframes;
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* @flow */
-
-	'use strict';
-
-	var resolveStyles = __webpack_require__(1);
-	var wrapUtils = __webpack_require__(8);
-
-	var objectAssign = __webpack_require__(11);
-
-	var wrap = function wrap(config) {
-	  var newConfig = {
-	    getInitialState: function getInitialState() {
-	      var existingInitialState = config.getInitialState ? config.getInitialState.call(this) : {};
-	      var radiumInitialState = wrapUtils.getInitialState();
-	      return objectAssign({}, existingInitialState, radiumInitialState);
-	    },
-
-	    componentWillUnmount: function componentWillUnmount() {
-	      config.componentWillUnmount && config.componentWillUnmount.call(this);
-	      wrapUtils.componentWillUnmount(this);
-	    },
-
-	    render: function render() {
-	      var renderedElement = config.render.call(this);
-	      return resolveStyles(this, renderedElement);
-	    }
-	  };
-
-	  return objectAssign({}, config, newConfig);
-	};
-
-	module.exports = wrap;
-
-/***/ },
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_6__;
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* @flow */
-
-	'use strict';
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var resolveStyles = __webpack_require__(1);
-	var wrapUtils = __webpack_require__(8);
-	var objectAssign = __webpack_require__(11);
-
-	var enhanceWithRadium = function enhanceWithRadium(ComposedComponent) {
-	  var displayName = ComposedComponent.displayName || ComposedComponent.name || 'Component';
-
-	  var RadiumEnhancer = (function (_ComposedComponent) {
-	    function RadiumEnhancer() {
-	      _classCallCheck(this, RadiumEnhancer);
-
-	      _get(Object.getPrototypeOf(RadiumEnhancer.prototype), 'constructor', this).apply(this, arguments);
-
-	      var radiumInitialState = wrapUtils.getInitialState();
-	      this.state = objectAssign(this.state || {}, radiumInitialState);
-	    }
-
-	    _inherits(RadiumEnhancer, _ComposedComponent);
-
-	    _createClass(RadiumEnhancer, [{
-	      key: 'render',
-	      value: function render() {
-	        var renderedElement = _get(Object.getPrototypeOf(RadiumEnhancer.prototype), 'render', this).call(this);
-	        return resolveStyles(this, renderedElement);
-	      }
-	    }, {
-	      key: 'componentWillUnmount',
-	      value: function componentWillUnmount() {
-	        if (_get(Object.getPrototypeOf(RadiumEnhancer.prototype), 'componentWillUnmount', this)) {
-	          _get(Object.getPrototypeOf(RadiumEnhancer.prototype), 'componentWillUnmount', this).call(this);
-	        }
-
-	        wrapUtils.componentWillUnmount(this);
-	      }
-	    }], [{
-	      key: 'displayName',
-	      value: 'Radium(' + displayName + ')',
-	      enumerable: true
-	    }]);
-
-	    return RadiumEnhancer;
-	  })(ComposedComponent);
-
-	  return RadiumEnhancer;
-	};
-
-	module.exports = enhanceWithRadium;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* @flow */
-
-	'use strict';
-
-	module.exports = {
-	  getInitialState: function getInitialState() {
-	    return { _radiumStyleState: {} };
-	  },
-
-	  componentWillUnmount: function componentWillUnmount(component) {
-	    if (component._radiumMouseUpListener) {
-	      component._radiumMouseUpListener.remove();
-	    }
-
-	    if (component._radiumMediaQueryListenersByQuery) {
-	      Object.keys(component._radiumMediaQueryListenersByQuery).forEach(function (query) {
-	        component._radiumMediaQueryListenersByQuery[query].remove();
-	      }, component);
-	    }
-	  }
-	};
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* @flow */
-
-	'use strict';
-
-	var createMarkupForStyles = function createMarkupForStyles(style) {
-	  return Object.keys(style).map(function (property) {
-	    return property + ': ' + style[property] + ';';
-	  }).join('\n');
-	};
-
-	module.exports = createMarkupForStyles;
-
-/***/ },
-/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -658,8 +528,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var ExecutionEnvironment = __webpack_require__(12);
-	var arrayFind = __webpack_require__(14);
+	var ExecutionEnvironment = __webpack_require__(3);
+	var arrayFind = __webpack_require__(7);
 
 	var infoByCssPrefix = {
 	  '-moz-': {
@@ -735,7 +605,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return s.replace(_camelCaseRegex, _camelCaseReplacer);
 	};
 
-	var _getPrefixedProperty = function _getPrefixedProperty(property) {
+	var getPrefixedPropertyName = function getPrefixedPropertyName(property) {
 	  if (prefixedPropertyCache.hasOwnProperty(property)) {
 	    return prefixedPropertyCache[property];
 	  }
@@ -772,17 +642,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _getPrefixedValue = function _getPrefixedValue(property, value, originalProperty) {
 	  // don't test numbers or numbers with units (e.g. 10em)
-	  if (typeof value !== 'string' || !isNaN(parseInt(value, 10))) {
+	  if (!(Array.isArray(value) || typeof value === 'string') || !isNaN(parseInt(value, 10))) {
 	    return value;
 	  }
 
-	  var cacheKey = property + value;
+	  var cacheKey = Array.isArray(value) ? value.join(' || ') : property + value;
 
 	  if (prefixedValueCache.hasOwnProperty(cacheKey)) {
 	    return prefixedValueCache[cacheKey];
 	  }
 
-	  var possibleValues = [
+	  var possibleValues = Array.isArray(value) ? value.concat(value.map(function (v) {
+	    return prefixInfo.cssPrefix + v;
+	  })) : [
 	  // Unprefixed
 	  value,
 	  // Prefixed
@@ -824,7 +696,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// Returns a new style object with vendor prefixes added to property names
 	// and values.
-	var prefix = function prefix(style, mode /* 'css' or 'js' */) {
+	var getPrefixedStyle = function getPrefixedStyle(style, mode /* 'css' or 'js' */) {
 	  mode = mode || 'js';
 
 	  if (!ExecutionEnvironment.canUseDOM) {
@@ -835,7 +707,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Object.keys(style).forEach(function (property) {
 	    var value = style[property];
 
-	    var newProperty = _getPrefixedProperty(property);
+	    var newProperty = getPrefixedPropertyName(property);
 	    if (newProperty === false) {
 	      // Ignore unsupported properties
 	      /* eslint-disable no-console */
@@ -853,13 +725,49 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return newStyle;
 	};
 
-	prefix.css = prefixInfo.cssPrefix;
-	prefix.js = prefixInfo.jsPrefix;
-
-	module.exports = prefix;
+	module.exports = {
+	  getPrefixedPropertyName: getPrefixedPropertyName,
+	  getPrefixedStyle: getPrefixedStyle,
+	  cssPrefix: prefixInfo.cssPrefix,
+	  jsPrefix: prefixInfo.jsPrefix
+	};
 
 /***/ },
-/* 11 */
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function find(array, predicate, self) {
+	  self = self || this;
+	  var len = array.length;
+	  var i;
+	  if (len === 0) {
+	    return;
+	  }
+	  if (typeof predicate !== 'function') {
+	    throw new TypeError(predicate + ' must be a function');
+	  }
+
+	  for (i = 0; i < len; i++) {
+	    if (predicate.call(self, array[i], i, array)) {
+	      return array[i];
+	    }
+	  }
+
+	  return;
+	}
+
+	module.exports = find;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_8__;
+
+/***/ },
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -890,103 +798,172 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 12 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Based on code that is Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 */
 
 	'use strict';
 
-	var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+	var createMarkupForStyles = __webpack_require__(11);
+	var Prefixer = __webpack_require__(6);
 
-	var ExecutionEnvironment = {
+	var React = __webpack_require__(8);
 
-	  canUseDOM: canUseDOM,
+	var buildCssString = function buildCssString(selector, rules) {
+	  if (!selector || !rules) {
+	    return;
+	  }
 
-	  canUseWorkers: typeof Worker !== 'undefined',
+	  var prefixedRules = Prefixer.getPrefixedStyle(rules, 'css');
+	  var serializedRules = createMarkupForStyles(prefixedRules);
 
-	  canUseEventListeners: canUseDOM && !!(window.addEventListener || window.attachEvent),
-
-	  canUseViewport: canUseDOM && !!window.screen
-
+	  return selector + '{' + serializedRules + '}';
 	};
 
-	module.exports = ExecutionEnvironment;
+	var Style = React.createClass({
+	  displayName: 'Style',
+
+	  propTypes: {
+	    scopeSelector: React.PropTypes.string,
+	    rules: React.PropTypes.object
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      scopeSelector: ''
+	    };
+	  },
+
+	  _buildStyles: function _buildStyles(styles) {
+	    var _this = this;
+
+	    return Object.keys(styles).reduce(function (accumulator, selector) {
+	      var rules = styles[selector];
+
+	      if (selector === 'mediaQueries') {
+	        accumulator += _this._buildMediaQueryString(rules);
+	      } else {
+	        var completeSelector = (_this.props.scopeSelector ? _this.props.scopeSelector + ' ' : '') + selector;
+	        accumulator += buildCssString(completeSelector, rules);
+	      }
+
+	      return accumulator;
+	    }, '');
+	  },
+
+	  _buildMediaQueryString: function _buildMediaQueryString(mediaQueryObj) {
+	    var _this2 = this;
+
+	    var contextMediaQueries = this._getContextMediaQueries();
+	    var mediaQueryString = '';
+
+	    Object.keys(mediaQueryObj).forEach(function (query) {
+	      var completeQuery = contextMediaQueries[query] ? contextMediaQueries[query] : query;
+	      mediaQueryString += '@media ' + completeQuery + '{' + _this2._buildStyles(mediaQueryObj[query]) + '}';
+	    });
+
+	    return mediaQueryString;
+	  },
+
+	  _getContextMediaQueries: function _getContextMediaQueries() {
+	    var contextMediaQueries = {};
+	    if (this.context && this.context.mediaQueries) {
+	      Object.keys(this.context.mediaQueries).forEach((function (query) {
+	        contextMediaQueries[query] = this.context.mediaQueries[query].media;
+	      }).bind(this));
+	    }
+
+	    return contextMediaQueries;
+	  },
+
+	  render: function render() {
+	    if (!this.props.rules) {
+	      return null;
+	    }
+
+	    var styles = this._buildStyles(this.props.rules);
+
+	    return React.createElement('style', { dangerouslySetInnerHTML: { __html: styles } });
+	  }
+	});
+
+	module.exports = Style;
 
 /***/ },
-/* 13 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* @flow */
 
 	'use strict';
 
-	var _callbacks = [];
-	var _mouseUpListenerIsActive = false;
-
-	var _handleMouseUp = function _handleMouseUp(ev) {
-	  _callbacks.forEach(function (callback) {
-	    callback(ev);
-	  });
+	var createMarkupForStyles = function createMarkupForStyles(style, spaces) {
+	  spaces = spaces || '';
+	  return Object.keys(style).map(function (property) {
+	    return spaces + property + ': ' + style[property] + ';';
+	  }).join('\n');
 	};
 
-	var subscribe = function subscribe(callback) {
-	  if (_callbacks.indexOf(callback) === -1) {
-	    _callbacks.push(callback);
-	  }
-
-	  if (!_mouseUpListenerIsActive) {
-	    window.addEventListener('mouseup', _handleMouseUp);
-	    _mouseUpListenerIsActive = true;
-	  }
-
-	  return {
-	    remove: function remove() {
-	      var index = _callbacks.indexOf(callback);
-	      _callbacks.splice(index, 1);
-
-	      if (_callbacks.length === 0 && _mouseUpListenerIsActive) {
-	        window.removeEventListener('mouseup', _handleMouseUp);
-	        _mouseUpListenerIsActive = false;
-	      }
-	    }
-	  };
-	};
-
-	module.exports = {
-	  subscribe: subscribe
-	};
+	module.exports = createMarkupForStyles;
 
 /***/ },
-/* 14 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
+
+	/* @flow */
 
 	'use strict';
 
-	function find(array, predicate, self) {
-	  self = self || this;
-	  var len = array.length;
-	  var i;
-	  if (len === 0) {
-	    return;
-	  }
-	  if (typeof predicate !== 'function') {
-	    throw new TypeError(predicate + ' must be a function');
-	  }
+	var createMarkupForStyles = __webpack_require__(11);
+	var Prefixer = __webpack_require__(6);
 
-	  for (i = 0; i < len; i++) {
-	    if (predicate.call(self, array[i], i, array)) {
-	      return array[i];
-	    }
-	  }
+	var ExecutionEnvironment = __webpack_require__(3);
 
-	  return;
+	var isAnimationSupported = ExecutionEnvironment.canUseDOM && Prefixer.getPrefixedPropertyName('animation') !== false;
+
+	var animationIndex = 1;
+	var animationStyleSheet = null;
+	var keyframesPrefixed = null;
+
+	if (isAnimationSupported) {
+	  animationStyleSheet = document.createElement('style');
+	  document.head.appendChild(animationStyleSheet);
+
+	  // Test if prefix needed for keyframes (copied from PrefixFree)
+	  keyframesPrefixed = 'keyframes';
+	  animationStyleSheet.textContent = '@keyframes {}';
+	  if (!animationStyleSheet.sheet.cssRules.length) {
+	    keyframesPrefixed = Prefixer.cssPrefix + 'keyframes';
+	  }
 	}
 
-	module.exports = find;
+	// Simple animation helper that injects CSS into a style object containing the
+	// keyframes, and returns a string with the generated animation name.
+	var keyframes = function keyframes(keyframeRules) {
+	  var name = 'Animation' + animationIndex;
+	  animationIndex += 1;
+
+	  if (!isAnimationSupported) {
+	    return name;
+	  }
+
+	  var rule = '@' + keyframesPrefixed + ' ' + name + ' {\n' + Object.keys(keyframeRules).map(function (percentage) {
+	    var props = keyframeRules[percentage];
+	    var prefixedProps = Prefixer.getPrefixedStyle(props, 'css');
+	    var serializedProps = createMarkupForStyles(prefixedProps, '  ');
+	    return '  ' + percentage + ' {\n  ' + serializedProps + '\n  }';
+	  }).join('\n') + '\n}\n';
+
+	  // for flow
+	  /* istanbul ignore next */
+	  if (!animationStyleSheet) {
+	    throw new Error('keyframes not initialized properly');
+	  }
+
+	  animationStyleSheet.sheet.insertRule(rule, animationStyleSheet.sheet.cssRules.length);
+	  return name;
+	};
+
+	module.exports = keyframes;
 
 /***/ }
 /******/ ])
