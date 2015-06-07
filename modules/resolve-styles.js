@@ -132,18 +132,20 @@ var resolveStyles = function (
     return renderedElement;
   }
 
-  // Recurse over children first in case we bail early. Could be optimized to be
-  // iterative if needed. Note that children only include those rendered in
-  // `this` component. Child nodes in other components will not be here, so each
-  // component needs to use Radium.
+  // Recurse over children first in case we bail early. Note that children only
+  // include those rendered in `this` component. Child nodes in other components
+  // will not be here, so each component needs to use Radium.
   var newChildren = null;
   var oldChildren = renderedElement.props.children;
   if (oldChildren) {
-    // If a React Element is an only child, don't wrap it in an array for
-    // React.Children.map() for React.Children.only() compatibility.
-    if (React.Children.count(oldChildren) === 1 && oldChildren.type) {
+    var childrenType = typeof oldChildren;
+    if (childrenType === 'string' || childrenType === 'number') {
+      // Don't do anything with a single primitive child
+      newChildren = oldChildren;
+    } else if (React.Children.count(oldChildren) === 1 && oldChildren.type) {
+      // If a React Element is an only child, don't wrap it in an array for
+      // React.Children.map() for React.Children.only() compatibility.
       var onlyChild = React.Children.only(oldChildren);
-
       newChildren = resolveStyles(component, onlyChild, existingKeyMap);
     } else {
       newChildren = React.Children.map(

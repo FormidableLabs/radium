@@ -92,6 +92,22 @@ describe('resolveStyles', function () {
       expect(children[0].props.style).toBe(style);
     });
 
+    it('doesn\'t wrap string children in spans', function () {
+      var component = genComponent();
+      var renderedElement = <div>Hello</div>;
+
+      var result = resolveStyles(component, renderedElement);
+      expect(result.props.children).toBe('Hello');
+    });
+
+    it('doesn\'t wrap number children in spans', function () {
+      var component = genComponent();
+      var renderedElement = <div>{88347}</div>;
+
+      var result = resolveStyles(component, renderedElement);
+      expect(result.props.children).toBe(88347);
+    });
+
     it('ignores invalid children', function () {
       var component = genComponent();
 
