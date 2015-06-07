@@ -15,7 +15,7 @@ var getState = function (
     throw new Error('Radium.getState invalid value param: `' + value + '`');
   }
 
-  return (
+  return !!(
     state &&
     state._radiumStyleState &&
     state._radiumStyleState[elementKey] &&

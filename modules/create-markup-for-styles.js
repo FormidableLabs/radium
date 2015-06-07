@@ -2,7 +2,7 @@
 
 'use strict';
 
-var createMarkupForStyles = function (style, spaces) {
+var createMarkupForStyles = function (style: Object, spaces: string): string {
   spaces = spaces || '';
   return Object.keys(style).map(function (property) {
     return spaces + property + ': ' + style[property] + ';';

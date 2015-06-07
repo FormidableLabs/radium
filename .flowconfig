@@ -1,4 +1,5 @@
 [ignore]
+.*/lib/.*
 .*/node_modules/.*/node_modules/.*
 .*/node_modules/babel-core/.*
 .*/node_modules/babel-loader/.*
