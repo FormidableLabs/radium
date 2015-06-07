@@ -2,101 +2,34 @@
 
 **Table of Contents**
 
-- [Enhancer](#enhancer)
+- [Radium](#radium)
+  - [Sample Style Object](#sample-style-object)
 - [getState](#getstate)
 - [keyframes](#keyframes)
-- [wrap](#wrap)
-  - [Sample Style Object](#sample-style-object)
 - [Style Component](#style-component)
 
-## Enhancer
-```as
-module.exports = Radium.Enhancer(Button);
+## Radium
 
-// or
-Button = Radium.Enhancer(Button);
-
-// or if using Decorators (Stage 1, Babel)
-@Radium.Enhancer
-class Button extends React.Component {
-  // ...
-}
-```
-
-`Enhancer` is the ES6 verison of `wrap`. See [documentation for wrap](#wrap) to see how it works.
-
-## getState
-
-**Radium.getState(state, elementKey, value)**
-
-Query Radium's knowledge of the browser state for a given element key. This is particularly useful if you would like to set styles for one element when another element is in a particular state, e.g. show a message when a button is hovered.
-
-Note that the target element specified by `elementKey` must have the state you'd like to check defined in its style object so that Radium knows to add the handlers. It can be empty, e.g. `':hover': {}`.
-
-Parameters:
-
-- **state** - you'll usually pass `this.state`, but sometimes you may want to pass a previous state, like in `shouldComponentUpdate`, `componentWillUpdate`, and `componentDidUpdate`
-- **elementKey** - if you used multiple elements, pass the same `key=""` or `ref=""`. If you only have one element, you can leave it blank (`'main'` will be inferred)
-- **value** - one of the following: `:active`, `:focus`, and `:hover`
-- **returns** `true` or `false`
-
-Usage:
-
-```as
-    Radium.getState(this.state, 'button', ':hover')
-```
-
-## keyframes
-
-**Radium.keyframes(keyframes)**
-
-Create a keyframes animation for use in any inline style. `keyframes` is a helper that translates the keyframes object you pass in to CSS and injects the `@keyframes` (prefixed properly) definition into a style sheet. Automatically generates and returns a name for the keyframes, that you can then use in the value for `animation`. Radium will automatically apply vendor prefixing to keyframe styles.
-
-```as
-var Spinner = React.createClass(Radium.wrap({
-  render: function () {
-    return (
-      <div>
-        <div style={styles.inner} />
-      </div>
-    );
-  }
-}));
-
-var pulseKeyframes = Radium.keyframes({
-  '0%': {width: '10%'},
-  '50%': {width: '50%'},
-  '100%': {width: '10%'},
-});
-
-var styles = {
-  inner: {
-    animation: pulseKeyframes + ' 3s ease 0s infinite',
-    background: 'blue',
-    height: '4px',
-    margin: '0 auto',
-  }
-};
-```
-
-## wrap
-
-**Radium.wrap(classConfig)**
-
-The essence of using Radium. Wrapping the component configuration allows Radium to:
+`Radium` itself is a higher-order component, whose job is to:
 - Provide initial state
 - Process the `style` attribute after `render()`
 - Clean up any resources when the component unmounts
 
-Usage is simple:
+Usage with `class` and ES7 decorators:
 
 ```as
-var MyComponent = React.createClass(Radium.wrap({
-  // write your component as normal
-}));
+@Radium
+class MyComponent extends React.Component { ... }
 ```
 
-`wrap`s primary job is to apply interactive or media query styles, but even if you are not using any special styles, `wrap` will still:
+Usage with `createClass`:
+
+```as
+var MyComponent = React.createClass({ ... });
+module.exports = Radium(MyComponent);
+```
+
+`Radium`s primary job is to apply interactive or media query styles, but even if you are not using any special styles, the higher order component will still:
 - Merge arrays of styles passed as the `style` attribute
 - Automatically vendor prefix the `style` object
 
@@ -156,6 +89,61 @@ var styles = {
     ':active': {
       backgroundColor: '#990000'
     }
+  }
+};
+```
+
+## getState
+
+**Radium.getState(state, elementKey, value)**
+
+Query Radium's knowledge of the browser state for a given element key. This is particularly useful if you would like to set styles for one element when another element is in a particular state, e.g. show a message when a button is hovered.
+
+Note that the target element specified by `elementKey` must have the state you'd like to check defined in its style object so that Radium knows to add the handlers. It can be empty, e.g. `':hover': {}`.
+
+Parameters:
+
+- **state** - you'll usually pass `this.state`, but sometimes you may want to pass a previous state, like in `shouldComponentUpdate`, `componentWillUpdate`, and `componentDidUpdate`
+- **elementKey** - if you used multiple elements, pass the same `key=""` or `ref=""`. If you only have one element, you can leave it blank (`'main'` will be inferred)
+- **value** - one of the following: `:active`, `:focus`, and `:hover`
+- **returns** `true` or `false`
+
+Usage:
+
+```as
+    Radium.getState(this.state, 'button', ':hover')
+```
+
+## keyframes
+
+**Radium.keyframes(keyframes)**
+
+Create a keyframes animation for use in any inline style. `keyframes` is a helper that translates the keyframes object you pass in to CSS and injects the `@keyframes` (prefixed properly) definition into a style sheet. Automatically generates and returns a name for the keyframes, that you can then use in the value for `animation`. Radium will automatically apply vendor prefixing to keyframe styles.
+
+```as
+@Radium
+class Spinner extends React.Component {
+  render () {
+    return (
+      <div>
+        <div style={styles.inner} />
+      </div>
+    );
+  }
+}
+
+var pulseKeyframes = Radium.keyframes({
+  '0%': {width: '10%'},
+  '50%': {width: '50%'},
+  '100%': {width: '10%'},
+});
+
+var styles = {
+  inner: {
+    animation: pulseKeyframes + ' 3s ease 0s infinite',
+    background: 'blue',
+    height: '4px',
+    margin: '0 auto',
   }
 };
 ```

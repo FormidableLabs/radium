@@ -10,9 +10,7 @@
     "lib/get-state.js": true,
     "lib/keyframes.js": true,
     "lib/prefixer.js": true,
-    "lib/resolve-styles.js": true,
-    "lib/wrap-utils.js": true,
-    "lib/wrap.js": true
+    "lib/resolve-styles.js": true
   },
   "unmockedModulePathPatterns": [
     "array-find",

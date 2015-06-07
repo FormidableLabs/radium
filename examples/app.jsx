@@ -20,10 +20,14 @@ class HoverMessage extends React.Component {
     )
   }
 }
-HoverMessage = Radium.Enhancer(HoverMessage);
+HoverMessage = Radium(HoverMessage);
 
-var TwoSquares = React.createClass(Radium.wrap({
-  render: function () {
+//
+// Radium with ES7 decorator
+//
+@Radium
+class TwoSquares extends React.Component {
+  render () {
     return (
       <div>
         <div key="one" style={[squareStyles.both, squareStyles.one]} />
@@ -32,9 +36,9 @@ var TwoSquares = React.createClass(Radium.wrap({
       </div>
     )
   }
-}));
+}
 
-var Spinner = React.createClass(Radium.wrap({
+var Spinner = React.createClass({
   render: function () {
     return (
       <div>
@@ -42,9 +46,10 @@ var Spinner = React.createClass(Radium.wrap({
       </div>
     );
   }
-}));
+});
+Spinner = Radium(Spinner);
 
-var App = React.createClass(Radium.wrap({
+var App = React.createClass({
 
   _remount: function() {
     this.setState({shouldRenderNull: true});
@@ -139,7 +144,8 @@ var App = React.createClass(Radium.wrap({
       </div>
     );
   }
-}));
+});
+App = Radium(App);
 
 var squareStyles = {
   both: {

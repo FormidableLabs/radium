@@ -4,7 +4,6 @@
 'use strict';
 
 jest.dontMock('../enhancer.js');
-jest.dontMock('../wrap-utils.js');
 
 var resolveStyles = require('../resolve-styles.js');
 var Enhancer = require('../enhancer.js');

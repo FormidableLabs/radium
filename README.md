@@ -48,7 +48,7 @@ Convinced about CSS in JS with React, but not Radium? Check out our comprehensiv
 
 ## Usage
 
-Start by adding `Radium.Enhancer()` around your component, like `module.exports = Radium.Enhancer(Component)`, or `Component = Radium.Enhancer(Component)`. Alternatively, if using `createClass`, add `Radium.wrap()` around the config you pass to `React.createClass`. Then, write a style object as you normally would with inline styles, and add in styles for interactive states and media queries. Pass the style object to your component via `style={...}` and let Radium do the rest!
+Start by adding the `@Radium` decorator to your component class. Alternatively, wrap `Radium()` around your component, like `module.exports = Radium(Component)`, or `Component = Radium(Component)`, which works with classes and `createClass`. Then, write a style object as you normally would with inline styles, and add in styles for interactive states and media queries. Pass the style object to your component via `style={...}` and let Radium do the rest!
 
 ```as
 <Button kind="primary">Radium Button</Button>
@@ -84,11 +84,11 @@ Button.propTypes = {
 };
 
 // Add Radium support to your ES6 class component
-module.exports = Radium.Enhancer(Button);
+module.exports = Radium(Button);
 
 
 // You can also use React.createClass
-var Button = React.createClass(Radium.wrap({
+var Button = React.createClass({
   propTypes: {
     kind: React.PropTypes.oneOf(['primary', 'warning']).isRequired
   },
@@ -105,7 +105,8 @@ var Button = React.createClass(Radium.wrap({
       </button>
     );
   }
-}));
+});
+Button = Radium(Button);
 
 // You can create your style objects dynamically or share them for
 // every instance of the component.

@@ -1,7 +1,7 @@
 var React = require('react');
 var Radium = require('../../modules/index');
 
-var ComputedWell = React.createClass(Radium.wrap({
+var ComputedWell = React.createClass({
   getInitialState: function () {
     return {
       dynamicBg: '#000'
@@ -33,6 +33,6 @@ var ComputedWell = React.createClass(Radium.wrap({
       </form>
     );
   }
-}));
+});
 
-module.exports = ComputedWell;
+module.exports = Radium(ComputedWell);
