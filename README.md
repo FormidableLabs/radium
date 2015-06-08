@@ -59,15 +59,18 @@ var Radium = require('radium');
 var React = require('react');
 var color = require('color');
 
-// Radium is the cleanest when using ES6 classes with React.
+@Radium
 class Button extends React.Component {
+  static propTypes = {
+    kind: React.PropTypes.oneOf(['primary', 'warning']).isRequired
+  };
+  
   render() {
     // Radium extends the style attribute to accept an array. It will merge
     // the styles in order. We use this feature here to apply the primary
     // or warning styles depending on the value of the `kind` prop. Since its
     // all just JavaScript, you can use whatever logic you want to decide which
-    // styles are applied (props, state, context, etc). Radium also adds vendor
-    // prefixes automatically where needed.
+    // styles are applied (props, state, context, etc).
     return (
       <button
         style={[
@@ -79,58 +82,18 @@ class Button extends React.Component {
     );
   }
 }
-Button.propTypes = {
-  kind: React.PropTypes.oneOf(['primary', 'warning']).isRequired
-};
-
-// Add Radium support to your ES6 class component
-module.exports = Radium(Button);
-
-
-// You can also use React.createClass
-var Button = React.createClass({
-  propTypes: {
-    kind: React.PropTypes.oneOf(['primary', 'warning']).isRequired
-  },
-
-  render: function () {
-    return (
-      <button
-        style={[
-          styles.base,
-          this.props.kind === 'primary' && styles.primary,
-          this.props.kind === 'warning' && styles.warning
-        ]}>
-        {this.props.children}
-      </button>
-    );
-  }
-});
-Button = Radium(Button);
 
 // You can create your style objects dynamically or share them for
 // every instance of the component.
 var styles = {
   base: {
-    padding: '1.5em 2em',
-    border: 0,
-    borderRadius: 4,
     color: '#fff',
-    cursor: 'pointer',
-    fontSize: 16,
-    fontWeight: 700,
 
     // Adding interactive state couldn't be easier! Add a special key to your
     // style object (:hover, :focus, :active, or @media) with the additional rules.
     ':hover': {
       background: color('#0074d9').lighten(0.2).hexString()
-    },
-
-    // If you specify more than one, later ones will override earlier ones.
-    ':focus': {
-      boxShadow: '0 0 0 3px #eee, 0 0 0 6px #0074D9',
-      outline: 'none'
-    },
+    }
   },
 
   primary: {
