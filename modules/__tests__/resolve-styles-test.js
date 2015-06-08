@@ -5,11 +5,13 @@
 
 jest.dontMock('../get-state.js');
 jest.dontMock('../resolve-styles.js');
+jest.dontMock('../config.js');
 
 var React = require('react');
 var MouseUpListener = require('../mouse-up-listener.js');
 var objectAssign = require('object-assign');
 var resolveStyles = require('../resolve-styles.js');
+var Config = require('../config.js');
 
 var genComponent = function () {
   return {
@@ -507,9 +509,10 @@ describe('resolveStyles', function () {
     it('listens for media queries', function () {
       var component = genComponent();
       var addListener = jest.genMockFunction();
-      window.matchMedia = jest.genMockFunction().mockImplementation(function () {
+      var matchMedia = jest.genMockFunction().mockImplementation(function () {
         return {addListener: addListener};
       });
+      Config.setMatchMedia(matchMedia);
 
       var renderedElement =
         <div style={{
@@ -517,16 +520,17 @@ describe('resolveStyles', function () {
         }} />;
 
       resolveStyles(component, renderedElement);
-      expect(window.matchMedia).lastCalledWith('(max-width: 400px)');
+      expect(matchMedia).lastCalledWith('(max-width: 400px)');
       expect(addListener).lastCalledWith(jasmine.any('function'));
     });
 
     it('only listens once for a single element', function () {
       var component = genComponent();
       var addListener = jest.genMockFunction();
-      window.matchMedia = jest.genMockFunction().mockImplementation(function () {
+      var matchMedia = jest.genMockFunction().mockImplementation(function () {
         return {addListener: addListener};
       });
+      Config.setMatchMedia(matchMedia);
 
       var renderedElement =
         <div style={{
@@ -536,7 +540,7 @@ describe('resolveStyles', function () {
       resolveStyles(component, renderedElement);
       resolveStyles(component, renderedElement);
 
-      expect(window.matchMedia.mock.calls.length).toBe(1);
+      expect(matchMedia.mock.calls.length).toBe(1);
       expect(addListener.mock.calls.length).toBe(1);
     });
 
@@ -544,9 +548,10 @@ describe('resolveStyles', function () {
       var component1 = genComponent();
       var component2 = genComponent();
       var addListener = jest.genMockFunction();
-      window.matchMedia = jest.genMockFunction().mockImplementation(function () {
+      var matchMedia = jest.genMockFunction().mockImplementation(function () {
         return {addListener: addListener};
       });
+      Config.setMatchMedia(matchMedia);
 
       var renderedElement =
         <div>
@@ -563,18 +568,19 @@ describe('resolveStyles', function () {
       resolveStyles(component1, renderedElement);
       resolveStyles(component2, renderedElement);
 
-      expect(window.matchMedia.mock.calls.length).toBe(1);
+      expect(matchMedia.mock.calls.length).toBe(1);
       expect(addListener.mock.calls.length).toBe(2);
     });
 
     it('applies styles when media query matches', function () {
       var component = genComponent();
-      window.matchMedia = jest.genMockFunction().mockImplementation(function () {
+      var matchMedia = jest.genMockFunction().mockImplementation(function () {
         return {
           addListener: jest.genMockFunction(),
           matches: true
         };
       });
+      Config.setMatchMedia(matchMedia);
 
       var renderedElement =
         <div style={{
@@ -588,12 +594,13 @@ describe('resolveStyles', function () {
 
     it('merges nested pseudo styles', function () {
       var component = genComponent();
-      window.matchMedia = jest.genMockFunction().mockImplementation(function () {
+      var matchMedia = jest.genMockFunction().mockImplementation(function () {
         return {
           addListener: jest.genMockFunction(),
           matches: true
         };
       });
+      Config.setMatchMedia(matchMedia);
 
       var renderedElement =
         <div style={[
@@ -639,9 +646,10 @@ describe('resolveStyles', function () {
         }
       );
       var mql = {addListener: addListener};
-      window.matchMedia = jest.genMockFunction().mockImplementation(function () {
+      var matchMedia = jest.genMockFunction().mockImplementation(function () {
         return mql;
       });
+      Config.setMatchMedia(matchMedia);
 
       var renderedElement =
         <div style={{
@@ -664,9 +672,10 @@ describe('resolveStyles', function () {
         addListener: jest.genMockFunction(),
         removeListener: jest.genMockFunction()
       };
-      window.matchMedia = jest.genMockFunction().mockImplementation(function () {
+      var matchMedia = jest.genMockFunction().mockImplementation(function () {
         return mql;
       });
+      Config.setMatchMedia(matchMedia);
 
       var renderedElement =
         <div style={{
