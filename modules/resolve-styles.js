@@ -5,6 +5,7 @@
 var MouseUpListener = require('./mouse-up-listener');
 var getState = require('./get-state');
 var Prefixer = require('./prefixer');
+var Config = require('./config');
 
 var ExecutionEnvironment = require('exenv');
 var React = require('react');
@@ -75,11 +76,7 @@ var _onMediaQueryChange = function (component, query, mediaQueryList) {
 };
 
 var _resolveMediaQueryStyles = function (component, style) {
-  if (
-    !ExecutionEnvironment.canUseDOM ||
-    !window ||
-    !window.matchMedia
-  ) {
+  if (!Config.canMatchMedia()) {
     return style;
   }
 
@@ -92,7 +89,7 @@ var _resolveMediaQueryStyles = function (component, style) {
     // Create a global MediaQueryList if one doesn't already exist
     var mql = mediaQueryListByQueryString[query];
     if (!mql) {
-      mediaQueryListByQueryString[query] = mql = window.matchMedia(query);
+      mediaQueryListByQueryString[query] = mql = Config.matchMedia(query);
     }
 
     // Keep track of which keys already have listeners
