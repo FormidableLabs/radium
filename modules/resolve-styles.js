@@ -137,6 +137,14 @@ var resolveStyles = function (
   // will not be here, so each component needs to use Radium.
   var newChildren = null;
   var oldChildren = renderedElement.props.children;
+  var resolveChild = function (child) {
+    // test if child is a valid ReactDOMElement and not ReactComponentElement
+    if (React.isValidElement(child) && typeof child.type === 'string') {
+      return resolveStyles(component, child, existingKeyMap);
+    }
+
+    return child;
+  };
   if (oldChildren) {
     var childrenType = typeof oldChildren;
     if (childrenType === 'string' || childrenType === 'number') {
@@ -146,13 +154,13 @@ var resolveStyles = function (
       // If a React Element is an only child, don't wrap it in an array for
       // React.Children.map() for React.Children.only() compatibility.
       var onlyChild = React.Children.only(oldChildren);
-      newChildren = resolveStyles(component, onlyChild, existingKeyMap);
+      newChildren = resolveChild(onlyChild);
     } else {
       newChildren = React.Children.map(
         oldChildren,
         function (child) {
           if (React.isValidElement(child)) {
-            return resolveStyles(component, child, existingKeyMap);
+            return resolveChild(child);
           }
 
           return child;

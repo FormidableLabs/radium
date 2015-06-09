@@ -761,4 +761,18 @@ describe('resolveStyles', function () {
     });
   });
 
+  describe('ReactComponentElement children', function () {
+    it('doesn\'t change ReactComponentElement children', function () {
+      var component = genComponent();
+      class CustomComponent extends React.Component {}
+      var style = {':hover': {}};
+      var renderedElement = <div>
+        <CustomComponent style={style}/>
+      </div>;
+
+      var result = resolveStyles(component, renderedElement);
+      var children = getChildrenArray(result.props.children);
+      expect(children[0].props.style).toBe(style);
+    });
+  });
 });
