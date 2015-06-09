@@ -84,6 +84,10 @@ var _resolveMediaQueryStyles = function (component, style) {
   .filter(function (name) { return name[0] === '@'; })
   .map(function (query) {
     var mediaQueryStyles = style[query];
+
+    if (Config.isMediaQueryAlias(query)) {
+      query = Config.getMediaQueryByAlias(query);
+    }
     query = query.replace('@media ', '');
 
     // Create a global MediaQueryList if one doesn't already exist
