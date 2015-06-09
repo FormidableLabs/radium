@@ -6,6 +6,7 @@
   - [Sample Style Object](#sample-style-object)
 - [getState](#getstate)
 - [keyframes](#keyframes)
+- [Config.setMatchMedia](#config-setmatchmedia)
 - [Style Component](#style-component)
 
 ## Radium
@@ -147,6 +148,30 @@ var styles = {
   }
 };
 ```
+
+## Config.setMatchMedia
+
+Allows you to replace the `matchMedia` function that Radium uses. The default is `window.matchMedia`, and the primary use case for replacing it is to use media queries on the server. You'll have to send the width and height of the page to the server somehow, and then use a [mock for match media](https://github.com/azazdeaz/match-media-mock) that implements the [`window.matchMedia` API](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia). Your server code could look like this:
+
+```as
+var Radium = require('radium');
+var matchMediaMock = require('match-media-mock').create();
+Radium.Config.setMatchMedia(matchMediaMock);
+
+app.get('/app/:width/:height', function(req, res) {
+  matchMediaMock.setConfig({
+    type: 'screen',
+    width: req.params.width,
+    height: req.params.height,
+  });
+
+  var html = React.renderToString(<RadiumApp/>);
+
+  res.end(html);
+});
+```
+
+See #146 for more info.
 
 ## Style Component
 
