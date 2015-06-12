@@ -161,6 +161,20 @@ var resolveStyles = function (
     }
   }
 
+  // Bail early if element is not a simple ReactDOMElement.
+  if (
+    !React.isValidElement(renderedElement) ||
+    typeof renderedElement.type !== 'string'
+  ) {
+    if (oldChildren === newChildren) {
+      return renderedElement;
+    }
+
+    return React.cloneElement(
+      renderedElement, renderedElement.props, newChildren
+    );
+  }
+
   var props = renderedElement.props;
   var style = props.style;
   var newProps = {};

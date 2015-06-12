@@ -761,4 +761,49 @@ describe('resolveStyles', function () {
     });
   });
 
+  describe('ReactComponentElement children', function () {
+    it('doesn\'t resolve ReactComponentElement children', function () {
+      var component = genComponent();
+      class CustomComponent extends React.Component {}
+      var style = {':hover': {}};
+      var renderedElement = (<div>
+        <CustomComponent style={style}/>
+      </div>);
+
+      var result = resolveStyles(component, renderedElement);
+      var children = getChildrenArray(result.props.children);
+      expect(children[0].props.style).toBe(style);
+    });
+
+    it('resolves ReactDOMElement children of ReactComponentElements', function () {
+      var component = genComponent();
+      class CustomComponent extends React.Component {}
+      var style = [
+        {background: 'white'},
+        {color: 'blue'}
+      ];
+      var renderedElement = (
+        <div style={style}>
+          <CustomComponent style={style}>
+            <div style={style} />
+          </CustomComponent>
+        </div>
+      );
+
+      var result = resolveStyles(component, renderedElement);
+      expect(result.props.style).toEqual({
+        background: 'white',
+        color: 'blue'
+      });
+
+      var children = getChildrenArray(result.props.children);
+      expect(children[0].props.style).toBe(style);
+
+      var componentChildren = getChildrenArray(children[0].props.children);
+      expect(componentChildren[0].props.style).toEqual({
+        background: 'white',
+        color: 'blue'
+      });
+    });
+  });
 });
