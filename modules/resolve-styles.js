@@ -137,14 +137,6 @@ var resolveStyles = function (
   // will not be here, so each component needs to use Radium.
   var newChildren = null;
   var oldChildren = renderedElement.props.children;
-  var resolveChild = function (child) {
-    // test if child is a valid ReactDOMElement and not ReactComponentElement
-    if (React.isValidElement(child) && typeof child.type === 'string') {
-      return resolveStyles(component, child, existingKeyMap);
-    }
-
-    return child;
-  };
   if (oldChildren) {
     var childrenType = typeof oldChildren;
     if (childrenType === 'string' || childrenType === 'number') {
@@ -154,19 +146,33 @@ var resolveStyles = function (
       // If a React Element is an only child, don't wrap it in an array for
       // React.Children.map() for React.Children.only() compatibility.
       var onlyChild = React.Children.only(oldChildren);
-      newChildren = resolveChild(onlyChild);
+      newChildren = resolveStyles(component, onlyChild, existingKeyMap);
     } else {
       newChildren = React.Children.map(
         oldChildren,
         function (child) {
           if (React.isValidElement(child)) {
-            return resolveChild(child);
+            return resolveStyles(component, child, existingKeyMap);
           }
 
           return child;
         }
       );
     }
+  }
+
+  // Bail early if element is not a simple ReactDOMElement.
+  if (
+    !React.isValidElement(renderedElement) ||
+    typeof renderedElement.type !== 'string'
+  ) {
+    if (oldChildren === newChildren) {
+      return renderedElement;
+    }
+
+    return React.cloneElement(
+      renderedElement, renderedElement.props, newChildren
+    );
   }
 
   var props = renderedElement.props;
