@@ -208,7 +208,13 @@ var getPrefixedStyle = function (style, mode /* 'css' or 'js' */) {
   mode = mode || 'js';
 
   if (!ExecutionEnvironment.canUseDOM) {
-    return style;
+    return Object.keys(style).reduce((newStyle, key) => {
+      var value = style[key];
+      var newKey = mode === 'css' ? _camelCaseToDashCase(key) : key;
+      var newValue = Array.isArray(value) ? value[0] : value;
+      newStyle[newKey] = newValue;
+      return newStyle;
+    }, {});
   }
 
   var newStyle = {};

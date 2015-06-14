@@ -62,7 +62,7 @@ describe('Prefixer', () => {
     expect(Prefixer.jsPrefix).toBe('Webkit');
   });
 
-  it('doesn\'t detect prefix if not in browser', () => {
+  it('doesn\'t detect prefix if in server', () => {
     jest.setMock('exenv', {
       canUseDOM: false,
       canUseEventListeners: false
@@ -218,6 +218,30 @@ describe('Prefixer', () => {
     expect(Prefixer.getPrefixedStyle({borderWidth: '1px'}, 'css')).toEqual(
       {'border-width': '1px'}
     );
+  });
+
+  it('uses dash-case if mode is css and in server', () => {
+    jest.setMock('exenv', {
+      canUseDOM: false,
+      canUseEventListeners: false
+    });
+
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.getPrefixedStyle({borderWidth: '1px'}, 'css')).toEqual(
+      {'border-width': '1px'}
+    );
+  });
+
+  it('uses first value in fallback array if in server', () => {
+    jest.setMock('exenv', {
+      canUseDOM: false,
+      canUseEventListeners: false
+    });
+
+    var Prefixer = require('../prefixer.js');
+    expect(
+      Prefixer.getPrefixedStyle({color: ['rgba(255, 255, 255, .5)', '#fff']})
+    ).toEqual({color: 'rgba(255, 255, 255, .5)'});
   });
 
   it('uses dash-prefix if mode is css', () => {
