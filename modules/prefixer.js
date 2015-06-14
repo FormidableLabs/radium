@@ -215,7 +215,7 @@ var getPrefixedStyle = function (style, mode /* 'css' or 'js' */) {
     }, {});
   }
 
-  var newStyle = {};
+  var prefixedStyle = {};
   Object.keys(style).forEach(function (property) {
     var value = style[property];
 
@@ -232,9 +232,9 @@ var getPrefixedStyle = function (style, mode /* 'css' or 'js' */) {
 
     var newValue = _getPrefixedValue(newProperty.js, value, property);
 
-    newStyle[newProperty[mode]] = newValue;
+    prefixedStyle[newProperty[mode]] = newValue;
   });
-  return newStyle;
+  return prefixedStyle;
 };
 
 
