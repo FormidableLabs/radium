@@ -1,8 +1,6 @@
 /* eslint-env jasmine */
 /* global jest */
 
-'use strict';
-
 jest.dontMock('../create-markup-for-styles.js');
 jest.dontMock('../keyframes.js');
 

@@ -1,8 +1,6 @@
 /* eslint-env jasmine */
 /* global jest */
 
-'use strict';
-
 jest.dontMock('../prefixer.js');
 
 var originalDocumentCreateElement = document.createElement;

@@ -1,7 +1,5 @@
 /* @flow */
 
-'use strict';
-
 var MouseUpListener = require('./mouse-up-listener');
 var getState = require('./get-state');
 var Prefixer = require('./prefixer');

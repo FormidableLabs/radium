@@ -1,7 +1,5 @@
 /* @flow */
 
-'use strict';
-
 var VALID_KEYS = [':active', ':focus', ':hover'];
 
 var getState = function (

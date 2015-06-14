@@ -1,5 +1,3 @@
-'use strict';
-
 var Enhancer = require('./enhancer');
 
 module.exports = (ComposedComponent: constructor) => Enhancer(ComposedComponent);

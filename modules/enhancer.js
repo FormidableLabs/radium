@@ -1,7 +1,5 @@
 /* @flow */
 
-'use strict';
-
 var resolveStyles = require('./resolve-styles.js');
 
 var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
