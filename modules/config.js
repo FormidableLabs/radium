@@ -1,7 +1,5 @@
 /* @flow */
 
-'use strict';
-
 var ExecutionEnvironment = require('exenv');
 
 var _matchMediaFunction = ExecutionEnvironment.canUseDOM &&

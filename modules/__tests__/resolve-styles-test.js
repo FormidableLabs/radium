@@ -1,8 +1,6 @@
 /* eslint-env jasmine */
 /* global jest */
 
-'use strict';
-
 jest.dontMock('../get-state.js');
 jest.dontMock('../resolve-styles.js');
 jest.dontMock('../config.js');
@@ -84,10 +82,11 @@ describe('resolveStyles', function () {
     it('passes through normal style objects of children', function () {
       var component = genComponent();
       var style = {color: 'blue'};
-      var renderedElement =
+      var renderedElement = (
         <div>
           <div style={style} />
-        </div>;
+        </div>
+      );
 
       var result = resolveStyles(component, renderedElement);
       var children = getChildrenArray(result.props.children);
@@ -130,11 +129,12 @@ describe('resolveStyles', function () {
 
     it('merges an array of style objects', function () {
       var component = genComponent();
-      var renderedElement =
+      var renderedElement = (
         <div style={[
           {background: 'white'},
           {color: 'blue'}
-        ]} />;
+        ]} />
+      );
 
       var result = resolveStyles(component, renderedElement);
 
@@ -146,7 +146,7 @@ describe('resolveStyles', function () {
 
     it('skips falsy and non-object entries', function () {
       var component = genComponent();
-      var renderedElement =
+      var renderedElement = (
         <div style={[
           {background: 'white'},
           false,
@@ -155,7 +155,8 @@ describe('resolveStyles', function () {
           '',
           [1, 2, 3],
           {color: 'blue'}
-        ]} />;
+        ]} />
+      );
 
       var result = resolveStyles(component, renderedElement);
 
@@ -167,11 +168,12 @@ describe('resolveStyles', function () {
 
     it('overwrites earlier styles with later ones', function () {
       var component = genComponent();
-      var renderedElement =
+      var renderedElement = (
         <div style={[
           {background: 'white'},
           {background: 'blue'}
-        ]} />;
+        ]} />
+      );
 
       var result = resolveStyles(component, renderedElement);
 
@@ -182,11 +184,12 @@ describe('resolveStyles', function () {
 
     it('merges nested special styles', function () {
       var component = genComponent();
-      var renderedElement =
+      var renderedElement = (
         <div style={[
           {':hover': { background: 'white'}},
           {':hover': {color: 'blue'}}
-        ]} />;
+        ]} />
+      );
 
       var result = resolveStyles(component, renderedElement);
       result.props.onMouseEnter();
@@ -253,11 +256,12 @@ describe('resolveStyles', function () {
 
       // Use ref instead of key here because React.Children.map will discard
       // the duplicate keyed element.
-      var renderedElement =
+      var renderedElement = (
         <div>
           <div ref="foo" style={style} />
           <div ref="foo" style={style} />
-        </div>;
+        </div>
+      );
 
       expect(function () {
         resolveStyles(component, renderedElement);
@@ -269,11 +273,12 @@ describe('resolveStyles', function () {
       var style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
 
-        var renderedElement =
-          <div>
-            <div style={style} />
-            <div style={style} />
-          </div>;
+      var renderedElement = (
+        <div>
+          <div style={style} />
+          <div style={style} />
+        </div>
+      );
 
       expect(function () {
         resolveStyles(component, renderedElement);
@@ -285,11 +290,12 @@ describe('resolveStyles', function () {
       var style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
 
-        var renderedElement =
-          <div>
-            <div key="foo" />
-            <div key="bar" style={style} />
-          </div>;
+      var renderedElement = (
+        <div>
+          <div key="foo" />
+          <div key="bar" style={style} />
+        </div>
+      );
 
       var result = resolveStyles(component, renderedElement);
       var children = getChildrenArray(result.props.children);
@@ -309,11 +315,12 @@ describe('resolveStyles', function () {
       var style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
 
-        var renderedElement =
-          <div>
-            <div ref="foo" />
-            <div ref="bar" style={style} />
-          </div>;
+      var renderedElement = (
+        <div>
+          <div ref="foo" />
+          <div ref="bar" style={style} />
+        </div>
+      );
 
       var result = resolveStyles(component, renderedElement);
       var children = getChildrenArray(result.props.children);
@@ -484,11 +491,12 @@ describe('resolveStyles', function () {
         ':active': {background: 'red'}
       };
       var originalOnMouseDown = jest.genMockFunction();
-      var renderedElement =
+      var renderedElement = (
         <div
           onMouseDown={originalOnMouseDown}
           style={style}
-        />;
+        />
+      );
 
       var result = resolveStyles(component, renderedElement);
 
@@ -514,10 +522,11 @@ describe('resolveStyles', function () {
       });
       Config.setMatchMedia(matchMedia);
 
-      var renderedElement =
+      var renderedElement = (
         <div style={{
           '@media (max-width: 400px)': {background: 'red'}
-        }} />;
+        }} />
+      );
 
       resolveStyles(component, renderedElement);
       expect(matchMedia).lastCalledWith('(max-width: 400px)');
@@ -532,10 +541,11 @@ describe('resolveStyles', function () {
       });
       Config.setMatchMedia(matchMedia);
 
-      var renderedElement =
+      var renderedElement = (
         <div style={{
           '@media (max-width: 400px)': {background: 'red'}
-        }} />;
+        }} />
+      );
 
       resolveStyles(component, renderedElement);
       resolveStyles(component, renderedElement);
@@ -553,7 +563,7 @@ describe('resolveStyles', function () {
       });
       Config.setMatchMedia(matchMedia);
 
-      var renderedElement =
+      var renderedElement = (
         <div>
           <div
             key="first"
@@ -563,7 +573,8 @@ describe('resolveStyles', function () {
             key="second"
             style={{'@media (max-width: 400px)': {background: 'red'}}}
           />
-        </div>;
+        </div>
+      );
 
       resolveStyles(component1, renderedElement);
       resolveStyles(component2, renderedElement);
@@ -582,11 +593,12 @@ describe('resolveStyles', function () {
       });
       Config.setMatchMedia(matchMedia);
 
-      var renderedElement =
+      var renderedElement = (
         <div style={{
           background: 'blue',
           '@media (max-width: 400px)': {background: 'red'}
-        }} />;
+        }} />
+      );
 
       var result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).toEqual('red');
@@ -602,7 +614,7 @@ describe('resolveStyles', function () {
       });
       Config.setMatchMedia(matchMedia);
 
-      var renderedElement =
+      var renderedElement = (
         <div style={[
           {
             background: 'blue',
@@ -624,7 +636,8 @@ describe('resolveStyles', function () {
               }
             }
           }
-        ]} />;
+        ]} />
+      );
 
       var result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).toEqual('red');
@@ -651,11 +664,12 @@ describe('resolveStyles', function () {
       });
       Config.setMatchMedia(matchMedia);
 
-      var renderedElement =
+      var renderedElement = (
         <div style={{
           background: 'blue',
           '@media (max-width: 400px)': {background: 'red'}
-        }} />;
+        }} />
+      );
 
       resolveStyles(component1, renderedElement);
       resolveStyles(component2, renderedElement);
@@ -677,11 +691,12 @@ describe('resolveStyles', function () {
       });
       Config.setMatchMedia(matchMedia);
 
-      var renderedElement =
+      var renderedElement = (
         <div style={{
           background: 'blue',
           '@media (max-width: 400px)': {background: 'red'}
-        }} />;
+        }} />
+      );
 
       resolveStyles(component, renderedElement);
 
@@ -766,9 +781,11 @@ describe('resolveStyles', function () {
       var component = genComponent();
       class CustomComponent extends React.Component {}
       var style = {':hover': {}};
-      var renderedElement = (<div>
-        <CustomComponent style={style}/>
-      </div>);
+      var renderedElement = (
+        <div>
+          <CustomComponent style={style}/>
+        </div>
+      );
 
       var result = resolveStyles(component, renderedElement);
       var children = getChildrenArray(result.props.children);

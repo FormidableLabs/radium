@@ -3,8 +3,6 @@
  * convert between different cases all the time.
  */
 
-'use strict';
-
 var ExecutionEnvironment = require('exenv');
 var arrayFind = require('array-find');
 

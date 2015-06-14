@@ -1,7 +1,5 @@
 /* @flow */
 
-'use strict';
-
 var _callbacks = [];
 var _mouseUpListenerIsActive = false;
 

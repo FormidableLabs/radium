@@ -1,5 +1,3 @@
-'use strict';
-
 var createMarkupForStyles = require('../create-markup-for-styles');
 var Prefixer = require('../prefixer');
 
@@ -18,8 +16,8 @@ var buildCssString = function (selector, rules) {
 
 var Style = React.createClass({
   propTypes: {
-    scopeSelector: React.PropTypes.string,
-    rules: React.PropTypes.object
+    rules: React.PropTypes.object,
+    scopeSelector: React.PropTypes.string
   },
 
   getDefaultProps: function () {

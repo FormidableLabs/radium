@@ -1,7 +1,5 @@
 /* @flow */
 
-'use strict';
-
 var createMarkupForStyles = function (style: Object, spaces: string): string {
   spaces = spaces || '';
   return Object.keys(style).map(function (property) {

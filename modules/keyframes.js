@@ -1,7 +1,5 @@
 /* @flow */
 
-'use strict';
-
 var createMarkupForStyles = require('./create-markup-for-styles');
 var Prefixer = require('./prefixer');
 

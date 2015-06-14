@@ -1,8 +1,6 @@
 /* eslint-env jasmine */
 /* global jest */
 
-'use strict';
-
 jest.dontMock('../get-state.js');
 
 var getState = require('../get-state.js');

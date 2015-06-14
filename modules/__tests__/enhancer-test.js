@@ -1,8 +1,6 @@
 /* eslint-env jasmine */
 /* global jest */
 
-'use strict';
-
 jest.dontMock('../enhancer.js');
 
 var resolveStyles = require('../resolve-styles.js');
