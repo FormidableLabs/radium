@@ -45,6 +45,7 @@ Convinced about CSS in JS with React, but not Radium? Check out our comprehensiv
 
 - [Overview](docs/guides)
 - [API Docs](docs/api)
+- [Frequently Asked Questions (FAQ)](docs/faq)
 
 ## Usage
 
@@ -64,7 +65,7 @@ class Button extends React.Component {
   static propTypes = {
     kind: React.PropTypes.oneOf(['primary', 'warning']).isRequired
   };
-  
+
   render() {
     // Radium extends the style attribute to accept an array. It will merge
     // the styles in order. We use this feature here to apply the primary
