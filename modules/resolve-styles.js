@@ -183,6 +183,46 @@ var resolveStyles = function (
     style = _mergeStyles(style);
   }
 
+  if (process.env.NODE_ENV !== 'production') {
+    // Warn if you use longhand and shorthand properties in the same style
+    // object.
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/Shorthand_properties
+
+    var shorthandProps = [
+      'background', 'border', 'borderBottom', 'borderColor', 'borderLeft',
+      'borderRadius', 'borderRight', 'borderStyle', 'borderTop', 'borderWidth',
+      'font', 'listStyle', 'margin', 'padding', 'transform', 'transition'
+    ];
+
+    var checkProps = s => {
+      if (typeof s !== 'object') {
+        return;
+      }
+
+      var keys = Object.keys(s);
+      shorthandProps.forEach(shorthand => {
+        if (
+          s[shorthand] &&
+          keys.some(k => k !== shorthand && k.indexOf(shorthand) === 0)
+        ) {
+          /* eslint-disable no-console */
+          console.warning(
+            'Radium: property "' + shorthand + '" in style object',
+            style,
+            ': do not mix longhand and ' +
+            'shorthand properties in the same style object. See ' +
+            'https://github.com/FormidableLabs/radium/issues/95 for more ' +
+            'information.'
+          );
+          /* eslint-enable no-console */
+        }
+      });
+
+      keys.forEach(k => checkProps(s[k]));
+    };
+    checkProps(style);
+  }
+
   // Bail early if no interactive styles.
   if (
     !style ||

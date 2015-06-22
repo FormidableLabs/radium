@@ -823,4 +823,52 @@ describe('resolveStyles', function () {
       });
     });
   });
+
+  /* eslint-disable no-console */
+  describe('warnings', function () {
+    beforeEach(function () {
+      this.originalConsoleWarning = console.warning;
+      console.warning = jest.genMockFunction();
+    });
+
+    afterEach(function () {
+      console.warning = this.originalConsoleWarning;
+      process.env.NODE_ENV = null;
+    });
+
+    it('warns when mixing longhand and shorthand properties', function () {
+      var component = genComponent();
+      var renderedElement = (
+        <div style={{
+          border: '1px solid black',
+          borderWidth: '0 1px 1px 1px'
+        }} />
+      );
+
+      resolveStyles(component, renderedElement);
+
+      expect(console.warning).toBeCalled();
+      expect(console.warning.mock.calls[0][0].indexOf('border'))
+        .toBeGreaterThan(0);
+    });
+
+    it('warns when mixing longhand and shorthand properties in nested styles', function () {
+      var component = genComponent();
+      var renderedElement = (
+        <div style={{
+          ':hover': {
+            border: '1px solid black',
+            borderWidth: '0 1px 1px 1px'
+          }
+        }} />
+      );
+
+      resolveStyles(component, renderedElement);
+
+      expect(console.warning).toBeCalled();
+      expect(console.warning.mock.calls[0][0].indexOf('border'))
+        .toBeGreaterThan(0);
+    });
+  });
+  /* eslint-enable no-console */
 });
