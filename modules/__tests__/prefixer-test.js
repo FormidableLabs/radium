@@ -208,6 +208,47 @@ describe('Prefixer', () => {
     ).toEqual({color: '#fff'});
   });
 
+  it('uses first fallback value if none work even if it is numeric', () => {
+    mockStyle = {height: 'auto'};
+    var Prefixer = require('../prefixer.js');
+    expect(
+      Prefixer.getPrefixedStyle({height: [400, 'calc(100vh - 100px)']})
+    ).toEqual({height: '400px'});
+    expect(
+      Prefixer.getPrefixedStyle({height: ['500px', 'calc(100vh - 100px)']})
+    ).toEqual({height: '500px'});
+  });
+
+  it('adds px to properties requiring units', () => {
+    mockStyle = {height: 'auto'};
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.getPrefixedStyle({height: 400})).toEqual({height: '400px'});
+  });
+
+  it('doesn\'t add px to properties requiring units if value is 0', () => {
+    mockStyle = {height: 'auto'};
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.getPrefixedStyle({height: 0})).toEqual({height: 0});
+  });
+
+  it('doesn\'t add px to properties not requiring units', () => {
+    mockStyle = {zoom: '0'};
+    var Prefixer = require('../prefixer.js');
+    expect(Prefixer.getPrefixedStyle({zoom: 4})).toEqual({zoom: 4});
+  });
+
+  it('converts non-strings to strings', () => {
+    mockStyle = {color: 'inherit'};
+    var Prefixer = require('../prefixer.js');
+    var colorHelper = {
+      toString () {
+        return 'white';
+      }
+    };
+    expect(Prefixer.getPrefixedStyle({color: colorHelper}))
+      .toEqual({color: 'white'});
+  });
+
   it('uses dash-case if mode is css', () => {
     mockStyle = {
       borderWidth: '1px'
