@@ -6,7 +6,7 @@
   - [Sample Style Object](#sample-style-object)
 - [getState](#getstate)
 - [keyframes](#keyframes)
-- [Config.setMatchMedia](#config-setmatchmedia)
+- [Config.setMatchMedia](#configsetmatchmedia)
 - [Style Component](#style-component)
 
 ## Radium
