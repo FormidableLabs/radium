@@ -53,6 +53,40 @@ var infoByCssPrefix = {
   }
 };
 
+/**
+ * CSS properties which accept numbers but are not in units of "px".
+ * Copied from React core June 22, 2015.
+ * https://github.com/facebook/react/blob/
+ * ba81b60ad8e93b747be42a03b797065932c49c96/
+ * src/renderers/dom/shared/CSSProperty.js
+ */
+var isUnitlessNumber = {
+  boxFlex: true,
+  boxFlexGroup: true,
+  columnCount: true,
+  flex: true,
+  flexGrow: true,
+  flexPositive: true,
+  flexShrink: true,
+  flexNegative: true,
+  fontWeight: true,
+  lineClamp: true,
+  lineHeight: true,
+  opacity: true,
+  order: true,
+  orphans: true,
+  tabSize: true,
+  widows: true,
+  zIndex: true,
+  zoom: true,
+
+  // SVG-related properties
+  fillOpacity: true,
+  strokeDashoffset: true,
+  strokeOpacity: true,
+  strokeWidth: true
+};
+
 var domStyle = {};
 var prefixedPropertyCache = {};
 var prefixedValueCache = {};
@@ -127,13 +161,36 @@ var getPrefixedPropertyName = function (property) {
   return prefixedPropertyCache[property] = workingProperty;
 };
 
-var _getPrefixedValue = function (property, value, originalProperty) {
-  // don't test numbers or numbers with units (e.g. 10em)
+// React is planning to deprecate adding px automatically
+// (https://github.com/facebook/react/issues/1873), and if they do, this
+// should change to a warning or be removed in favor of React's warning.
+// Same goes for below.
+var _addPixelSuffixToValueIfNeeded = function (originalProperty, value) {
   if (
-    !(Array.isArray(value) || typeof value === 'string') ||
-    !isNaN(parseInt(value, 10))
+    value !== 0 &&
+    !isNaN(value) &&
+    !isUnitlessNumber[originalProperty]
   ) {
-    return value;
+    return value + 'px';
+  }
+  return value;
+};
+
+var _getPrefixedValue = function (property, value, originalProperty) {
+  if (!Array.isArray(value)) {
+    // don't test numbers (pure or stringy), but do add 'px' prefix if needed
+    if (!isNaN(value)) {
+      return _addPixelSuffixToValueIfNeeded(originalProperty, value);
+    }
+
+    if (typeof value !== 'string') {
+      value = value.toString();
+    }
+
+    // don't test numbers with units (e.g. 10em)
+    if (!isNaN(parseInt(value, 10))) {
+      return value;
+    }
   }
 
   var cacheKey = Array.isArray(value) ? (
@@ -146,14 +203,28 @@ var _getPrefixedValue = function (property, value, originalProperty) {
     return prefixedValueCache[cacheKey];
   }
 
-  var possibleValues = Array.isArray(value) ? (
-    value.concat(value.map(v => prefixInfo.cssPrefix + v))
-  ) : [
-    // Unprefixed
-    value,
-    // Prefixed
-    prefixInfo.cssPrefix + value
-  ];
+  var possibleValues;
+  if (Array.isArray(value)) {
+    // Add px for the same values React would, otherwise the testing below will
+    // fail and it will try to fallback.
+    possibleValues = value.map(v =>
+      _addPixelSuffixToValueIfNeeded(originalProperty, v)
+    );
+
+    // Add prefixed versions
+    possibleValues = possibleValues.concat(
+      value
+        .filter(v => !isNaN(v)) // Don't prefix numbers
+        .map(v => prefixInfo.cssPrefix + v)
+    );
+  } else {
+    possibleValues = [
+      // Unprefixed
+      value,
+      // Prefixed
+      prefixInfo.cssPrefix + value
+    ];
+  }
 
   // Alternative values
   if (
