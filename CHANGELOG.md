@@ -1,8 +1,26 @@
 # Radium Changelog
 
+## 0.13.1 (June 24, 2015)
+
+### New Features
+
+- [Radium.Config.setMatchMedia](https://github.com/FormidableLabs/radium/tree/master/docs/api#configsetmatchmedia) for server rendering
+
+### Bug Fixes
+
+- Don't resolve `style` prop of custom components, e.g. `<MyComponent style={...} />`, #202 (thanks @azazdeaz)
+- Fix not using dash-case on server with Style, #207
+- Fix server rendering when using fallback array of values (uses first one)
+- Fix numeric fallbacks, #221
+
+### Misc
+
+- Update dependencies
+- Warn when mixing longhand and shorthand
+
 ## 0.13.0 (June 7, 2015)
 
-### Breaking changes
+### Breaking Changes
 
 - `Radium.wrap` and `Radium.Enhancer` have been merged and moved to `Radium()`. Just wrap your component, `Button = Radium(Button);`, or use the decorator `@Radium`
 - `Style` component `rules` prop now takes an object instead of an array
@@ -19,6 +37,10 @@
 - `string` and `number` children are no longer wrapped in an extraneous `<span>`
 
 ## 0.12.2 (May 22, 2015)
+
+### Breaking Changes
+
+None
 
 ### New Features
 

@@ -7,7 +7,7 @@
 		exports["Radium"] = factory(require("react"));
 	else
 		root["Radium"] = factory(root["React"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_8__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_10__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -61,9 +61,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = function (ComposedComponent) {
 	  return Enhancer(ComposedComponent);
 	};
-	module.exports.Style = __webpack_require__(10);
+	module.exports.Style = __webpack_require__(12);
 	module.exports.getState = __webpack_require__(5);
-	module.exports.keyframes = __webpack_require__(12);
+	module.exports.keyframes = __webpack_require__(14);
+	module.exports.Config = __webpack_require__(9);
 
 /***/ },
 /* 1 */
@@ -137,17 +138,18 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* @flow */
+	/* WEBPACK VAR INJECTION */(function(process) {/* @flow */
 
 	'use strict';
 
 	var MouseUpListener = __webpack_require__(4);
 	var getState = __webpack_require__(5);
 	var Prefixer = __webpack_require__(6);
+	var Config = __webpack_require__(9);
 
-	var ExecutionEnvironment = __webpack_require__(3);
-	var React = __webpack_require__(8);
-	var objectAssign = __webpack_require__(9);
+	var ExecutionEnvironment = __webpack_require__(7);
+	var React = __webpack_require__(10);
+	var objectAssign = __webpack_require__(11);
 
 	// babel-eslint 3.1.7 fails here for some reason, error:
 	//   0:0  error  Cannot call method 'isSequenceExpression' of undefined
@@ -214,7 +216,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var _resolveMediaQueryStyles = function _resolveMediaQueryStyles(component, style) {
-	  if (!ExecutionEnvironment.canUseDOM || !window || !window.matchMedia) {
+	  if (!Config.canMatchMedia()) {
 	    return style;
 	  }
 
@@ -227,7 +229,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Create a global MediaQueryList if one doesn't already exist
 	    var mql = mediaQueryListByQueryString[query];
 	    if (!mql) {
-	      mediaQueryListByQueryString[query] = mql = window.matchMedia(query);
+	      mediaQueryListByQueryString[query] = mql = Config.matchMedia(query);
 	    }
 
 	    // Keep track of which keys already have listeners
@@ -297,6 +299,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }
 
+	  // Bail early if element is not a simple ReactDOMElement.
+	  if (!React.isValidElement(renderedElement) || typeof renderedElement.type !== 'string') {
+	    if (oldChildren === newChildren) {
+	      return renderedElement;
+	    }
+
+	    return React.cloneElement(renderedElement, renderedElement.props, newChildren);
+	  }
+
 	  var props = renderedElement.props;
 	  var style = props.style;
 	  var newProps = {};
@@ -305,6 +316,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // Ignores non-objects, so you can do `this.state.isCool && styles.cool`.
 	  if (Array.isArray(style)) {
 	    style = _mergeStyles(style);
+	  }
+
+	  if (process.env.NODE_ENV !== 'production') {
+	    // Warn if you use longhand and shorthand properties in the same style
+	    // object.
+	    // https://developer.mozilla.org/en-US/docs/Web/CSS/Shorthand_properties
+
+	    var shorthandProps = ['background', 'border', 'borderBottom', 'borderColor', 'borderLeft', 'borderRadius', 'borderRight', 'borderStyle', 'borderTop', 'borderWidth', 'font', 'listStyle', 'margin', 'padding', 'transform', 'transition'];
+
+	    var checkProps = function checkProps(s) {
+	      if (typeof s !== 'object') {
+	        return;
+	      }
+
+	      var keys = Object.keys(s);
+	      shorthandProps.forEach(function (shorthand) {
+	        if (s[shorthand] && keys.some(function (k) {
+	          return k !== shorthand && k.indexOf(shorthand) === 0;
+	        })) {
+	          /* eslint-disable no-console */
+	          console.warning('Radium: property "' + shorthand + '" in style object', style, ': do not mix longhand and ' + 'shorthand properties in the same style object. See ' + 'https://github.com/FormidableLabs/radium/issues/95 for more ' + 'information.');
+	          /* eslint-enable no-console */
+	        }
+	      });
+
+	      keys.forEach(function (k) {
+	        return checkProps(s[k]);
+	      });
+	    };
+	    checkProps(style);
 	  }
 
 	  // Bail early if no interactive styles.
@@ -410,50 +451,112 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = resolveStyles;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	  Copyright (c) 2015 Jed Watson.
-	  Based on code that is Copyright 2013-2015, Facebook, Inc.
-	  All rights reserved.
-	*/
+	// shim for using process in browser
 
 	'use strict';
 
-	(function () {
-		'use strict';
+	var process = module.exports = {};
+	var queue = [];
+	var draining = false;
+	var currentQueue;
+	var queueIndex = -1;
 
-		var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+	function cleanUpNextTick() {
+	    draining = false;
+	    if (currentQueue.length) {
+	        queue = currentQueue.concat(queue);
+	    } else {
+	        queueIndex = -1;
+	    }
+	    if (queue.length) {
+	        drainQueue();
+	    }
+	}
 
-		var ExecutionEnvironment = {
+	function drainQueue() {
+	    if (draining) {
+	        return;
+	    }
+	    var timeout = setTimeout(cleanUpNextTick);
+	    draining = true;
 
-			canUseDOM: canUseDOM,
+	    var len = queue.length;
+	    while (len) {
+	        currentQueue = queue;
+	        queue = [];
+	        while (++queueIndex < len) {
+	            currentQueue[queueIndex].run();
+	        }
+	        queueIndex = -1;
+	        len = queue.length;
+	    }
+	    currentQueue = null;
+	    draining = false;
+	    clearTimeout(timeout);
+	}
 
-			canUseWorkers: typeof Worker !== 'undefined',
+	process.nextTick = function (fun) {
+	    var args = new Array(arguments.length - 1);
+	    if (arguments.length > 1) {
+	        for (var i = 1; i < arguments.length; i++) {
+	            args[i - 1] = arguments[i];
+	        }
+	    }
+	    queue.push(new Item(fun, args));
+	    if (queue.length === 1 && !draining) {
+	        setTimeout(drainQueue, 0);
+	    }
+	};
 
-			canUseEventListeners: canUseDOM && !!(window.addEventListener || window.attachEvent),
+	// v8 likes predictible objects
+	function Item(fun, array) {
+	    this.fun = fun;
+	    this.array = array;
+	}
+	Item.prototype.run = function () {
+	    this.fun.apply(null, this.array);
+	};
+	process.title = 'browser';
+	process.browser = true;
+	process.env = {};
+	process.argv = [];
+	process.version = ''; // empty string to avoid regexp issues
+	process.versions = {};
 
-			canUseViewport: canUseDOM && !!window.screen
+	function noop() {}
 
-		};
+	process.on = noop;
+	process.addListener = noop;
+	process.once = noop;
+	process.off = noop;
+	process.removeListener = noop;
+	process.removeAllListeners = noop;
+	process.emit = noop;
 
-		if (true) {
-			!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
-				return ExecutionEnvironment;
-			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		} else if (typeof module !== 'undefined' && module.exports) {
-			module.exports = ExecutionEnvironment;
-		} else {
-			window.ExecutionEnvironment = ExecutionEnvironment;
-		}
-	})();
+	process.binding = function (name) {
+	    throw new Error('process.binding is not supported');
+	};
+
+	// TODO(shtylman)
+	process.cwd = function () {
+	    return '/';
+	};
+	process.chdir = function (dir) {
+	    throw new Error('process.chdir is not supported');
+	};
+	process.umask = function () {
+	    return 0;
+	};
 
 /***/ },
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	/* @flow */
 
@@ -497,7 +600,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	/* @flow */
 
@@ -528,8 +631,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var ExecutionEnvironment = __webpack_require__(3);
-	var arrayFind = __webpack_require__(7);
+	var ExecutionEnvironment = __webpack_require__(7);
+	var arrayFind = __webpack_require__(8);
 
 	var infoByCssPrefix = {
 	  '-moz-': {
@@ -576,6 +679,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	  }
+	};
+
+	/**
+	 * CSS properties which accept numbers but are not in units of "px".
+	 * Copied from React core June 22, 2015.
+	 * https://github.com/facebook/react/blob/
+	 * ba81b60ad8e93b747be42a03b797065932c49c96/
+	 * src/renderers/dom/shared/CSSProperty.js
+	 */
+	var isUnitlessNumber = {
+	  boxFlex: true,
+	  boxFlexGroup: true,
+	  columnCount: true,
+	  flex: true,
+	  flexGrow: true,
+	  flexPositive: true,
+	  flexShrink: true,
+	  flexNegative: true,
+	  fontWeight: true,
+	  lineClamp: true,
+	  lineHeight: true,
+	  opacity: true,
+	  order: true,
+	  orphans: true,
+	  tabSize: true,
+	  widows: true,
+	  zIndex: true,
+	  zoom: true,
+
+	  // SVG-related properties
+	  fillOpacity: true,
+	  strokeDashoffset: true,
+	  strokeOpacity: true,
+	  strokeWidth: true
 	};
 
 	var domStyle = {};
@@ -640,10 +777,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return prefixedPropertyCache[property] = workingProperty;
 	};
 
+	// React is planning to deprecate adding px automatically
+	// (https://github.com/facebook/react/issues/1873), and if they do, this
+	// should change to a warning or be removed in favor of React's warning.
+	// Same goes for below.
+	var _addPixelSuffixToValueIfNeeded = function _addPixelSuffixToValueIfNeeded(originalProperty, value) {
+	  if (value !== 0 && !isNaN(value) && !isUnitlessNumber[originalProperty]) {
+	    return value + 'px';
+	  }
+	  return value;
+	};
+
 	var _getPrefixedValue = function _getPrefixedValue(property, value, originalProperty) {
-	  // don't test numbers or numbers with units (e.g. 10em)
-	  if (!(Array.isArray(value) || typeof value === 'string') || !isNaN(parseInt(value, 10))) {
-	    return value;
+	  if (!Array.isArray(value)) {
+	    // don't test numbers (pure or stringy), but do add 'px' prefix if needed
+	    if (!isNaN(value)) {
+	      return _addPixelSuffixToValueIfNeeded(originalProperty, value);
+	    }
+
+	    if (typeof value !== 'string') {
+	      value = value.toString();
+	    }
+
+	    // don't test numbers with units (e.g. 10em)
+	    if (!isNaN(parseInt(value, 10))) {
+	      return value;
+	    }
 	  }
 
 	  var cacheKey = Array.isArray(value) ? value.join(' || ') : property + value;
@@ -652,13 +811,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return prefixedValueCache[cacheKey];
 	  }
 
-	  var possibleValues = Array.isArray(value) ? value.concat(value.map(function (v) {
-	    return prefixInfo.cssPrefix + v;
-	  })) : [
-	  // Unprefixed
-	  value,
-	  // Prefixed
-	  prefixInfo.cssPrefix + value];
+	  var possibleValues;
+	  if (Array.isArray(value)) {
+	    // Add px for the same values React would, otherwise the testing below will
+	    // fail and it will try to fallback.
+	    possibleValues = value.map(function (v) {
+	      return _addPixelSuffixToValueIfNeeded(originalProperty, v);
+	    });
+
+	    // Add prefixed versions
+	    possibleValues = possibleValues.concat(value.filter(function (v) {
+	      return !isNaN(v);
+	    }) // Don't prefix numbers
+	    .map(function (v) {
+	      return prefixInfo.cssPrefix + v;
+	    }));
+	  } else {
+	    possibleValues = [
+	    // Unprefixed
+	    value,
+	    // Prefixed
+	    prefixInfo.cssPrefix + value];
+	  }
 
 	  // Alternative values
 	  if (prefixInfo.alternativeValues && prefixInfo.alternativeValues[originalProperty] && prefixInfo.alternativeValues[originalProperty][value]) {
@@ -700,10 +874,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  mode = mode || 'js';
 
 	  if (!ExecutionEnvironment.canUseDOM) {
-	    return style;
+	    return Object.keys(style).reduce(function (newStyle, key) {
+	      var value = style[key];
+	      var newKey = mode === 'css' ? _camelCaseToDashCase(key) : key;
+	      var newValue = Array.isArray(value) ? value[0] : value;
+	      newStyle[newKey] = newValue;
+	      return newStyle;
+	    }, {});
 	  }
 
-	  var newStyle = {};
+	  var prefixedStyle = {};
 	  Object.keys(style).forEach(function (property) {
 	    var value = style[property];
 
@@ -720,9 +900,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var newValue = _getPrefixedValue(newProperty.js, value, property);
 
-	    newStyle[newProperty[mode]] = newValue;
+	    prefixedStyle[newProperty[mode]] = newValue;
 	  });
-	  return newStyle;
+	  return prefixedStyle;
 	};
 
 	module.exports = {
@@ -736,41 +916,108 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2015 Jed Watson.
+	  Based on code that is Copyright 2013-2015, Facebook, Inc.
+	  All rights reserved.
+	*/
+
 	'use strict';
 
-	function find(array, predicate, self) {
-	  self = self || this;
-	  var len = array.length;
-	  var i;
-	  if (len === 0) {
-	    return;
-	  }
-	  if (typeof predicate !== 'function') {
-	    throw new TypeError(predicate + ' must be a function');
+	(function () {
+		'use strict';
+
+		var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+
+		var ExecutionEnvironment = {
+
+			canUseDOM: canUseDOM,
+
+			canUseWorkers: typeof Worker !== 'undefined',
+
+			canUseEventListeners: canUseDOM && !!(window.addEventListener || window.attachEvent),
+
+			canUseViewport: canUseDOM && !!window.screen
+
+		};
+
+		if (true) {
+			!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return ExecutionEnvironment;
+			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else if (typeof module !== 'undefined' && module.exports) {
+			module.exports = ExecutionEnvironment;
+		} else {
+			window.ExecutionEnvironment = ExecutionEnvironment;
+		}
+	})();
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	function find(array, predicate, context) {
+	  if (typeof Array.prototype.find === 'function') {
+	    return array.find(predicate, context);
 	  }
 
-	  for (i = 0; i < len; i++) {
-	    if (predicate.call(self, array[i], i, array)) {
+	  context = context || this;
+	  var length = array.length;
+	  var i;
+
+	  if (typeof predicate !== 'function') {
+	    throw new TypeError(predicate + ' is not a function');
+	  }
+
+	  for (i = 0; i < length; i++) {
+	    if (predicate.call(context, array[i], i, array)) {
 	      return array[i];
 	    }
 	  }
-
-	  return;
 	}
 
 	module.exports = find;
 
 /***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_8__;
-
-/***/ },
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* @flow */
+
 	'use strict';
+
+	var ExecutionEnvironment = __webpack_require__(7);
+
+	var _matchMediaFunction = ExecutionEnvironment.canUseDOM && window && window.matchMedia;
+
+	module.exports = {
+	  canMatchMedia: function canMatchMedia() {
+	    return typeof _matchMediaFunction === 'function';
+	  },
+
+	  matchMedia: function matchMedia(query) {
+	    return _matchMediaFunction(query);
+	  },
+
+	  setMatchMedia: function setMatchMedia(nextMatchMediaFunction) {
+	    _matchMediaFunction = nextMatchMediaFunction;
+	  }
+	};
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_10__;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	'use strict';
+	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
 
 	function ToObject(val) {
 		if (val == null) {
@@ -780,6 +1027,18 @@ return /******/ (function(modules) { // webpackBootstrap
 		return Object(val);
 	}
 
+	function ownEnumerableKeys(obj) {
+		var keys = Object.getOwnPropertyNames(obj);
+
+		if (Object.getOwnPropertySymbols) {
+			keys = keys.concat(Object.getOwnPropertySymbols(obj));
+		}
+
+		return keys.filter(function (key) {
+			return propIsEnumerable.call(obj, key);
+		});
+	}
+
 	module.exports = Object.assign || function (target, source) {
 		var from;
 		var keys;
@@ -787,7 +1046,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		for (var s = 1; s < arguments.length; s++) {
 			from = arguments[s];
-			keys = Object.keys(Object(from));
+			keys = ownEnumerableKeys(Object(from));
 
 			for (var i = 0; i < keys.length; i++) {
 				to[keys[i]] = from[keys[i]];
@@ -798,15 +1057,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var createMarkupForStyles = __webpack_require__(11);
+	var createMarkupForStyles = __webpack_require__(13);
 	var Prefixer = __webpack_require__(6);
 
-	var React = __webpack_require__(8);
+	var React = __webpack_require__(10);
 
 	var buildCssString = function buildCssString(selector, rules) {
 	  if (!selector || !rules) {
@@ -823,8 +1082,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  displayName: 'Style',
 
 	  propTypes: {
-	    scopeSelector: React.PropTypes.string,
-	    rules: React.PropTypes.object
+	    rules: React.PropTypes.object,
+	    scopeSelector: React.PropTypes.string
 	  },
 
 	  getDefaultProps: function getDefaultProps() {
@@ -889,8 +1148,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Style;
 
 /***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
+/* 13 */
+/***/ function(module, exports) {
 
 	/* @flow */
 
@@ -906,17 +1165,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = createMarkupForStyles;
 
 /***/ },
-/* 12 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* @flow */
 
 	'use strict';
 
-	var createMarkupForStyles = __webpack_require__(11);
+	var createMarkupForStyles = __webpack_require__(13);
 	var Prefixer = __webpack_require__(6);
 
-	var ExecutionEnvironment = __webpack_require__(3);
+	var ExecutionEnvironment = __webpack_require__(7);
 
 	var isAnimationSupported = ExecutionEnvironment.canUseDOM && Prefixer.getPrefixedPropertyName('animation') !== false;
 
