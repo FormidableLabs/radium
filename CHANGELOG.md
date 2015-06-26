@@ -1,5 +1,11 @@
 # Radium Changelog
 
+## 0.13.2 (June 25, 2015)
+
+### Bug Fixes
+
+- Use `console.warn` instead of `console.warning` (duh)
+
 ## 0.13.1 (June 24, 2015)
 
 ### New Features

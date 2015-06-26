@@ -827,12 +827,12 @@ describe('resolveStyles', function () {
   /* eslint-disable no-console */
   describe('warnings', function () {
     beforeEach(function () {
-      this.originalConsoleWarning = console.warn;
+      this.originalConsoleWarn = console.warn;
       console.warn = jest.genMockFunction();
     });
 
     afterEach(function () {
-      console.warn = this.originalConsoleWarning;
+      console.warn = this.originalConsoleWarn;
       process.env.NODE_ENV = null;
     });
 
