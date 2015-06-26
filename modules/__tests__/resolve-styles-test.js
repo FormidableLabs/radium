@@ -827,12 +827,12 @@ describe('resolveStyles', function () {
   /* eslint-disable no-console */
   describe('warnings', function () {
     beforeEach(function () {
-      this.originalConsoleWarning = console.warning;
-      console.warning = jest.genMockFunction();
+      this.originalConsoleWarning = console.warn;
+      console.warn = jest.genMockFunction();
     });
 
     afterEach(function () {
-      console.warning = this.originalConsoleWarning;
+      console.warn = this.originalConsoleWarning;
       process.env.NODE_ENV = null;
     });
 
@@ -847,8 +847,8 @@ describe('resolveStyles', function () {
 
       resolveStyles(component, renderedElement);
 
-      expect(console.warning).toBeCalled();
-      expect(console.warning.mock.calls[0][0].indexOf('border'))
+      expect(console.warn).toBeCalled();
+      expect(console.warn.mock.calls[0][0].indexOf('border'))
         .toBeGreaterThan(0);
     });
 
@@ -865,8 +865,8 @@ describe('resolveStyles', function () {
 
       resolveStyles(component, renderedElement);
 
-      expect(console.warning).toBeCalled();
-      expect(console.warning.mock.calls[0][0].indexOf('border'))
+      expect(console.warn).toBeCalled();
+      expect(console.warn.mock.calls[0][0].indexOf('border'))
         .toBeGreaterThan(0);
     });
   });
