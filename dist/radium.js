@@ -459,6 +459,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// shim for using process in browser
 
+	'use strict';
+
 	var process = module.exports = {};
 	var queue = [];
 	var draining = false;
@@ -485,7 +487,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    draining = true;
 
 	    var len = queue.length;
-	    while(len) {
+	    while (len) {
 	        currentQueue = queue;
 	        queue = [];
 	        while (++queueIndex < len) {
@@ -542,12 +544,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	// TODO(shtylman)
-	process.cwd = function () { return '/' };
+	process.cwd = function () {
+	    return '/';
+	};
 	process.chdir = function (dir) {
 	    throw new Error('process.chdir is not supported');
 	};
-	process.umask = function() { return 0; };
-
+	process.umask = function () {
+	    return 0;
+	};
 
 /***/ },
 /* 4 */
@@ -917,14 +922,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  All rights reserved.
 	*/
 
+	'use strict';
+
 	(function () {
 		'use strict';
 
-		var canUseDOM = !!(
-			typeof window !== 'undefined' &&
-			window.document &&
-			window.document.createElement
-		);
+		var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
 
 		var ExecutionEnvironment = {
 
@@ -932,8 +935,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			canUseWorkers: typeof Worker !== 'undefined',
 
-			canUseEventListeners:
-				canUseDOM && !!(window.addEventListener || window.attachEvent),
+			canUseEventListeners: canUseDOM && !!(window.addEventListener || window.attachEvent),
 
 			canUseViewport: canUseDOM && !!window.screen
 
@@ -948,9 +950,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		} else {
 			window.ExecutionEnvironment = ExecutionEnvironment;
 		}
-
-	}());
-
+	})();
 
 /***/ },
 /* 8 */
@@ -979,7 +979,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	module.exports = find;
-
 
 /***/ },
 /* 9 */
@@ -1056,7 +1055,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		return to;
 	};
-
 
 /***/ },
 /* 12 */
