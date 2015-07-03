@@ -823,12 +823,11 @@ describe('resolveStyles', function () {
   /* eslint-disable no-console */
   describe('warnings', function () {
     beforeEach(function () {
-      this.originalConsoleWarning = console.warning;
-      console.warning = sinon.spy();
+      sinon.stub(console, 'warn');
     });
 
     afterEach(function () {
-      console.warning = this.originalConsoleWarning;
+      console.warn.restore();
       process.env.NODE_ENV = null;
     });
 
@@ -843,8 +842,8 @@ describe('resolveStyles', function () {
 
       resolveStyles(component, renderedElement);
 
-      expect(console.warning).to.have.been.called;
-      expect(console.warning.firstCall.args[0].indexOf('border'))
+      expect(console.warn).to.have.been.called;
+      expect(console.warn.firstCall.args[0].indexOf('border'))
         .to.be.greaterThan(0);
     });
 
@@ -861,8 +860,8 @@ describe('resolveStyles', function () {
 
       resolveStyles(component, renderedElement);
 
-      expect(console.warning).to.have.been.called;
-      expect(console.warning.firstCall.args[0].indexOf('border'))
+      expect(console.warn).to.have.been.called;
+      expect(console.warn.firstCall.args[0].indexOf('border'))
         .to.be.greaterThan(0);
     });
   });

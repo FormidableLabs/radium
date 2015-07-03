@@ -206,7 +206,7 @@ var resolveStyles = function (
           keys.some(k => k !== shorthand && k.indexOf(shorthand) === 0)
         ) {
           /* eslint-disable no-console */
-          console.warning(
+          console.warn(
             'Radium: property "' + shorthand + '" in style object',
             style,
             ': do not mix longhand and ' +

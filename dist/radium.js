@@ -336,7 +336,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return k !== shorthand && k.indexOf(shorthand) === 0;
 	        })) {
 	          /* eslint-disable no-console */
-	          console.warning('Radium: property "' + shorthand + '" in style object', style, ': do not mix longhand and ' + 'shorthand properties in the same style object. See ' + 'https://github.com/FormidableLabs/radium/issues/95 for more ' + 'information.');
+	          console.warn('Radium: property "' + shorthand + '" in style object', style, ': do not mix longhand and ' + 'shorthand properties in the same style object. See ' + 'https://github.com/FormidableLabs/radium/issues/95 for more ' + 'information.');
 	          /* eslint-enable no-console */
 	        }
 	      });
