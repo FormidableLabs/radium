@@ -9,7 +9,6 @@ module.exports = function (config) {
     preprocessors: {
       'modules/__tests__/**/*.js': ['webpack']
     },
-    commonjsPreprocessor: {},
     webpack: {
       cache: true,
       module: {
@@ -54,7 +53,6 @@ module.exports = function (config) {
         chunkModules: false
       }
     },
-    commonjsPreprocessor: {},
     exclude: [],
     port: 8080,
     logLevel: config.LOG_INFO,
