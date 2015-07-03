@@ -1,98 +1,112 @@
-/* eslint-env jasmine */
-/* global jest */
-
-jest.dontMock('../create-markup-for-styles.js');
-jest.dontMock('../keyframes.js');
-
-var originalDocumentCreateElement = document.createElement;
-var originalWindowGetComputedStyle = window.getComputedStyle;
 var styleElement;
+var exenv;
 
 describe('keyframes', () => {
+
   beforeEach(() => {
     styleElement = {
       textContent: '',
       sheet: {
-        insertRule: jest.genMockFunction(),
+        insertRule: sinon.spy(),
         cssRules: []
       }
     };
 
-    document.createElement = jest.genMockFunction().mockImplementation(() => {
+    sinon.stub(document, 'createElement', () => {
       return styleElement;
     });
 
-    document.head.appendChild = jest.genMockFunction();
+    sinon.stub(document.head, 'appendChild');
 
-    jest.setMock('exenv', {
+
+    exenv = {
       canUseDOM: true,
       canUseEventListeners: true
-    });
+    };
+
   });
 
   afterEach(() => {
-    document.createElement = originalDocumentCreateElement;
-    window.getComputedStyle = originalWindowGetComputedStyle;
+    document.createElement.restore();
+    document.head.appendChild.restore();
   });
 
   it('doesn\'t touch the DOM if DOM not available', () => {
-    jest.setMock('exenv', {
+    exenv = {
       canUseDOM: false,
       canUseEventListeners: false
+    };
+
+    var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+      'exenv': exenv,
+      './prefixer': require('__mocks__/prefixer.js')
     });
 
-    var keyframes = require('../keyframes.js');
-
-    expect(document.createElement).not.toBeCalled();
-    expect(document.head.appendChild).not.toBeCalled();
+    expect(document.createElement).not.to.have.been.called;
+    expect(document.head.appendChild).not.to.have.been.called;
 
     var name = keyframes({});
 
-    expect(name.length).toBeGreaterThan(0);
+    expect(name.length).to.be.greaterThan(0);
   });
 
   it('doesn\'t touch the DOM if animation not supported (IE9)', () => {
-    var Prefixer = require('../prefixer.js');
+    var Prefixer = require('__mocks__/prefixer.js');
     Prefixer.__setNextPrefixedPropertyName(false);
-    var keyframes = require('../keyframes.js');
+    var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+      'exenv': exenv,
+      './prefixer': Prefixer
+    });
 
-    expect(document.createElement).not.toBeCalled();
-    expect(document.head.appendChild).not.toBeCalled();
+    expect(document.createElement).not.to.have.been.called;
+    expect(document.head.appendChild).not.to.have.been.called;
 
     var name = keyframes({});
 
-    expect(name.length).toBeGreaterThan(0);
+    expect(name.length).to.be.greaterThan(0);
   });
 
   it('returns a name for the keyframes', () => {
-    var keyframes = require('../keyframes.js');
+    var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+      'exenv': exenv,
+      './prefixer': require('__mocks__/prefixer.js')
+    });
     var name = keyframes({});
-    expect(name.length).toBeGreaterThan(0);
+    expect(name.length).to.be.greaterThan(0);
   });
 
   it('prefixes @keyframes if needed', () => {
-    var keyframes = require('../keyframes.js');
+    var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+      'exenv': exenv,
+      './prefixer': require('__mocks__/prefixer.js')
+    });
     var name = keyframes({});
 
-    expect(styleElement.sheet.insertRule).lastCalledWith(
+    expect(styleElement.sheet.insertRule.lastCall.args).to.eql([
       '@-webkit-keyframes ' + name + ' {\n\n}\n',
       0
-    );
+    ]);
   });
 
   it('doesn\'t prefix @keyframes if not needed', () => {
     styleElement.sheet.cssRules = [{cssText: 'blah'}];
-    var keyframes = require('../keyframes.js');
+    var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+      'exenv': exenv,
+      './prefixer': require('__mocks__/prefixer.js')
+    });
     var name = keyframes({});
 
-    expect(styleElement.sheet.insertRule).lastCalledWith(
+    expect(styleElement.sheet.insertRule.lastCall.args).to.eql([
       '@keyframes ' + name + ' {\n\n}\n',
       1
-    );
+    ]);
   });
 
   it('serializes keyframes', () => {
-    var keyframes = require('../keyframes.js');
+    var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+      'exenv': exenv,
+      './prefixer': require('__mocks__/prefixer.js')
+    });
     var name = keyframes({
       from: {
         width: 100
@@ -102,7 +116,7 @@ describe('keyframes', () => {
       }
     });
 
-    expect(styleElement.sheet.insertRule).lastCalledWith(
+    expect(styleElement.sheet.insertRule.lastCall.args).to.eql([
 `@-webkit-keyframes ${name} {
   from {
     width: 100;
@@ -113,6 +127,6 @@ describe('keyframes', () => {
 }
 `,
       0
-    );
+    ]);
   });
 });

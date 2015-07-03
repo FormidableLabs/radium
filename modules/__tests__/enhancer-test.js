@@ -1,10 +1,7 @@
-/* eslint-env jasmine */
-/* global jest */
-
-jest.dontMock('../enhancer.js');
-
-var resolveStyles = require('../resolve-styles.js');
-var Enhancer = require('../enhancer.js');
+var resolveStyles = sinon.spy(require('resolve-styles.js'));
+var Enhancer = require('inject!enhancer.js')({
+  './resolve-styles.js': resolveStyles
+});
 
 var {Component} = require('react');
 
@@ -15,7 +12,7 @@ describe('Enhancer', () => {
 
     var instance = new Enhanced();
 
-    expect(instance.state).toEqual({_radiumStyleState: {}});
+    expect(instance.state).to.eql({_radiumStyleState: {}});
   });
 
   it('merges with existing state', () => {
@@ -30,7 +27,7 @@ describe('Enhancer', () => {
     var instance = new Enhanced();
 
 
-    expect(instance.state).toEqual(
+    expect(instance.state).to.eql(
       {foo: 'bar', _radiumStyleState: {}}
     );
   });
@@ -45,11 +42,11 @@ describe('Enhancer', () => {
 
     var instance = new Enhanced({foo: 'bar'});
 
-    expect(instance.props).toEqual({foo: 'bar'});
+    expect(instance.props).to.eql({foo: 'bar'});
   });
 
   it('calls existing render function, then resolveStyles', () => {
-    var renderMock = jest.genMockFunction();
+    var renderMock = sinon.spy();
     class Composed extends Component {
       render () {
         renderMock();
@@ -61,12 +58,12 @@ describe('Enhancer', () => {
     var instance = new Enhanced();
     instance.render();
 
-    expect(renderMock).toBeCalled();
-    expect(resolveStyles).toBeCalled();
+    expect(renderMock).to.have.been.called;
+    expect(resolveStyles).to.have.been.called;
   });
 
   it('calls existing constructor only once', () => {
-    var constructorMock = jest.genMockFunction();
+    var constructorMock = sinon.spy();
     class Composed extends Component {
       constructor () {
         super();
@@ -77,7 +74,7 @@ describe('Enhancer', () => {
 
     new Enhanced(); // eslint-disable-line no-new
 
-    expect(constructorMock.mock.calls.length).toBe(1);
+    expect(constructorMock).to.have.been.calledOnce;
   });
 
   it('refers to the existing displayName', () => {
@@ -86,11 +83,11 @@ describe('Enhancer', () => {
 
     var Enhanced = Enhancer(Composed);
 
-    expect(Enhanced.displayName).toContain(Composed.displayName);
+    expect(Enhanced.displayName).to.contain(Composed.displayName);
   });
 
   it('calls existing componentWillUnmount function', () => {
-    var existingComponentWillUnmount = jest.genMockFunction();
+    var existingComponentWillUnmount = sinon.spy();
     class Composed extends Component {
       componentWillUnmount () {
         existingComponentWillUnmount();
@@ -101,11 +98,11 @@ describe('Enhancer', () => {
     var instance = new Enhanced();
     instance.componentWillUnmount();
 
-    expect(existingComponentWillUnmount).toBeCalled();
+    expect(existingComponentWillUnmount).to.have.been.called;
   });
 
   it('removes mouse up listener on componentWillUnmount', () => {
-    var removeMouseUpListener = jest.genMockFunction();
+    var removeMouseUpListener = sinon.spy();
     class Composed extends Component {
       constructor () {
         super();
@@ -117,14 +114,14 @@ describe('Enhancer', () => {
     var instance = new Enhanced();
     instance.componentWillUnmount();
 
-    expect(removeMouseUpListener).toBeCalled();
+    expect(removeMouseUpListener).to.have.been.called;
   });
 
   it('removes media query listeners on componentWillUnmount', () => {
     var mediaQueryListenersByQuery = {
-      '(min-width: 1000px)': { remove: jest.genMockFunction() },
-      '(max-width: 600px)': { remove: jest.genMockFunction() },
-      '(min-resolution: 2dppx)': { remove: jest.genMockFunction() }
+      '(min-width: 1000px)': { remove: sinon.spy() },
+      '(max-width: 600px)': { remove: sinon.spy() },
+      '(min-resolution: 2dppx)': { remove: sinon.spy() }
     };
     class Composed extends Component {
       constructor () {
@@ -138,7 +135,7 @@ describe('Enhancer', () => {
     instance.componentWillUnmount();
 
     Object.keys(mediaQueryListenersByQuery).forEach(function (key) {
-      expect(mediaQueryListenersByQuery[key].remove).toBeCalled();
+      expect(mediaQueryListenersByQuery[key].remove).to.have.been.called;
     });
   });
 });

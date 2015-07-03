@@ -20,8 +20,8 @@
     "lint": "eslint modules",
     "postinstall": "node -e \"require('fs').stat('lib', function(e,s){process.exit(e || !s.isDirectory() ? 1 : 0)})\" || npm run prepublish",
     "prepublish": "npm run lib",
-    "test": "jest",
-    "test-coverage": "npm run babel && jest --config jest/coverage-config.json"
+    "test": "karma start",
+    "test-coverage": "karma start karma.conf.coverage.js"
   },
   "license": "MIT",
   "peerDependencies": {
@@ -38,26 +38,29 @@
   "devDependencies": {
     "babel-eslint": "^3.1.15",
     "babel-loader": "^5.1.4",
+    "chai": "^3.0.0",
     "coveralls": "^2.11.2",
     "eslint": "^0.22.1",
     "eslint-plugin-react": "^2.5.1",
-    "jest-cli": "^0.4.12",
+    "inject-loader": "^2.0.0",
+    "isparta-loader": "^0.2.0",
+    "karma": "^0.12.37",
+    "karma-babel-preprocessor": "^5.2.1",
+    "karma-coverage": "^0.4.2",
+    "karma-mocha": "^0.2.0",
+    "karma-mocha-reporter": "^1.0.2",
+    "karma-phantomjs-launcher": "^0.2.0",
+    "karma-phantomjs-shim": "^1.0.0",
+    "karma-sinon-chai": "^1.0.0",
+    "karma-webpack": "^1.5.1",
     "lodash": "^3.9.3",
+    "mocha": "^2.2.5",
+    "node-libs-browser": "^0.5.2",
+    "phantomjs": "^1.9.17",
     "react": ">=0.13.3",
+    "sinon": "^1.15.3",
+    "sinon-chai": "^2.8.0",
     "webpack": "^1.9.11",
     "webpack-dev-server": "^1.9.0"
-  },
-  "jest": {
-    "scriptPreprocessor": "jest/preprocessor.js",
-    "testPathDirs": [
-      "modules"
-    ],
-    "unmockedModulePathPatterns": [
-      "array-find",
-      "exenv",
-      "lodash",
-      "object-assign",
-      "react"
-    ]
   }
 }
