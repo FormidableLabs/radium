@@ -5,7 +5,8 @@ module.exports = function (config) {
       reporters: [{
         type: 'text'
       }, {
-        type: 'lcov'
+        type: 'lcovonly',
+        subdir: '.'
       }]
     }
   });
