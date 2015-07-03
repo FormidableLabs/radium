@@ -16,6 +16,8 @@ env:
 globals:
     require: true
     module: true
+    expect: true
+    sinon: true
 
 rules:
 
