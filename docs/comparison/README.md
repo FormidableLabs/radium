@@ -1,4 +1,4 @@
-# Comparision of CSS in JS Libraries for React
+# Comparison of CSS in JS Libraries for React
 
 Library | Syntax | Mechanism | Override mechanism | Compile-time step | Media Queries | Pseudo styles | CSS Syntax | Animations | ES6 Classes | Vendor Prefixes | Dynamic styles | Isomorphic (runs on server)
 -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- | --------
