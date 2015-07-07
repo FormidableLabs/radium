@@ -1,19 +1,15 @@
-/* eslint-env jasmine */
-/* global jest */
-
-jest.dontMock('../get-state.js');
-jest.dontMock('../resolve-styles.js');
-jest.dontMock('../config.js');
-
 var React = require('react');
-var MouseUpListener = require('../mouse-up-listener.js');
+var MouseUpListener = require('mouse-up-listener.js');
 var objectAssign = require('object-assign');
-var resolveStyles = require('../resolve-styles.js');
-var Config = require('../config.js');
+var resolveStyles = require('inject?-./get-state&-./config!resolve-styles.js')({
+  'exenv': require('__mocks__/exenv.js'),
+  './prefixer': require('__mocks__/prefixer.js')
+});
+var Config = require('config.js');
 
 var genComponent = function () {
   return {
-    setState: jest.genMockFunction().mockImplementation(function (newState) {
+    setState: sinon.spy(function (newState) {
       objectAssign(this.state, newState);
     }),
     state: {}
@@ -49,7 +45,7 @@ var getChildrenArray = function (children) {
 describe('resolveStyles', function () {
 
   beforeEach(function () {
-    MouseUpListener.subscribe = jest.genMockFunction();
+    MouseUpListener.subscribe = sinon.spy();
   });
 
   describe('no-op behavior', function () {
@@ -66,8 +62,8 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
 
-      expect(result).toBe(renderedElement);
-      expect(result.props).toBe(renderedElement.props);
+      expect(result).to.equal(renderedElement);
+      expect(result.props).to.equal(renderedElement.props);
     });
 
     it('passes through normal style objects', function () {
@@ -76,7 +72,7 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
 
-      expect(result.props.style).toBe(renderedElement.props.style);
+      expect(result.props.style).to.deep.equal(renderedElement.props.style);
     });
 
     it('passes through normal style objects of children', function () {
@@ -90,7 +86,7 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
       var children = getChildrenArray(result.props.children);
-      expect(children[0].props.style).toBe(style);
+      expect(children[0].props.style).to.deep.equal(style);
     });
 
     it('doesn\'t wrap string children in spans', function () {
@@ -98,7 +94,7 @@ describe('resolveStyles', function () {
       var renderedElement = <div>Hello</div>;
 
       var result = resolveStyles(component, renderedElement);
-      expect(result.props.children).toBe('Hello');
+      expect(result.props.children).to.equal('Hello');
     });
 
     it('doesn\'t wrap number children in spans', function () {
@@ -106,7 +102,7 @@ describe('resolveStyles', function () {
       var renderedElement = <div>{88347}</div>;
 
       var result = resolveStyles(component, renderedElement);
-      expect(result.props.children).toBe(88347);
+      expect(result.props.children).to.equal(88347);
     });
 
     it('ignores invalid children', function () {
@@ -120,7 +116,7 @@ describe('resolveStyles', function () {
       var result = resolveStyles(component, renderedElement);
       var children = getChildrenArray(result.props.children);
 
-      expect(children[0]).toBe(null);
+      expect(children[0]).to.be.null;
     });
 
   });
@@ -138,7 +134,7 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
 
-      expect(result.props.style).toEqual({
+      expect(result.props.style).to.deep.equal({
         background: 'white',
         color: 'blue'
       });
@@ -160,7 +156,7 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
 
-      expect(result.props.style).toEqual({
+      expect(result.props.style).to.deep.equal({
         background: 'white',
         color: 'blue'
       });
@@ -177,7 +173,7 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
 
-      expect(result.props.style).toEqual({
+      expect(result.props.style).to.deep.equal({
         background: 'blue'
       });
     });
@@ -195,7 +191,7 @@ describe('resolveStyles', function () {
       result.props.onMouseEnter();
       result = resolveStyles(component, renderedElement);
 
-      expect(result.props.style).toEqual({
+      expect(result.props.style).to.deep.equal({
         background: 'white',
         color: 'blue'
       });
@@ -213,7 +209,7 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
 
-      expect(result.props.style).toEqual({background: 'blue'});
+      expect(result.props.style).to.deep.equal({background: 'blue'});
     });
 
     it('adds appropriate handlers for ' + pseudo + ' styles', function () {
@@ -224,9 +220,9 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
 
-      expect(typeof result.props[onHandlerName]).toBe('function');
+      expect(typeof result.props[onHandlerName]).to.equal('function');
       if (offHandlerName) {
-        expect(typeof result.props[offHandlerName]).toBe('function');
+        expect(typeof result.props[offHandlerName]).to.equal('function');
       }
     });
 
@@ -237,16 +233,16 @@ describe('resolveStyles', function () {
       var renderedElement = <div style={style} />;
 
       var result = resolveStyles(component, renderedElement);
-      expect(result.props.style.background).toEqual('blue');
+      expect(result.props.style.background).to.equal('blue');
 
       result.props[onHandlerName]();
 
-      expect(component.setState).toBeCalled();
+      expect(component.setState).to.have.been.called;
 
       // Must create a new renderedElement each time, same as React, since
       // resolveStyles mutates
       result = resolveStyles(component, renderedElement);
-      expect(result.props.style.background).toEqual('red');
+      expect(result.props.style.background).to.equal('red');
     });
 
     it('throws if multiple elements have the same key', function () {
@@ -265,7 +261,7 @@ describe('resolveStyles', function () {
 
       expect(function () {
         resolveStyles(component, renderedElement);
-      }).toThrow();
+      }).to.throw();
     });
 
     it('throws if multiple elements have no key', function () {
@@ -282,7 +278,7 @@ describe('resolveStyles', function () {
 
       expect(function () {
         resolveStyles(component, renderedElement);
-      }).toThrow();
+      }).to.throw();
     });
 
     it('adds ' + pseudo + ' styles to correct element by key', function () {
@@ -299,15 +295,15 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
       var children = getChildrenArray(result.props.children);
-      expect(children[0].props.style).toEqual(null);
-      expect(children[1].props.style.background).toEqual('blue');
+      expect(children[0].props.style).to.be.undefined;
+      expect(children[1].props.style.background).to.equal('blue');
 
       children[1].props[onHandlerName]();
 
       result = resolveStyles(component, renderedElement);
       children = getChildrenArray(result.props.children);
-      expect(children[0].props.style).toEqual(null);
-      expect(children[1].props.style.background).toEqual('red');
+      expect(children[0].props.style).to.be.undefined;
+      expect(children[1].props.style.background).to.equal('red');
     });
 
     it('adds ' + pseudo + ' styles to correct element by ref', function () {
@@ -324,15 +320,15 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
       var children = getChildrenArray(result.props.children);
-      expect(children[0].props.style).toEqual(null);
-      expect(children[1].props.style.background).toEqual('blue');
+      expect(children[0].props.style).to.be.undefined;
+      expect(children[1].props.style.background).to.equal('blue');
 
       children[1].props[onHandlerName]();
 
       result = resolveStyles(component, renderedElement);
       children = getChildrenArray(result.props.children);
-      expect(children[0].props.style).toEqual(null);
-      expect(children[1].props.style.background).toEqual('red');
+      expect(children[0].props.style).to.be.undefined;
+      expect(children[1].props.style.background).to.equal('red');
     });
 
     if (offHandlerName) {
@@ -347,14 +343,14 @@ describe('resolveStyles', function () {
         result.props[onHandlerName]();
 
         result = resolveStyles(component, renderedElement);
-        expect(result.props.style.background).toEqual('red');
+        expect(result.props.style.background).to.equal('red');
 
         result.props[offHandlerName]();
 
-        expect(component.setState).toBeCalled();
+        expect(component.setState).to.have.been.called;
 
         result = resolveStyles(component, renderedElement);
-        expect(result.props.style.background).toEqual('blue');
+        expect(result.props.style.background).to.equal('blue');
       });
 
       it('doesn\'t mutate state', function () {
@@ -371,19 +367,19 @@ describe('resolveStyles', function () {
         result.props[onHandlerName]();
         // If they are still equal here, that means we mutated the existing
         // state, which will break shouldComponentUpdate.
-        expect(component.state._radiumStyleState).not.toEqual(previousState);
+        expect(component.state._radiumStyleState).not.to.equal(previousState);
 
         result = resolveStyles(component, renderedElement);
 
         previousState = component.state._radiumStyleState;
         result.props[offHandlerName]();
-        expect(component.state._radiumStyleState).not.toEqual(previousState);
+        expect(component.state._radiumStyleState).not.to.equal(previousState);
       });
     }
 
     it('calls existing ' + onHandlerName + ' handler', function () {
       var component = genComponent();
-      var originalOnHandler = jest.genMockFunction();
+      var originalOnHandler = sinon.spy();
 
       var style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
@@ -395,16 +391,16 @@ describe('resolveStyles', function () {
 
       result.props[onHandlerName]();
 
-      expect(originalOnHandler).toBeCalled();
+      expect(originalOnHandler).to.have.been.called;
 
       result = resolveStyles(component, renderedElement);
-      expect(result.props.style.background).toEqual('red');
+      expect(result.props.style.background).to.equal('red');
     });
 
     if (offHandlerName) {
       it('calls existing ' + offHandlerName + ' handler', function () {
         var component = genComponent();
-        var originalOffHandler = jest.genMockFunction();
+        var originalOffHandler = sinon.spy();
 
         var style = {background: 'blue'};
         style[':' + pseudo] = {background: 'red'};
@@ -418,10 +414,10 @@ describe('resolveStyles', function () {
         result.props[onHandlerName]();
         result.props[offHandlerName]();
 
-        expect(originalOffHandler).toBeCalled();
+        expect(originalOffHandler).to.have.been.called;
 
         result = resolveStyles(component, renderedElement);
-        expect(result.props.style.background).toEqual('blue');
+        expect(result.props.style.background).to.equal('blue');
       });
     }
 
@@ -444,7 +440,7 @@ describe('resolveStyles', function () {
 
       resolveStyles(component, renderedElement);
 
-      expect(MouseUpListener.subscribe).toBeCalled();
+      expect(MouseUpListener.subscribe).to.have.been.called;
     });
 
     it('adds active styles on mouse down', function () {
@@ -456,13 +452,13 @@ describe('resolveStyles', function () {
       var renderedElement = <div style={style} />;
 
       var result = resolveStyles(component, renderedElement);
-      expect(result.props.style.background).toEqual('blue');
+      expect(result.props.style.background).to.equal('blue');
 
       result.props.onMouseDown();
 
 
       result = resolveStyles(component, renderedElement);
-      expect(result.props.style.background).toEqual('red');
+      expect(result.props.style.background).to.equal('red');
     });
 
     it('removes active styles on mouse up', function () {
@@ -478,13 +474,13 @@ describe('resolveStyles', function () {
       result.props.onMouseDown();
 
       result = resolveStyles(component, renderedElement);
-      expect(result.props.style.background).toEqual('red');
+      expect(result.props.style.background).to.equal('red');
 
       // tigger global mouseup handler
-      MouseUpListener.subscribe.mock.calls[0][0]();
+      MouseUpListener.subscribe.firstCall.args[0]();
 
       result = resolveStyles(component, renderedElement);
-      expect(result.props.style.background).toEqual('blue');
+      expect(result.props.style.background).to.equal('blue');
     });
 
     it('ignores mouse up if no active styles', function () {
@@ -500,11 +496,11 @@ describe('resolveStyles', function () {
       result.props.onMouseDown();
 
       // tigger global mouseup handler
-      MouseUpListener.subscribe.mock.calls[0][0]();
-      MouseUpListener.subscribe.mock.calls[0][0]();
+      MouseUpListener.subscribe.firstCall.args[0]();
+      MouseUpListener.subscribe.firstCall.args[0]();
 
       result = resolveStyles(component, renderedElement);
-      expect(result.props.style.background).toEqual('blue');
+      expect(result.props.style.background).to.equal('blue');
     });
 
     it('calls existing onMouseDown handler', function () {
@@ -513,7 +509,7 @@ describe('resolveStyles', function () {
         background: 'blue',
         ':active': {background: 'red'}
       };
-      var originalOnMouseDown = jest.genMockFunction();
+      var originalOnMouseDown = sinon.spy();
       var renderedElement = (
         <div
           onMouseDown={originalOnMouseDown}
@@ -525,10 +521,10 @@ describe('resolveStyles', function () {
 
       result.props.onMouseDown();
 
-      expect(originalOnMouseDown).toBeCalled();
+      expect(originalOnMouseDown).to.have.been.called;
 
       result = resolveStyles(component, renderedElement);
-      expect(result.props.style.background).toEqual('red');
+      expect(result.props.style.background).to.equal('red');
     });
   });
 
@@ -539,8 +535,8 @@ describe('resolveStyles', function () {
 
     it('listens for media queries', function () {
       var component = genComponent();
-      var addListener = jest.genMockFunction();
-      var matchMedia = jest.genMockFunction().mockImplementation(function () {
+      var addListener = sinon.spy();
+      var matchMedia = sinon.spy(function () {
         return {addListener: addListener};
       });
       Config.setMatchMedia(matchMedia);
@@ -552,14 +548,14 @@ describe('resolveStyles', function () {
       );
 
       resolveStyles(component, renderedElement);
-      expect(matchMedia).lastCalledWith('(max-width: 400px)');
-      expect(addListener).lastCalledWith(jasmine.any('function'));
+      expect(matchMedia.lastCall.args[0]).to.equal('(max-width: 400px)');
+      expect(addListener.lastCall.args[0]).to.be.a('function');
     });
 
     it('only listens once for a single element', function () {
       var component = genComponent();
-      var addListener = jest.genMockFunction();
-      var matchMedia = jest.genMockFunction().mockImplementation(function () {
+      var addListener = sinon.spy();
+      var matchMedia = sinon.spy(function () {
         return {addListener: addListener};
       });
       Config.setMatchMedia(matchMedia);
@@ -573,15 +569,15 @@ describe('resolveStyles', function () {
       resolveStyles(component, renderedElement);
       resolveStyles(component, renderedElement);
 
-      expect(matchMedia.mock.calls.length).toBe(1);
-      expect(addListener.mock.calls.length).toBe(1);
+      expect(matchMedia).to.have.been.calledOnce;
+      expect(addListener).to.have.been.calledOnce;
     });
 
     it('listens once per component', function () {
       var component1 = genComponent();
       var component2 = genComponent();
-      var addListener = jest.genMockFunction();
-      var matchMedia = jest.genMockFunction().mockImplementation(function () {
+      var addListener = sinon.spy();
+      var matchMedia = sinon.spy(function () {
         return {addListener: addListener};
       });
       Config.setMatchMedia(matchMedia);
@@ -602,15 +598,15 @@ describe('resolveStyles', function () {
       resolveStyles(component1, renderedElement);
       resolveStyles(component2, renderedElement);
 
-      expect(matchMedia.mock.calls.length).toBe(1);
-      expect(addListener.mock.calls.length).toBe(2);
+      expect(matchMedia).to.have.been.calledOnce;
+      expect(addListener).to.have.been.calledTwice;
     });
 
     it('applies styles when media query matches', function () {
       var component = genComponent();
-      var matchMedia = jest.genMockFunction().mockImplementation(function () {
+      var matchMedia = sinon.spy(function () {
         return {
-          addListener: jest.genMockFunction(),
+          addListener: sinon.spy(),
           matches: true
         };
       });
@@ -624,14 +620,14 @@ describe('resolveStyles', function () {
       );
 
       var result = resolveStyles(component, renderedElement);
-      expect(result.props.style.background).toEqual('red');
+      expect(result.props.style.background).to.equal('red');
     });
 
     it('merges nested pseudo styles', function () {
       var component = genComponent();
-      var matchMedia = jest.genMockFunction().mockImplementation(function () {
+      var matchMedia = sinon.spy(function () {
         return {
-          addListener: jest.genMockFunction(),
+          addListener: sinon.spy(),
           matches: true
         };
       });
@@ -663,26 +659,26 @@ describe('resolveStyles', function () {
       );
 
       var result = resolveStyles(component, renderedElement);
-      expect(result.props.style.background).toEqual('red');
+      expect(result.props.style.background).to.equal('red');
 
       result.props.onMouseEnter();
 
       result = resolveStyles(component, renderedElement);
-      expect(result.props.style.background).toEqual('yellow');
-      expect(result.props.style.color).toEqual('white');
+      expect(result.props.style.background).to.equal('yellow');
+      expect(result.props.style.color).to.equal('white');
     });
 
     it('calls component setState when media query changes', function () {
       var component1 = genComponent();
       var component2 = genComponent();
       var listeners = [];
-      var addListener = jest.genMockFunction().mockImplementation(
+      var addListener = sinon.spy(
         function (listener) {
           listeners.push(listener);
         }
       );
       var mql = {addListener: addListener};
-      var matchMedia = jest.genMockFunction().mockImplementation(function () {
+      var matchMedia = sinon.spy(function () {
         return mql;
       });
       Config.setMatchMedia(matchMedia);
@@ -699,17 +695,17 @@ describe('resolveStyles', function () {
 
       listeners.forEach(function (listener) { listener(mql); });
 
-      expect(component1.setState).toBeCalled();
-      expect(component2.setState).toBeCalled();
+      expect(component1.setState).to.have.been.called;
+      expect(component2.setState).to.have.been.called;
     });
 
     it('saves listeners on component for later removal', function () {
       var component = genComponent();
       var mql = {
-        addListener: jest.genMockFunction(),
-        removeListener: jest.genMockFunction()
+        addListener: sinon.spy(),
+        removeListener: sinon.spy()
       };
-      var matchMedia = jest.genMockFunction().mockImplementation(function () {
+      var matchMedia = sinon.spy(function () {
         return mql;
       });
       Config.setMatchMedia(matchMedia);
@@ -729,7 +725,7 @@ describe('resolveStyles', function () {
         }
       );
 
-      expect(mql.removeListener).toBeCalled();
+      expect(mql.removeListener).to.have.been.called;
     });
   });
 
@@ -767,7 +763,7 @@ describe('resolveStyles', function () {
 
           result = resolveStyles(component, renderedElement);
 
-          expect(result.props.style.background).toBe(
+          expect(result.props.style.background).to.equal(
             pseudoStyles[pseudoStyles.length - 1].style.background
           );
         });
@@ -788,7 +784,7 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
 
-      expect(React.Children.only(result.props.children)).toBeTruthy();
+      expect(React.Children.only(result.props.children)).to.be.ok;
     });
 
     it('doesn\'t break when only child isn\'t ReactElement', function () {
@@ -812,7 +808,7 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
       var children = getChildrenArray(result.props.children);
-      expect(children[0].props.style).toBe(style);
+      expect(children[0].props.style).to.deep.equal(style);
     });
 
     it('resolves ReactDOMElement children of ReactComponentElements', function () {
@@ -831,16 +827,16 @@ describe('resolveStyles', function () {
       );
 
       var result = resolveStyles(component, renderedElement);
-      expect(result.props.style).toEqual({
+      expect(result.props.style).to.deep.equal({
         background: 'white',
         color: 'blue'
       });
 
       var children = getChildrenArray(result.props.children);
-      expect(children[0].props.style).toBe(style);
+      expect(children[0].props.style).to.deep.equal(style);
 
       var componentChildren = getChildrenArray(children[0].props.children);
-      expect(componentChildren[0].props.style).toEqual({
+      expect(componentChildren[0].props.style).to.deep.equal({
         background: 'white',
         color: 'blue'
       });
@@ -850,12 +846,11 @@ describe('resolveStyles', function () {
   /* eslint-disable no-console */
   describe('warnings', function () {
     beforeEach(function () {
-      this.originalConsoleWarn = console.warn;
-      console.warn = jest.genMockFunction();
+      sinon.stub(console, 'warn');
     });
 
     afterEach(function () {
-      console.warn = this.originalConsoleWarn;
+      console.warn.restore();
       process.env.NODE_ENV = null;
     });
 
@@ -870,9 +865,9 @@ describe('resolveStyles', function () {
 
       resolveStyles(component, renderedElement);
 
-      expect(console.warn).toBeCalled();
-      expect(console.warn.mock.calls[0][0].indexOf('border'))
-        .toBeGreaterThan(0);
+      expect(console.warn).to.have.been.called;
+      expect(console.warn.firstCall.args[0].indexOf('border'))
+        .to.be.greaterThan(0);
     });
 
     it('warns when mixing longhand and shorthand properties in nested styles', function () {
@@ -888,9 +883,9 @@ describe('resolveStyles', function () {
 
       resolveStyles(component, renderedElement);
 
-      expect(console.warn).toBeCalled();
-      expect(console.warn.mock.calls[0][0].indexOf('border'))
-        .toBeGreaterThan(0);
+      expect(console.warn).to.have.been.called;
+      expect(console.warn.firstCall.args[0].indexOf('border'))
+        .to.be.greaterThan(0);
     });
   });
   /* eslint-enable no-console */
