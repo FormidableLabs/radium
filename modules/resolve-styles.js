@@ -7,7 +7,6 @@ var Config = require('./config');
 
 var ExecutionEnvironment = require('exenv');
 var React = require('react');
-var objectAssign = require('object-assign');
 
 // babel-eslint 3.1.7 fails here for some reason, error:
 //   0:0  error  Cannot call method 'isSequenceExpression' of undefined
@@ -30,9 +29,8 @@ var _getStyleState = function (component, key, value) {
 
 var _setStyleState = function (component, key, newState) {
   var existing = component.state && component.state._radiumStyleState || {};
-  var state = { _radiumStyleState: objectAssign({}, existing) };
-  state._radiumStyleState[key] = state._radiumStyleState[key] || {};
-  objectAssign(state._radiumStyleState[key], newState);
+  var state = { _radiumStyleState: {...existing} };
+  state._radiumStyleState[key] = {...state._radiumStyleState[key], ...newState};
   component.setState(state);
 };
 
