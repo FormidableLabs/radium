@@ -44,9 +44,18 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
     }
   }
 
-  if (ComposedComponent.hasOwnProperty('defaultProps')) {
-    RadiumEnhancer.defaultProps = ComposedComponent.defaultProps;
-  }
+  var staticKeys = [
+    'defaultProps',
+    'propTypes',
+    'contextTypes',
+    'childContextTypes'
+  ];
+
+  staticKeys.forEach((key) => {
+    if (ComposedComponent.hasOwnProperty(key)) {
+      RadiumEnhancer[key] = ComposedComponent[key];
+    }
+  });
 
   RadiumEnhancer.displayName = `Radium(${displayName})`;
 
