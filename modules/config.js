@@ -4,7 +4,8 @@ var ExecutionEnvironment = require('exenv');
 
 var _matchMediaFunction = ExecutionEnvironment.canUseDOM &&
   window &&
-  window.matchMedia;
+  window.matchMedia &&
+  (mediaQueryString => window.matchMedia(mediaQueryString));
 
 module.exports = {
   canMatchMedia () {

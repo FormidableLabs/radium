@@ -352,6 +352,29 @@ describe('resolveStyles', function () {
         result = resolveStyles(component, renderedElement);
         expect(result.props.style.background).to.equal('blue');
       });
+
+      it('doesn\'t mutate state', function () {
+        var component = genComponent();
+        var style = {background: 'blue'};
+        style[':' + pseudo] = {background: 'red'};
+        var renderedElement = <div style={style} />;
+
+        var result = resolveStyles(component, renderedElement);
+
+        // Capturing a reference to the existing state is enough, since Radium
+        // MUST return a new copy for shouldComponentUpdate.
+        var previousState = component.state._radiumStyleState;
+        result.props[onHandlerName]();
+        // If they are still equal here, that means we mutated the existing
+        // state, which will break shouldComponentUpdate.
+        expect(component.state._radiumStyleState).not.toEqual(previousState);
+
+        result = resolveStyles(component, renderedElement);
+
+        previousState = component.state._radiumStyleState;
+        result.props[offHandlerName]();
+        expect(component.state._radiumStyleState).not.toEqual(previousState);
+      });
     }
 
     it('calls existing ' + onHandlerName + ' handler', function () {

@@ -30,7 +30,6 @@
   "dependencies": {
     "array-find": "^1.0.0",
     "exenv": "^1.2.0",
-    "object-assign": "^3.0.0",
     "babel": "^5.5.8",
     "babel-core": "^5.5.8",
     "rimraf": "^2.4.0"
@@ -57,6 +56,7 @@
     "mocha": "^2.2.5",
     "node-libs-browser": "^0.5.2",
     "phantomjs": "^1.9.17",
+    "object-assign": "^3.0.0",
     "react": ">=0.13.3",
     "sinon": "^1.15.3",
     "sinon-chai": "^2.8.0",
