@@ -892,6 +892,20 @@ describe('resolveStyles', function () {
       expect(console.warn.mock.calls[0][0].indexOf('border'))
         .toBeGreaterThan(0);
     });
+
+    it('does not warn when mixing border and borderRadius', function () {
+      var component = genComponent();
+      var renderedElement = (
+        <div style={{
+          border: '1px solid black',
+          borderRadius: '5px'
+        }} />
+      );
+
+      resolveStyles(component, renderedElement);
+
+      expect(console.warn.mock.calls[0].length).toEqual(0);
+    });
   });
   /* eslint-enable no-console */
 });
