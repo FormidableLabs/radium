@@ -44,6 +44,23 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
     }
   }
 
+  // Class inheritance uses Object.create and because of __proto__ issues
+  // with IE <10 any static properties of the superclass aren't inherited and
+  // so need to be manually populated
+  // See http://babeljs.io/docs/advanced/caveats/#classes-10-and-below-
+  var staticKeys = [
+    'defaultProps',
+    'propTypes',
+    'contextTypes',
+    'childContextTypes'
+  ];
+
+  staticKeys.forEach((key) => {
+    if (ComposedComponent.hasOwnProperty(key)) {
+      RadiumEnhancer[key] = ComposedComponent[key];
+    }
+  });
+
   RadiumEnhancer.displayName = `Radium(${displayName})`;
 
   return RadiumEnhancer;

@@ -10,12 +10,14 @@ env:
     browser: true
     node: true
     amd: false
-    mocha: false
+    mocha: true
     jasmine: false
 
 globals:
     require: true
     module: true
+    expect: true
+    sinon: true
 
 rules:
 

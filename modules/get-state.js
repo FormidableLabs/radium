@@ -5,7 +5,7 @@ var VALID_KEYS = [':active', ':focus', ':hover'];
 var getState = function (
   state: {_radiumStyleState: Object<string, Object<string, boolean>>},
   elementKey: string,
-  value: string,
+  value: string
 ): boolean {
   elementKey = elementKey || 'main';
 

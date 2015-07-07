@@ -27,7 +27,7 @@ if (isAnimationSupported) {
 // Simple animation helper that injects CSS into a style object containing the
 // keyframes, and returns a string with the generated animation name.
 var keyframes = function (
-  keyframeRules: Object<string, Object<string, string|number>>,
+  keyframeRules: Object<string, Object<string, string|number>>
 ): string {
   var name = 'Animation' + animationIndex;
   animationIndex += 1;
