@@ -904,7 +904,7 @@ describe('resolveStyles', function () {
 
       resolveStyles(component, renderedElement);
 
-      expect(console.warn.mock.calls[0].length).toEqual(0);
+      expect(console.warn.mock.calls.length).toEqual(0);
     });
   });
   /* eslint-enable no-console */
