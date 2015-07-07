@@ -20,7 +20,7 @@ module.exports = function (config) {
           test: /\.jsx?$/,
           include: path.resolve('modules/'),
           exclude: /(__tests__|__mocks__)/,
-          loader: 'isparta'
+          loader: 'isparta?{ babel: { stage: 1 } }'
         }],
         loaders: [{
           test: /\.jsx?$/,

@@ -367,13 +367,13 @@ describe('resolveStyles', function () {
         result.props[onHandlerName]();
         // If they are still equal here, that means we mutated the existing
         // state, which will break shouldComponentUpdate.
-        expect(component.state._radiumStyleState).not.toEqual(previousState);
+        expect(component.state._radiumStyleState).not.to.equal(previousState);
 
         result = resolveStyles(component, renderedElement);
 
         previousState = component.state._radiumStyleState;
         result.props[offHandlerName]();
-        expect(component.state._radiumStyleState).not.toEqual(previousState);
+        expect(component.state._radiumStyleState).not.to.equal(previousState);
       });
     }
 
