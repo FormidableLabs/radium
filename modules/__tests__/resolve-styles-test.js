@@ -899,7 +899,7 @@ describe('resolveStyles', function () {
 
       resolveStyles(component, renderedElement);
 
-      expect(console.warn.mock.calls.length).toEqual(0);
+      expect(console.warn).to.not.have.been.called;
     });
   });
   /* eslint-enable no-console */
