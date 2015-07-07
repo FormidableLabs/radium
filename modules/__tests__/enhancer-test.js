@@ -12,7 +12,7 @@ describe('Enhancer', () => {
 
     var instance = new Enhanced();
 
-    expect(instance.state).to.eql({_radiumStyleState: {}});
+    expect(instance.state).to.deep.equal({_radiumStyleState: {}});
   });
 
   it('merges with existing state', () => {
@@ -27,7 +27,7 @@ describe('Enhancer', () => {
     var instance = new Enhanced();
 
 
-    expect(instance.state).to.eql(
+    expect(instance.state).to.deep.equal(
       {foo: 'bar', _radiumStyleState: {}}
     );
   });
@@ -42,7 +42,7 @@ describe('Enhancer', () => {
 
     var instance = new Enhanced({foo: 'bar'});
 
-    expect(instance.props).to.eql({foo: 'bar'});
+    expect(instance.props).to.deep.equal({foo: 'bar'});
   });
 
   it('calls existing render function, then resolveStyles', () => {

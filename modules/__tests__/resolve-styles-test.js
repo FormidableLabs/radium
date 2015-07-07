@@ -72,7 +72,7 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
 
-      expect(result.props.style).to.eql(renderedElement.props.style);
+      expect(result.props.style).to.deep.equal(renderedElement.props.style);
     });
 
     it('passes through normal style objects of children', function () {
@@ -86,7 +86,7 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
       var children = getChildrenArray(result.props.children);
-      expect(children[0].props.style).to.eql(style);
+      expect(children[0].props.style).to.deep.equal(style);
     });
 
     it('doesn\'t wrap string children in spans', function () {
@@ -134,7 +134,7 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
 
-      expect(result.props.style).to.eql({
+      expect(result.props.style).to.deep.equal({
         background: 'white',
         color: 'blue'
       });
@@ -156,7 +156,7 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
 
-      expect(result.props.style).to.eql({
+      expect(result.props.style).to.deep.equal({
         background: 'white',
         color: 'blue'
       });
@@ -173,7 +173,7 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
 
-      expect(result.props.style).to.eql({
+      expect(result.props.style).to.deep.equal({
         background: 'blue'
       });
     });
@@ -191,7 +191,7 @@ describe('resolveStyles', function () {
       result.props.onMouseEnter();
       result = resolveStyles(component, renderedElement);
 
-      expect(result.props.style).to.eql({
+      expect(result.props.style).to.deep.equal({
         background: 'white',
         color: 'blue'
       });
@@ -209,7 +209,7 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
 
-      expect(result.props.style).to.eql({background: 'blue'});
+      expect(result.props.style).to.deep.equal({background: 'blue'});
     });
 
     it('adds appropriate handlers for ' + pseudo + ' styles', function () {
@@ -785,7 +785,7 @@ describe('resolveStyles', function () {
 
       var result = resolveStyles(component, renderedElement);
       var children = getChildrenArray(result.props.children);
-      expect(children[0].props.style).to.eql(style);
+      expect(children[0].props.style).to.deep.equal(style);
     });
 
     it('resolves ReactDOMElement children of ReactComponentElements', function () {
@@ -804,16 +804,16 @@ describe('resolveStyles', function () {
       );
 
       var result = resolveStyles(component, renderedElement);
-      expect(result.props.style).to.eql({
+      expect(result.props.style).to.deep.equal({
         background: 'white',
         color: 'blue'
       });
 
       var children = getChildrenArray(result.props.children);
-      expect(children[0].props.style).to.eql(style);
+      expect(children[0].props.style).to.deep.equal(style);
 
       var componentChildren = getChildrenArray(children[0].props.children);
-      expect(componentChildren[0].props.style).to.eql({
+      expect(componentChildren[0].props.style).to.deep.equal({
         background: 'white',
         color: 'blue'
       });

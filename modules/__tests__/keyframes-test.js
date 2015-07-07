@@ -82,7 +82,7 @@ describe('keyframes', () => {
     });
     var name = keyframes({});
 
-    expect(styleElement.sheet.insertRule.lastCall.args).to.eql([
+    expect(styleElement.sheet.insertRule.lastCall.args).to.deep.equal([
       '@-webkit-keyframes ' + name + ' {\n\n}\n',
       0
     ]);
@@ -96,7 +96,7 @@ describe('keyframes', () => {
     });
     var name = keyframes({});
 
-    expect(styleElement.sheet.insertRule.lastCall.args).to.eql([
+    expect(styleElement.sheet.insertRule.lastCall.args).to.deep.equal([
       '@keyframes ' + name + ' {\n\n}\n',
       1
     ]);
@@ -116,7 +116,7 @@ describe('keyframes', () => {
       }
     });
 
-    expect(styleElement.sheet.insertRule.lastCall.args).to.eql([
+    expect(styleElement.sheet.insertRule.lastCall.args).to.deep.equal([
 `@-webkit-keyframes ${name} {
   from {
     width: 100;
