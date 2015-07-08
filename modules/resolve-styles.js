@@ -244,7 +244,8 @@ var resolveStyles = function (
         'fontStyle',
         'fontVariant',
         'fontVariantLigatures',
-        'fontWeight'
+        'fontWeight',
+        'lineHeight'
       ],
       'listStyle': [
         'listStyleImage',
