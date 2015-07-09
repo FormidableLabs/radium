@@ -191,6 +191,7 @@ var _getPrefixedValue = function (property, value, originalProperty) {
         if (console && console.warn) {
           console.warn('CSS value is "' + value + '" for property "' + property + '"');
         }
+        return value;
       }
     }
 
