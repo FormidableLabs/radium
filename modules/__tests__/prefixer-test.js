@@ -158,7 +158,9 @@ describe('Prefixer', () => {
   it('ignores undefined values', () => {
     mockStyle = { lineHeight: '' };
     var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
-    expect(Prefixer.getPrefixedStyle({lineHeight: undefined})).to.deep.equal({lineHeight: undefined});
+    expect(
+      Prefixer.getPrefixedStyle({lineHeight: undefined})).to.deep.equal({lineHeight: undefined}
+    );
   });
 
   it('uses prefixed value if unprefixed setter fails and it works', () => {
