@@ -8,62 +8,35 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
     ComposedComponent.name ||
     'Component';
 
-  class RadiumEnhancer extends ComposedComponent {
-    _radiumMediaQueryListenersByQuery: Object<string, {remove: () => void}>;
-    _radiumMouseUpListener: {remove: () => void};
+  let { render, componentWillUnmount } = ComposedComponent.prototype;
 
-    constructor () {
-      super(...arguments);
+  ComposedComponent.prototype.render = function () {
+    var renderedElement = render.call(this);
+    return resolveStyles(this, renderedElement);
+  };
 
-      this.state = this.state || {};
-      this.state._radiumStyleState = {};
+  ComposedComponent.prototype.componentWillUnmount = function () {
+    if (componentWillUnmount) {
+      componentWillUnmount.call(this);
     }
 
-    render () {
-      var renderedElement = super.render();
-      return resolveStyles(this, renderedElement);
+    if (this._radiumMouseUpListener) {
+      this._radiumMouseUpListener.remove();
     }
 
-    componentWillUnmount () {
-      if (super.componentWillUnmount) {
-        super.componentWillUnmount();
-      }
-
-      if (this._radiumMouseUpListener) {
-        this._radiumMouseUpListener.remove();
-      }
-
-      if (this._radiumMediaQueryListenersByQuery) {
-        Object.keys(this._radiumMediaQueryListenersByQuery).forEach(
-          function (query) {
-            this._radiumMediaQueryListenersByQuery[query].remove();
-          },
-          this
-        );
-      }
+    if (this._radiumMediaQueryListenersByQuery) {
+      Object.keys(this._radiumMediaQueryListenersByQuery).forEach(
+        function (query) {
+          this._radiumMediaQueryListenersByQuery[query].remove();
+        },
+        this
+      );
     }
-  }
+  };
 
-  // Class inheritance uses Object.create and because of __proto__ issues
-  // with IE <10 any static properties of the superclass aren't inherited and
-  // so need to be manually populated
-  // See http://babeljs.io/docs/advanced/caveats/#classes-10-and-below-
-  var staticKeys = [
-    'defaultProps',
-    'propTypes',
-    'contextTypes',
-    'childContextTypes'
-  ];
+  ComposedComponent.displayName = `Radium(${displayName})`;
 
-  staticKeys.forEach((key) => {
-    if (ComposedComponent.hasOwnProperty(key)) {
-      RadiumEnhancer[key] = ComposedComponent[key];
-    }
-  });
-
-  RadiumEnhancer.displayName = `Radium(${displayName})`;
-
-  return RadiumEnhancer;
+  return ComposedComponent;
 };
 
 module.exports = enhanceWithRadium;

@@ -6,32 +6,6 @@ var Enhancer = require('inject!enhancer.js')({
 var {Component} = require('react');
 
 describe('Enhancer', () => {
-  it('sets up initial state', () => {
-    class Composed extends Component { }
-    var Enhanced = Enhancer(Composed);
-
-    var instance = new Enhanced();
-
-    expect(instance.state).to.deep.equal({_radiumStyleState: {}});
-  });
-
-  it('merges with existing state', () => {
-    class Composed extends Component {
-      constructor () {
-        super();
-        this.state = {foo: 'bar'};
-      }
-    }
-    var Enhanced = Enhancer(Composed);
-
-    var instance = new Enhanced();
-
-
-    expect(instance.state).to.deep.equal(
-      {foo: 'bar', _radiumStyleState: {}}
-    );
-  });
-
   it('receives the given props', () => {
     class Composed extends Component {
       constructor (props) {
