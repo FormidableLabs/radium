@@ -61,6 +61,16 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
     }
   });
 
+  if (process.env.NODE_ENV !== 'production') {
+    // This fixes React Hot Loader by exposing the original components top level
+    // prototype methods on the Radium enhanced prototype as discussed in #219.
+    Object.keys(ComposedComponent.prototype).forEach(key => {
+      if (!RadiumEnhancer.prototype.hasOwnProperty(key)) {
+        RadiumEnhancer.prototype[key] = ComposedComponent.prototype[key];
+      }
+    });
+  }
+
   RadiumEnhancer.displayName = `Radium(${displayName})`;
 
   return RadiumEnhancer;
