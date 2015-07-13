@@ -149,6 +149,20 @@ describe('Prefixer', () => {
     expect(Prefixer.getPrefixedStyle({lineHeight: '2em'})).to.deep.equal({lineHeight: '2em'});
   });
 
+  it('ignores null values', () => {
+    mockStyle = { lineHeight: '' };
+    var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
+    expect(Prefixer.getPrefixedStyle({lineHeight: null})).to.deep.equal({lineHeight: null});
+  });
+
+  it('ignores undefined values', () => {
+    mockStyle = { lineHeight: '' };
+    var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
+    expect(
+      Prefixer.getPrefixedStyle({lineHeight: undefined})).to.deep.equal({lineHeight: undefined}
+    );
+  });
+
   it('uses prefixed value if unprefixed setter fails and it works', () => {
     browserPrefix = '-webkit-';
     var flexValue = '';

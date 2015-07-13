@@ -184,7 +184,15 @@ var _getPrefixedValue = function (property, value, originalProperty) {
     }
 
     if (typeof value !== 'string') {
-      value = value.toString();
+      if (value !== null && value !== undefined) {
+        value = value.toString();
+      } else {
+        /* eslint-disable no-console */
+        if (console && console.warn) {
+          console.warn('CSS value is "' + value + '" for property "' + property + '"');
+        }
+        return value;
+      }
     }
 
     // don't test numbers with units (e.g. 10em)
