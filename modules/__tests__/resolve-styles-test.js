@@ -887,6 +887,20 @@ describe('resolveStyles', function () {
       expect(console.warn.firstCall.args[0].indexOf('border'))
         .to.be.greaterThan(0);
     });
+
+    it('does not warn when mixing border and borderRadius', function () {
+      var component = genComponent();
+      var renderedElement = (
+        <div style={{
+          border: '1px solid black',
+          borderRadius: '5px'
+        }} />
+      );
+
+      resolveStyles(component, renderedElement);
+
+      expect(console.warn).to.not.have.been.called;
+    });
   });
   /* eslint-enable no-console */
 });

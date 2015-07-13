@@ -186,26 +186,110 @@ var resolveStyles = function (
     // object.
     // https://developer.mozilla.org/en-US/docs/Web/CSS/Shorthand_properties
 
-    var shorthandProps = [
-      'background', 'border', 'borderBottom', 'borderColor', 'borderLeft',
-      'borderRadius', 'borderRight', 'borderStyle', 'borderTop', 'borderWidth',
-      'font', 'listStyle', 'margin', 'padding', 'transform', 'transition'
-    ];
+    var shorthandPropertyExpansions = {
+      'background': [
+        'backgroundAttachment',
+        'backgroundBlendMode',
+        'backgroundClip',
+        'backgroundColor',
+        'backgroundImage',
+        'backgroundOrigin',
+        'backgroundPosition',
+        'backgroundPositionX',
+        'backgroundPositionY',
+        'backgroundRepeat',
+        'backgroundRepeatX',
+        'backgroundRepeatY',
+        'backgroundSize'
+      ],
+      'border': [
+        'borderBottom',
+        'borderBottomColor',
+        'borderBottomStyle',
+        'borderBottomWidth',
+        'borderColor',
+        'borderLeft',
+        'borderLeftColor',
+        'borderLeftStyle',
+        'borderLeftWidth',
+        'borderRight',
+        'borderRightColor',
+        'borderRightStyle',
+        'borderRightWidth',
+        'borderStyle',
+        'borderTop',
+        'borderTopColor',
+        'borderTopStyle',
+        'borderTopWidth',
+        'borderWidth'
+      ],
+      'borderImage': [
+        'borderImageOutset',
+        'borderImageRepeat',
+        'borderImageSlice',
+        'borderImageSource',
+        'borderImageWidth'
+      ],
+      'borderRadius': [
+        'borderBottomLeftRadius',
+        'borderBottomRightRadius',
+        'borderTopLeftRadius',
+        'borderTopRightRadius'
+      ],
+      'font': [
+        'fontFamily',
+        'fontKerning',
+        'fontSize',
+        'fontStretch',
+        'fontStyle',
+        'fontVariant',
+        'fontVariantLigatures',
+        'fontWeight',
+        'lineHeight'
+      ],
+      'listStyle': [
+        'listStyleImage',
+        'listStylePosition',
+        'listStyleType'
+      ],
+      'margin': [
+        'marginBottom',
+        'marginLeft',
+        'marginRight',
+        'marginTop'
+      ],
+      'padding': [
+        'paddingBottom',
+        'paddingLeft',
+        'paddingRight',
+        'paddingTop'
+      ],
+      'transform': [
+        'transformOrigin',
+        'transformStyle'
+      ],
+      'transition': [
+        'transitionDelay',
+        'transitionDuration',
+        'transitionProperty',
+        'transitionTimingFunction'
+      ]
+    };
 
     var checkProps = s => {
       if (typeof s !== 'object') {
         return;
       }
 
-      var keys = Object.keys(s);
-      shorthandProps.forEach(shorthand => {
+      var styleKeys = Object.keys(s);
+      styleKeys.forEach(styleKey => {
         if (
-          s[shorthand] &&
-          keys.some(k => k !== shorthand && k.indexOf(shorthand) === 0)
+          shorthandPropertyExpansions[styleKey] &&
+          shorthandPropertyExpansions[styleKey].some(sp => styleKeys.indexOf(sp) !== -1)
         ) {
           /* eslint-disable no-console */
           console.warn(
-            'Radium: property "' + shorthand + '" in style object',
+            'Radium: property "' + styleKey + '" in style object',
             style,
             ': do not mix longhand and ' +
             'shorthand properties in the same style object. Check the render ' +
@@ -217,7 +301,7 @@ var resolveStyles = function (
         }
       });
 
-      keys.forEach(k => checkProps(s[k]));
+      styleKeys.forEach(k => checkProps(s[k]));
     };
     checkProps(style);
   }
