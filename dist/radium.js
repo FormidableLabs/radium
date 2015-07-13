@@ -61,16 +61,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = function (ComposedComponent) {
 	  return Enhancer(ComposedComponent);
 	};
-	module.exports.Style = __webpack_require__(12);
-	module.exports.getState = __webpack_require__(5);
-	module.exports.keyframes = __webpack_require__(14);
-	module.exports.Config = __webpack_require__(9);
+	module.exports.Style = __webpack_require__(11);
+	module.exports.getState = __webpack_require__(7);
+	module.exports.keyframes = __webpack_require__(13);
+	module.exports.Config = __webpack_require__(4);
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* @flow */
+	/* WEBPACK VAR INJECTION */(function(process) {/* @flow */
 
 	'use strict';
 
@@ -82,7 +82,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var resolveStyles = __webpack_require__(2);
+	var resolveStyles = __webpack_require__(3);
 
 	var enhanceWithRadium = function enhanceWithRadium(ComposedComponent) {
 	  var displayName = ComposedComponent.displayName || ComposedComponent.name || 'Component';
@@ -127,29 +127,154 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return RadiumEnhancer;
 	  })(ComposedComponent);
 
+	  // Class inheritance uses Object.create and because of __proto__ issues
+	  // with IE <10 any static properties of the superclass aren't inherited and
+	  // so need to be manually populated
+	  // See http://babeljs.io/docs/advanced/caveats/#classes-10-and-below-
+	  var staticKeys = ['defaultProps', 'propTypes', 'contextTypes', 'childContextTypes'];
+
+	  staticKeys.forEach(function (key) {
+	    if (ComposedComponent.hasOwnProperty(key)) {
+	      RadiumEnhancer[key] = ComposedComponent[key];
+	    }
+	  });
+
+	  if (process.env.NODE_ENV !== 'production') {
+	    // This fixes React Hot Loader by exposing the original components top level
+	    // prototype methods on the Radium enhanced prototype as discussed in #219.
+	    Object.keys(ComposedComponent.prototype).forEach(function (key) {
+	      if (!RadiumEnhancer.prototype.hasOwnProperty(key)) {
+	        RadiumEnhancer.prototype[key] = ComposedComponent.prototype[key];
+	      }
+	    });
+	  }
+
 	  RadiumEnhancer.displayName = 'Radium(' + displayName + ')';
 
 	  return RadiumEnhancer;
 	};
 
 	module.exports = enhanceWithRadium;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
 /* 2 */
+/***/ function(module, exports) {
+
+	// shim for using process in browser
+
+	'use strict';
+
+	var process = module.exports = {};
+	var queue = [];
+	var draining = false;
+	var currentQueue;
+	var queueIndex = -1;
+
+	function cleanUpNextTick() {
+	    draining = false;
+	    if (currentQueue.length) {
+	        queue = currentQueue.concat(queue);
+	    } else {
+	        queueIndex = -1;
+	    }
+	    if (queue.length) {
+	        drainQueue();
+	    }
+	}
+
+	function drainQueue() {
+	    if (draining) {
+	        return;
+	    }
+	    var timeout = setTimeout(cleanUpNextTick);
+	    draining = true;
+
+	    var len = queue.length;
+	    while (len) {
+	        currentQueue = queue;
+	        queue = [];
+	        while (++queueIndex < len) {
+	            currentQueue[queueIndex].run();
+	        }
+	        queueIndex = -1;
+	        len = queue.length;
+	    }
+	    currentQueue = null;
+	    draining = false;
+	    clearTimeout(timeout);
+	}
+
+	process.nextTick = function (fun) {
+	    var args = new Array(arguments.length - 1);
+	    if (arguments.length > 1) {
+	        for (var i = 1; i < arguments.length; i++) {
+	            args[i - 1] = arguments[i];
+	        }
+	    }
+	    queue.push(new Item(fun, args));
+	    if (queue.length === 1 && !draining) {
+	        setTimeout(drainQueue, 0);
+	    }
+	};
+
+	// v8 likes predictible objects
+	function Item(fun, array) {
+	    this.fun = fun;
+	    this.array = array;
+	}
+	Item.prototype.run = function () {
+	    this.fun.apply(null, this.array);
+	};
+	process.title = 'browser';
+	process.browser = true;
+	process.env = {};
+	process.argv = [];
+	process.version = ''; // empty string to avoid regexp issues
+	process.versions = {};
+
+	function noop() {}
+
+	process.on = noop;
+	process.addListener = noop;
+	process.once = noop;
+	process.off = noop;
+	process.removeListener = noop;
+	process.removeAllListeners = noop;
+	process.emit = noop;
+
+	process.binding = function (name) {
+	    throw new Error('process.binding is not supported');
+	};
+
+	// TODO(shtylman)
+	process.cwd = function () {
+	    return '/';
+	};
+	process.chdir = function (dir) {
+	    throw new Error('process.chdir is not supported');
+	};
+	process.umask = function () {
+	    return 0;
+	};
+
+/***/ },
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/* @flow */
 
 	'use strict';
 
-	var MouseUpListener = __webpack_require__(4);
-	var getState = __webpack_require__(5);
-	var Prefixer = __webpack_require__(6);
-	var Config = __webpack_require__(9);
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var ExecutionEnvironment = __webpack_require__(7);
+	var MouseUpListener = __webpack_require__(6);
+	var getState = __webpack_require__(7);
+	var Prefixer = __webpack_require__(8);
+	var Config = __webpack_require__(4);
+
+	var ExecutionEnvironment = __webpack_require__(5);
 	var React = __webpack_require__(10);
-	var objectAssign = __webpack_require__(11);
 
 	// babel-eslint 3.1.7 fails here for some reason, error:
 	//   0:0  error  Cannot call method 'isSequenceExpression' of undefined
@@ -171,10 +296,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var _setStyleState = function _setStyleState(component, key, newState) {
-	  var existing = component.state && component.state._radiumStyleState || {};
-	  var state = { _radiumStyleState: objectAssign({}, existing) };
-	  state._radiumStyleState[key] = state._radiumStyleState[key] || {};
-	  objectAssign(state._radiumStyleState[key], newState);
+	  var existing = component._lastRadiumState || component.state && component.state._radiumStyleState || {};
+
+	  var state = { _radiumStyleState: _extends({}, existing) };
+	  state._radiumStyleState[key] = _extends({}, state._radiumStyleState[key], newState);
+
+	  component._lastRadiumState = state;
 	  component.setState(state);
 	};
 
@@ -323,25 +450,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // object.
 	    // https://developer.mozilla.org/en-US/docs/Web/CSS/Shorthand_properties
 
-	    var shorthandProps = ['background', 'border', 'borderBottom', 'borderColor', 'borderLeft', 'borderRadius', 'borderRight', 'borderStyle', 'borderTop', 'borderWidth', 'font', 'listStyle', 'margin', 'padding', 'transform', 'transition'];
+	    var shorthandPropertyExpansions = {
+	      'background': ['backgroundAttachment', 'backgroundBlendMode', 'backgroundClip', 'backgroundColor', 'backgroundImage', 'backgroundOrigin', 'backgroundPosition', 'backgroundPositionX', 'backgroundPositionY', 'backgroundRepeat', 'backgroundRepeatX', 'backgroundRepeatY', 'backgroundSize'],
+	      'border': ['borderBottom', 'borderBottomColor', 'borderBottomStyle', 'borderBottomWidth', 'borderColor', 'borderLeft', 'borderLeftColor', 'borderLeftStyle', 'borderLeftWidth', 'borderRight', 'borderRightColor', 'borderRightStyle', 'borderRightWidth', 'borderStyle', 'borderTop', 'borderTopColor', 'borderTopStyle', 'borderTopWidth', 'borderWidth'],
+	      'borderImage': ['borderImageOutset', 'borderImageRepeat', 'borderImageSlice', 'borderImageSource', 'borderImageWidth'],
+	      'borderRadius': ['borderBottomLeftRadius', 'borderBottomRightRadius', 'borderTopLeftRadius', 'borderTopRightRadius'],
+	      'font': ['fontFamily', 'fontKerning', 'fontSize', 'fontStretch', 'fontStyle', 'fontVariant', 'fontVariantLigatures', 'fontWeight', 'lineHeight'],
+	      'listStyle': ['listStyleImage', 'listStylePosition', 'listStyleType'],
+	      'margin': ['marginBottom', 'marginLeft', 'marginRight', 'marginTop'],
+	      'padding': ['paddingBottom', 'paddingLeft', 'paddingRight', 'paddingTop'],
+	      'transform': ['transformOrigin', 'transformStyle'],
+	      'transition': ['transitionDelay', 'transitionDuration', 'transitionProperty', 'transitionTimingFunction']
+	    };
 
 	    var checkProps = function checkProps(s) {
 	      if (typeof s !== 'object') {
 	        return;
 	      }
 
-	      var keys = Object.keys(s);
-	      shorthandProps.forEach(function (shorthand) {
-	        if (s[shorthand] && keys.some(function (k) {
-	          return k !== shorthand && k.indexOf(shorthand) === 0;
+	      var styleKeys = Object.keys(s);
+	      styleKeys.forEach(function (styleKey) {
+	        if (shorthandPropertyExpansions[styleKey] && shorthandPropertyExpansions[styleKey].some(function (sp) {
+	          return styleKeys.indexOf(sp) !== -1;
 	        })) {
 	          /* eslint-disable no-console */
-	          console.warn('Radium: property "' + shorthand + '" in style object', style, ': do not mix longhand and ' + 'shorthand properties in the same style object. See ' + 'https://github.com/FormidableLabs/radium/issues/95 for more ' + 'information.');
+	          console.warn('Radium: property "' + styleKey + '" in style object', style, ': do not mix longhand and ' + 'shorthand properties in the same style object. Check the render ' + 'method of ' + component.constructor.displayName + '.', 'See https://github.com/FormidableLabs/radium/issues/95 for more ' + 'information.');
 	          /* eslint-enable no-console */
 	        }
 	      });
 
-	      keys.forEach(function (k) {
+	      styleKeys.forEach(function (k) {
 	        return checkProps(s[k]);
 	      });
 	    };
@@ -451,111 +589,78 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = resolveStyles;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	// shim for using process in browser
-
-	'use strict';
-
-	var process = module.exports = {};
-	var queue = [];
-	var draining = false;
-	var currentQueue;
-	var queueIndex = -1;
-
-	function cleanUpNextTick() {
-	    draining = false;
-	    if (currentQueue.length) {
-	        queue = currentQueue.concat(queue);
-	    } else {
-	        queueIndex = -1;
-	    }
-	    if (queue.length) {
-	        drainQueue();
-	    }
-	}
-
-	function drainQueue() {
-	    if (draining) {
-	        return;
-	    }
-	    var timeout = setTimeout(cleanUpNextTick);
-	    draining = true;
-
-	    var len = queue.length;
-	    while (len) {
-	        currentQueue = queue;
-	        queue = [];
-	        while (++queueIndex < len) {
-	            currentQueue[queueIndex].run();
-	        }
-	        queueIndex = -1;
-	        len = queue.length;
-	    }
-	    currentQueue = null;
-	    draining = false;
-	    clearTimeout(timeout);
-	}
-
-	process.nextTick = function (fun) {
-	    var args = new Array(arguments.length - 1);
-	    if (arguments.length > 1) {
-	        for (var i = 1; i < arguments.length; i++) {
-	            args[i - 1] = arguments[i];
-	        }
-	    }
-	    queue.push(new Item(fun, args));
-	    if (queue.length === 1 && !draining) {
-	        setTimeout(drainQueue, 0);
-	    }
-	};
-
-	// v8 likes predictible objects
-	function Item(fun, array) {
-	    this.fun = fun;
-	    this.array = array;
-	}
-	Item.prototype.run = function () {
-	    this.fun.apply(null, this.array);
-	};
-	process.title = 'browser';
-	process.browser = true;
-	process.env = {};
-	process.argv = [];
-	process.version = ''; // empty string to avoid regexp issues
-	process.versions = {};
-
-	function noop() {}
-
-	process.on = noop;
-	process.addListener = noop;
-	process.once = noop;
-	process.off = noop;
-	process.removeListener = noop;
-	process.removeAllListeners = noop;
-	process.emit = noop;
-
-	process.binding = function (name) {
-	    throw new Error('process.binding is not supported');
-	};
-
-	// TODO(shtylman)
-	process.cwd = function () {
-	    return '/';
-	};
-	process.chdir = function (dir) {
-	    throw new Error('process.chdir is not supported');
-	};
-	process.umask = function () {
-	    return 0;
-	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
 /* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* @flow */
+
+	'use strict';
+
+	var ExecutionEnvironment = __webpack_require__(5);
+
+	var _matchMediaFunction = ExecutionEnvironment.canUseDOM && window && window.matchMedia && function (mediaQueryString) {
+	  return window.matchMedia(mediaQueryString);
+	};
+
+	module.exports = {
+	  canMatchMedia: function canMatchMedia() {
+	    return typeof _matchMediaFunction === 'function';
+	  },
+
+	  matchMedia: function matchMedia(query) {
+	    return _matchMediaFunction(query);
+	  },
+
+	  setMatchMedia: function setMatchMedia(nextMatchMediaFunction) {
+	    _matchMediaFunction = nextMatchMediaFunction;
+	  }
+	};
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2015 Jed Watson.
+	  Based on code that is Copyright 2013-2015, Facebook, Inc.
+	  All rights reserved.
+	*/
+
+	'use strict';
+
+	(function () {
+		'use strict';
+
+		var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+
+		var ExecutionEnvironment = {
+
+			canUseDOM: canUseDOM,
+
+			canUseWorkers: typeof Worker !== 'undefined',
+
+			canUseEventListeners: canUseDOM && !!(window.addEventListener || window.attachEvent),
+
+			canUseViewport: canUseDOM && !!window.screen
+
+		};
+
+		if (true) {
+			!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return ExecutionEnvironment;
+			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else if (typeof module !== 'undefined' && module.exports) {
+			module.exports = ExecutionEnvironment;
+		} else {
+			window.ExecutionEnvironment = ExecutionEnvironment;
+		}
+	})();
+
+/***/ },
+/* 6 */
 /***/ function(module, exports) {
 
 	/* @flow */
@@ -599,7 +704,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 5 */
+/* 7 */
 /***/ function(module, exports) {
 
 	/* @flow */
@@ -621,7 +726,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = getState;
 
 /***/ },
-/* 6 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -631,8 +736,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var ExecutionEnvironment = __webpack_require__(7);
-	var arrayFind = __webpack_require__(8);
+	var ExecutionEnvironment = __webpack_require__(5);
+	var arrayFind = __webpack_require__(9);
 
 	var infoByCssPrefix = {
 	  '-moz-': {
@@ -796,7 +901,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    if (typeof value !== 'string') {
-	      value = value.toString();
+	      if (value !== null && value !== undefined) {
+	        value = value.toString();
+	      } else {
+	        /* eslint-disable no-console */
+	        if (console && console.warn) {
+	          console.warn('CSS value is "' + value + '" for property "' + property + '"');
+	        }
+	        return value;
+	      }
 	    }
 
 	    // don't test numbers with units (e.g. 10em)
@@ -913,47 +1026,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	  Copyright (c) 2015 Jed Watson.
-	  Based on code that is Copyright 2013-2015, Facebook, Inc.
-	  All rights reserved.
-	*/
-
-	'use strict';
-
-	(function () {
-		'use strict';
-
-		var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
-
-		var ExecutionEnvironment = {
-
-			canUseDOM: canUseDOM,
-
-			canUseWorkers: typeof Worker !== 'undefined',
-
-			canUseEventListeners: canUseDOM && !!(window.addEventListener || window.attachEvent),
-
-			canUseViewport: canUseDOM && !!window.screen
-
-		};
-
-		if (true) {
-			!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
-				return ExecutionEnvironment;
-			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		} else if (typeof module !== 'undefined' && module.exports) {
-			module.exports = ExecutionEnvironment;
-		} else {
-			window.ExecutionEnvironment = ExecutionEnvironment;
-		}
-	})();
-
-/***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -981,32 +1054,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = find;
 
 /***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* @flow */
-
-	'use strict';
-
-	var ExecutionEnvironment = __webpack_require__(7);
-
-	var _matchMediaFunction = ExecutionEnvironment.canUseDOM && window && window.matchMedia;
-
-	module.exports = {
-	  canMatchMedia: function canMatchMedia() {
-	    return typeof _matchMediaFunction === 'function';
-	  },
-
-	  matchMedia: function matchMedia(query) {
-	    return _matchMediaFunction(query);
-	  },
-
-	  setMatchMedia: function setMatchMedia(nextMatchMediaFunction) {
-	    _matchMediaFunction = nextMatchMediaFunction;
-	  }
-	};
-
-/***/ },
 /* 10 */
 /***/ function(module, exports) {
 
@@ -1014,56 +1061,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 11 */
-/***/ function(module, exports) {
-
-	'use strict';
-	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-	function ToObject(val) {
-		if (val == null) {
-			throw new TypeError('Object.assign cannot be called with null or undefined');
-		}
-
-		return Object(val);
-	}
-
-	function ownEnumerableKeys(obj) {
-		var keys = Object.getOwnPropertyNames(obj);
-
-		if (Object.getOwnPropertySymbols) {
-			keys = keys.concat(Object.getOwnPropertySymbols(obj));
-		}
-
-		return keys.filter(function (key) {
-			return propIsEnumerable.call(obj, key);
-		});
-	}
-
-	module.exports = Object.assign || function (target, source) {
-		var from;
-		var keys;
-		var to = ToObject(target);
-
-		for (var s = 1; s < arguments.length; s++) {
-			from = arguments[s];
-			keys = ownEnumerableKeys(Object(from));
-
-			for (var i = 0; i < keys.length; i++) {
-				to[keys[i]] = from[keys[i]];
-			}
-		}
-
-		return to;
-	};
-
-/***/ },
-/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var createMarkupForStyles = __webpack_require__(13);
-	var Prefixer = __webpack_require__(6);
+	var createMarkupForStyles = __webpack_require__(12);
+	var Prefixer = __webpack_require__(8);
 
 	var React = __webpack_require__(10);
 
@@ -1148,7 +1151,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Style;
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports) {
 
 	/* @flow */
@@ -1165,17 +1168,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = createMarkupForStyles;
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* @flow */
 
 	'use strict';
 
-	var createMarkupForStyles = __webpack_require__(13);
-	var Prefixer = __webpack_require__(6);
+	var createMarkupForStyles = __webpack_require__(12);
+	var Prefixer = __webpack_require__(8);
 
-	var ExecutionEnvironment = __webpack_require__(7);
+	var ExecutionEnvironment = __webpack_require__(5);
 
 	var isAnimationSupported = ExecutionEnvironment.canUseDOM && Prefixer.getPrefixedPropertyName('animation') !== false;
 

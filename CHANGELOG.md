@@ -1,5 +1,22 @@
 # Radium Changelog
 
+## 0.13.3 (July 13, 2015)
+
+### Bug Fixes
+
+- Fix hotloading component methods, #255, thanks @bobbyrenwick
+- Add displayName to shorthand warning, #253, thanks @bobbyrenwick
+- Warn and ignore null/undefined values, #250, thanks @AnSavvides
+- Don't warn when mixing border & borderRadius, and more shorthand warning updates, #246, thanks @nathanfriemel
+- Remove react from peerDependencies so Radium can be used with the 0.14 beta, #242, thanks @dariocravero
+- Fix transfering defaultProps and friends in IE <11, #241, thanks @bobbyrenwick
+- Don't alias matchMedia, fixes IE <11 bug, #238
+- Stop mutating style state, #237
+
+### Misc
+
+- Migrate tests to Karma, #240, thanks @exogen
+
 ## 0.13.2 (June 25, 2015)
 
 ### Bug Fixes
