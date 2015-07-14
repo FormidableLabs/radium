@@ -1,5 +1,11 @@
 # Radium Changelog
 
+## 0.13.4 (July 14, 2015)
+
+### Bug Fixes
+
+- Fix regression with multiple states (tests were failing) from 0.13.3
+
 ## 0.13.3 (July 13, 2015)
 
 ### Bug Fixes
