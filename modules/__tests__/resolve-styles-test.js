@@ -902,7 +902,7 @@ describe('resolveStyles', function () {
       expect(console.warn).to.not.have.been.called;
     });
 
-    it('does not warn when passed a falsy entry value', function () {
+    it('does not throw when passed a falsy entry value', function () {
       var component = genComponent();
       var renderedElement = (
         <div style={{
