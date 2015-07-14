@@ -212,7 +212,7 @@ import Radium, { Style } from 'radium'
 A string that any included selectors in `rules` will be appended to. Use to scope styles in the component to a particular element. A good use case might be to generate a unique ID for a component to scope any styles to the particular component that owns the `<Style>` component instance.
 
 ```as
-<div classname="TestClass">
+<div className="TestClass">
   <Style
   scopeSelector=".TestClass"
     rules={{
