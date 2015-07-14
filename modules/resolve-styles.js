@@ -34,7 +34,7 @@ var _setStyleState = function (component, key, newState) {
   var state = { _radiumStyleState: {...existing} };
   state._radiumStyleState[key] = {...state._radiumStyleState[key], ...newState};
 
-  component._lastRadiumState = state;
+  component._lastRadiumState = state._radiumStyleState;
   component.setState(state);
 };
 
