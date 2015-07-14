@@ -1,6 +1,6 @@
 {
   "name": "radium",
-  "version": "0.13.3",
+  "version": "0.13.4",
   "description": "A set of tools to manage inline styles on React elements",
   "main": "lib/index.js",
   "repository": {
@@ -19,7 +19,7 @@
     "lib": "npm run babel && rimraf lib/__tests__ lib/__mocks__",
     "lint": "eslint modules",
     "postinstall": "node -e \"require('fs').stat('lib', function(e,s){process.exit(e || !s.isDirectory() ? 1 : 0)})\" || npm run prepublish",
-    "prepublish": "npm run lib",
+    "prepublish": "npm test && npm run lint && npm run lib",
     "test": "karma start",
     "test-coverage": "karma start karma.conf.coverage.js"
   },

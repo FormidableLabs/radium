@@ -301,7 +301,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var state = { _radiumStyleState: _extends({}, existing) };
 	  state._radiumStyleState[key] = _extends({}, state._radiumStyleState[key], newState);
 
-	  component._lastRadiumState = state;
+	  component._lastRadiumState = state._radiumStyleState;
 	  component.setState(state);
 	};
 
