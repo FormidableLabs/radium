@@ -100,10 +100,17 @@ if (ExecutionEnvironment.canUseDOM) {
 
   // Based on http://davidwalsh.name/vendor-prefix
   var windowStyles = window.getComputedStyle(document.documentElement, '');
-  var prefixMatch = Array.prototype.slice.call(windowStyles)
-    .join('')
-    .match(/-(moz|webkit|ms|o)-/);
-  var cssVendorPrefix = prefixMatch && prefixMatch[0];
+  var prefixMatch, cssVendorPrefix;
+
+  for (var i = 0; i < windowStyles.length; i++) {
+    prefixMatch = windowStyles[i].match(/-(moz|webkit|ms|o)-/);
+
+    if (prefixMatch) {
+      break;
+    }
+  }
+
+  cssVendorPrefix = prefixMatch && prefixMatch[0];
 
   prefixInfo = infoByCssPrefix[cssVendorPrefix] || prefixInfo;
 }
