@@ -141,7 +141,7 @@ var pulseKeyframes = Radium.keyframes({
 
 var styles = {
   inner: {
-    animation: pulseKeyframes + ' 3s ease 0s infinite',
+    animation: `${pulseKeyframes} 3s ease 0s infinite`,
     background: 'blue',
     height: '4px',
     margin: '0 auto',
