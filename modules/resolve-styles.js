@@ -139,8 +139,8 @@ var resolveStyles = function (
   var oldChildren = renderedElement.props.children;
   if (oldChildren) {
     var childrenType = typeof oldChildren;
-    if (childrenType === 'string' || childrenType === 'number') {
-      // Don't do anything with a single primitive child
+    if (childrenType === 'string' || childrenType === 'number' || childrenType === 'function') {
+      // Don't do anything with a single primitive child or functions
       newChildren = oldChildren;
     } else if (React.Children.count(oldChildren) === 1 && oldChildren.type) {
       // If a React Element is an only child, don't wrap it in an array for
