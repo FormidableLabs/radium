@@ -317,7 +317,7 @@ var resolveStyles = function (
   ) {
     if (style) {
       // Still perform vendor prefixing, though.
-      newProps.style = Prefixer.getPrefixedStyle(style);
+      newProps.style = Prefixer.getPrefixedStyle(component, style);
       return React.cloneElement(renderedElement, newProps, newChildren);
     } else if (newChildren) {
       return React.cloneElement(renderedElement, {}, newChildren);
@@ -420,7 +420,7 @@ var resolveStyles = function (
     );
   }
 
-  newProps.style = Prefixer.getPrefixedStyle(newStyle);
+  newProps.style = Prefixer.getPrefixedStyle(component, newStyle);
 
   return React.cloneElement(renderedElement, newProps, newChildren);
 };
