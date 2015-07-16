@@ -12,7 +12,7 @@ module.exports = {
     return typeof _matchMediaFunction === 'function';
   },
 
-  matchMedia (query: string) {
+  matchMedia (query: string): Function {
     return _matchMediaFunction(query);
   },
 

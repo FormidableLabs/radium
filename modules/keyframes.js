@@ -10,14 +10,13 @@ var isAnimationSupported = ExecutionEnvironment.canUseDOM &&
 
 var animationIndex = 1;
 var animationStyleSheet = null;
-var keyframesPrefixed = null;
+var keyframesPrefixed = 'keyframes';
 
 if (isAnimationSupported) {
   animationStyleSheet = (document.createElement('style'): any);
   document.head.appendChild(animationStyleSheet);
 
   // Test if prefix needed for keyframes (copied from PrefixFree)
-  keyframesPrefixed = 'keyframes';
   animationStyleSheet.textContent = '@keyframes {}';
   if (!animationStyleSheet.sheet.cssRules.length) {
     keyframesPrefixed = Prefixer.cssPrefix + 'keyframes';
@@ -27,7 +26,8 @@ if (isAnimationSupported) {
 // Simple animation helper that injects CSS into a style object containing the
 // keyframes, and returns a string with the generated animation name.
 var keyframes = function (
-  keyframeRules: Object<string, Object<string, string|number>>
+  keyframeRules: {[percentage: string]: {[key: string]: string|number}},
+  component: any
 ): string {
   var name = 'Animation' + animationIndex;
   animationIndex += 1;
@@ -39,7 +39,7 @@ var keyframes = function (
   var rule = '@' + keyframesPrefixed + ' ' + name + ' {\n' +
     Object.keys(keyframeRules).map(function (percentage) {
       var props = keyframeRules[percentage];
-      var prefixedProps = Prefixer.getPrefixedStyle(props, 'css');
+      var prefixedProps = Prefixer.getPrefixedStyle(component, props, 'css');
       var serializedProps = createMarkupForStyles(prefixedProps, '  ');
       return '  ' + percentage + ' {\n  ' + serializedProps + '\n  }';
     }).join('\n') +

@@ -118,9 +118,11 @@ Usage:
 
 ## keyframes
 
-**Radium.keyframes(keyframes)**
+**Radium.keyframes(keyframes, component)**
 
 Create a keyframes animation for use in any inline style. `keyframes` is a helper that translates the keyframes object you pass in to CSS and injects the `@keyframes` (prefixed properly) definition into a style sheet. Automatically generates and returns a name for the keyframes, that you can then use in the value for `animation`. Radium will automatically apply vendor prefixing to keyframe styles.
+
+`Radium.keyframes` takes a second optional parameter, `component`. This is optional as you may not always have a component to pass. If you do have a `component` however, it is a good idea to pass that as a parameter for better warning & error reporting.
 
 ```as
 @Radium

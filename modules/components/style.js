@@ -3,12 +3,12 @@ var Prefixer = require('../prefixer');
 
 var React = require('react');
 
-var buildCssString = function (selector, rules) {
+var buildCssString = function (component, selector, rules) {
   if (!selector || !rules) {
     return;
   }
 
-  var prefixedRules = Prefixer.getPrefixedStyle(rules, 'css');
+  var prefixedRules = Prefixer.getPrefixedStyle(component, rules, 'css');
   var serializedRules = createMarkupForStyles(prefixedRules);
 
   return selector + '{' + serializedRules + '}';
@@ -38,7 +38,7 @@ var Style = React.createClass({
             this.props.scopeSelector + ' ' :
             ''
           ) + selector;
-        accumulator += buildCssString(completeSelector, rules);
+        accumulator += buildCssString(this, completeSelector, rules);
       }
 
       return accumulator;
