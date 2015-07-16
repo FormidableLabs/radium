@@ -103,6 +103,9 @@ if (ExecutionEnvironment.canUseDOM) {
   var prefixMatch;
   var windowStyles = window.getComputedStyle(document.documentElement, '');
 
+  // Array.prototype.slice.call(windowStyles) fails with
+  // "Uncaught TypeError: undefined is not a function"
+  // in older versions Android (KitKat) web views
   for (var i = 0; i < windowStyles.length; i++) {
     prefixMatch = windowStyles[i].match(/-(moz|webkit|ms|o)-/);
 
