@@ -99,8 +99,9 @@ if (ExecutionEnvironment.canUseDOM) {
   domStyle = document.createElement('p').style;
 
   // Based on http://davidwalsh.name/vendor-prefix
+  var cssVendorPrefix;
+  var prefixMatch;
   var windowStyles = window.getComputedStyle(document.documentElement, '');
-  var prefixMatch, cssVendorPrefix;
 
   for (var i = 0; i < windowStyles.length; i++) {
     prefixMatch = windowStyles[i].match(/-(moz|webkit|ms|o)-/);
