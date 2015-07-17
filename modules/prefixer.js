@@ -6,6 +6,8 @@
 var ExecutionEnvironment = require('exenv');
 var arrayFind = require('array-find');
 
+var VENDOR_PREFIX_REGEX = /-(moz|webkit|ms|o)-/;
+
 var infoByCssPrefix = {
   '-moz-': {
     cssPrefix: '-moz-',
@@ -95,6 +97,7 @@ var prefixInfo = {
   jsPrefix: ''
 };
 
+
 if (ExecutionEnvironment.canUseDOM) {
   domStyle = document.createElement('p').style;
 
@@ -107,7 +110,7 @@ if (ExecutionEnvironment.canUseDOM) {
   // "Uncaught TypeError: undefined is not a function"
   // in older versions Android (KitKat) web views
   for (var i = 0; i < windowStyles.length; i++) {
-    prefixMatch = windowStyles[i].match(/-(moz|webkit|ms|o)-/);
+    prefixMatch = windowStyles[i].match(VENDOR_PREFIX_REGEX);
 
     if (prefixMatch) {
       break;
