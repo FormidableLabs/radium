@@ -268,10 +268,6 @@ var resolveStyles = function (
         'paddingRight',
         'paddingTop'
       ],
-      'transform': [
-        'transformOrigin',
-        'transformStyle'
-      ],
       'transition': [
         'transitionDelay',
         'transitionDuration',
