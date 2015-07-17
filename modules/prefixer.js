@@ -6,6 +6,8 @@
 var ExecutionEnvironment = require('exenv');
 var arrayFind = require('array-find');
 
+var VENDOR_PREFIX_REGEX = /-(moz|webkit|ms|o)-/;
+
 var infoByCssPrefix = {
   '-moz-': {
     cssPrefix: '-moz-',
@@ -95,15 +97,27 @@ var prefixInfo = {
   jsPrefix: ''
 };
 
+
 if (ExecutionEnvironment.canUseDOM) {
   domStyle = document.createElement('p').style;
 
   // Based on http://davidwalsh.name/vendor-prefix
+  var cssVendorPrefix;
+  var prefixMatch;
   var windowStyles = window.getComputedStyle(document.documentElement, '');
-  var prefixMatch = Array.prototype.slice.call(windowStyles)
-    .join('')
-    .match(/-(moz|webkit|ms|o)-/);
-  var cssVendorPrefix = prefixMatch && prefixMatch[0];
+
+  // Array.prototype.slice.call(windowStyles) fails with
+  // "Uncaught TypeError: undefined is not a function"
+  // in older versions Android (KitKat) web views
+  for (var i = 0; i < windowStyles.length; i++) {
+    prefixMatch = windowStyles[i].match(VENDOR_PREFIX_REGEX);
+
+    if (prefixMatch) {
+      break;
+    }
+  }
+
+  cssVendorPrefix = prefixMatch && prefixMatch[0];
 
   prefixInfo = infoByCssPrefix[cssVendorPrefix] || prefixInfo;
 }
