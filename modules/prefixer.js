@@ -15,12 +15,28 @@ var infoByCssPrefix = {
     alternativeProperties: {
       // OLD - Firefox 19-
       flex: [{css: '-moz-box-flex', js: 'MozBoxFlex'}],
-      order: [{css: '-moz-box-ordinal-group', js: 'MozBoxOrdinalGroup'}]
+      order: [{css: '-moz-box-ordinal-group', js: 'MozBoxOrdinalGroup'}],
+      flexDirection: [{css: '-moz-box-orient', js: 'MozBoxOrient'}],
+      alignItems: [{ css: '-moz-box-align', js: 'MozBoxAlign' }],
+      justifyContent: [{ css: '-moz-box-pack', js: 'MozBoxPack' }]
     },
     alternativeValues: {
+      // OLD - Firefox 19-
       display: {
-        // OLD - Firefox 19-
         flex: ['-moz-box']
+      },
+      flexDirection: {
+        row: ['horizontal'],
+        column: ['vertical']
+      },
+      alignItems: {
+        'flex-start': ['start'],
+        'flex-end': ['end']
+      },
+      justifyContent: {
+        'flex-start': ['start'],
+        'flex-end': ['end'],
+        'space-between': ['justify']
       }
     }
   },
@@ -72,12 +88,29 @@ var infoByCssPrefix = {
     jsPrefix: 'Webkit',
     alternativeProperties: {
       // OLD - iOS 6-, Safari 3.1-6
-      flex: [{css: '-webkit-box-flex', js: 'WebkitBoxFlex'}],
-      order: [{css: '-webkit-box-ordinal-group', js: 'WebkitBoxOrdinalGroup'}]
+      flex: [{css: '-webkit-box-flex', js: 'MozBoxFlex'}],
+      order: [{css: '-webkit-box-ordinal-group', js: 'WebkitBoxOrdinalGroup'}],
+      flexDirection: [{css: '-webkit-box-orient', js: 'WebkitBoxOrient'}],
+      alignItems: [{ css: '-webkit-box-align', js: 'WebkitBoxAlign' }],
+      justifyContent: [{ css: '-webkit-box-pack', js: 'WebkitBoxPack' }]
     },
     alternativeValues: {
+      // OLD - iOS 6-, Safari 3.1-6
       display: {
-        flex: ['-webkit-box'] // OLD - iOS 6-, Safari 3.1-6
+        flex: ['-webkit-box']
+      },
+      flexDirection: {
+        row: ['horizontal'],
+        column: ['vertical']
+      },
+      alignItems: {
+        'flex-start': ['start'],
+        'flex-end': ['end']
+      },
+      justifyContent: {
+        'flex-start': ['start'],
+        'flex-end': ['end'],
+        'space-between': ['justify']
       }
     }
   }
