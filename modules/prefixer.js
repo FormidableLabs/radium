@@ -101,6 +101,12 @@ var prefixInfo = {
 if (ExecutionEnvironment.canUseDOM) {
   domStyle = document.createElement('p').style;
 
+  // older Firefox versions may have no float property in style object
+  // so we need to add it manually
+  if (domStyle.float === undefined) {
+    domStyle.float = "";
+  }
+
   // Based on http://davidwalsh.name/vendor-prefix
   var cssVendorPrefix;
   var prefixMatch;
