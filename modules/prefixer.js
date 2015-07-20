@@ -27,11 +27,39 @@ var infoByCssPrefix = {
   '-ms-': {
     cssPrefix: '-ms-',
     jsPrefix: 'ms',
+    alternativeProperties: {
+      // TWEENER - IE 10
+      order: [{ css: '-ms-flex-order', js: 'msFlexOrder' }],
+      alignSelf: [{ css: '-ms-flex-align-item', js: 'msFlexAlignItem' }],
+      alignItems: [{ css: '-ms-flex-align', js: 'msFlexAlign' }],
+      justifyContent: [{ css: '-ms-flex-pack', js: 'msFlexPack' }],
+      alignContent: [{ css: '-ms-flex-line-pack', js: 'msFlexLinePack' }]
+    },
     alternativeValues: {
+      // TWEENER - IE 10
       display: {
-        // TWEENER - IE 10
         flex: ['-ms-flexbox'],
-        order: ['-ms-flex-order']
+        'inline-flex': ['-ms-inline-flexbox']
+      },
+      alignSelf: {
+        'flex-start': ['start'],
+        'flex-end': ['end']
+      },
+      alignItems: {
+        'flex-start': ['start'],
+        'flex-end': ['end']
+      },
+      justifyContent: {
+        'flex-start': ['start'],
+        'flex-end': ['end'],
+        'space-between': ['justify'],
+        'space-around': ['distribute']
+      },
+      alignContent: {
+        'flex-start': ['start'],
+        'flex-end': ['end'],
+        'space-between': ['justify'],
+        'space-around': ['distribute']
       }
     }
   },
