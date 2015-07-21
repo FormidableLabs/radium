@@ -18,7 +18,7 @@
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
     "lib": "npm run babel && rimraf lib/__tests__ lib/__mocks__",
     "lint": "eslint modules",
-    "postinstall": "node -e \"require('fs').stat('lib', function(e,s){process.exit(e || !s.isDirectory() ? 1 : 0)})\" || npm run prepublish",
+    "postinstall": "node -e \"require('fs').stat('lib', function(e,s){process.exit(e || !s.isDirectory() ? 1 : 0)})\" || npm run lib",
     "prepublish": "npm test && npm run lint && npm run lib",
     "test": "karma start",
     "test-coverage": "karma start karma.conf.coverage.js"
