@@ -104,7 +104,7 @@ if (ExecutionEnvironment.canUseDOM) {
   // older Firefox versions may have no float property in style object
   // so we need to add it manually
   if (domStyle.float === undefined) {
-    domStyle.float = "";
+    domStyle.float = '';
   }
 
   // Based on http://davidwalsh.name/vendor-prefix
@@ -223,7 +223,10 @@ var _getPrefixedValue = function (property, value, originalProperty) {
 
   var cacheKey = Array.isArray(value) ? (
     value.join(' || ')
+  /* babel-eslint bug: https://github.com/babel/babel-eslint/issues/149 */
+  /* eslint-disable space-infix-ops */
   ) : (
+  /* eslint-enable space-infix-ops */
     property + value
   );
 
