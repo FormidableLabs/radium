@@ -14,24 +14,24 @@ var infoByCssPrefix = {
     jsPrefix: 'Moz',
     alternativeProperties: {
       // OLD - Firefox 19-
+      alignItems: [{css: '-moz-box-align', js: 'MozBoxAlign'}],
       flex: [{css: '-moz-box-flex', js: 'MozBoxFlex'}],
-      order: [{css: '-moz-box-ordinal-group', js: 'MozBoxOrdinalGroup'}],
       flexDirection: [{css: '-moz-box-orient', js: 'MozBoxOrient'}],
-      alignItems: [{ css: '-moz-box-align', js: 'MozBoxAlign' }],
-      justifyContent: [{ css: '-moz-box-pack', js: 'MozBoxPack' }]
+      justifyContent: [{css: '-moz-box-pack', js: 'MozBoxPack'}],
+      order: [{css: '-moz-box-ordinal-group', js: 'MozBoxOrdinalGroup'}]
     },
     alternativeValues: {
       // OLD - Firefox 19-
+      alignItems: {
+        'flex-start': ['start'],
+        'flex-end': ['end']
+      },
       display: {
         flex: ['-moz-box']
       },
       flexDirection: {
-        row: ['horizontal'],
-        column: ['vertical']
-      },
-      alignItems: {
-        'flex-start': ['start'],
-        'flex-end': ['end']
+        column: ['vertical'],
+        row: ['horizontal']
       },
       justifyContent: {
         'flex-start': ['start'],
@@ -45,33 +45,33 @@ var infoByCssPrefix = {
     jsPrefix: 'ms',
     alternativeProperties: {
       // TWEENER - IE 10
-      order: [{ css: '-ms-flex-order', js: 'msFlexOrder' }],
-      alignSelf: [{ css: '-ms-flex-align-item', js: 'msFlexAlignItem' }],
-      alignItems: [{ css: '-ms-flex-align', js: 'msFlexAlign' }],
-      justifyContent: [{ css: '-ms-flex-pack', js: 'msFlexPack' }],
-      alignContent: [{ css: '-ms-flex-line-pack', js: 'msFlexLinePack' }]
+      alignContent: [{css: '-ms-flex-line-pack', js: 'msFlexLinePack'}],
+      alignItems: [{css: '-ms-flex-align', js: 'msFlexAlign'}],
+      alignSelf: [{css: '-ms-flex-align-item', js: 'msFlexAlignItem'}],
+      justifyContent: [{css: '-ms-flex-pack', js: 'msFlexPack'}],
+      order: [{css: '-ms-flex-order', js: 'msFlexOrder'}]
     },
     alternativeValues: {
       // TWEENER - IE 10
-      display: {
-        flex: ['-ms-flexbox'],
-        'inline-flex': ['-ms-inline-flexbox']
-      },
-      alignSelf: {
-        'flex-start': ['start'],
-        'flex-end': ['end']
-      },
-      alignItems: {
-        'flex-start': ['start'],
-        'flex-end': ['end']
-      },
-      justifyContent: {
+      alignContent: {
         'flex-start': ['start'],
         'flex-end': ['end'],
         'space-between': ['justify'],
         'space-around': ['distribute']
       },
-      alignContent: {
+      alignItems: {
+        'flex-start': ['start'],
+        'flex-end': ['end']
+      },
+      alignSelf: {
+        'flex-start': ['start'],
+        'flex-end': ['end']
+      },
+      display: {
+        flex: ['-ms-flexbox'],
+        'inline-flex': ['-ms-inline-flexbox']
+      },
+      justifyContent: {
         'flex-start': ['start'],
         'flex-end': ['end'],
         'space-between': ['justify'],
@@ -88,24 +88,24 @@ var infoByCssPrefix = {
     jsPrefix: 'Webkit',
     alternativeProperties: {
       // OLD - iOS 6-, Safari 3.1-6
+      alignItems: [{css: '-webkit-box-align', js: 'WebkitBoxAlign'}],
       flex: [{css: '-webkit-box-flex', js: 'MozBoxFlex'}],
-      order: [{css: '-webkit-box-ordinal-group', js: 'WebkitBoxOrdinalGroup'}],
       flexDirection: [{css: '-webkit-box-orient', js: 'WebkitBoxOrient'}],
-      alignItems: [{ css: '-webkit-box-align', js: 'WebkitBoxAlign' }],
-      justifyContent: [{ css: '-webkit-box-pack', js: 'WebkitBoxPack' }]
+      justifyContent: [{css: '-webkit-box-pack', js: 'WebkitBoxPack'}],
+      order: [{css: '-webkit-box-ordinal-group', js: 'WebkitBoxOrdinalGroup'}]
     },
     alternativeValues: {
       // OLD - iOS 6-, Safari 3.1-6
+      alignItems: {
+        'flex-start': ['start'],
+        'flex-end': ['end']
+      },
       display: {
         flex: ['-webkit-box']
       },
       flexDirection: {
         row: ['horizontal'],
         column: ['vertical']
-      },
-      alignItems: {
-        'flex-start': ['start'],
-        'flex-end': ['end']
       },
       justifyContent: {
         'flex-start': ['start'],
