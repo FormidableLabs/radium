@@ -207,9 +207,16 @@ var _getPrefixedValue = function (property, value, originalProperty) {
       if (value !== null && value !== undefined) {
         value = value.toString();
       } else {
-        /* eslint-disable no-console */
-        if (console && console.warn) {
-          console.warn('CSS value is "' + value + '" for property "' + property + '"');
+        if (process.env.NODE_ENV !== 'production') {
+          /* eslint-disable no-console */
+          if (console && console.warn) {
+            console.warn(
+              'CSS value is "%s" for property "%s"',
+              value,
+              property
+            );
+          }
+          /* eslint-enabled no-console */
         }
         return value;
       }
@@ -290,13 +297,15 @@ var _getPrefixedValue = function (property, value, originalProperty) {
     // Unsupported, assume unprefixed works, but warn
     prefixedValueCache[cacheKey] = value;
 
-    /* eslint-disable no-console */
-    if (console && console.warn) {
-      console.warn(
-        'Unsupported CSS value "' + value + '" for property "' + property + '"'
-      );
+    if (process.env.NODE_ENV !== 'production') {
+      /* eslint-disable no-console */
+      if (console && console.warn) {
+        console.warn(
+          'Unsupported CSS value "' + value + '" for property "' + property + '"'
+        );
+      }
+      /* eslint-enable no-console */
     }
-    /* eslint-enable no-console */
   }
 
   return prefixedValueCache[cacheKey];
