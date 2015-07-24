@@ -3,11 +3,6 @@
 var resolveStyles = require('./resolve-styles.js');
 
 var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
-  var displayName =
-    ComposedComponent.displayName ||
-    ComposedComponent.name ||
-    'Component';
-
   class RadiumEnhancer extends ComposedComponent {
     _radiumMediaQueryListenersByQuery: Object<string, {remove: () => void}>;
     _radiumMouseUpListener: {remove: () => void};
@@ -71,7 +66,10 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
     });
   }
 
-  RadiumEnhancer.displayName = `Radium(${displayName})`;
+  RadiumEnhancer.displayName =
+    ComposedComponent.displayName ||
+    ComposedComponent.name ||
+    'Component';
 
   return RadiumEnhancer;
 };

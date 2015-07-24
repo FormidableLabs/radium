@@ -77,13 +77,13 @@ describe('Enhancer', () => {
     expect(constructorMock).to.have.been.calledOnce;
   });
 
-  it('refers to the existing displayName', () => {
+  it('uses the existing displayName', () => {
     class Composed extends Component {}
     Composed.displayName = 'Composed';
 
     var Enhanced = Enhancer(Composed);
 
-    expect(Enhanced.displayName).to.contain(Composed.displayName);
+    expect(Enhanced.displayName).to.equal(Composed.displayName);
   });
 
   it('calls existing componentWillUnmount function', () => {
