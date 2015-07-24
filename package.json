@@ -21,7 +21,8 @@
     "postinstall": "node -e \"require('fs').stat('lib', function(e,s){process.exit(e || !s.isDirectory() ? 1 : 0)})\" || npm run lib",
     "prepublish": "npm test && npm run lint && npm run lib",
     "test": "karma start",
-    "test-coverage": "karma start karma.conf.coverage.js"
+    "test-coverage": "karma start karma.conf.coverage.js",
+    "test-dev": "karma start --no-single-run --auto-watch"
   },
   "license": "MIT",
   "dependencies": {
