@@ -14,24 +14,68 @@ var infoByCssPrefix = {
     jsPrefix: 'Moz',
     alternativeProperties: {
       // OLD - Firefox 19-
+      alignItems: [{css: '-moz-box-align', js: 'MozBoxAlign'}],
       flex: [{css: '-moz-box-flex', js: 'MozBoxFlex'}],
+      flexDirection: [{css: '-moz-box-orient', js: 'MozBoxOrient'}],
+      justifyContent: [{css: '-moz-box-pack', js: 'MozBoxPack'}],
       order: [{css: '-moz-box-ordinal-group', js: 'MozBoxOrdinalGroup'}]
     },
     alternativeValues: {
+      // OLD - Firefox 19-
+      alignItems: {
+        'flex-start': ['start'],
+        'flex-end': ['end']
+      },
       display: {
-        // OLD - Firefox 19-
         flex: ['-moz-box']
+      },
+      flexDirection: {
+        column: ['vertical'],
+        row: ['horizontal']
+      },
+      justifyContent: {
+        'flex-start': ['start'],
+        'flex-end': ['end'],
+        'space-between': ['justify']
       }
     }
   },
   '-ms-': {
     cssPrefix: '-ms-',
     jsPrefix: 'ms',
+    alternativeProperties: {
+      // TWEENER - IE 10
+      alignContent: [{css: '-ms-flex-line-pack', js: 'msFlexLinePack'}],
+      alignItems: [{css: '-ms-flex-align', js: 'msFlexAlign'}],
+      alignSelf: [{css: '-ms-flex-align-item', js: 'msFlexAlignItem'}],
+      justifyContent: [{css: '-ms-flex-pack', js: 'msFlexPack'}],
+      order: [{css: '-ms-flex-order', js: 'msFlexOrder'}]
+    },
     alternativeValues: {
+      // TWEENER - IE 10
+      alignContent: {
+        'flex-start': ['start'],
+        'flex-end': ['end'],
+        'space-between': ['justify'],
+        'space-around': ['distribute']
+      },
+      alignItems: {
+        'flex-start': ['start'],
+        'flex-end': ['end']
+      },
+      alignSelf: {
+        'flex-start': ['start'],
+        'flex-end': ['end']
+      },
       display: {
-        // TWEENER - IE 10
         flex: ['-ms-flexbox'],
-        order: ['-ms-flex-order']
+        'inline-flex': ['-ms-inline-flexbox']
+      },
+      justifyContent: {
+        'flex-start': ['start'],
+        'flex-end': ['end'],
+        'space-between': ['justify'],
+        'space-around': ['distribute']
       }
     }
   },
@@ -44,12 +88,29 @@ var infoByCssPrefix = {
     jsPrefix: 'Webkit',
     alternativeProperties: {
       // OLD - iOS 6-, Safari 3.1-6
-      flex: [{css: '-webkit-box-flex', js: 'WebkitBoxFlex'}],
+      alignItems: [{css: '-webkit-box-align', js: 'WebkitBoxAlign'}],
+      flex: [{css: '-webkit-box-flex', js: 'MozBoxFlex'}],
+      flexDirection: [{css: '-webkit-box-orient', js: 'WebkitBoxOrient'}],
+      justifyContent: [{css: '-webkit-box-pack', js: 'WebkitBoxPack'}],
       order: [{css: '-webkit-box-ordinal-group', js: 'WebkitBoxOrdinalGroup'}]
     },
     alternativeValues: {
+      // OLD - iOS 6-, Safari 3.1-6
+      alignItems: {
+        'flex-start': ['start'],
+        'flex-end': ['end']
+      },
       display: {
-        flex: ['-webkit-box'] // OLD - iOS 6-, Safari 3.1-6
+        flex: ['-webkit-box']
+      },
+      flexDirection: {
+        row: ['horizontal'],
+        column: ['vertical']
+      },
+      justifyContent: {
+        'flex-start': ['start'],
+        'flex-end': ['end'],
+        'space-between': ['justify']
       }
     }
   }
