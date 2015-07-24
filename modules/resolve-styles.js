@@ -2,6 +2,7 @@
 
 var MouseUpListener = require('./mouse-up-listener');
 var getState = require('./get-state');
+var getStateKey = require('./get-state-key');
 var Prefixer = require('./prefixer');
 var Config = require('./config');
 
@@ -326,7 +327,7 @@ var resolveStyles = function (
   // with the rendered element, so we know to apply the proper interactive
   // styles.
   var originalKey = renderedElement.ref || renderedElement.key;
-  var key = originalKey || 'main';
+  var key = getStateKey(originalKey);
 
   if (existingKeyMap[key]) {
     throw new Error(
