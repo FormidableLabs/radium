@@ -140,7 +140,7 @@ var _cloneElement = function (renderedElement, newProps, newChildren) {
 var resolveStyles = function (
   component: any, // ReactComponent, flow+eslint complaining
   renderedElement: any, // ReactElement
-  existingKeyMap?: {[key: string]: bool}
+  existingKeyMap?: {[key: string]: boolean}
 ): any { // ReactElement
   existingKeyMap = existingKeyMap || {};
 
