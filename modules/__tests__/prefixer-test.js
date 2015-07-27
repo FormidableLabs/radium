@@ -301,4 +301,23 @@ describe('Prefixer', () => {
       {'-webkit-border-width': '1px'}
     );
   });
+
+  /* eslint-disable no-console */
+  it('doesn\'t warn if value is null or undefined', () => {
+    mockStyle = {
+      height: null
+    };
+
+    sinon.stub(console, 'warn');
+    var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
+    expect(Prefixer.getPrefixedStyle({height: null})).to.deep.equal(
+      {height: null}
+    );
+    expect(Prefixer.getPrefixedStyle({height: undefined})).to.deep.equal(
+      {height: undefined}
+    );
+    expect(console.warn).not.to.have.been.called;
+    console.warn.restore();
+  });
+  /* eslint-enable no-console */
 });

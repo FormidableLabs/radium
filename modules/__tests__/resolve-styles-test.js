@@ -901,6 +901,15 @@ describe('resolveStyles', function () {
 
       expect(console.warn).to.not.have.been.called;
     });
+
+    it('does not throw when passed a falsy entry value', function () {
+      var component = genComponent();
+      var renderedElement = <div style={{height: null }} />;
+
+      expect(function () {
+        resolveStyles(component, renderedElement);
+      }).to.not.throw();
+    });
   });
   /* eslint-enable no-console */
 });

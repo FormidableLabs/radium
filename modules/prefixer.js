@@ -260,7 +260,7 @@ var _addPixelSuffixToValueIfNeeded = function (originalProperty, value) {
 var _getPrefixedValue = function (property, value, originalProperty) {
   if (!Array.isArray(value)) {
     // don't test numbers (pure or stringy), but do add 'px' prefix if needed
-    if (!isNaN(value)) {
+    if (!isNaN(value) && value !== null) {
       return _addPixelSuffixToValueIfNeeded(originalProperty, value);
     }
 
@@ -268,17 +268,6 @@ var _getPrefixedValue = function (property, value, originalProperty) {
       if (value !== null && value !== undefined) {
         value = value.toString();
       } else {
-        if (process.env.NODE_ENV !== 'production') {
-          /* eslint-disable no-console */
-          if (console && console.warn) {
-            console.warn(
-              'CSS value is "%s" for property "%s"',
-              value,
-              property
-            );
-          }
-          /* eslint-enabled no-console */
-        }
         return value;
       }
     }

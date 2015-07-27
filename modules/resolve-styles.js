@@ -278,7 +278,7 @@ var resolveStyles = function (
     };
 
     var checkProps = s => {
-      if (typeof s !== 'object') {
+      if (typeof s !== 'object' || !s) {
         return;
       }
 
