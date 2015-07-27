@@ -115,6 +115,25 @@ var _resolveMediaQueryStyles = function (component, style) {
   return style;
 };
 
+// Wrapper around React.cloneElement. To avoid processing the same element
+// twice, whenever we clone an element add a special non-enumerable prop to
+// make sure we don't process this element again.
+var _cloneElement = function (renderedElement, newProps, newChildren) {
+  var clone = React.cloneElement(
+    renderedElement,
+    newProps,
+    newChildren
+  );
+
+  Object.defineProperty(
+    clone.props,
+    '_radiumDidResolveStyles',
+    {value: true, enumerable: false}
+  );
+
+  return clone;
+};
+
 //
 // The nucleus of Radium. resolveStyles is called on the rendered elements
 // before they are returned in render. It iterates over the elements and
@@ -129,14 +148,22 @@ var resolveStyles = function (
 ): any { // ReactElement
   existingKeyMap = existingKeyMap || {};
 
-  if (!renderedElement) {
+
+  if (
+    !renderedElement ||
+    // Bail if we've already processed this element. This ensures that only the
+    // owner of an element processes that element, since the owner's render
+    // function will be called first (which will always be the case, since you
+    // can't know what else to render until you render the parent component).
+    (renderedElement.props && renderedElement.props._radiumDidResolveStyles)
+  ) {
     return renderedElement;
   }
 
   // Recurse over children first in case we bail early. Note that children only
   // include those rendered in `this` component. Child nodes in other components
   // will not be here, so each component needs to use Radium.
-  var newChildren = null;
+  var newChildren;
   var oldChildren = renderedElement.props.children;
   if (oldChildren) {
     var childrenType = typeof oldChildren;
@@ -171,7 +198,7 @@ var resolveStyles = function (
       return renderedElement;
     }
 
-    return React.cloneElement(
+    return _cloneElement(
       renderedElement, renderedElement.props, newChildren
     );
   }
@@ -315,9 +342,9 @@ var resolveStyles = function (
     if (style) {
       // Still perform vendor prefixing, though.
       newProps.style = Prefixer.getPrefixedStyle(style);
-      return React.cloneElement(renderedElement, newProps, newChildren);
+      return _cloneElement(renderedElement, newProps, newChildren);
     } else if (newChildren) {
-      return React.cloneElement(renderedElement, {}, newChildren);
+      return _cloneElement(renderedElement, {}, newChildren);
     }
 
     return renderedElement;
@@ -419,7 +446,7 @@ var resolveStyles = function (
 
   newProps.style = Prefixer.getPrefixedStyle(newStyle);
 
-  return React.cloneElement(renderedElement, newProps, newChildren);
+  return _cloneElement(renderedElement, newProps, newChildren);
 };
 
 // Exposing methods for tests is ugly, but the alternative, re-requiring the
