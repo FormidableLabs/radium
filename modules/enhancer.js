@@ -4,7 +4,7 @@ var resolveStyles = require('./resolve-styles.js');
 
 var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
   class RadiumEnhancer extends ComposedComponent {
-    _radiumMediaQueryListenersByQuery: Object<string, {remove: () => void}>;
+    _radiumMediaQueryListenersByQuery: {[key: string]: {remove: () => void}};
     _radiumMouseUpListener: {remove: () => void};
 
     constructor () {

@@ -125,7 +125,7 @@ var _resolveMediaQueryStyles = function (component, style) {
 var resolveStyles = function (
   component: any, // ReactComponent, flow+eslint complaining
   renderedElement: any, // ReactElement
-  existingKeyMap?: Object<string, string>
+  existingKeyMap?: {[key: string]: boolean}
 ): any { // ReactElement
   existingKeyMap = existingKeyMap || {};
 
