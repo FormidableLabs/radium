@@ -7,7 +7,7 @@
 		exports["Radium"] = factory(require("react"));
 	else
 		root["Radium"] = factory(root["React"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_10__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_11__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -61,10 +61,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = function (ComposedComponent) {
 	  return Enhancer(ComposedComponent);
 	};
-	module.exports.Style = __webpack_require__(11);
-	module.exports.getState = __webpack_require__(7);
-	module.exports.keyframes = __webpack_require__(13);
-	module.exports.Config = __webpack_require__(4);
+	module.exports.Style = __webpack_require__(12);
+	module.exports.getState = __webpack_require__(5);
+	module.exports.keyframes = __webpack_require__(14);
+	module.exports.Config = __webpack_require__(10);
 
 /***/ },
 /* 1 */
@@ -85,8 +85,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var resolveStyles = __webpack_require__(3);
 
 	var enhanceWithRadium = function enhanceWithRadium(ComposedComponent) {
-	  var displayName = ComposedComponent.displayName || ComposedComponent.name || 'Component';
-
 	  var RadiumEnhancer = (function (_ComposedComponent) {
 	    function RadiumEnhancer() {
 	      _classCallCheck(this, RadiumEnhancer);
@@ -149,7 +147,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	  }
 
-	  RadiumEnhancer.displayName = 'Radium(' + displayName + ')';
+	  RadiumEnhancer.displayName = ComposedComponent.displayName || ComposedComponent.name || 'Component';
 
 	  return RadiumEnhancer;
 	};
@@ -268,13 +266,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var MouseUpListener = __webpack_require__(6);
-	var getState = __webpack_require__(7);
-	var Prefixer = __webpack_require__(8);
-	var Config = __webpack_require__(4);
+	var MouseUpListener = __webpack_require__(4);
+	var getState = __webpack_require__(5);
+	var getStateKey = __webpack_require__(6);
+	var Prefixer = __webpack_require__(7);
+	var Config = __webpack_require__(10);
 
-	var ExecutionEnvironment = __webpack_require__(5);
-	var React = __webpack_require__(10);
+	var ExecutionEnvironment = __webpack_require__(8);
+	var React = __webpack_require__(11);
 
 	// babel-eslint 3.1.7 fails here for some reason, error:
 	//   0:0  error  Cannot call method 'isSequenceExpression' of undefined
@@ -383,6 +382,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return style;
 	};
 
+	// Wrapper around React.cloneElement. To avoid processing the same element
+	// twice, whenever we clone an element add a special non-enumerable prop to
+	// make sure we don't process this element again.
+	var _cloneElement = function _cloneElement(renderedElement, newProps, newChildren) {
+	  var clone = React.cloneElement(renderedElement, newProps, newChildren);
+
+	  Object.defineProperty(clone.props, '_radiumDidResolveStyles', { value: true, enumerable: false });
+
+	  return clone;
+	};
+
 	//
 	// The nucleus of Radium. resolveStyles is called on the rendered elements
 	// before they are returned in render. It iterates over the elements and
@@ -396,19 +406,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // ReactElement
 	  existingKeyMap = existingKeyMap || {};
 
-	  if (!renderedElement) {
+	  if (!renderedElement || renderedElement.props && renderedElement.props._radiumDidResolveStyles) {
 	    return renderedElement;
 	  }
 
 	  // Recurse over children first in case we bail early. Note that children only
 	  // include those rendered in `this` component. Child nodes in other components
 	  // will not be here, so each component needs to use Radium.
-	  var newChildren = null;
+	  var newChildren;
 	  var oldChildren = renderedElement.props.children;
 	  if (oldChildren) {
 	    var childrenType = typeof oldChildren;
-	    if (childrenType === 'string' || childrenType === 'number') {
-	      // Don't do anything with a single primitive child
+	    if (childrenType === 'string' || childrenType === 'number' || childrenType === 'function') {
+	      // Don't do anything with a single primitive child or functions
 	      newChildren = oldChildren;
 	    } else if (React.Children.count(oldChildren) === 1 && oldChildren.type) {
 	      // If a React Element is an only child, don't wrap it in an array for
@@ -432,7 +442,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return renderedElement;
 	    }
 
-	    return React.cloneElement(renderedElement, renderedElement.props, newChildren);
+	    return _cloneElement(renderedElement, renderedElement.props, newChildren);
 	  }
 
 	  var props = renderedElement.props;
@@ -459,12 +469,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      'listStyle': ['listStyleImage', 'listStylePosition', 'listStyleType'],
 	      'margin': ['marginBottom', 'marginLeft', 'marginRight', 'marginTop'],
 	      'padding': ['paddingBottom', 'paddingLeft', 'paddingRight', 'paddingTop'],
-	      'transform': ['transformOrigin', 'transformStyle'],
 	      'transition': ['transitionDelay', 'transitionDuration', 'transitionProperty', 'transitionTimingFunction']
 	    };
 
 	    var checkProps = function checkProps(s) {
-	      if (typeof s !== 'object') {
+	      if (typeof s !== 'object' || !s) {
 	        return;
 	      }
 
@@ -491,9 +500,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (style) {
 	      // Still perform vendor prefixing, though.
 	      newProps.style = Prefixer.getPrefixedStyle(style);
-	      return React.cloneElement(renderedElement, newProps, newChildren);
+	      return _cloneElement(renderedElement, newProps, newChildren);
 	    } else if (newChildren) {
-	      return React.cloneElement(renderedElement, {}, newChildren);
+	      return _cloneElement(renderedElement, {}, newChildren);
 	    }
 
 	    return renderedElement;
@@ -503,7 +512,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // with the rendered element, so we know to apply the proper interactive
 	  // styles.
 	  var originalKey = renderedElement.ref || renderedElement.key;
-	  var key = originalKey || 'main';
+	  var key = getStateKey(originalKey);
 
 	  if (existingKeyMap[key]) {
 	    throw new Error('Radium requires each element with interactive styles to have a unique ' + 'key, set using either the ref or key prop. ' + (originalKey ? 'Key "' + originalKey + '" is a duplicate.' : 'Multiple elements have no key specified.'));
@@ -579,7 +588,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  newProps.style = Prefixer.getPrefixedStyle(newStyle);
 
-	  return React.cloneElement(renderedElement, newProps, newChildren);
+	  return _cloneElement(renderedElement, newProps, newChildren);
 	};
 
 	// Exposing methods for tests is ugly, but the alternative, re-requiring the
@@ -589,78 +598,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = resolveStyles;
+
+	// Bail if we've already processed this element. This ensures that only the
+	// owner of an element processes that element, since the owner's render
+	// function will be called first (which will always be the case, since you
+	// can't know what else to render until you render the parent component).
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* @flow */
-
-	'use strict';
-
-	var ExecutionEnvironment = __webpack_require__(5);
-
-	var _matchMediaFunction = ExecutionEnvironment.canUseDOM && window && window.matchMedia && function (mediaQueryString) {
-	  return window.matchMedia(mediaQueryString);
-	};
-
-	module.exports = {
-	  canMatchMedia: function canMatchMedia() {
-	    return typeof _matchMediaFunction === 'function';
-	  },
-
-	  matchMedia: function matchMedia(query) {
-	    return _matchMediaFunction(query);
-	  },
-
-	  setMatchMedia: function setMatchMedia(nextMatchMediaFunction) {
-	    _matchMediaFunction = nextMatchMediaFunction;
-	  }
-	};
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	  Copyright (c) 2015 Jed Watson.
-	  Based on code that is Copyright 2013-2015, Facebook, Inc.
-	  All rights reserved.
-	*/
-
-	'use strict';
-
-	(function () {
-		'use strict';
-
-		var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
-
-		var ExecutionEnvironment = {
-
-			canUseDOM: canUseDOM,
-
-			canUseWorkers: typeof Worker !== 'undefined',
-
-			canUseEventListeners: canUseDOM && !!(window.addEventListener || window.attachEvent),
-
-			canUseViewport: canUseDOM && !!window.screen
-
-		};
-
-		if (true) {
-			!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
-				return ExecutionEnvironment;
-			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		} else if (typeof module !== 'undefined' && module.exports) {
-			module.exports = ExecutionEnvironment;
-		} else {
-			window.ExecutionEnvironment = ExecutionEnvironment;
-		}
-	})();
-
-/***/ },
-/* 6 */
 /***/ function(module, exports) {
 
 	/* @flow */
@@ -704,40 +650,58 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 7 */
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* @flow */
+
+	'use strict';
+
+	var getStateKey = __webpack_require__(6);
+
+	var VALID_KEYS = [':active', ':focus', ':hover'];
+
+	var getState = function getState(state, elementKey, value) {
+	  if (VALID_KEYS.indexOf(value) === -1) {
+	    throw new Error('Radium.getState invalid value param: `' + value + '`');
+	  }
+
+	  var key = getStateKey(elementKey);
+
+	  return !!(state && state._radiumStyleState && state._radiumStyleState[key] && state._radiumStyleState[key][value]) || false;
+	};
+
+	module.exports = getState;
+
+/***/ },
+/* 6 */
 /***/ function(module, exports) {
 
 	/* @flow */
 
 	'use strict';
 
-	var VALID_KEYS = [':active', ':focus', ':hover'];
-
-	var getState = function getState(state, elementKey, value) {
-	  elementKey = elementKey || 'main';
-
-	  if (VALID_KEYS.indexOf(value) === -1) {
-	    throw new Error('Radium.getState invalid value param: `' + value + '`');
-	  }
-
-	  return !!(state && state._radiumStyleState && state._radiumStyleState[elementKey] && state._radiumStyleState[elementKey][value]) || false;
+	var getStateKey = function getStateKey(elementKey) {
+	  return elementKey === null || elementKey === undefined ? 'main' : elementKey.toString();
 	};
 
-	module.exports = getState;
+	module.exports = getStateKey;
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
+	/* WEBPACK VAR INJECTION */(function(process) {/**
 	 * Based on https://github.com/jsstyles/css-vendor, but without having to
 	 * convert between different cases all the time.
 	 */
 
 	'use strict';
 
-	var ExecutionEnvironment = __webpack_require__(5);
+	var ExecutionEnvironment = __webpack_require__(8);
 	var arrayFind = __webpack_require__(9);
+
+	var VENDOR_PREFIX_REGEX = /-(moz|webkit|ms|o)-/;
 
 	var infoByCssPrefix = {
 	  '-moz-': {
@@ -745,24 +709,68 @@ return /******/ (function(modules) { // webpackBootstrap
 	    jsPrefix: 'Moz',
 	    alternativeProperties: {
 	      // OLD - Firefox 19-
+	      alignItems: [{ css: '-moz-box-align', js: 'MozBoxAlign' }],
 	      flex: [{ css: '-moz-box-flex', js: 'MozBoxFlex' }],
+	      flexDirection: [{ css: '-moz-box-orient', js: 'MozBoxOrient' }],
+	      justifyContent: [{ css: '-moz-box-pack', js: 'MozBoxPack' }],
 	      order: [{ css: '-moz-box-ordinal-group', js: 'MozBoxOrdinalGroup' }]
 	    },
 	    alternativeValues: {
+	      // OLD - Firefox 19-
+	      alignItems: {
+	        'flex-start': ['start'],
+	        'flex-end': ['end']
+	      },
 	      display: {
-	        // OLD - Firefox 19-
 	        flex: ['-moz-box']
+	      },
+	      flexDirection: {
+	        column: ['vertical'],
+	        row: ['horizontal']
+	      },
+	      justifyContent: {
+	        'flex-start': ['start'],
+	        'flex-end': ['end'],
+	        'space-between': ['justify']
 	      }
 	    }
 	  },
 	  '-ms-': {
 	    cssPrefix: '-ms-',
 	    jsPrefix: 'ms',
+	    alternativeProperties: {
+	      // TWEENER - IE 10
+	      alignContent: [{ css: '-ms-flex-line-pack', js: 'msFlexLinePack' }],
+	      alignItems: [{ css: '-ms-flex-align', js: 'msFlexAlign' }],
+	      alignSelf: [{ css: '-ms-flex-align-item', js: 'msFlexAlignItem' }],
+	      justifyContent: [{ css: '-ms-flex-pack', js: 'msFlexPack' }],
+	      order: [{ css: '-ms-flex-order', js: 'msFlexOrder' }]
+	    },
 	    alternativeValues: {
+	      // TWEENER - IE 10
+	      alignContent: {
+	        'flex-start': ['start'],
+	        'flex-end': ['end'],
+	        'space-between': ['justify'],
+	        'space-around': ['distribute']
+	      },
+	      alignItems: {
+	        'flex-start': ['start'],
+	        'flex-end': ['end']
+	      },
+	      alignSelf: {
+	        'flex-start': ['start'],
+	        'flex-end': ['end']
+	      },
 	      display: {
-	        // TWEENER - IE 10
 	        flex: ['-ms-flexbox'],
-	        order: ['-ms-flex-order']
+	        'inline-flex': ['-ms-inline-flexbox']
+	      },
+	      justifyContent: {
+	        'flex-start': ['start'],
+	        'flex-end': ['end'],
+	        'space-between': ['justify'],
+	        'space-around': ['distribute']
 	      }
 	    }
 	  },
@@ -775,12 +783,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	    jsPrefix: 'Webkit',
 	    alternativeProperties: {
 	      // OLD - iOS 6-, Safari 3.1-6
-	      flex: [{ css: '-webkit-box-flex', js: 'WebkitBoxFlex' }],
+	      alignItems: [{ css: '-webkit-box-align', js: 'WebkitBoxAlign' }],
+	      flex: [{ css: '-webkit-box-flex', js: 'MozBoxFlex' }],
+	      flexDirection: [{ css: '-webkit-box-orient', js: 'WebkitBoxOrient' }],
+	      justifyContent: [{ css: '-webkit-box-pack', js: 'WebkitBoxPack' }],
 	      order: [{ css: '-webkit-box-ordinal-group', js: 'WebkitBoxOrdinalGroup' }]
 	    },
 	    alternativeValues: {
+	      // OLD - iOS 6-, Safari 3.1-6
+	      alignItems: {
+	        'flex-start': ['start'],
+	        'flex-end': ['end']
+	      },
 	      display: {
-	        flex: ['-webkit-box'] // OLD - iOS 6-, Safari 3.1-6
+	        flex: ['-webkit-box']
+	      },
+	      flexDirection: {
+	        row: ['horizontal'],
+	        column: ['vertical']
+	      },
+	      justifyContent: {
+	        'flex-start': ['start'],
+	        'flex-end': ['end'],
+	        'space-between': ['justify']
 	      }
 	    }
 	  }
@@ -831,10 +856,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	if (ExecutionEnvironment.canUseDOM) {
 	  domStyle = document.createElement('p').style;
 
+	  // older Firefox versions may have no float property in style object
+	  // so we need to add it manually
+	  if (domStyle.float === undefined) {
+	    domStyle.float = '';
+	  }
+
 	  // Based on http://davidwalsh.name/vendor-prefix
+	  var cssVendorPrefix;
+	  var prefixMatch;
 	  var windowStyles = window.getComputedStyle(document.documentElement, '');
-	  var prefixMatch = Array.prototype.slice.call(windowStyles).join('').match(/-(moz|webkit|ms|o)-/);
-	  var cssVendorPrefix = prefixMatch && prefixMatch[0];
+
+	  // Array.prototype.slice.call(windowStyles) fails with
+	  // "Uncaught TypeError: undefined is not a function"
+	  // in older versions Android (KitKat) web views
+	  for (var i = 0; i < windowStyles.length; i++) {
+	    prefixMatch = windowStyles[i].match(VENDOR_PREFIX_REGEX);
+
+	    if (prefixMatch) {
+	      break;
+	    }
+	  }
+
+	  cssVendorPrefix = prefixMatch && prefixMatch[0];
 
 	  prefixInfo = infoByCssPrefix[cssVendorPrefix] || prefixInfo;
 	}
@@ -896,7 +940,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _getPrefixedValue = function _getPrefixedValue(property, value, originalProperty) {
 	  if (!Array.isArray(value)) {
 	    // don't test numbers (pure or stringy), but do add 'px' prefix if needed
-	    if (!isNaN(value)) {
+	    if (!isNaN(value) && value !== null) {
 	      return _addPixelSuffixToValueIfNeeded(originalProperty, value);
 	    }
 
@@ -904,10 +948,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (value !== null && value !== undefined) {
 	        value = value.toString();
 	      } else {
-	        /* eslint-disable no-console */
-	        if (console && console.warn) {
-	          console.warn('CSS value is "' + value + '" for property "' + property + '"');
-	        }
 	        return value;
 	      }
 	    }
@@ -918,7 +958,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }
 
-	  var cacheKey = Array.isArray(value) ? value.join(' || ') : property + value;
+	  var cacheKey = Array.isArray(value) ? value.join(' || ')
+	  /* babel-eslint bug: https://github.com/babel/babel-eslint/issues/149 */
+	  /* eslint-disable space-infix-ops */
+	  :
+	  /* eslint-enable space-infix-ops */
+	  property + value;
 
 	  if (prefixedValueCache.hasOwnProperty(cacheKey)) {
 	    return prefixedValueCache[cacheKey];
@@ -971,11 +1016,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Unsupported, assume unprefixed works, but warn
 	    prefixedValueCache[cacheKey] = value;
 
-	    /* eslint-disable no-console */
-	    if (console && console.warn) {
-	      console.warn('Unsupported CSS value "' + value + '" for property "' + property + '"');
+	    if (process.env.NODE_ENV !== 'production') {
+	      /* eslint-disable no-console */
+	      if (console && console.warn) {
+	        console.warn('Unsupported CSS value "' + value + '" for property "' + property + '"');
+	      }
+	      /* eslint-enable no-console */
 	    }
-	    /* eslint-enable no-console */
 	  }
 
 	  return prefixedValueCache[cacheKey];
@@ -1024,6 +1071,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	  cssPrefix: prefixInfo.cssPrefix,
 	  jsPrefix: prefixInfo.jsPrefix
 	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2015 Jed Watson.
+	  Based on code that is Copyright 2013-2015, Facebook, Inc.
+	  All rights reserved.
+	*/
+
+	'use strict';
+
+	(function () {
+		'use strict';
+
+		var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+
+		var ExecutionEnvironment = {
+
+			canUseDOM: canUseDOM,
+
+			canUseWorkers: typeof Worker !== 'undefined',
+
+			canUseEventListeners: canUseDOM && !!(window.addEventListener || window.attachEvent),
+
+			canUseViewport: canUseDOM && !!window.screen
+
+		};
+
+		if (true) {
+			!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return ExecutionEnvironment;
+			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else if (typeof module !== 'undefined' && module.exports) {
+			module.exports = ExecutionEnvironment;
+		} else {
+			window.ExecutionEnvironment = ExecutionEnvironment;
+		}
+	})();
 
 /***/ },
 /* 9 */
@@ -1055,20 +1143,48 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 10 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_10__;
+	/* @flow */
+
+	'use strict';
+
+	var ExecutionEnvironment = __webpack_require__(8);
+
+	var _matchMediaFunction = ExecutionEnvironment.canUseDOM && window && window.matchMedia && function (mediaQueryString) {
+	  return window.matchMedia(mediaQueryString);
+	};
+
+	module.exports = {
+	  canMatchMedia: function canMatchMedia() {
+	    return typeof _matchMediaFunction === 'function';
+	  },
+
+	  matchMedia: function matchMedia(query) {
+	    return _matchMediaFunction(query);
+	  },
+
+	  setMatchMedia: function setMatchMedia(nextMatchMediaFunction) {
+	    _matchMediaFunction = nextMatchMediaFunction;
+	  }
+	};
 
 /***/ },
 /* 11 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_11__;
+
+/***/ },
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var createMarkupForStyles = __webpack_require__(12);
-	var Prefixer = __webpack_require__(8);
+	var createMarkupForStyles = __webpack_require__(13);
+	var Prefixer = __webpack_require__(7);
 
-	var React = __webpack_require__(10);
+	var React = __webpack_require__(11);
 
 	var buildCssString = function buildCssString(selector, rules) {
 	  if (!selector || !rules) {
@@ -1151,7 +1267,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Style;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	/* @flow */
@@ -1168,17 +1284,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = createMarkupForStyles;
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* @flow */
 
 	'use strict';
 
-	var createMarkupForStyles = __webpack_require__(12);
-	var Prefixer = __webpack_require__(8);
+	var createMarkupForStyles = __webpack_require__(13);
+	var Prefixer = __webpack_require__(7);
 
-	var ExecutionEnvironment = __webpack_require__(5);
+	var ExecutionEnvironment = __webpack_require__(8);
 
 	var isAnimationSupported = ExecutionEnvironment.canUseDOM && Prefixer.getPrefixedPropertyName('animation') !== false;
 

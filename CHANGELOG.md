@@ -1,5 +1,28 @@
 # Radium Changelog
 
+## 0.13.5 (July 29, 2015)
+
+### Improvements
+
+- Support for old and tweener flexbox syntax, #279, thanks @sylvaingi
+- Only calls console.warn during development, not in production
+
+### Bug Fixes
+
+- Don't call resolveStyles more than once on the same element, #293
+- Allow null or undefined values in style, #263
+- Remove redundant babel-core from dependencies
+- Fix using numeric 0 as key to getState, #275
+- Don't wrap display name with "Radium(...)", #271
+- Fix older firefox missing `float` property, #277, thanks @bencao
+- Don't warn when mixing `transform` properties, #272, thanks @MattHauglustaine
+- Use for loop instead of Array prototype on the result of window.getComputedStyle, which was breaking Android web view, #267, thanks @bsbeeks
+- Ignore functions as children instead of blowing up, #265, thanks @Cottin
+
+### Misc
+
+- Add `test-dev` command for faster test feedback during development
+
 ## 0.13.4 (July 14, 2015)
 
 ### Bug Fixes
