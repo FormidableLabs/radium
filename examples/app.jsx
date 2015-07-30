@@ -16,6 +16,7 @@ var React = require('react');
 var Button = require('./components/button.jsx');
 var ComputedWell = require('./components/computed-well.jsx');
 var Style = require('../modules/components/style.js');
+var PrintStyle = require('../modules/components/print-style.js');
 var Radium = require('../modules');
 
 //
@@ -52,15 +53,23 @@ class TwoSquares extends React.Component {
 }
 
 var Spinner = React.createClass({
+
+  statics: {
+    printStyles: {
+      width: '100%'
+    }
+  },
+
   render: function () {
     return (
-      <div>
+      <div className='spinning-test'>
         <div style={spinnerStyles.inner} />
       </div>
     );
   }
 });
 Spinner = Radium(Spinner);
+
 
 var App = React.createClass({
 
@@ -154,6 +163,8 @@ var App = React.createClass({
           />
           <span>This content has scoped styles</span>
         </p>
+
+        <PrintStyle />
       </div>
     );
   }

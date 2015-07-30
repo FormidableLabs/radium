@@ -1,6 +1,7 @@
 /* @flow */
 
 var resolveStyles = require('./resolve-styles.js');
+var printStyles = require('./print-styles.js');
 
 var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
   class RadiumEnhancer extends ComposedComponent {
@@ -16,7 +17,7 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
 
     render () {
       var renderedElement = super.render();
-      return resolveStyles(this, renderedElement);
+      return resolveStyles(this, renderedElement, true);
     }
 
     componentWillUnmount () {
@@ -55,6 +56,8 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
       RadiumEnhancer[key] = ComposedComponent[key];
     }
   });
+
+  printStyles.addPrintStyles(RadiumEnhancer);
 
   if (process.env.NODE_ENV !== 'production') {
     // This fixes React Hot Loader by exposing the original components top level

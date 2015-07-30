@@ -144,6 +144,7 @@ var _cloneElement = function (renderedElement, newProps, newChildren) {
 var resolveStyles = function (
   component: any, // ReactComponent, flow+eslint complaining
   renderedElement: any, // ReactElement
+  isEnhancedComponent: bool,
   existingKeyMap?: Object<string, string>
 ): any { // ReactElement
   existingKeyMap = existingKeyMap || {};
@@ -174,13 +175,13 @@ var resolveStyles = function (
       // If a React Element is an only child, don't wrap it in an array for
       // React.Children.map() for React.Children.only() compatibility.
       var onlyChild = React.Children.only(oldChildren);
-      newChildren = resolveStyles(component, onlyChild, existingKeyMap);
+      newChildren = resolveStyles(component, onlyChild, false, existingKeyMap);
     } else {
       newChildren = React.Children.map(
         oldChildren,
         function (child) {
           if (React.isValidElement(child)) {
-            return resolveStyles(component, child, existingKeyMap);
+            return resolveStyles(component, child, false, existingKeyMap);
           }
 
           return child;
@@ -204,8 +205,20 @@ var resolveStyles = function (
   }
 
   var props = renderedElement.props;
+  var className = props.className;
   var style = props.style;
   var newProps = {};
+
+  // If we have print styles we need to ensure that we activate them by giving
+  // them a class name
+  if (isEnhancedComponent && component.constructor.printStyles) {
+    if (className) {
+      className = className + ' ' + component.constructor.displayName;
+    } else {
+      className = component.constructor.displayName;
+    }
+    newProps.className = className;
+  }
 
   // Convenient syntax for multiple styles: `style={[style1, style2, etc]}`
   // Ignores non-objects, so you can do `this.state.isCool && styles.cool`.
@@ -344,7 +357,7 @@ var resolveStyles = function (
       newProps.style = Prefixer.getPrefixedStyle(style);
       return _cloneElement(renderedElement, newProps, newChildren);
     } else if (newChildren) {
-      return _cloneElement(renderedElement, {}, newChildren);
+      return _cloneElement(renderedElement, newProps, newChildren);
     }
 
     return renderedElement;
