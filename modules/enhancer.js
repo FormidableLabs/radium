@@ -13,11 +13,15 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
 
       this.state = this.state || {};
       this.state._radiumStyleState = {};
+
+      if (RadiumEnhancer.printStyleClass) {
+        this.printStyleClass = RadiumEnhancer.printStyleClass;
+      }
     }
 
     render () {
       var renderedElement = super.render();
-      return resolveStyles(this, renderedElement, true);
+      return resolveStyles(this, renderedElement);
     }
 
     componentWillUnmount () {
@@ -57,8 +61,6 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
     }
   });
 
-  printStyles.addPrintStyles(RadiumEnhancer);
-
   if (process.env.NODE_ENV !== 'production') {
     // This fixes React Hot Loader by exposing the original components top level
     // prototype methods on the Radium enhanced prototype as discussed in #219.
@@ -73,6 +75,8 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
     ComposedComponent.displayName ||
     ComposedComponent.name ||
     'Component';
+
+  RadiumEnhancer.printStyleClass = printStyles.addPrintStyles(RadiumEnhancer);
 
   return RadiumEnhancer;
 };

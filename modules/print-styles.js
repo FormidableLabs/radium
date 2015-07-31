@@ -41,12 +41,19 @@ var addPrintStyles = function (Component) {
         return;
     }
 
-    var className = `.${Component.displayName}`;
-    allPrintStyles[className] = importantValues(Component.printStyles);
+    var printStyleClass = {};
+
+    Object.keys(Component.printStyles).forEach((key) => {
+        var styles = Component.printStyles[key];
+        var className = `Radium-${Component.displayName}-${key}`;
+        allPrintStyles[`.${className}`] = importantValues(styles);
+        printStyleClass[key] = className;
+    });
 
     // Allows for lazy loading of JS that then calls Radium to update the
     // print styles
     emitChange();
+    return printStyleClass;
 };
 
 var getPrintStyles = function () {

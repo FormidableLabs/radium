@@ -56,14 +56,20 @@ var Spinner = React.createClass({
 
   statics: {
     printStyles: {
-      width: '100%'
+      main: {
+        width: '50%'
+      },
+
+      inner: {
+        background: 'red'
+      }
     }
   },
 
   render: function () {
     return (
-      <div className='spinning-test'>
-        <div style={spinnerStyles.inner} />
+      <div className={this.printStyleClass.main}>
+        <div className={this.printStyleClass.inner} style={spinnerStyles.inner} />
       </div>
     );
   }
