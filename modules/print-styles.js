@@ -1,7 +1,9 @@
+/* @flow */
+
 var allPrintStyles = {};
 var listeners = [];
 
-var addListener = function (listener) {
+var addListener = function (listener: Function): void {
     var listenerIndex = listeners.indexOf(listener);
 
     if (listenerIndex === -1) {
@@ -9,7 +11,7 @@ var addListener = function (listener) {
     }
 };
 
-var removeListener = function (listener) {
+var removeListener = function (listener: Function): void {
     var listenerIndex = listeners.indexOf(listener);
 
     if (listenerIndex > -1) {
@@ -36,7 +38,7 @@ var importantValues = function (styleObj) {
     return importantStyleObj;
 };
 
-var addPrintStyles = function (Component) {
+var addPrintStyles = function (Component: constructor) {
     if (!Component.printStyles) {
         return;
     }
@@ -56,7 +58,7 @@ var addPrintStyles = function (Component) {
     return printStyleClass;
 };
 
-var getPrintStyles = function () {
+var getPrintStyles = function (): Object  {
     return allPrintStyles;
 };
 
