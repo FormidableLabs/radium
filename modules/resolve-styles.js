@@ -148,7 +148,6 @@ var resolveStyles = function (
 ): any { // ReactElement
   existingKeyMap = existingKeyMap || {};
 
-
   if (
     !renderedElement ||
     // Bail if we've already processed this element. This ensures that only the
@@ -163,13 +162,22 @@ var resolveStyles = function (
   // Recurse over children first in case we bail early. Note that children only
   // include those rendered in `this` component. Child nodes in other components
   // will not be here, so each component needs to use Radium.
-  var newChildren;
   var oldChildren = renderedElement.props.children;
+  var newChildren = oldChildren;
   if (oldChildren) {
     var childrenType = typeof oldChildren;
-    if (childrenType === 'string' || childrenType === 'number' || childrenType === 'function') {
-      // Don't do anything with a single primitive child or functions
+    if (childrenType === 'string' || childrenType === 'number') {
+      // Don't do anything with a single primitive child
       newChildren = oldChildren;
+    } else if (childrenType === 'function') {
+      // Wrap the function, resolving styles on the result
+      newChildren = function () {
+        var result = oldChildren.apply(this, arguments);
+        if (React.isValidElement(result)) {
+          return resolveStyles(component, result, existingKeyMap);
+        }
+        return result;
+      };
     } else if (React.Children.count(oldChildren) === 1 && oldChildren.type) {
       // If a React Element is an only child, don't wrap it in an array for
       // React.Children.map() for React.Children.only() compatibility.
@@ -189,23 +197,40 @@ var resolveStyles = function (
     }
   }
 
+  var props = renderedElement.props;
+  var newProps = {};
+
+  // Recurse over props, just like children
+  Object.keys(props).forEach(prop => {
+    var propValue = props[prop];
+    if (React.isValidElement(propValue)) {
+      newProps[prop] = resolveStyles(
+        component,
+        propValue,
+        existingKeyMap
+      );
+    }
+  });
+
+  var hasResolvedProps = Object.keys(newProps).length > 0;
+
   // Bail early if element is not a simple ReactDOMElement.
   if (
     !React.isValidElement(renderedElement) ||
     typeof renderedElement.type !== 'string'
   ) {
-    if (oldChildren === newChildren) {
+    if (oldChildren === newChildren && !hasResolvedProps) {
       return renderedElement;
     }
 
     return _cloneElement(
-      renderedElement, renderedElement.props, newChildren
+      renderedElement,
+      hasResolvedProps ? newProps : {},
+      newChildren
     );
   }
 
-  var props = renderedElement.props;
   var style = props.style;
-  var newProps = {};
 
   // Convenient syntax for multiple styles: `style={[style1, style2, etc]}`
   // Ignores non-objects, so you can do `this.state.isCool && styles.cool`.
@@ -343,8 +368,8 @@ var resolveStyles = function (
       // Still perform vendor prefixing, though.
       newProps.style = Prefixer.getPrefixedStyle(style);
       return _cloneElement(renderedElement, newProps, newChildren);
-    } else if (newChildren) {
-      return _cloneElement(renderedElement, {}, newChildren);
+    } else if (newChildren || hasResolvedProps) {
+      return _cloneElement(renderedElement, newProps, newChildren);
     }
 
     return renderedElement;
