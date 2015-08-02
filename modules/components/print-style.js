@@ -29,15 +29,13 @@ var PrintStyle = React.createClass({
 
   render: function () {
     return (
-      <Style
-        rules={
-          {
-            mediaQueries: {
-              print: this.state.styles
-            }
+      <Style rules={
+        {
+          mediaQueries: {
+            print: this.state.styles
           }
         }
-      />
+      } />
     );
   }
 
