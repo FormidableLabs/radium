@@ -40,7 +40,7 @@
     "eslint-plugin-react": "^3.0.0",
     "inject-loader": "^2.0.0",
     "isparta-loader": "^0.2.0",
-    "karma": "^0.12.37",
+    "karma": "^0.13.3",
     "karma-babel-preprocessor": "^5.2.1",
     "karma-coverage": "^0.4.2",
     "karma-mocha": "^0.2.0",
@@ -48,7 +48,7 @@
     "karma-phantomjs-launcher": "^0.2.0",
     "karma-phantomjs-shim": "^1.0.0",
     "karma-sinon-chai": "^1.0.0",
-    "karma-webpack": "1.5.1",
+    "karma-webpack": "^1.7.0",
     "lodash": "^3.9.3",
     "mocha": "^2.2.5",
     "node-libs-browser": "^0.5.2",
@@ -57,7 +57,7 @@
     "react": ">=0.13.3",
     "sinon": "^1.15.3",
     "sinon-chai": "^2.8.0",
-    "webpack": "1.9.11",
+    "webpack": "^1.9.11",
     "webpack-dev-server": "^1.9.0"
   }
 }
