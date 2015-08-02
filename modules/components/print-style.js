@@ -4,24 +4,23 @@ var Style = require('./style.js');
 var printStyles = require('../print-styles.js');
 
 var PrintStyle = React.createClass({
-
   getInitialState: function () {
-    return this.getStylesState();
+    return this._getStylesState();
   },
 
   componentDidMount: function () {
-    printStyles.addListener(this.onChange);
+    printStyles.addListener(this._onChange);
   },
 
   componentWillUnmount: function () {
-    printStyles.removeListener(this.onChange);
+    printStyles.removeListener(this._onChange);
   },
 
-  onChange: function () {
-    this.setState(this.getStylesState());
+  _onChange: function () {
+    this.setState(this._getStylesState());
   },
 
-  getStylesState: function () {
+  _getStylesState: function () {
     return {
       styles: printStyles.getPrintStyles()
     };
@@ -38,7 +37,6 @@ var PrintStyle = React.createClass({
       } />
     );
   }
-
 });
 
 module.exports = PrintStyle;
