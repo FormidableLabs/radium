@@ -218,7 +218,7 @@ describe('Radium blackbox tests', () => {
       TestUtils.findRenderedDOMComponentWithTag(output, 'style')
     );
 
-    expect(style.innerText).to.deep.equal(
+    expect(style.innerText).to.equal(
       '@media print{.Radium-TestComponent-foo{color: blue !important;}.Radium-TestComponent-bar{background: red !important;}.Radium-TestComponent2-main{color: black !important;}}' // eslint-disable-line max-len
     );
   });
