@@ -23,7 +23,7 @@ var emitChange = function () {
   listeners.forEach(listener => listener());
 };
 
-var importantValues = function (styleObj) {
+var _appendImportantToEachValue = function (styleObj) {
   var importantStyleObj = {};
 
   Object.keys(styleObj).forEach(key => {
@@ -48,7 +48,7 @@ var addPrintStyles = function (Component: constructor) {
   Object.keys(Component.printStyles).forEach((key) => {
     var styles = Component.printStyles[key];
     var className = `Radium-${Component.displayName}-${key}`;
-    allPrintStyles[`.${className}`] = importantValues(styles);
+    allPrintStyles[`.${className}`] = _appendImportantToEachValue(styles);
     printStyleClass[key] = className;
   });
 
