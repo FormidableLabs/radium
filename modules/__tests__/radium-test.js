@@ -1,7 +1,7 @@
 var Radium = require('index.js');
 var React = require('react/addons');
 
-var {PrintStyle} = Radium;
+var {PrintStyleSheet} = Radium;
 var {Component} = React;
 var TestUtils = React.addons.TestUtils;
 
@@ -212,7 +212,7 @@ describe('Radium blackbox tests', () => {
     };
     Radium(TestComponent2);
 
-    var output = TestUtils.renderIntoDocument(<PrintStyle />);
+    var output = TestUtils.renderIntoDocument(<PrintStyleSheet />);
 
     var style = React.findDOMNode(
       TestUtils.findRenderedDOMComponentWithTag(output, 'style')

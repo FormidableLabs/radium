@@ -8,7 +8,7 @@
 - [keyframes](#keyframes)
 - [Config.setMatchMedia](#configsetmatchmedia)
 - [Style Component](#style-component)
-- [Print Style Component](#print-style-component)
+- [PrintStyleSheet Component](#printstylesheet-component)
 
 ## Radium
 
@@ -225,7 +225,7 @@ A string that any included selectors in `rules` will be appended to. Use to scop
 </div>
 ```
 
-## Print Style
+## PrintStyleSheet component
 
 In order to fully support print styling it is necessary to use CSS because of browser differences, as described in #132. Radium allows you to do this easily by specifying print styles as static properties of your components.
 
@@ -274,4 +274,4 @@ Radium(React.createClass({
 }));
 ```
 
-Somewhere in near the root of your app, create a `<PrintStyle />` component and it will render a style tag containing all the CSS needed for printing, wrapped in a `@media print` query.
+Somewhere in near the root of your app, create a `<PrintStyleSheet />` component and it will render a style tag containing all the CSS needed for printing, wrapped in a `@media print` query.
