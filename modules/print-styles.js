@@ -19,7 +19,7 @@ var removeListener = function (listener: Function): void {
   }
 };
 
-var emitChange = function () {
+var _emitChange = function () {
   listeners.forEach(listener => listener());
 };
 
@@ -54,7 +54,7 @@ var addPrintStyles = function (Component: constructor) {
 
   // Allows for lazy loading of JS that then calls Radium to update the
   // print styles
-  emitChange();
+  _emitChange();
   return printStyleClass;
 };
 
