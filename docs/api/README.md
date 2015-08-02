@@ -227,14 +227,13 @@ A string that any included selectors in `rules` will be appended to. Use to scop
 
 ## Print Style
 
-In order to fully support all print styling eventually, it is necessary to use CSS because of browser differences described in #132. Radium allows you to do this easily by specifying print styles as static properties of your components.
+In order to fully support print styling it is necessary to use CSS because of browser differences, as described in #132. Radium allows you to do this easily by specifying print styles as static properties of your components.
 
 With ES7 decorators and static class properties:
 
 ```as
 @Radium
 class MyComponent extends React.Component {
-  static displayName = 'MyComponent';
 
   static printStyles = {
     wrapper: { background: 'black' },
