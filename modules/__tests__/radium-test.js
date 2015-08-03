@@ -1,6 +1,7 @@
 var Radium = require('index.js');
 var React = require('react/addons');
 
+var {PrintStyleSheet} = Radium;
 var {Component} = React;
 var TestUtils = React.addons.TestUtils;
 
@@ -179,5 +180,50 @@ describe('Radium blackbox tests', () => {
     TestUtils.Simulate.mouseDown(div);
 
     expect(div.style.color).to.equal('green');
+  });
+
+  it('applies print styles through the PrintStyle component', () => {
+    Radium(React.createClass({
+      displayName: 'TestComponent',
+
+      statics: {
+        printStyles: {
+          foo: {color: 'blue'},
+          bar: {background: 'red'}
+        }
+      },
+
+      render () {
+        return (
+          <div />
+        );
+      }
+    }));
+
+    class TestComponent2 extends Component {
+      render () {
+        return <div />;
+      }
+    }
+
+    TestComponent2.displayName = 'TestComponent2';
+    TestComponent2.printStyles = {
+      main: {color: 'black'}
+    };
+    Radium(TestComponent2);
+
+    var output = TestUtils.renderIntoDocument(<PrintStyleSheet />);
+
+    var style = React.findDOMNode(
+      TestUtils.findRenderedDOMComponentWithTag(output, 'style')
+    );
+
+    expect(style.innerText).to.equal(
+      '@media print{' +
+      '.Radium-TestComponent-foo{color: blue !important;}' +
+      '.Radium-TestComponent-bar{background: red !important;}' +
+      '.Radium-TestComponent2-main{color: black !important;}' +
+      '}'
+    );
   });
 });

@@ -1,6 +1,7 @@
 /* @flow */
 
 var resolveStyles = require('./resolve-styles.js');
+var printStyles = require('./print-styles.js');
 
 var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
   class RadiumEnhancer extends ComposedComponent {
@@ -12,6 +13,10 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
 
       this.state = this.state || {};
       this.state._radiumStyleState = {};
+
+      if (RadiumEnhancer.printStyleClass) {
+        this.printStyleClass = RadiumEnhancer.printStyleClass;
+      }
     }
 
     render () {
@@ -70,6 +75,8 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
     ComposedComponent.displayName ||
     ComposedComponent.name ||
     'Component';
+
+  RadiumEnhancer.printStyleClass = printStyles.addPrintStyles(RadiumEnhancer);
 
   return RadiumEnhancer;
 };
