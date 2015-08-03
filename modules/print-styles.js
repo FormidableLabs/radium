@@ -65,5 +65,5 @@ var getPrintStyles = function (): Object  {
 module.exports = {
   addPrintStyles,
   getPrintStyles,
-  subscribe,
+  subscribe
 };
