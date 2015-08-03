@@ -3,6 +3,7 @@
 - [How do I use pseudo-selectors like `:checked` or `:last`?](#how-do-i-use-pseudo-selectors-like-checked-or-last)
 - [How can I use `ReactCSSTransitionGroup` without any classes?](#how-can-i-use-reactcsstransitiongroup-without-any-classes)
 - [How can I use Radium with jsbin?](#how-can-i-use-radium-with-jsbin)
+- [Can I use my favourite CSS/LESS/SASS syntax?](#can-i-use-my-favourite-csslesssass-syntax)
 
 ## How do I use pseudo-selectors like `:checked` or `:last`?
 
@@ -86,3 +87,50 @@ To get the latest version, drop this into the HTML:
 ```
 
 We also recommend changing the JavaScript language to ES6/Babel.
+
+## Can I use my favourite CSS/LESS/SASS syntax?
+
+Yes, with the help of the [react-styling](https://github.com/halt-hammerzeit/react-styling) module, which requires [template strings](https://babeljs.io/docs/learn-es2015/#template-strings). Using react-styling you can write your styles in any syntax you like (curly braces or tabs, CSS, LESS/SASS, anything will do).
+
+The example from the main Readme (using regular CSS syntax)
+
+```as
+<Button kind="primary">Radium Button</Button>
+```
+
+```as
+@Radium
+class Button extends React.Component {
+  static propTypes = {
+    kind: React.PropTypes.oneOf(['primary', 'warning']).isRequired
+  }
+
+  render() {
+    return (
+      <button style={style.button[this.props.kind]}>
+        {this.props.children}
+      </button>
+    )
+  }
+}
+
+const style = styler`
+  .button {
+    color: #fff;
+
+    :hover {
+      background: ${color('#0074d9').lighten(0.2).hexString()};
+    }
+
+    &.primary {
+      background: #0074D9;
+    }
+
+    &.warning {
+      background: #FF4136;
+    }
+  }
+`
+```
+
+You can find a more advanced example in the [react-styling readme](https://github.com/halt-hammerzeit/react-styling#radium).

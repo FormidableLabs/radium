@@ -141,7 +141,7 @@ var pulseKeyframes = Radium.keyframes({
 
 var styles = {
   inner: {
-    animation: pulseKeyframes + ' 3s ease 0s infinite',
+    animation: `${pulseKeyframes} 3s ease 0s infinite`,
     background: 'blue',
     height: '4px',
     margin: '0 auto',
@@ -189,6 +189,9 @@ An object of CSS rules to render. Each key of the rules object is a CSS selector
 var Radium = require('radium');
 var Style = Radium.Style;
 
+// or
+import Radium, { Style } from 'radium'
+
 <Style rules={{
   body: {
     margin: 0,
@@ -196,16 +199,20 @@ var Style = Radium.Style;
   },
   html: {
     background: '#ccc'
+  },
+  'h1, h2, h3': {
+    fontWeight: 'bold'
   }
 }} />
 ```
+
 
 #### scopeSelector
 
 A string that any included selectors in `rules` will be appended to. Use to scope styles in the component to a particular element. A good use case might be to generate a unique ID for a component to scope any styles to the particular component that owns the `<Style>` component instance.
 
 ```as
-<div class="TestClass">
+<div className="TestClass">
   <Style
   scopeSelector=".TestClass"
     rules={{

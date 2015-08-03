@@ -8,7 +8,7 @@ var _matchMediaFunction = ExecutionEnvironment.canUseDOM &&
   (mediaQueryString => window.matchMedia(mediaQueryString));
 
 module.exports = {
-  canMatchMedia () {
+  canMatchMedia (): boolean {
     return typeof _matchMediaFunction === 'function';
   },
 

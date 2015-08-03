@@ -1,8 +1,33 @@
 # Using Radium
 
+**Table of Contents**
+
+- [How do I do it, then?](#how-do-i-do-it-then)
+- [Modifiers](#modifiers)
+- [Browser States](#browser-states)
+- [Media Queries](#media-queries)
+  - [Nested browser states](#nested-browser-states)
+  - [Known issues with media queries](#known-issues-with-media-queries)
+- [Styling Multiple Elements in a Single Component](#styling-multiple-elements-in-a-single-component)
+- [Styling one element depending on another's state](#styling-one-element-depending-on-anothers-state)
+- [Fallback Values](#fallback-values)
+- [Style Component](#style-component)
+
 Radium is a toolset for easily writing React component styles. It resolves browser states and media queries to apply the correct styles to your components, all without selectors, specificity, or source order dependence.
 
 ## How do I do it, then?
+
+First, require or import Radium at the top of component file:
+
+```as
+var Radium = require('radium');
+
+// or
+import Radium from 'radium'
+
+// If you want to use the <Style /> component you can do
+import Radium, { Style } from 'radium'
+```
 
 Let's create a fictional `<Button>` component. It will have a set of default styles, will adjust its appearance based on modifiers, and will include hover, focus, and active states.
 
@@ -21,17 +46,22 @@ class Button extends React.Component {
 Radium is activated by using a decorator or wrapping your component:
 
 ```as
+// For ES6 and ES7
 @Radium
 class Button extends React.Component {
   // ...
 }
 
 // or
-
+class Button extends React.Component {
+  // ...
+}
 module.exports = Radium(Button);
 
 // or
-
+class Button extends React.Component {
+  // ...
+}
 Button = Radium(Button);
 ```
 
@@ -283,3 +313,7 @@ Is equivalent to the following CSS (note that the order is reversed):
   background: rgba(255, 255, 255, .5);
 }
 ```
+
+## `<Style>` component
+
+Want to add a style selector within your component? Need to pass properties to the `html` and `body` elements or group selectors (e.g. `h1, h2, h3`) that share properties? Radium has you covered with the `<Style />` component - read how to use it [here](https://github.com/FormidableLabs/radium/tree/master/docs/api#style-component).
