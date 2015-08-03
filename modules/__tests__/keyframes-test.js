@@ -3,7 +3,7 @@ var exenv;
 
 var {Component} = require('react');
 
-class MyComponent extends Component { };
+class MyComponent extends Component { }
 
 describe('keyframes', () => {
 

@@ -3,7 +3,7 @@ var mockStyle = {};
 
 var {Component} = require('react');
 
-class MyComponent extends Component { };
+class MyComponent extends Component { }
 
 describe('Prefixer', () => {
   var exenv;
@@ -78,7 +78,9 @@ describe('Prefixer', () => {
     browserPrefix = '-webkit-';
     mockStyle = { transform: '' };
     var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
-    expect(Prefixer.getPrefixedStyle(MyComponent, {transform: 'foo'})).to.deep.equal({transform: 'foo'});
+    expect(
+      Prefixer.getPrefixedStyle(MyComponent, {transform: 'foo'})).to.deep.equal({transform: 'foo'}
+    );
   });
 
   it('caches property and value checks', () => {
@@ -104,14 +106,22 @@ describe('Prefixer', () => {
     browserPrefix = '-webkit-';
     mockStyle = { WebkitTransform: '' };
     var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
-    expect(Prefixer.getPrefixedStyle(MyComponent, {transform: 'foo'})).to.deep.equal({WebkitTransform: 'foo'});
+    expect(
+      Prefixer.getPrefixedStyle(
+        MyComponent, {transform: 'foo'}
+      )
+    ).to.deep.equal({WebkitTransform: 'foo'});
   });
 
   it('uses alternative properties if no others available', () => {
     browserPrefix = '-moz-';
     mockStyle = { MozBoxFlex: '' };
     var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
-    expect(Prefixer.getPrefixedStyle(MyComponent, {flex: 1})).to.deep.equal({MozBoxFlex: 1});
+    expect(
+      Prefixer.getPrefixedStyle(
+        MyComponent, {flex: 1}
+      )
+    ).to.deep.equal({MozBoxFlex: 1});
   });
 
   it('uses prefixed property if both in style object', () => {
@@ -121,14 +131,22 @@ describe('Prefixer', () => {
       WebkitTransform: ''
     };
     var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
-    expect(Prefixer.getPrefixedStyle(MyComponent, {transform: 'foo'})).to.deep.equal({WebkitTransform: 'foo'});
+    expect(
+      Prefixer.getPrefixedStyle(
+        MyComponent, {transform: 'foo'}
+      )
+    ).to.deep.equal({WebkitTransform: 'foo'});
   });
 
   it('uses unprefixed value if setter works', () => {
     browserPrefix = '-webkit-';
     mockStyle = { transform: '' };
     var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
-    expect(Prefixer.getPrefixedStyle(MyComponent, {transform: 'foo'})).to.deep.equal({transform: 'foo'});
+    expect(
+      Prefixer.getPrefixedStyle(
+        MyComponent, {transform: 'foo'}
+      )
+    ).to.deep.equal({transform: 'foo'});
   });
 
   it('ignores unsupported values', () => {
@@ -138,32 +156,50 @@ describe('Prefixer', () => {
       set transform (value) { }
     };
     var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
-    expect(Prefixer.getPrefixedStyle(MyComponent, {transform: 'foo'})).to.deep.equal({transform: 'foo'});
+    expect(
+      Prefixer.getPrefixedStyle(
+        MyComponent, {transform: 'foo'}
+      )
+    ).to.deep.equal({transform: 'foo'});
   });
 
   it('ignores number values', () => {
     mockStyle = { lineHeight: '' };
     var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
-    expect(Prefixer.getPrefixedStyle(MyComponent, {lineHeight: 2})).to.deep.equal({lineHeight: 2});
+    expect(
+      Prefixer.getPrefixedStyle(
+        MyComponent, {lineHeight: 2}
+      )
+    ).to.deep.equal({lineHeight: 2});
   });
 
   it('ignores numbers with units', () => {
     mockStyle = { lineHeight: '' };
     var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
-    expect(Prefixer.getPrefixedStyle(MyComponent, {lineHeight: '2em'})).to.deep.equal({lineHeight: '2em'});
+    expect(
+      Prefixer.getPrefixedStyle(
+        MyComponent, {lineHeight: '2em'}
+      )
+    ).to.deep.equal({lineHeight: '2em'});
   });
 
   it('ignores null values', () => {
     mockStyle = { lineHeight: '' };
     var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
-    expect(Prefixer.getPrefixedStyle(MyComponent, {lineHeight: null})).to.deep.equal({lineHeight: null});
+    expect(
+      Prefixer.getPrefixedStyle(MyComponent, {lineHeight: null}
+      )
+    ).to.deep.equal({lineHeight: null});
   });
 
   it('ignores undefined values', () => {
     mockStyle = { lineHeight: '' };
     var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
     expect(
-      Prefixer.getPrefixedStyle(MyComponent, {lineHeight: undefined})).to.deep.equal({lineHeight: undefined}
+      Prefixer.getPrefixedStyle(
+        MyComponent, {lineHeight: undefined}
+      )
+    ).to.deep.equal({lineHeight: undefined}
     );
   });
 
@@ -181,7 +217,11 @@ describe('Prefixer', () => {
       }
     };
     var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
-    expect(Prefixer.getPrefixedStyle(MyComponent, {display: 'flex'})).to.deep.equal({display: '-webkit-flex'});
+    expect(
+      Prefixer.getPrefixedStyle(
+        MyComponent, {display: 'flex'}
+      )
+    ).to.deep.equal({display: '-webkit-flex'});
   });
 
   it('uses alternative value if all others fail and it works', () => {
@@ -198,7 +238,11 @@ describe('Prefixer', () => {
       }
     };
     var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
-    expect(Prefixer.getPrefixedStyle(MyComponent, {display: 'flex'})).to.deep.equal({display: '-webkit-box'});
+    expect(
+      Prefixer.getPrefixedStyle(
+        MyComponent, {display: 'flex'}
+      )
+    ).to.deep.equal({display: '-webkit-box'});
   });
 
   it('uses fallback in value array if first value fails and it works', () => {
