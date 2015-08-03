@@ -3,20 +3,20 @@
 var allPrintStyles = {};
 var listeners = [];
 
-var addListener = function (listener: Function): void {
-  var listenerIndex = listeners.indexOf(listener);
-
-  if (listenerIndex === -1) {
+var subscribe = function (listener: () => void): {remove: () => void} {
+  if (listeners.indexOf(listener) === -1) {
     listeners.push(listener);
   }
-};
 
-var removeListener = function (listener: Function): void {
-  var listenerIndex = listeners.indexOf(listener);
+  return {
+    remove: function () {
+      var listenerIndex = listeners.indexOf(listener);
 
-  if (listenerIndex > -1) {
-    listeners.splice(listenerIndex, 1);
-  }
+      if (listenerIndex > -1) {
+        listeners.splice(listenerIndex, 1);
+      }
+    }
+  };
 };
 
 var _emitChange = function () {
@@ -65,6 +65,5 @@ var getPrintStyles = function (): Object  {
 module.exports = {
   addPrintStyles,
   getPrintStyles,
-  addListener,
-  removeListener
+  subscribe,
 };

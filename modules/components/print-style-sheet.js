@@ -9,11 +9,11 @@ var PrintStyle = React.createClass({
   },
 
   componentDidMount: function () {
-    printStyles.addListener(this._onChange);
+    this.subscription = printStyles.subscribe(this._onChange);
   },
 
   componentWillUnmount: function () {
-    printStyles.removeListener(this._onChange);
+    this.subscription.remove();
   },
 
   _onChange: function () {
