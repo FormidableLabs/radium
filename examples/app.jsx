@@ -16,7 +16,7 @@ var React = require('react');
 var Button = require('./components/button.jsx');
 var ComputedWell = require('./components/computed-well.jsx');
 var Style = require('../modules/components/style.js');
-var PrintStyle = require('../modules/components/print-style.js');
+var PrintStyleSheet = require('../modules/components/print-style-sheet.js');
 var Radium = require('../modules');
 
 //
@@ -170,7 +170,7 @@ var App = React.createClass({
           <span>This content has scoped styles</span>
         </p>
 
-        <PrintStyle />
+        <PrintStyleSheet />
       </div>
     );
   }
