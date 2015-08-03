@@ -268,13 +268,6 @@ var _getPrefixedValue = function (component, property, value, originalProperty) 
       if (value !== null && value !== undefined) {
         value = value.toString();
       } else {
-        /* eslint-disable no-console */
-        if (console && console.warn) {
-          console.warn(
-            'CSS value is "' + value + '" for property "' + property +
-            '" in component"' + component.constructor.displayName + '"'
-          );
-        }
         return value;
       }
     }
