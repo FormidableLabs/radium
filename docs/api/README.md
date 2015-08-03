@@ -234,7 +234,6 @@ With ES7 decorators and static class properties:
 ```as
 @Radium
 class MyComponent extends React.Component {
-
   static printStyles = {
     wrapper: { background: 'black' },
     text: { color: 'red' }
@@ -254,7 +253,6 @@ With `createClass`:
 
 ```as
 Radium(React.createClass({
-
   displayName: 'MyComponent',
 
   statics: {
@@ -274,4 +272,4 @@ Radium(React.createClass({
 }));
 ```
 
-Somewhere in near the root of your app, create a `<PrintStyleSheet />` component and it will render a style tag containing all the CSS needed for printing, wrapped in a `@media print` query.
+Somewhere in near the root of your app, create a `<PrintStyleSheet />` component and it will render a style tag containing all the CSS needed for printing, wrapped in a `@media print` query. You should only render <PrintStyleSheet /> once. It will contain all the print styles for every component.
