@@ -351,7 +351,7 @@ var _getPrefixedValue = function (component, property, value, originalProperty) 
       /* eslint-disable no-console */
       if (console && console.warn) {
         console.warn(
-          'Unsupported CSS value "' + value + '" for property "' + property + '"'
+          'Unsupported CSS value "' + value + '" for property "' + property + '"' + '" in component "' + component.constructor.displayName + '"'
         );
       }
       /* eslint-enable no-console */
@@ -385,7 +385,9 @@ var getPrefixedStyle = function (component, style, mode /* 'css' or 'js' */) {
       // Ignore unsupported properties
       /* eslint-disable no-console */
       if (console && console.warn) {
-        console.warn('Unsupported CSS property "' + property + '"');
+        console.warn(
+          'Unsupported CSS property "' + property + '" in component "' + component.constructor.displayName + '"'
+        );
       }
       /* eslint-enable no-console */
       return;
