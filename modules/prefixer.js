@@ -257,7 +257,7 @@ var _addPixelSuffixToValueIfNeeded = function (originalProperty, value) {
   return value;
 };
 
-var _getPrefixedValue = function (property, value, originalProperty) {
+var _getPrefixedValue = function (component, property, value, originalProperty) {
   if (!Array.isArray(value)) {
     // don't test numbers (pure or stringy), but do add 'px' prefix if needed
     if (!isNaN(value) && value !== null) {
@@ -350,8 +350,13 @@ var _getPrefixedValue = function (property, value, originalProperty) {
     if (process.env.NODE_ENV !== 'production') {
       /* eslint-disable no-console */
       if (console && console.warn) {
+        var componentContext = component
+          ? ` in component "${component.constructor.displayName}"`
+          : '';
+
         console.warn(
-          'Unsupported CSS value "' + value + '" for property "' + property + '"'
+          `Unsupported CSS value "${value}" for property "${property}$"` +
+            componentContext
         );
       }
       /* eslint-enable no-console */
@@ -363,7 +368,7 @@ var _getPrefixedValue = function (property, value, originalProperty) {
 
 // Returns a new style object with vendor prefixes added to property names
 // and values.
-var getPrefixedStyle = function (style, mode /* 'css' or 'js' */) {
+var getPrefixedStyle = function (component, style, mode /* 'css' or 'js' */) {
   mode = mode || 'js';
 
   if (!ExecutionEnvironment.canUseDOM) {
@@ -385,13 +390,19 @@ var getPrefixedStyle = function (style, mode /* 'css' or 'js' */) {
       // Ignore unsupported properties
       /* eslint-disable no-console */
       if (console && console.warn) {
-        console.warn('Unsupported CSS property "' + property + '"');
+        var componentContext = component
+          ? ` in component "${component.constructor.displayName}"`
+          : '';
+
+        console.warn(
+          `Unsupported CSS property "${property}$"` + componentContext
+        );
       }
       /* eslint-enable no-console */
       return;
     }
 
-    var newValue = _getPrefixedValue(newProperty.js, value, property);
+    var newValue = _getPrefixedValue(component, newProperty.js, value, property);
 
     prefixedStyle[newProperty[mode]] = newValue;
   });

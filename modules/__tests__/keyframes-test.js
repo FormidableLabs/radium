@@ -1,6 +1,10 @@
 var styleElement;
 var exenv;
 
+var {Component} = require('react');
+
+class MyComponent extends Component { }
+
 describe('keyframes', () => {
 
   beforeEach(() => {
@@ -45,7 +49,7 @@ describe('keyframes', () => {
     expect(document.createElement).not.to.have.been.called;
     expect(document.head.appendChild).not.to.have.been.called;
 
-    var name = keyframes({});
+    var name = keyframes({}, MyComponent);
 
     expect(name.length).to.be.greaterThan(0);
   });
@@ -61,12 +65,21 @@ describe('keyframes', () => {
     expect(document.createElement).not.to.have.been.called;
     expect(document.head.appendChild).not.to.have.been.called;
 
-    var name = keyframes({});
+    var name = keyframes({}, MyComponent);
 
     expect(name.length).to.be.greaterThan(0);
   });
 
   it('returns a name for the keyframes', () => {
+    var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+      'exenv': exenv,
+      './prefixer': require('__mocks__/prefixer.js')
+    });
+    var name = keyframes({}, MyComponent);
+    expect(name.length).to.be.greaterThan(0);
+  });
+
+  it('does not always require a component', () => {
     var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
@@ -80,7 +93,7 @@ describe('keyframes', () => {
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
     });
-    var name = keyframes({});
+    var name = keyframes({}, MyComponent);
 
     expect(styleElement.sheet.insertRule.lastCall.args).to.deep.equal([
       '@-webkit-keyframes ' + name + ' {\n\n}\n',
@@ -94,7 +107,7 @@ describe('keyframes', () => {
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
     });
-    var name = keyframes({});
+    var name = keyframes({}, MyComponent);
 
     expect(styleElement.sheet.insertRule.lastCall.args).to.deep.equal([
       '@keyframes ' + name + ' {\n\n}\n',
@@ -114,7 +127,7 @@ describe('keyframes', () => {
       to: {
         width: 200
       }
-    });
+    }, MyComponent);
 
     expect(styleElement.sheet.insertRule.lastCall.args).to.deep.equal([
 `@-webkit-keyframes ${name} {

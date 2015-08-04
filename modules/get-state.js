@@ -5,7 +5,7 @@ var getStateKey = require('./get-state-key');
 var VALID_KEYS = [':active', ':focus', ':hover'];
 
 var getState = function (
-  state: {_radiumStyleState: Object<string, Object<string, boolean>>},
+  state: {_radiumStyleState: {[key: string]: {[value: string]: boolean}}},
   elementKey: string,
   value: string
 ): boolean {
