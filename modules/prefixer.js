@@ -252,11 +252,13 @@ var _getUnprefixedProperty = function (property) {
   var noPrefixProperty = property;
 
   vendorPrefixes.forEach(prefix => {
+    // Let's check if the property starts with a vendor prefix
     if (property.indexOf(prefix) === 0) {
       noPrefixProperty = noPrefixProperty.replace(
         prefix,
         ''
       );
+
       // We have removed the vendor prefix, however the first
       // character is going to be uppercase hence won't match
       // any of the `isUnitlessNumber` keys as they all start
