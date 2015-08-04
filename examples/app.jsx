@@ -195,11 +195,11 @@ var tileStyle = {
   }
 };
 
-var pulseKeyframes = Radium.keyframes(Spinner, {
+var pulseKeyframes = Radium.keyframes({
   '0%': {width: '10%'},
   '50%': {width: '50%'},
   '100%': {width: '10%'},
-});
+}, Spinner);
 
 var spinnerStyles = {
   inner: {
