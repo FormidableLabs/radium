@@ -251,7 +251,7 @@ var getPrefixedPropertyName = function (property) {
 var _getUnprefixedProperty = function (property) {
   var noPrefixProperty = property;
 
-  vendorPrefixes.forEach(prefix => {
+  vendorPrefixes.some(prefix => {
     // Let's check if the property starts with a vendor prefix
     if (property.indexOf(prefix) === 0) {
       noPrefixProperty = noPrefixProperty.replace(
@@ -265,6 +265,8 @@ var _getUnprefixedProperty = function (property) {
       // with lower case. Let's ensure that the first char is
       // lower case.
       noPrefixProperty = noPrefixProperty.charAt(0).toLowerCase() + noPrefixProperty.slice(1);
+
+      return true;
     }
   });
 
