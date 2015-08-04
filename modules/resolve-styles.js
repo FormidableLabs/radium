@@ -340,17 +340,19 @@ var resolveStyles = function (
           shorthandPropertyExpansions[styleKey] &&
           shorthandPropertyExpansions[styleKey].some(sp => styleKeys.indexOf(sp) !== -1)
         ) {
-          /* eslint-disable no-console */
-          console.warn(
-            'Radium: property "' + styleKey + '" in style object',
-            style,
-            ': do not mix longhand and ' +
-            'shorthand properties in the same style object. Check the render ' +
-            'method of ' + component.constructor.displayName + '.',
-            'See https://github.com/FormidableLabs/radium/issues/95 for more ' +
-            'information.'
-          );
-          /* eslint-enable no-console */
+          if (process.env.NODE_ENV !== 'production') {
+            /* eslint-disable no-console */
+            console.warn(
+              'Radium: property "' + styleKey + '" in style object',
+              style,
+              ': do not mix longhand and ' +
+              'shorthand properties in the same style object. Check the render ' +
+              'method of ' + component.constructor.displayName + '.',
+              'See https://github.com/FormidableLabs/radium/issues/95 for more ' +
+              'information.'
+            );
+            /* eslint-enable no-console */
+          }
         }
       });
 
