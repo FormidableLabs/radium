@@ -8,7 +8,7 @@ module.exports = {
     }
     return name;
   },
-  getPrefixedStyle: style => style,
+  getPrefixedStyle: (component, style) => style,
   cssPrefix: '-webkit-',
 
   __setNextPrefixedPropertyName (name) {
