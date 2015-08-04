@@ -8,6 +8,8 @@ var arrayFind = require('array-find');
 
 var VENDOR_PREFIX_REGEX = /-(moz|webkit|ms|o)-/;
 
+var vendorPrefixes = ['Webkit', 'ms', 'Moz', 'O'];
+
 var infoByCssPrefix = {
   '-moz-': {
     cssPrefix: '-moz-',
@@ -242,15 +244,46 @@ var getPrefixedPropertyName = function (property) {
   return prefixedPropertyCache[property] = workingProperty;
 };
 
+// We are un-prefixing values before checking for isUnitlessNumber,
+// otherwise we are at risk of being in a situation where someone
+// explicitly passes something like `MozBoxFlex: 1` and that will
+// in turn get transformed into `MozBoxFlex: 1px`.
+var _getUnprefixedProperty = function (property) {
+  var noPrefixProperty = property;
+
+  vendorPrefixes.some(prefix => {
+    // Let's check if the property starts with a vendor prefix
+    if (property.indexOf(prefix) === 0) {
+      noPrefixProperty = noPrefixProperty.replace(
+        prefix,
+        ''
+      );
+
+      // We have removed the vendor prefix, however the first
+      // character is going to be uppercase hence won't match
+      // any of the `isUnitlessNumber` keys as they all start
+      // with lower case. Let's ensure that the first char is
+      // lower case.
+      noPrefixProperty = noPrefixProperty.charAt(0).toLowerCase() + noPrefixProperty.slice(1);
+
+      return true;
+    }
+  });
+
+  return noPrefixProperty;
+};
+
 // React is planning to deprecate adding px automatically
 // (https://github.com/facebook/react/issues/1873), and if they do, this
 // should change to a warning or be removed in favor of React's warning.
 // Same goes for below.
 var _addPixelSuffixToValueIfNeeded = function (originalProperty, value) {
+  var unPrefixedProperty = _getUnprefixedProperty(originalProperty);
+
   if (
     value !== 0 &&
     !isNaN(value) &&
-    !isUnitlessNumber[originalProperty]
+    !isUnitlessNumber[unPrefixedProperty]
   ) {
     return value + 'px';
   }

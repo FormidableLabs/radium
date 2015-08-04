@@ -124,6 +124,17 @@ describe('Prefixer', () => {
     ).to.deep.equal({MozBoxFlex: 1});
   });
 
+  it('unprefixes values before checking isUnitlessNumber to avoid px addition', () => {
+    browserPrefix = '-moz-';
+    mockStyle = { MozBoxFlex: '1', lineHeight: 2 };
+    var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
+    expect(
+      Prefixer.getPrefixedStyle(
+        MyComponent, {MozBoxFlex: 1, lineHeight: 2}
+      )
+    ).to.deep.equal({MozBoxFlex: 1, lineHeight: 2});
+  });
+
   it('uses prefixed property if both in style object', () => {
     browserPrefix = '-webkit-';
     mockStyle = {
