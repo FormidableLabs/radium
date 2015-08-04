@@ -66,7 +66,8 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
     // prototype methods on the Radium enhanced prototype as discussed in #219.
     Object.keys(ComposedComponent.prototype).forEach(key => {
       if (!RadiumEnhancer.prototype.hasOwnProperty(key)) {
-        RadiumEnhancer.prototype[key] = ComposedComponent.prototype[key];
+        var descriptor = Object.getOwnPropertyDescriptor(ComposedComponent.prototype, key);
+        Object.defineProperty(RadiumEnhancer.prototype, key, descriptor);
       }
     });
   }
