@@ -350,9 +350,12 @@ var _getPrefixedValue = function (component, property, value, originalProperty) 
     if (process.env.NODE_ENV !== 'production') {
       /* eslint-disable no-console */
       if (console && console.warn) {
+        var componentContext = component
+          ? '"' + '" in component "' + component.constructor.displayName + '"'
+          : '';
+
         console.warn(
-          'Unsupported CSS value "' + value + '" for property "'
-          + property + '"' + '" in component "' + component.constructor.displayName + '"'
+          'Unsupported CSS value "' + value + '" for property "' + property + componentContext
         );
       }
       /* eslint-enable no-console */
@@ -386,9 +389,12 @@ var getPrefixedStyle = function (component, style, mode /* 'css' or 'js' */) {
       // Ignore unsupported properties
       /* eslint-disable no-console */
       if (console && console.warn) {
+        var componentContext = component
+          ? '" in component "' + component.constructor.displayName + '"'
+          : '';
+
         console.warn(
-          'Unsupported CSS property "' + property +
-          '" in component "' + component.constructor.displayName + '"'
+          'Unsupported CSS property "' + property + componentContext
         );
       }
       /* eslint-enable no-console */
