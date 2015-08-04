@@ -394,7 +394,7 @@ var getPrefixedStyle = function (component, style, mode /* 'css' or 'js' */) {
           : '';
 
         console.warn(
-          'Unsupported CSS property "' + property + componentContext
+          `Unsupported CSS property "${property}$"` + componentContext
         );
       }
       /* eslint-enable no-console */
