@@ -497,6 +497,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  // Recurse over props, just like children
 	  Object.keys(props).forEach(function (prop) {
+	    // We already recurse over children above
+	    if (prop === 'children') {
+	      return;
+	    }
+
 	    var propValue = props[prop];
 	    if (React.isValidElement(propValue)) {
 	      newProps[prop] = resolveStyles(component, propValue, existingKeyMap);

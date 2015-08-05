@@ -1,5 +1,11 @@
 # Radium Changelog
 
+## 0.13.7 (August 5, 2015)
+
+### Bug Fixes
+
+- Fix double resolving bug on props.children, #307
+
 ## 0.13.6 (August 5, 2015)
 
 ### New Features
