@@ -1,5 +1,22 @@
 # Radium Changelog
 
+## 0.13.6 (August 5, 2015)
+
+### New Features
+
+- Resolve styles on elements found in props and children as function, #298
+- [&lt;PrintStyleSheet&gt;](https://github.com/FormidableLabs/radium/tree/master/docs/api#printstylesheet-component) component and `printStyles` property to add print styles to your components, #299, thanks @bobbyrenwick
+
+### Improvements
+
+- Show component name when warning in prefixer, #302, thanks @AnSavvides
+
+### Bug Fixes
+
+- Fix bug with _radiumDidResolveStyles that was breaking in React 0.14.0-beta2
+- Un-prefix values before checking isUnitlessNumber, #305, thanks @AnSavvides
+- Prevent errors from getters that do not have setters as static props of React components, #306, thanks @rolandpoulter
+
 ## 0.13.5 (July 29, 2015)
 
 ### Improvements
