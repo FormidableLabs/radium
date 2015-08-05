@@ -2,6 +2,7 @@
 [![Coverage Status][cov_img]][cov_site]
 [![NPM Package][npm_img]][npm_site]
 [![Dependency Status][david_img]][david_site]
+![gzipped size][size_img]
 
 # Radium
 
@@ -139,3 +140,4 @@ Please see [CONTRIBUTING](CONTRIBUTING.md)
 [npm_site]: https://www.npmjs.org/package/radium
 [david_img]: https://img.shields.io/david/FormidableLabs/radium.svg
 [david_site]: https://david-dm.org/FormidableLabs/radium
+[size_img]: https://badge-size.herokuapp.com/FormidableLabs/radium/master/dist/radium.min.js.svg?compress=gzip&label=gzipped
