@@ -119,6 +119,30 @@ describe('resolveStyles', function () {
       expect(children[0]).to.be.null;
     });
 
+    it('only processes an element once', function () {
+      sinon.spy(React, 'cloneElement');
+
+      var component = genComponent();
+      var renderedElement = (
+        <div style={[
+          {background: 'white'},
+          {color: 'blue'}
+        ]} />
+      );
+
+      var result = resolveStyles(component, renderedElement);
+      result = resolveStyles(component, result);
+
+      expect(result.props.style).to.deep.equal({
+        background: 'white',
+        color: 'blue'
+      });
+
+      expect(React.cloneElement).to.have.been.calledOnce;
+
+      React.cloneElement.restore();
+    });
+
   });
 
   describe('style array', function () {
