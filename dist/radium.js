@@ -56,18 +56,57 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var Enhancer = __webpack_require__(1);
+	var Enhancer = __webpack_require__(3);
 
 	module.exports = function (ComposedComponent) {
 	  return Enhancer(ComposedComponent);
 	};
-	module.exports.Style = __webpack_require__(12);
-	module.exports.getState = __webpack_require__(5);
-	module.exports.keyframes = __webpack_require__(14);
+	module.exports.Style = __webpack_require__(13);
+	module.exports.PrintStyleSheet = __webpack_require__(15);
+	module.exports.getState = __webpack_require__(1);
+	module.exports.keyframes = __webpack_require__(16);
 	module.exports.Config = __webpack_require__(10);
 
 /***/ },
 /* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* @flow */
+
+	'use strict';
+
+	var getStateKey = __webpack_require__(2);
+
+	var VALID_KEYS = [':active', ':focus', ':hover'];
+
+	var getState = function getState(state, elementKey, value) {
+	  if (VALID_KEYS.indexOf(value) === -1) {
+	    throw new Error('Radium.getState invalid value param: `' + value + '`');
+	  }
+
+	  var key = getStateKey(elementKey);
+
+	  return !!(state && state._radiumStyleState && state._radiumStyleState[key] && state._radiumStyleState[key][value]) || false;
+	};
+
+	module.exports = getState;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	/* @flow */
+
+	'use strict';
+
+	var getStateKey = function getStateKey(elementKey) {
+	  return elementKey === null || elementKey === undefined ? 'main' : elementKey.toString();
+	};
+
+	module.exports = getStateKey;
+
+/***/ },
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/* @flow */
@@ -82,7 +121,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var resolveStyles = __webpack_require__(3);
+	var resolveStyles = __webpack_require__(5);
+	var printStyles = __webpack_require__(12);
 
 	var enhanceWithRadium = function enhanceWithRadium(ComposedComponent) {
 	  var RadiumEnhancer = (function (_ComposedComponent) {
@@ -93,6 +133,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      this.state = this.state || {};
 	      this.state._radiumStyleState = {};
+
+	      if (RadiumEnhancer.printStyleClass) {
+	        this.printStyleClass = RadiumEnhancer.printStyleClass;
+	      }
 	    }
 
 	    _inherits(RadiumEnhancer, _ComposedComponent);
@@ -142,21 +186,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // prototype methods on the Radium enhanced prototype as discussed in #219.
 	    Object.keys(ComposedComponent.prototype).forEach(function (key) {
 	      if (!RadiumEnhancer.prototype.hasOwnProperty(key)) {
-	        RadiumEnhancer.prototype[key] = ComposedComponent.prototype[key];
+	        var descriptor = Object.getOwnPropertyDescriptor(ComposedComponent.prototype, key);
+	        Object.defineProperty(RadiumEnhancer.prototype, key, descriptor);
 	      }
 	    });
 	  }
 
 	  RadiumEnhancer.displayName = ComposedComponent.displayName || ComposedComponent.name || 'Component';
 
+	  RadiumEnhancer.printStyleClass = printStyles.addPrintStyles(RadiumEnhancer);
+
 	  return RadiumEnhancer;
 	};
 
 	module.exports = enhanceWithRadium;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 2 */
+/* 4 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -257,7 +304,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 3 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/* @flow */
@@ -266,9 +313,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var MouseUpListener = __webpack_require__(4);
-	var getState = __webpack_require__(5);
-	var getStateKey = __webpack_require__(6);
+	var MouseUpListener = __webpack_require__(6);
+	var getState = __webpack_require__(1);
+	var getStateKey = __webpack_require__(2);
 	var Prefixer = __webpack_require__(7);
 	var Config = __webpack_require__(10);
 
@@ -386,9 +433,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	// twice, whenever we clone an element add a special non-enumerable prop to
 	// make sure we don't process this element again.
 	var _cloneElement = function _cloneElement(renderedElement, newProps, newChildren) {
-	  var clone = React.cloneElement(renderedElement, newProps, newChildren);
-
-	  Object.defineProperty(clone.props, '_radiumDidResolveStyles', { value: true, enumerable: false });
+	  var clone = React.cloneElement(renderedElement, _extends({}, newProps, {
+	    _radiumDidResolveStyles: true
+	  }), newChildren);
 
 	  return clone;
 	};
@@ -413,13 +460,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // Recurse over children first in case we bail early. Note that children only
 	  // include those rendered in `this` component. Child nodes in other components
 	  // will not be here, so each component needs to use Radium.
-	  var newChildren;
 	  var oldChildren = renderedElement.props.children;
+	  var newChildren = oldChildren;
 	  if (oldChildren) {
 	    var childrenType = typeof oldChildren;
-	    if (childrenType === 'string' || childrenType === 'number' || childrenType === 'function') {
-	      // Don't do anything with a single primitive child or functions
+	    if (childrenType === 'string' || childrenType === 'number') {
+	      // Don't do anything with a single primitive child
 	      newChildren = oldChildren;
+	    } else if (childrenType === 'function') {
+	      // Wrap the function, resolving styles on the result
+	      newChildren = function () {
+	        var result = oldChildren.apply(this, arguments);
+	        if (React.isValidElement(result)) {
+	          return resolveStyles(component, result, existingKeyMap);
+	        }
+	        return result;
+	      };
 	    } else if (React.Children.count(oldChildren) === 1 && oldChildren.type) {
 	      // If a React Element is an only child, don't wrap it in an array for
 	      // React.Children.map() for React.Children.only() compatibility.
@@ -436,18 +492,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }
 
+	  var props = renderedElement.props;
+	  var newProps = {};
+
+	  // Recurse over props, just like children
+	  Object.keys(props).forEach(function (prop) {
+	    var propValue = props[prop];
+	    if (React.isValidElement(propValue)) {
+	      newProps[prop] = resolveStyles(component, propValue, existingKeyMap);
+	    }
+	  });
+
+	  var hasResolvedProps = Object.keys(newProps).length > 0;
+
 	  // Bail early if element is not a simple ReactDOMElement.
 	  if (!React.isValidElement(renderedElement) || typeof renderedElement.type !== 'string') {
-	    if (oldChildren === newChildren) {
+	    if (oldChildren === newChildren && !hasResolvedProps) {
 	      return renderedElement;
 	    }
 
-	    return _cloneElement(renderedElement, renderedElement.props, newChildren);
+	    return _cloneElement(renderedElement, hasResolvedProps ? newProps : {}, newChildren);
 	  }
 
-	  var props = renderedElement.props;
 	  var style = props.style;
-	  var newProps = {};
 
 	  // Convenient syntax for multiple styles: `style={[style1, style2, etc]}`
 	  // Ignores non-objects, so you can do `this.state.isCool && styles.cool`.
@@ -482,9 +549,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (shorthandPropertyExpansions[styleKey] && shorthandPropertyExpansions[styleKey].some(function (sp) {
 	          return styleKeys.indexOf(sp) !== -1;
 	        })) {
-	          /* eslint-disable no-console */
-	          console.warn('Radium: property "' + styleKey + '" in style object', style, ': do not mix longhand and ' + 'shorthand properties in the same style object. Check the render ' + 'method of ' + component.constructor.displayName + '.', 'See https://github.com/FormidableLabs/radium/issues/95 for more ' + 'information.');
-	          /* eslint-enable no-console */
+	          if (process.env.NODE_ENV !== 'production') {
+	            /* eslint-disable no-console */
+	            console.warn('Radium: property "' + styleKey + '" in style object', style, ': do not mix longhand and ' + 'shorthand properties in the same style object. Check the render ' + 'method of ' + component.constructor.displayName + '.', 'See https://github.com/FormidableLabs/radium/issues/95 for more ' + 'information.');
+	            /* eslint-enable no-console */
+	          }
 	        }
 	      });
 
@@ -499,10 +568,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (!style || !Object.keys(style).some(_isSpecialKey)) {
 	    if (style) {
 	      // Still perform vendor prefixing, though.
-	      newProps.style = Prefixer.getPrefixedStyle(style);
+	      newProps.style = Prefixer.getPrefixedStyle(component, style);
 	      return _cloneElement(renderedElement, newProps, newChildren);
-	    } else if (newChildren) {
-	      return _cloneElement(renderedElement, {}, newChildren);
+	    } else if (newChildren || hasResolvedProps) {
+	      return _cloneElement(renderedElement, newProps, newChildren);
 	    }
 
 	    return renderedElement;
@@ -586,7 +655,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    component._radiumMouseUpListener = MouseUpListener.subscribe(_mouseUp.bind(null, component));
 	  }
 
-	  newProps.style = Prefixer.getPrefixedStyle(newStyle);
+	  newProps.style = Prefixer.getPrefixedStyle(component, newStyle);
 
 	  return _cloneElement(renderedElement, newProps, newChildren);
 	};
@@ -603,10 +672,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	// owner of an element processes that element, since the owner's render
 	// function will be called first (which will always be the case, since you
 	// can't know what else to render until you render the parent component).
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 4 */
+/* 6 */
 /***/ function(module, exports) {
 
 	/* @flow */
@@ -650,44 +719,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* @flow */
-
-	'use strict';
-
-	var getStateKey = __webpack_require__(6);
-
-	var VALID_KEYS = [':active', ':focus', ':hover'];
-
-	var getState = function getState(state, elementKey, value) {
-	  if (VALID_KEYS.indexOf(value) === -1) {
-	    throw new Error('Radium.getState invalid value param: `' + value + '`');
-	  }
-
-	  var key = getStateKey(elementKey);
-
-	  return !!(state && state._radiumStyleState && state._radiumStyleState[key] && state._radiumStyleState[key][value]) || false;
-	};
-
-	module.exports = getState;
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	/* @flow */
-
-	'use strict';
-
-	var getStateKey = function getStateKey(elementKey) {
-	  return elementKey === null || elementKey === undefined ? 'main' : elementKey.toString();
-	};
-
-	module.exports = getStateKey;
-
-/***/ },
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -702,6 +733,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var arrayFind = __webpack_require__(9);
 
 	var VENDOR_PREFIX_REGEX = /-(moz|webkit|ms|o)-/;
+
+	var vendorPrefixes = ['Webkit', 'ms', 'Moz', 'O'];
 
 	var infoByCssPrefix = {
 	  '-moz-': {
@@ -926,18 +959,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return prefixedPropertyCache[property] = workingProperty;
 	};
 
+	// We are un-prefixing values before checking for isUnitlessNumber,
+	// otherwise we are at risk of being in a situation where someone
+	// explicitly passes something like `MozBoxFlex: 1` and that will
+	// in turn get transformed into `MozBoxFlex: 1px`.
+	var _getUnprefixedProperty = function _getUnprefixedProperty(property) {
+	  var noPrefixProperty = property;
+
+	  vendorPrefixes.some(function (prefix) {
+	    // Let's check if the property starts with a vendor prefix
+	    if (property.indexOf(prefix) === 0) {
+	      noPrefixProperty = noPrefixProperty.replace(prefix, '');
+
+	      // We have removed the vendor prefix, however the first
+	      // character is going to be uppercase hence won't match
+	      // any of the `isUnitlessNumber` keys as they all start
+	      // with lower case. Let's ensure that the first char is
+	      // lower case.
+	      noPrefixProperty = noPrefixProperty.charAt(0).toLowerCase() + noPrefixProperty.slice(1);
+
+	      return true;
+	    }
+	  });
+
+	  return noPrefixProperty;
+	};
+
 	// React is planning to deprecate adding px automatically
 	// (https://github.com/facebook/react/issues/1873), and if they do, this
 	// should change to a warning or be removed in favor of React's warning.
 	// Same goes for below.
 	var _addPixelSuffixToValueIfNeeded = function _addPixelSuffixToValueIfNeeded(originalProperty, value) {
-	  if (value !== 0 && !isNaN(value) && !isUnitlessNumber[originalProperty]) {
+	  var unPrefixedProperty = _getUnprefixedProperty(originalProperty);
+
+	  if (value !== 0 && !isNaN(value) && !isUnitlessNumber[unPrefixedProperty]) {
 	    return value + 'px';
 	  }
 	  return value;
 	};
 
-	var _getPrefixedValue = function _getPrefixedValue(property, value, originalProperty) {
+	var _getPrefixedValue = function _getPrefixedValue(component, property, value, originalProperty) {
 	  if (!Array.isArray(value)) {
 	    // don't test numbers (pure or stringy), but do add 'px' prefix if needed
 	    if (!isNaN(value) && value !== null) {
@@ -1019,7 +1080,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (process.env.NODE_ENV !== 'production') {
 	      /* eslint-disable no-console */
 	      if (console && console.warn) {
-	        console.warn('Unsupported CSS value "' + value + '" for property "' + property + '"');
+	        var componentContext = component ? ' in component "' + component.constructor.displayName + '"' : '';
+
+	        console.warn('Unsupported CSS value "' + value + '" for property "' + property + '$"' + componentContext);
 	      }
 	      /* eslint-enable no-console */
 	    }
@@ -1030,7 +1093,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// Returns a new style object with vendor prefixes added to property names
 	// and values.
-	var getPrefixedStyle = function getPrefixedStyle(style, mode /* 'css' or 'js' */) {
+	var getPrefixedStyle = function getPrefixedStyle(component, style, mode /* 'css' or 'js' */) {
 	  mode = mode || 'js';
 
 	  if (!ExecutionEnvironment.canUseDOM) {
@@ -1050,15 +1113,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var newProperty = getPrefixedPropertyName(property);
 	    if (newProperty === false) {
 	      // Ignore unsupported properties
-	      /* eslint-disable no-console */
-	      if (console && console.warn) {
-	        console.warn('Unsupported CSS property "' + property + '"');
+	      if (process.env.NODE_ENV !== 'production') {
+	        /* eslint-disable no-console */
+	        if (console && console.warn) {
+	          var componentContext = component ? ' in component "' + component.constructor.displayName + '"' : '';
+
+	          console.warn('Unsupported CSS property "' + property + '$"' + componentContext);
+	        }
+	        /* eslint-enable no-console */
+	        return;
 	      }
-	      /* eslint-enable no-console */
-	      return;
 	    }
 
-	    var newValue = _getPrefixedValue(newProperty.js, value, property);
+	    var newValue = _getPrefixedValue(component, newProperty.js, value, property);
 
 	    prefixedStyle[newProperty[mode]] = newValue;
 	  });
@@ -1071,7 +1138,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  cssPrefix: prefixInfo.cssPrefix,
 	  jsPrefix: prefixInfo.jsPrefix
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 /* 8 */
@@ -1177,21 +1244,99 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 12 */
+/***/ function(module, exports) {
+
+	/* @flow */
+
+	"use strict";
+
+	var allPrintStyles = {};
+	var listeners = [];
+
+	var subscribe = function subscribe(listener) {
+	  if (listeners.indexOf(listener) === -1) {
+	    listeners.push(listener);
+	  }
+
+	  return {
+	    remove: function remove() {
+	      var listenerIndex = listeners.indexOf(listener);
+
+	      if (listenerIndex > -1) {
+	        listeners.splice(listenerIndex, 1);
+	      }
+	    }
+	  };
+	};
+
+	var _emitChange = function _emitChange() {
+	  listeners.forEach(function (listener) {
+	    return listener();
+	  });
+	};
+
+	var _appendImportantToEachValue = function _appendImportantToEachValue(styleObj) {
+	  var importantStyleObj = {};
+
+	  Object.keys(styleObj).forEach(function (key) {
+	    var value = styleObj[key];
+
+	    // This breaks unitless values but they'll be deprecated soon anyway
+	    // https://github.com/facebook/react/issues/1873
+	    value = "" + value + " !important";
+	    importantStyleObj[key] = value;
+	  });
+
+	  return importantStyleObj;
+	};
+
+	var addPrintStyles = function addPrintStyles(Component) {
+	  if (!Component.printStyles) {
+	    return;
+	  }
+
+	  var printStyleClass = {};
+
+	  Object.keys(Component.printStyles).forEach(function (key) {
+	    var styles = Component.printStyles[key];
+	    var className = "Radium-" + Component.displayName + "-" + key;
+	    allPrintStyles["." + className] = _appendImportantToEachValue(styles);
+	    printStyleClass[key] = className;
+	  });
+
+	  // Allows for lazy loading of JS that then calls Radium to update the
+	  // print styles
+	  _emitChange();
+	  return printStyleClass;
+	};
+
+	var getPrintStyles = function getPrintStyles() {
+	  return allPrintStyles;
+	};
+
+	module.exports = {
+	  addPrintStyles: addPrintStyles,
+	  getPrintStyles: getPrintStyles,
+	  subscribe: subscribe
+	};
+
+/***/ },
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var createMarkupForStyles = __webpack_require__(13);
+	var createMarkupForStyles = __webpack_require__(14);
 	var Prefixer = __webpack_require__(7);
 
 	var React = __webpack_require__(11);
 
-	var buildCssString = function buildCssString(selector, rules) {
+	var buildCssString = function buildCssString(component, selector, rules) {
 	  if (!selector || !rules) {
 	    return;
 	  }
 
-	  var prefixedRules = Prefixer.getPrefixedStyle(rules, 'css');
+	  var prefixedRules = Prefixer.getPrefixedStyle(component, rules, 'css');
 	  var serializedRules = createMarkupForStyles(prefixedRules);
 
 	  return selector + '{' + serializedRules + '}';
@@ -1221,7 +1366,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        accumulator += _this._buildMediaQueryString(rules);
 	      } else {
 	        var completeSelector = (_this.props.scopeSelector ? _this.props.scopeSelector + ' ' : '') + selector;
-	        accumulator += buildCssString(completeSelector, rules);
+	        accumulator += buildCssString(_this, completeSelector, rules);
 	      }
 
 	      return accumulator;
@@ -1267,7 +1412,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Style;
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	/* @flow */
@@ -1284,14 +1429,61 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = createMarkupForStyles;
 
 /***/ },
-/* 14 */
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(11);
+
+	var Style = __webpack_require__(13);
+	var printStyles = __webpack_require__(12);
+
+	var PrintStyle = React.createClass({
+	  displayName: 'PrintStyle',
+
+	  getInitialState: function getInitialState() {
+	    return this._getStylesState();
+	  },
+
+	  componentDidMount: function componentDidMount() {
+	    this.subscription = printStyles.subscribe(this._onChange);
+	  },
+
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.subscription.remove();
+	  },
+
+	  _onChange: function _onChange() {
+	    this.setState(this._getStylesState());
+	  },
+
+	  _getStylesState: function _getStylesState() {
+	    return {
+	      styles: printStyles.getPrintStyles()
+	    };
+	  },
+
+	  render: function render() {
+	    return React.createElement(Style, { rules: {
+	        mediaQueries: {
+	          print: this.state.styles
+	        }
+	      } });
+	  }
+	});
+
+	module.exports = PrintStyle;
+
+/***/ },
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* @flow */
 
 	'use strict';
 
-	var createMarkupForStyles = __webpack_require__(13);
+	var createMarkupForStyles = __webpack_require__(14);
 	var Prefixer = __webpack_require__(7);
 
 	var ExecutionEnvironment = __webpack_require__(8);
@@ -1300,14 +1492,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var animationIndex = 1;
 	var animationStyleSheet = null;
-	var keyframesPrefixed = null;
+	var keyframesPrefixed = 'keyframes';
 
 	if (isAnimationSupported) {
 	  animationStyleSheet = document.createElement('style');
 	  document.head.appendChild(animationStyleSheet);
 
 	  // Test if prefix needed for keyframes (copied from PrefixFree)
-	  keyframesPrefixed = 'keyframes';
 	  animationStyleSheet.textContent = '@keyframes {}';
 	  if (!animationStyleSheet.sheet.cssRules.length) {
 	    keyframesPrefixed = Prefixer.cssPrefix + 'keyframes';
@@ -1316,7 +1507,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// Simple animation helper that injects CSS into a style object containing the
 	// keyframes, and returns a string with the generated animation name.
-	var keyframes = function keyframes(keyframeRules) {
+	var keyframes = function keyframes(keyframeRules, component) {
 	  var name = 'Animation' + animationIndex;
 	  animationIndex += 1;
 
@@ -1326,7 +1517,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  var rule = '@' + keyframesPrefixed + ' ' + name + ' {\n' + Object.keys(keyframeRules).map(function (percentage) {
 	    var props = keyframeRules[percentage];
-	    var prefixedProps = Prefixer.getPrefixedStyle(props, 'css');
+	    var prefixedProps = Prefixer.getPrefixedStyle(component, props, 'css');
 	    var serializedProps = createMarkupForStyles(prefixedProps, '  ');
 	    return '  ' + percentage + ' {\n  ' + serializedProps + '\n  }';
 	  }).join('\n') + '\n}\n';
