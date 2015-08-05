@@ -121,14 +121,11 @@ var _resolveMediaQueryStyles = function (component, style) {
 var _cloneElement = function (renderedElement, newProps, newChildren) {
   var clone = React.cloneElement(
     renderedElement,
-    newProps,
+    {
+      ...newProps,
+      _radiumDidResolveStyles: true
+    },
     newChildren
-  );
-
-  Object.defineProperty(
-    clone.props,
-    '_radiumDidResolveStyles',
-    {value: true, enumerable: false}
   );
 
   return clone;
