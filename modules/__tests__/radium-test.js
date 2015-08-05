@@ -182,6 +182,48 @@ describe('Radium blackbox tests', () => {
     expect(div.style.color).to.equal('green');
   });
 
+  it('resolves styles on multiple elements nested far down, Issue #307', () => {
+    @Radium
+    class TestComponent extends Component {
+      render () {
+        return (
+          <section>
+            <section>
+              <section>
+                <header key="header" style={{
+                  color: 'yellow',
+                  ':hover': { color: 'blue' }
+                }} />
+                <footer key="footer" style={{
+                  color: 'green',
+                  ':hover': { color: 'red' }
+                }} />
+              </section>
+            </section>
+          </section>
+        );
+      }
+    }
+
+    var output = TestUtils.renderIntoDocument(<TestComponent />);
+
+    var header = React.findDOMNode(
+      TestUtils.findRenderedDOMComponentWithTag(output, 'header')
+    );
+    expect(header.style.color).to.equal('yellow');
+
+    var footer = React.findDOMNode(
+      TestUtils.findRenderedDOMComponentWithTag(output, 'footer')
+    );
+    expect(footer.style.color).to.equal('green');
+
+    TestUtils.SimulateNative.mouseOver(header);
+    TestUtils.SimulateNative.mouseOver(footer);
+
+    expect(header.style.color).to.equal('blue');
+    expect(footer.style.color).to.equal('red');
+  });
+
   it('applies print styles through the PrintStyle component', () => {
     Radium(React.createClass({
       displayName: 'TestComponent',
