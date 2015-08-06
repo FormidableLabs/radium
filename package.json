@@ -28,7 +28,7 @@
   "dependencies": {
     "array-find": "^1.0.0",
     "exenv": "^1.2.0",
-    "babel": "^5.5.8",
+    "babel": "^5.8.21",
     "rimraf": "^2.4.0"
   },
   "devDependencies": {
