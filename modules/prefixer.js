@@ -313,10 +313,7 @@ var _getPrefixedValue = function (component, property, value, originalProperty) 
 
   var cacheKey = Array.isArray(value) ? (
     value.join(' || ')
-  /* babel-eslint bug: https://github.com/babel/babel-eslint/issues/149 */
-  /* eslint-disable space-infix-ops */
   ) : (
-  /* eslint-enable space-infix-ops */
     property + value
   );
 
