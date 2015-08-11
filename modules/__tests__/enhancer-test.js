@@ -165,4 +165,28 @@ describe('Enhancer', () => {
     expect(Enhanced.defaultProps).to.deep.equal({ foo: 'bar' });
   });
 
+  it('copies methods across to top level prototype', () => {
+    var Composed = React.createClass({
+
+      getStyles: function () {
+        return [{ color: 'black' }];
+      },
+
+      render: function () {
+        return (
+          <div style={this.getStyles()}>
+            Hello World!
+          </div>
+        );
+      }
+
+    });
+
+    var Enhanced = Enhancer(Composed);
+
+    Object.keys(Composed.prototype).forEach(key => {
+      expect(Enhanced.prototype.hasOwnProperty(key)).to.equal(true);
+    });
+  });
+
 });
