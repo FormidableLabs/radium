@@ -3,7 +3,8 @@ var Enhancer = require('inject!enhancer.js')({
   './resolve-styles.js': resolveStyles
 });
 
-var {Component} = require('react');
+var React = require('react/addons');
+var {Component} = React;
 
 describe('Enhancer', () => {
   it('sets up initial state', () => {
@@ -153,4 +154,15 @@ describe('Enhancer', () => {
       expect(mediaQueryListenersByQuery[key].remove).to.have.been.called;
     });
   });
+
+  it('manually populates static properties for IE <10', () => {
+    class Composed extends Component { }
+
+    Composed.defaultProps = { foo: 'bar' };
+
+    var Enhanced = Enhancer(Composed);
+
+    expect(Enhanced.defaultProps).to.deep.equal({ foo: 'bar' });
+  });
+
 });
