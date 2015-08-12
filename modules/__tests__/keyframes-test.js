@@ -1,7 +1,7 @@
 var styleElement;
 var exenv;
 
-var {Component} = require('react');
+var {Component} = require('react/addons');
 
 class MyComponent extends Component { }
 

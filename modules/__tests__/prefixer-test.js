@@ -1,7 +1,7 @@
 var browserPrefix = '';
 var mockStyle = {};
 
-var {Component} = require('react');
+var {Component} = require('react/addons');
 
 class MyComponent extends Component { }
 
