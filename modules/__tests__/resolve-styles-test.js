@@ -1,4 +1,4 @@
-var React = require('react');
+var React = require('react/addons');
 var MouseUpListener = require('mouse-up-listener.js');
 var objectAssign = require('object-assign');
 var resolveStyles = require('inject?-./get-state&-./config!resolve-styles.js')({
