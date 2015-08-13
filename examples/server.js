@@ -14,15 +14,8 @@ app.all('/*', function (req, res, next) {
   next()
 });
 
-
 console.log(__dirname+'/bundle.js')
 app.use('/js/bundle.js', express.static(__dirname+'/bundle.js'));
-// app.use('/css', express.static(__dirname+'/../../public/css'));
-// app.use('/img', express.static(__dirname+'/../../public/img'));
-// app.use('/favicon.ico', express.static(__dirname+'/../../public/img/favicon.ico'));
-
-
-
 
 app.get('/*', function (req, res) {
 
