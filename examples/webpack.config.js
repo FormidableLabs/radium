@@ -17,12 +17,12 @@ var webpack = require('webpack');
 module.exports = {
   cache: true,
   entry: {
-    app: "./examples/app.jsx"
+    app: "./examples/client.js"
   },
   output: {
     path: path.join(__dirname),
     publicPath: '/',
-    filename: '[name].js',
+    filename: 'bundle.js',
     chunkFilename: '[chunkhash].js'
   },
   module: {
