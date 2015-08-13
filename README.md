@@ -116,6 +116,12 @@ To see local examples in action, do this:
 npm install
 npm run examples
 ```
+or to see the examples running in an isomorphic environment:
+
+```
+npm install
+npm run examples-iso-watch
+```
 
 ## How does Radium work?
 
