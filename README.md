@@ -110,7 +110,14 @@ var styles = {
 
 ## Examples
 
-To see local examples in action, do this:
+To see the universal examples:
+
+```
+npm install
+npm run universal
+```
+
+To see local client-side only examples in action, do this:
 
 ```
 npm install
