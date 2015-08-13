@@ -1,29 +1,23 @@
 import express from "express";
 import React from "react";
-
 import App from './app.jsx'
-
-
+import fs from 'fs'
+const indexHTML = fs.readFileSync(__dirname+'/index.html').toString();
+const htmlRegex = /¡HTML!/;
 const app = express();
 
-app.set('views', './examples');
-app.set('view engine', 'jade');
-
-app.all('/*', function (req, res, next) {
-  console.log('access to : ', req.url)
-  next()
-});
-
 console.log(__dirname+'/bundle.js')
-app.use('/js/bundle.js', express.static(__dirname+'/bundle.js'));
+app.use('/bundle.js', express.static(__dirname+'/bundle.js'));
 
 app.get('/*', function (req, res) {
-
-  console.log('generic access : ', req.url)
-
   let content = React.renderToString((<App />));
-  res.render('index', { content: content });;
-
+  let html = indexHTML.replace(htmlRegex, content);
+  res.writeHead(200, {
+    'Content-Length': html.length,
+    'Content-Type': 'text/html'
+  });
+  res.write(html);
+  res.end();
 });
 
 var server = app.listen(8080, function () {
