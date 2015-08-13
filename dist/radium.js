@@ -1,3 +1,17 @@
+Skip to content
+This repository
+Search
+Pull requests
+Issues
+Gist
+ @jurgob
+ Watch 61
+  Star 1,623
+ Fork 66FormidableLabs/radium
+Branch: master  radium/dist/radium.js
+@ianobermillerianobermiller 8 days ago 0.13.7 dist and changelog
+4 contributors @ianobermiller @alexlande @vincentriemer @kenwheeler
+RawBlameHistory     1545 lines (1248 sloc)  49.253 kB
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory(require("react"));
@@ -56,14 +70,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var Enhancer = __webpack_require__(1);
+	var Enhancer = __webpack_require__(3);
 
 	module.exports = function (ComposedComponent) {
 	  return Enhancer(ComposedComponent);
 	};
 	module.exports.Style = __webpack_require__(13);
 	module.exports.PrintStyleSheet = __webpack_require__(15);
-	module.exports.getState = __webpack_require__(5);
+	module.exports.getState = __webpack_require__(1);
 	module.exports.keyframes = __webpack_require__(16);
 	module.exports.Config = __webpack_require__(10);
 
@@ -71,23 +85,61 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+	/* @flow */
+
+	'use strict';
+
+	var getStateKey = __webpack_require__(2);
+
+	var VALID_KEYS = [':active', ':focus', ':hover'];
+
+	var getState = function getState(state, elementKey, value) {
+	  if (VALID_KEYS.indexOf(value) === -1) {
+	    throw new Error('Radium.getState invalid value param: `' + value + '`');
+	  }
+
+	  var key = getStateKey(elementKey);
+
+	  return !!(state && state._radiumStyleState && state._radiumStyleState[key] && state._radiumStyleState[key][value]) || false;
+	};
+
+	module.exports = getState;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	/* @flow */
+
+	'use strict';
+
+	var getStateKey = function getStateKey(elementKey) {
+	  return elementKey === null || elementKey === undefined ? 'main' : elementKey.toString();
+	};
+
+	module.exports = getStateKey;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/* @flow */
+
+	'use strict';
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var resolveStyles = __webpack_require__(3);
+	var resolveStyles = __webpack_require__(5);
 	var printStyles = __webpack_require__(12);
 
 	var enhanceWithRadium = function enhanceWithRadium(ComposedComponent) {
 	  var RadiumEnhancer = (function (_ComposedComponent) {
-	    _inherits(RadiumEnhancer, _ComposedComponent);
-
 	    function RadiumEnhancer() {
 	      _classCallCheck(this, RadiumEnhancer);
 
@@ -101,10 +153,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 
-	    // Class inheritance uses Object.create and because of __proto__ issues
-	    // with IE <10 any static properties of the superclass aren't inherited and
-	    // so need to be manually populated
-	    // See http://babeljs.io/docs/advanced/caveats/#classes-10-and-below-
+	    _inherits(RadiumEnhancer, _ComposedComponent);
 
 	    _createClass(RadiumEnhancer, [{
 	      key: 'render',
@@ -134,6 +183,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return RadiumEnhancer;
 	  })(ComposedComponent);
 
+	  // Class inheritance uses Object.create and because of __proto__ issues
+	  // with IE <10 any static properties of the superclass aren't inherited and
+	  // so need to be manually populated
+	  // See http://babeljs.io/docs/advanced/caveats/#classes-10-and-below-
 	  var staticKeys = ['defaultProps', 'propTypes', 'contextTypes', 'childContextTypes'];
 
 	  staticKeys.forEach(function (key) {
@@ -161,10 +214,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = enhanceWithRadium;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 2 */
+/* 4 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -265,16 +318,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 3 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+	/* WEBPACK VAR INJECTION */(function(process) {/* @flow */
+
+	'use strict';
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var MouseUpListener = __webpack_require__(4);
-	var getState = __webpack_require__(5);
-	var getStateKey = __webpack_require__(6);
+	var MouseUpListener = __webpack_require__(6);
+	var getState = __webpack_require__(1);
+	var getStateKey = __webpack_require__(2);
 	var Prefixer = __webpack_require__(7);
 	var Config = __webpack_require__(10);
 
@@ -412,12 +467,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // ReactElement
 	  existingKeyMap = existingKeyMap || {};
 
-	  if (!renderedElement ||
-	  // Bail if we've already processed this element. This ensures that only the
-	  // owner of an element processes that element, since the owner's render
-	  // function will be called first (which will always be the case, since you
-	  // can't know what else to render until you render the parent component).
-	  renderedElement.props && renderedElement.props._radiumDidResolveStyles) {
+	  if (!renderedElement || renderedElement.props && renderedElement.props._radiumDidResolveStyles) {
 	    return renderedElement;
 	  }
 
@@ -636,11 +686,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = resolveStyles;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+	// Bail if we've already processed this element. This ensures that only the
+	// owner of an element processes that element, since the owner's render
+	// function will be called first (which will always be the case, since you
+	// can't know what else to render until you render the parent component).
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 4 */
+/* 6 */
 /***/ function(module, exports) {
+
+	/* @flow */
 
 	'use strict';
 
@@ -679,40 +736,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 	  subscribe: subscribe
 	};
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var getStateKey = __webpack_require__(6);
-
-	var VALID_KEYS = [':active', ':focus', ':hover'];
-
-	var getState = function getState(state, elementKey, value) {
-	  if (VALID_KEYS.indexOf(value) === -1) {
-	    throw new Error('Radium.getState invalid value param: `' + value + '`');
-	  }
-
-	  var key = getStateKey(elementKey);
-
-	  return !!(state && state._radiumStyleState && state._radiumStyleState[key] && state._radiumStyleState[key][value]) || false;
-	};
-
-	module.exports = getState;
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var getStateKey = function getStateKey(elementKey) {
-	  return elementKey === null || elementKey === undefined ? 'main' : elementKey.toString();
-	};
-
-	module.exports = getStateKey;
 
 /***/ },
 /* 7 */
@@ -1015,7 +1038,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }
 
-	  var cacheKey = Array.isArray(value) ? value.join(' || ') : property + value;
+	  var cacheKey = Array.isArray(value) ? value.join(' || ')
+	  /* babel-eslint bug: https://github.com/babel/babel-eslint/issues/149 */
+	  /* eslint-disable space-infix-ops */
+	  :
+	  /* eslint-enable space-infix-ops */
+	  property + value;
 
 	  if (prefixedValueCache.hasOwnProperty(cacheKey)) {
 	    return prefixedValueCache[cacheKey];
@@ -1129,7 +1157,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  cssPrefix: prefixInfo.cssPrefix,
 	  jsPrefix: prefixInfo.jsPrefix
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 /* 8 */
@@ -1203,6 +1231,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* @flow */
+
 	'use strict';
 
 	var ExecutionEnvironment = __webpack_require__(8);
@@ -1234,6 +1264,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ },
 /* 12 */
 /***/ function(module, exports) {
+
+	/* @flow */
 
 	"use strict";
 
@@ -1270,7 +1302,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    // This breaks unitless values but they'll be deprecated soon anyway
 	    // https://github.com/facebook/react/issues/1873
-	    value = value + " !important";
+	    value = "" + value + " !important";
 	    importantStyleObj[key] = value;
 	  });
 
@@ -1402,6 +1434,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 14 */
 /***/ function(module, exports) {
 
+	/* @flow */
+
 	'use strict';
 
 	var createMarkupForStyles = function createMarkupForStyles(style, spaces) {
@@ -1464,6 +1498,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* @flow */
+
 	'use strict';
 
 	var createMarkupForStyles = __webpack_require__(14);
@@ -1521,3 +1557,5 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ ])
 });
 ;
+Status API Training Shop Blog About Help
+© 2015 GitHub, Inc. Terms Privacy Security Contact
