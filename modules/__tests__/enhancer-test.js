@@ -157,7 +157,7 @@ describe('Enhancer', () => {
 
   it('manually populates all static properties for IE <10', () => {
     class Composed extends Component {
-      static staticMethod() {
+      static staticMethod () {
         return { bar: 'foo' };
       }
     }
