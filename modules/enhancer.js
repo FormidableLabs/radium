@@ -50,7 +50,7 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
   // See http://babeljs.io/docs/advanced/caveats/#classes-10-and-below-
   // This also fixes React Hot Loader by exposing the original components top level
   // prototype methods on the Radium enhanced prototype as discussed in #219.
-  Object.keys(ComposedComponent.prototype).forEach(key => {
+  Object.getOwnPropertyNames(ComposedComponent.prototype).forEach(key => {
     if (!RadiumEnhancer.prototype.hasOwnProperty(key)) {
       var descriptor = Object.getOwnPropertyDescriptor(ComposedComponent.prototype, key);
       Object.defineProperty(RadiumEnhancer.prototype, key, descriptor);
