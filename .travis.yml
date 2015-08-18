@@ -17,6 +17,11 @@ branches:
   only:
     - master
 
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+
 script:
   - npm run lint
   - npm run test-coverage
