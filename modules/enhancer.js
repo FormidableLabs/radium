@@ -48,29 +48,14 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
   // with IE <10 any static properties of the superclass aren't inherited and
   // so need to be manually populated
   // See http://babeljs.io/docs/advanced/caveats/#classes-10-and-below-
-  var staticKeys = [
-    'defaultProps',
-    'propTypes',
-    'contextTypes',
-    'childContextTypes'
-  ];
-
-  staticKeys.forEach((key) => {
-    if (ComposedComponent.hasOwnProperty(key)) {
-      RadiumEnhancer[key] = ComposedComponent[key];
+  // This also fixes React Hot Loader by exposing the original components top level
+  // prototype methods on the Radium enhanced prototype as discussed in #219.
+  Object.getOwnPropertyNames(ComposedComponent.prototype).forEach(key => {
+    if (!RadiumEnhancer.prototype.hasOwnProperty(key)) {
+      var descriptor = Object.getOwnPropertyDescriptor(ComposedComponent.prototype, key);
+      Object.defineProperty(RadiumEnhancer.prototype, key, descriptor);
     }
   });
-
-  if (process.env.NODE_ENV !== 'production') {
-    // This fixes React Hot Loader by exposing the original components top level
-    // prototype methods on the Radium enhanced prototype as discussed in #219.
-    Object.keys(ComposedComponent.prototype).forEach(key => {
-      if (!RadiumEnhancer.prototype.hasOwnProperty(key)) {
-        var descriptor = Object.getOwnPropertyDescriptor(ComposedComponent.prototype, key);
-        Object.defineProperty(RadiumEnhancer.prototype, key, descriptor);
-      }
-    });
-  }
 
   RadiumEnhancer.displayName =
     ComposedComponent.displayName ||

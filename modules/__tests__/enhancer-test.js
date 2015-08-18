@@ -155,14 +155,19 @@ describe('Enhancer', () => {
     });
   });
 
-  it('manually populates static properties for IE <10', () => {
-    class Composed extends Component { }
+  it('manually populates all static properties for IE <10', () => {
+    class Composed extends Component {
+      static staticMethod () {
+        return { bar: 'foo' };
+      }
+    }
 
     Composed.defaultProps = { foo: 'bar' };
 
     var Enhanced = Enhancer(Composed);
 
     expect(Enhanced.defaultProps).to.deep.equal({ foo: 'bar' });
+    expect(Enhanced.staticMethod()).to.deep.equal({ bar: 'foo' });
   });
 
   it('copies methods across to top level prototype', () => {
