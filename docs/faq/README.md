@@ -4,7 +4,7 @@
 - [How can I use `ReactCSSTransitionGroup` without any classes?](#how-can-i-use-reactcsstransitiongroup-without-any-classes)
 - [How can I use Radium with jsbin?](#how-can-i-use-radium-with-jsbin)
 - [Can I use my favourite CSS/LESS/SASS syntax?](#can-i-use-my-favourite-csslesssass-syntax)
-- [Can I use Radium with Boostrap?](#can-i-use-radium-with-bootstrap)
+- [Can I use Radium with Bootstrap?](#can-i-use-radium-with-bootstrap)
 - [Why doesn't Radium work on SomeComponent?](#why-doesnt-radium-work-on-somecomponent)
 
 ## How do I use pseudo-selectors like `:checked` or `:last`?
@@ -137,7 +137,7 @@ const style = styler`
 
 You can find a more advanced example in the [react-styling readme](https://github.com/halt-hammerzeit/react-styling#radium).
 
-## Can I use Radium with Boostrap?
+## Can I use Radium with Bootstrap?
 
 See https://github.com/FormidableLabs/radium/issues/323 for discussion.
 
