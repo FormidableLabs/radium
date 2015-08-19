@@ -4,6 +4,8 @@
 - [How can I use `ReactCSSTransitionGroup` without any classes?](#how-can-i-use-reactcsstransitiongroup-without-any-classes)
 - [How can I use Radium with jsbin?](#how-can-i-use-radium-with-jsbin)
 - [Can I use my favourite CSS/LESS/SASS syntax?](#can-i-use-my-favourite-csslesssass-syntax)
+- [Can I use Radium with Boostrap?](#can-i-use-radium-with-bootstrap)
+- [Why doesn't Radium work on SomeComponent?](#why-doesnt-radium-work-on-somecomponent)
 
 ## How do I use pseudo-selectors like `:checked` or `:last`?
 
@@ -134,3 +136,11 @@ const style = styler`
 ```
 
 You can find a more advanced example in the [react-styling readme](https://github.com/halt-hammerzeit/react-styling#radium).
+
+## Can I use Radium with Boostrap?
+
+See https://github.com/FormidableLabs/radium/issues/323 for discussion.
+
+## Why doesn't Radium work on SomeComponent?
+
+Radium doesn't mess with the `style` prop of non-DOM elements. This includes thin wrappers like `react-router`'s `Link` component. We can't assume that a custom component will use `style` the same way DOM elements do. For instance, it could be a string enum to select a specific style. In order for resolving `style` on a custom element to work, that element needs to actually pass that `style` prop to the DOM element underneath, in addition to passing down all the event handlers (`onMouseEnter`, etc). Since Radium has no control over the implementation of other components, resolving styles on them is not safe. We are exploring adding a mechanism to bypass Radium's check, see https://github.com/FormidableLabs/radium/issues/258.
