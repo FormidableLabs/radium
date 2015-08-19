@@ -143,4 +143,13 @@ See https://github.com/FormidableLabs/radium/issues/323 for discussion.
 
 ## Why doesn't Radium work on SomeComponent?
 
-Radium doesn't mess with the `style` prop of non-DOM elements. This includes thin wrappers like `react-router`'s `Link` component. We can't assume that a custom component will use `style` the same way DOM elements do. For instance, it could be a string enum to select a specific style. In order for resolving `style` on a custom element to work, that element needs to actually pass that `style` prop to the DOM element underneath, in addition to passing down all the event handlers (`onMouseEnter`, etc). Since Radium has no control over the implementation of other components, resolving styles on them is not safe. We are exploring adding a mechanism to bypass Radium's check, see https://github.com/FormidableLabs/radium/issues/258.
+Radium doesn't mess with the `style` prop of non-DOM elements. This includes thin wrappers like `react-router`'s `Link` component. We can't assume that a custom component will use `style` the same way DOM elements do. For instance, it could be a string enum to select a specific style. In order for resolving `style` on a custom element to work, that element needs to actually pass that `style` prop to the DOM element underneath, in addition to passing down all the event handlers (`onMouseEnter`, etc). Since Radium has no control over the implementation of other components, resolving styles on them is not safe. 
+
+A workaround is to wrap your custom component in Radium, even if you do not have the source, like this:
+```as
+var Link = require('react-router').Link;
+Link = Radium(Link);
+```
+Huge thanks to @mairh for coming up with this idea in https://github.com/FormidableLabs/radium/issues/324.
+
+We are also exploring adding a mechanism to bypass Radium's check, see https://github.com/FormidableLabs/radium/issues/258.
