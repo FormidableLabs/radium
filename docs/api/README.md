@@ -4,9 +4,9 @@
 
 - [Radium](#radium)
   - [Sample Style Object](#sample-style-object)
+  - [config.matchMedia](#configmatchmedia)
 - [getState](#getstate)
 - [keyframes](#keyframes)
-- [Config.setMatchMedia](#configsetmatchmedia)
 - [Style Component](#style-component)
 - [PrintStyleSheet Component](#printstylesheet-component)
 
@@ -34,6 +34,43 @@ module.exports = Radium(MyComponent);
 `Radium`s primary job is to apply interactive or media query styles, but even if you are not using any special styles, the higher order component will still:
 - Merge arrays of styles passed as the `style` attribute
 - Automatically vendor prefix the `style` object
+
+You can also pass a configuration object to `@Radium`:
+
+```a
+@Radium({matchMedia: mockMatchMedia})
+class MyComponent extends React.Component { ... }
+
+// or with createClass
+
+var MyComponent = React.createClass({ ... });
+module.exports = Radium({matchMedia: mockMatchMedia})(MyComponent);
+```
+
+You may want to have project-wide Radium settings. Simply create a function that
+wraps Radium, and use it instead of `@Radium`:
+
+```as
+function MyRadium(component) {
+  return Radium(config)(component);
+}
+
+// Usage
+@MyRadium
+class MyComponent extends React.Component { ... }
+```
+
+Radium can be called any number of times with a config object, and later configs
+will be merged with and overwrite previous configs. That way, you can still
+override settings on a per-component basis:
+
+```as
+@MyRadium({...special config...})
+class MySpecialComponent extends React.Component { ... }
+```
+
+Possible configuration values:
+- [`matchMedia`](#configmatchmedia)
 
 ### Sample Style Object
 
@@ -95,6 +132,62 @@ var styles = {
 };
 ```
 
+### config.matchMedia
+
+Allows you to replace the `matchMedia` function that Radium uses. The default is `window.matchMedia`, and the primary use case for replacing it is to use media queries on the server. You'll have to send the width and height of the page to the server somehow, and then use a [mock for match media](https://github.com/azazdeaz/match-media-mock) that implements the [`window.matchMedia` API](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia). Your code could look like this:
+
+**Server**
+
+```as
+var MyRadium = require('./myradium');
+var matchMediaMock = require('match-media-mock').create();
+MyRadium.setMatchMedia(matchMediaMock);
+
+app.get('/app/:width/:height', function(req, res) {
+  matchMediaMock.setConfig({
+    type: 'screen',
+    width: req.params.width,
+    height: req.params.height,
+  });
+
+  // Your application code uses `@MyRadium` instead of `@Radium`
+  var html = React.renderToString(<RadiumApp />);
+
+  res.end(html);
+});
+```
+
+**MyRadium.js**
+
+```as
+var Radium = require('radium');
+
+var _matchMedia = null;
+
+function MyRadium(component) {
+  return Radium({
+    matchMedia: _matchMedia
+  })(component);
+}
+
+MyRadium.setMatchMedia = function (matchMedia) {
+  _matchMedia = matchMedia;
+};
+
+module.exports = MyRadium;
+```
+
+**MyComponent.js**
+
+```as
+var MyRadium = require('./myradium');
+
+@MyRadium
+class MyComponent extends React.Component { ... }
+```
+
+See #146 for more info.
+
 ## getState
 
 **Radium.getState(state, elementKey, value)**
@@ -151,30 +244,6 @@ var styles = {
   }
 };
 ```
-
-## Config.setMatchMedia
-
-Allows you to replace the `matchMedia` function that Radium uses. The default is `window.matchMedia`, and the primary use case for replacing it is to use media queries on the server. You'll have to send the width and height of the page to the server somehow, and then use a [mock for match media](https://github.com/azazdeaz/match-media-mock) that implements the [`window.matchMedia` API](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia). Your server code could look like this:
-
-```as
-var Radium = require('radium');
-var matchMediaMock = require('match-media-mock').create();
-Radium.Config.setMatchMedia(matchMediaMock);
-
-app.get('/app/:width/:height', function(req, res) {
-  matchMediaMock.setConfig({
-    type: 'screen',
-    width: req.params.width,
-    height: req.params.height,
-  });
-
-  var html = React.renderToString(<RadiumApp/>);
-
-  res.end(html);
-});
-```
-
-See #146 for more info.
 
 ## Style Component
 

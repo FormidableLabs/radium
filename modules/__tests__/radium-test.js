@@ -268,4 +268,33 @@ describe('Radium blackbox tests', () => {
       '}'
     );
   });
+
+  it('accepts a config', () => {
+    var truthyMatchMedia = function () {
+      return {
+        matches: true,
+        addListener: function () {},
+        removeListener: function () {}
+      };
+    };
+
+    @Radium({
+      matchMedia: truthyMatchMedia
+    })
+    class TestComponent extends Component {
+      render () {
+        return (
+          <div style={{
+            '@media (min-width: 600px)': {color: 'blue'}
+          }} />
+        );
+      }
+    }
+
+    var output = getRenderOutput(<TestComponent />);
+
+    expect(output.props.style).to.deep.equal(
+      {color: 'blue'}
+    );
+  });
 });

@@ -5,7 +5,6 @@ var resolveStyles = require('inject?-./get-state&-./config!resolve-styles.js')({
   'exenv': require('__mocks__/exenv.js'),
   './prefixer': require('__mocks__/prefixer.js')
 });
-var Config = require('config.js');
 
 var genComponent = function () {
   return {
@@ -563,7 +562,6 @@ describe('resolveStyles', function () {
       var matchMedia = sinon.spy(function () {
         return {addListener: addListener};
       });
-      Config.setMatchMedia(matchMedia);
 
       var renderedElement = (
         <div style={{
@@ -571,7 +569,7 @@ describe('resolveStyles', function () {
         }} />
       );
 
-      resolveStyles(component, renderedElement);
+      resolveStyles(component, renderedElement, {matchMedia});
       expect(matchMedia.lastCall.args[0]).to.equal('(max-width: 400px)');
       expect(addListener.lastCall.args[0]).to.be.a('function');
     });
@@ -582,7 +580,6 @@ describe('resolveStyles', function () {
       var matchMedia = sinon.spy(function () {
         return {addListener: addListener};
       });
-      Config.setMatchMedia(matchMedia);
 
       var renderedElement = (
         <div style={{
@@ -590,8 +587,8 @@ describe('resolveStyles', function () {
         }} />
       );
 
-      resolveStyles(component, renderedElement);
-      resolveStyles(component, renderedElement);
+      resolveStyles(component, renderedElement, {matchMedia});
+      resolveStyles(component, renderedElement, {matchMedia});
 
       expect(matchMedia).to.have.been.calledOnce;
       expect(addListener).to.have.been.calledOnce;
@@ -604,7 +601,6 @@ describe('resolveStyles', function () {
       var matchMedia = sinon.spy(function () {
         return {addListener: addListener};
       });
-      Config.setMatchMedia(matchMedia);
 
       var renderedElement = (
         <div>
@@ -619,8 +615,8 @@ describe('resolveStyles', function () {
         </div>
       );
 
-      resolveStyles(component1, renderedElement);
-      resolveStyles(component2, renderedElement);
+      resolveStyles(component1, renderedElement, {matchMedia});
+      resolveStyles(component2, renderedElement, {matchMedia});
 
       expect(matchMedia).to.have.been.calledOnce;
       expect(addListener).to.have.been.calledTwice;
@@ -634,7 +630,6 @@ describe('resolveStyles', function () {
           matches: true
         };
       });
-      Config.setMatchMedia(matchMedia);
 
       var renderedElement = (
         <div style={{
@@ -643,7 +638,7 @@ describe('resolveStyles', function () {
         }} />
       );
 
-      var result = resolveStyles(component, renderedElement);
+      var result = resolveStyles(component, renderedElement, {matchMedia});
       expect(result.props.style.background).to.equal('red');
     });
 
@@ -655,7 +650,6 @@ describe('resolveStyles', function () {
           matches: true
         };
       });
-      Config.setMatchMedia(matchMedia);
 
       var renderedElement = (
         <div style={[
@@ -682,12 +676,12 @@ describe('resolveStyles', function () {
         ]} />
       );
 
-      var result = resolveStyles(component, renderedElement);
+      var result = resolveStyles(component, renderedElement, {matchMedia});
       expect(result.props.style.background).to.equal('red');
 
       result.props.onMouseEnter();
 
-      result = resolveStyles(component, renderedElement);
+      result = resolveStyles(component, renderedElement, {matchMedia});
       expect(result.props.style.background).to.equal('yellow');
       expect(result.props.style.color).to.equal('white');
     });
@@ -705,7 +699,6 @@ describe('resolveStyles', function () {
       var matchMedia = sinon.spy(function () {
         return mql;
       });
-      Config.setMatchMedia(matchMedia);
 
       var renderedElement = (
         <div style={{
@@ -714,8 +707,8 @@ describe('resolveStyles', function () {
         }} />
       );
 
-      resolveStyles(component1, renderedElement);
-      resolveStyles(component2, renderedElement);
+      resolveStyles(component1, renderedElement, {matchMedia});
+      resolveStyles(component2, renderedElement, {matchMedia});
 
       listeners.forEach(function (listener) { listener(mql); });
 
@@ -732,7 +725,6 @@ describe('resolveStyles', function () {
       var matchMedia = sinon.spy(function () {
         return mql;
       });
-      Config.setMatchMedia(matchMedia);
 
       var renderedElement = (
         <div style={{
@@ -741,7 +733,7 @@ describe('resolveStyles', function () {
         }} />
       );
 
-      resolveStyles(component, renderedElement);
+      resolveStyles(component, renderedElement, {matchMedia});
 
       Object.keys(component._radiumMediaQueryListenersByQuery).forEach(
         function (key) {
