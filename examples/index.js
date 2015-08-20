@@ -11,30 +11,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var path = require('path');
-var webpack = require('webpack');
-
-module.exports = {
-  cache: true,
-  entry: {
-    index: "./examples/index.js"
-  },
-  output: {
-    path: path.join(__dirname),
-    publicPath: '/',
-    filename: '[name].js',
-    chunkFilename: '[chunkhash].js'
-  },
-  module: {
-    loaders: [
-      {
-        test: /\.js$/,
-        loader: 'babel-loader?stage=0'
-      },
-      {
-        test: /\.jsx$/,
-        loader: 'babel-loader?stage=0'
-      }
-    ]
-  }
-}
+var React = require('react');
+var App = require('./app.jsx');
+React.render(<App />, document.getElementById('app'));

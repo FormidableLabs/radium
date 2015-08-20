@@ -2,7 +2,9 @@ Thanks for contributing!
 
 ## Development
 
-Run `npm run examples` to run a webpack dev server with Radium examples.
+Run `npm run examples` to run a webpack dev server with Radium client examples.
+
+Run `npm run universal` to run a hapi server and a webpack dev server with Radium universal examples.
 
 ## Lint
 

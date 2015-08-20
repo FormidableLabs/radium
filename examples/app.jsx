@@ -227,4 +227,4 @@ var spinnerStyles = {
   }
 };
 
-React.render(<App />, document.getElementById('app'));
+module.exports = App;
