@@ -229,7 +229,7 @@ A string that any included selectors in `rules` will be appended to. Use to scop
 
 ## PrintStyleSheet component
 
-In order to fully support print styling it is necessary to use CSS because of browser differences, as described in #132. Radium allows you to do this easily by specifying print styles as static properties of your components.
+In order to fully support print styling it is necessary to use CSS because of browser differences, as described in [#132](https://github.com/FormidableLabs/radium/issues/132#issuecomment-99805511). Radium allows you to do this easily by specifying print styles as static properties of your components.
 
 With ES7 decorators and static class properties:
 
