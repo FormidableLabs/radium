@@ -31,7 +31,7 @@ When we say expressive, we mean it: math, concatenation, regex, conditionals, fu
 
 For a short technical explanation, see [How does Radium work?](#how-does-radium-work).
 
-Convinced about CSS in JS with React, but not Radium? Check out our comprehensive [comparison of 14+ alternatives](docs/comparison).
+Convinced about CSS in JS with React, but not Radium? Check out our comprehensive [comparison of 14+ alternatives][docs_comparison].
 
 ## Features
 
@@ -44,9 +44,9 @@ Convinced about CSS in JS with React, but not Radium? Check out our comprehensiv
 
 ## Docs
 
-- [Overview](docs/guides)
-- [API Docs](docs/api)
-- [Frequently Asked Questions (FAQ)](docs/faq)
+- [Overview][docs_guides]
+- [API Docs][docs_api]
+- [Frequently Asked Questions (FAQ)][docs_faq]
 
 ## Usage
 
@@ -141,3 +141,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md)
 [david_img]: https://img.shields.io/david/FormidableLabs/radium.svg
 [david_site]: https://david-dm.org/FormidableLabs/radium
 [size_img]: https://badge-size.herokuapp.com/FormidableLabs/radium/master/dist/radium.min.js.svg?compress=gzip&label=gzipped
+[docs_comparison]: https://github.com/FormidableLabs/radium/tree/master/docs/comparison
+[docs_guides]: https://github.com/FormidableLabs/radium/tree/master/docs/guides
+[docs_api]: https://github.com/FormidableLabs/radium/tree/master/docs/api
+[docs_faq]: https://github.com/FormidableLabs/radium/tree/master/docs/faq
