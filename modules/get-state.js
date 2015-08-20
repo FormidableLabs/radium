@@ -20,7 +20,7 @@ var getState = function (
     state._radiumStyleState &&
     state._radiumStyleState[key] &&
     state._radiumStyleState[key][value]
-  ) || false;
+  );
 };
 
 module.exports = getState;
