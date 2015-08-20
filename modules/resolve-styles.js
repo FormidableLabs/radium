@@ -4,7 +4,6 @@ var MouseUpListener = require('./mouse-up-listener');
 var getState = require('./get-state');
 var getStateKey = require('./get-state-key');
 var Prefixer = require('./prefixer');
-var Config = require('./config');
 
 var ExecutionEnvironment = require('exenv');
 var React = require('react');
@@ -19,6 +18,11 @@ var React = require('react');
 // }
 
 var mediaQueryListByQueryString = {};
+
+var _matchMedia = ExecutionEnvironment.canUseDOM &&
+  window &&
+  window.matchMedia &&
+  (mediaQueryString => window.matchMedia(mediaQueryString));
 
 var _isSpecialKey = function (key) {
   return key[0] === ':' || key[0] === '@';
@@ -79,8 +83,9 @@ var _onMediaQueryChange = function (component, query, mediaQueryList) {
   _setStyleState(component, '_all', state);
 };
 
-var _resolveMediaQueryStyles = function (component, style) {
-  if (!Config.canMatchMedia()) {
+var _resolveMediaQueryStyles = function (component, style, config) {
+  var matchMedia = config.matchMedia || _matchMedia;
+  if (!matchMedia) {
     return style;
   }
 
@@ -93,7 +98,7 @@ var _resolveMediaQueryStyles = function (component, style) {
     // Create a global MediaQueryList if one doesn't already exist
     var mql = mediaQueryListByQueryString[query];
     if (!mql) {
-      mediaQueryListByQueryString[query] = mql = Config.matchMedia(query);
+      mediaQueryListByQueryString[query] = mql = matchMedia(query);
     }
 
     // Keep track of which keys already have listeners
@@ -140,6 +145,7 @@ var _cloneElement = function (renderedElement, newProps, newChildren) {
 var resolveStyles = function (
   component: any, // ReactComponent, flow+eslint complaining
   renderedElement: any, // ReactElement
+  config: Object = {},
   existingKeyMap?: {[key: string]: boolean}
 ): any { // ReactElement
   existingKeyMap = existingKeyMap || {};
@@ -170,7 +176,7 @@ var resolveStyles = function (
       newChildren = function () {
         var result = oldChildren.apply(this, arguments);
         if (React.isValidElement(result)) {
-          return resolveStyles(component, result, existingKeyMap);
+          return resolveStyles(component, result, config, existingKeyMap);
         }
         return result;
       };
@@ -178,13 +184,13 @@ var resolveStyles = function (
       // If a React Element is an only child, don't wrap it in an array for
       // React.Children.map() for React.Children.only() compatibility.
       var onlyChild = React.Children.only(oldChildren);
-      newChildren = resolveStyles(component, onlyChild, existingKeyMap);
+      newChildren = resolveStyles(component, onlyChild, config, existingKeyMap);
     } else {
       newChildren = React.Children.map(
         oldChildren,
         function (child) {
           if (React.isValidElement(child)) {
-            return resolveStyles(component, child, existingKeyMap);
+            return resolveStyles(component, child, config, existingKeyMap);
           }
 
           return child;
@@ -208,6 +214,7 @@ var resolveStyles = function (
       newProps[prop] = resolveStyles(
         component,
         propValue,
+        config,
         existingKeyMap
       );
     }
@@ -397,7 +404,7 @@ var resolveStyles = function (
   existingKeyMap[key] = true;
 
   // Media queries can contain pseudo styles, like :hover
-  style = _resolveMediaQueryStyles(component, style);
+  style = _resolveMediaQueryStyles(component, style, config);
 
   var newStyle = {};
   Object.keys(style).forEach(function (styleKey) {

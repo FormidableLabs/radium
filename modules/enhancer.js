@@ -1,19 +1,43 @@
 /* @flow */
 
+var objectAssign = require('object-assign');
 var resolveStyles = require('./resolve-styles.js');
 var printStyles = require('./print-styles.js');
 
+var KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
+  'arguments',
+  'callee',
+  'caller',
+  'length',
+  'name',
+  'prototype',
+  'type'
+];
+
 var copyProperties = function (source, target) {
   Object.getOwnPropertyNames(source).forEach(key => {
-    var ignoreKeys = ['type', 'arguments', 'callee', 'caller', 'length', 'name', 'prototype'];
-    if (ignoreKeys.indexOf(key) < 0 && !target.hasOwnProperty(key)) {
+    if (
+      KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES.indexOf(key) < 0 &&
+      !target.hasOwnProperty(key)
+    ) {
       var descriptor = Object.getOwnPropertyDescriptor(source, key);
       Object.defineProperty(target, key, descriptor);
     }
   });
 };
 
-var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
+var enhanceWithRadium = function (
+  configOrComposedComponent: constructor | Object,
+  config?: Object = {},
+): constructor {
+  if (typeof configOrComposedComponent !== 'function') {
+    var newConfig = objectAssign({}, config, configOrComposedComponent);
+    return function (configOrComponent) {
+      return enhanceWithRadium(configOrComponent, newConfig);
+    };
+  }
+
+  var ComposedComponent = configOrComposedComponent;
   class RadiumEnhancer extends ComposedComponent {
     _radiumMediaQueryListenersByQuery: {[query: string]: {remove: () => void}};
     _radiumMouseUpListener: {remove: () => void};
@@ -31,7 +55,7 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
 
     render () {
       var renderedElement = super.render();
-      return resolveStyles(this, renderedElement);
+      return resolveStyles(this, renderedElement, config);
     }
 
     componentWillUnmount () {
@@ -61,8 +85,9 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
   copyProperties(ComposedComponent, RadiumEnhancer);
 
   if (process.env.NODE_ENV !== 'production') {
-    // This also fixes React Hot Loader by exposing the original components top level
-    // prototype methods on the Radium enhanced prototype as discussed in #219.
+    // This also fixes React Hot Loader by exposing the original components top
+    // level prototype methods on the Radium enhanced prototype as discussed in
+    // https://github.com/FormidableLabs/radium/issues/219.
     copyProperties(ComposedComponent.prototype, RadiumEnhancer.prototype);
   }
 
