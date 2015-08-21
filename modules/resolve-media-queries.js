@@ -1,23 +1,28 @@
-
-
-var ExecutionEnvironment = require('exenv');
-
-var _matchMedia = ExecutionEnvironment.canUseDOM &&
-  window &&
-  window.matchMedia &&
-  (mediaQueryString => window.matchMedia(mediaQueryString));
+var _windowMatchMedia;
+var _getWindowMatchMedia = function (ExecutionEnvironment) {
+  if (_windowMatchMedia === undefined) {
+    _windowMatchMedia = !!ExecutionEnvironment.canUseDOM &&
+      !!window &&
+      !!window.matchMedia &&
+      (mediaQueryString => window.matchMedia(mediaQueryString));
+  }
+  return _windowMatchMedia;
+};
 
 var mediaQueryListByQueryString = {};
 
-var _onMediaQueryChange = function (component, util, query, mediaQueryList) {
-  var state = {};
-  state[query] = mediaQueryList.matches;
-  util.setStyleState(component, '_all', state);
-};
-
-var resolveMediaQueries = function ({component, style, config, util}) {
+var resolveMediaQueries = function ({
+  ExecutionEnvironment,
+  component,
+  config,
+  mergeStyles,
+  setState,
+  style
+}) {
+  var newComponentFields = {};
   var newStyle = style;
-  var matchMedia = config.matchMedia || _matchMedia;
+  var matchMedia = config.matchMedia ||
+    _getWindowMatchMedia(ExecutionEnvironment);
   if (!matchMedia) {
     return newStyle;
   }
@@ -34,22 +39,23 @@ var resolveMediaQueries = function ({component, style, config, util}) {
       mediaQueryListByQueryString[query] = mql = matchMedia(query);
     }
 
-    // Keep track of which keys already have listeners
-    if (!component._radiumMediaQueryListenersByQuery) {
-      component._radiumMediaQueryListenersByQuery = {};
-    }
-
-    if (!component._radiumMediaQueryListenersByQuery[query]) {
-      var listener = _onMediaQueryChange.bind(null, component, util, query);
+    if (
+      !component._radiumMediaQueryListenersByQuery ||
+      !component._radiumMediaQueryListenersByQuery[query]
+    ) {
+      var listener = () => setState(query, mql.matches, '_all');
       mql.addListener(listener);
-      component._radiumMediaQueryListenersByQuery[query] = {
-        remove() { mql.removeListener(listener); }
+      newComponentFields._radiumMediaQueryListenersByQuery = {
+        ...component._radiumMediaQueryListenersByQuery
+      };
+      newComponentFields._radiumMediaQueryListenersByQuery[query] = {
+        remove () { mql.removeListener(listener); }
       };
     }
 
     // Apply media query states
     if (mql.matches) {
-      newStyle = util.mergeStyles([newStyle, mediaQueryStyles]);
+      newStyle = mergeStyles([newStyle, mediaQueryStyles]);
     }
   });
 
@@ -65,6 +71,7 @@ var resolveMediaQueries = function ({component, style, config, util}) {
   );
 
   return {
+    componentFields: newComponentFields,
     style: newStyle
   };
 };

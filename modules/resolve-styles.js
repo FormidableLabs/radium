@@ -5,9 +5,8 @@ var checkProps = require('./check-props');
 var getState = require('./get-state');
 var getStateKey = require('./get-state-key');
 var mergeStyles = require('./merge-styles');
-var resolveInteractonStyles = require('./resolve-interaction-styles');
+var resolveInteractionStyles = require('./resolve-interaction-styles');
 var resolveMediaQueries = require('./resolve-media-queries');
-var setStyleState = require('./set-style-state');
 
 var ExecutionEnvironment = require('exenv');
 var React = require('react');
@@ -21,8 +20,16 @@ var React = require('react');
 //   _radiumMouseUpListener: {remove: () => void},
 // }
 
-var _isSpecialKey = function (key) {
-  return key[0] === ':' || key[0] === '@';
+var _setStyleState = function (component, key, stateKey, value) {
+  var existing = component._lastRadiumState ||
+    component.state && component.state._radiumStyleState || {};
+
+  var state = { _radiumStyleState: {...existing} };
+  state._radiumStyleState[key] = {...state._radiumStyleState[key]};
+  state._radiumStyleState[key][stateKey] = value;
+
+  component._lastRadiumState = state._radiumStyleState;
+  component.setState(state);
 };
 
 // Wrapper around React.cloneElement. To avoid processing the same element
@@ -150,16 +157,9 @@ var resolveStyles = function (
 
   checkProps(component, style);
 
-  // Bail early if no interactive styles.
-  if (
-    !style ||
-    !Object.keys(style).some(_isSpecialKey)
-  ) {
-    if (style) {
-      // Still perform vendor prefixing, though.
-      newProps.style = Prefixer.getPrefixedStyle(component, style);
-      return _cloneElement(renderedElement, newProps, newChildren);
-    } else if (newChildren || hasResolvedProps) {
+  // Bail early if no style.
+  if (!style) {
+    if (newChildren || hasResolvedProps) {
       return _cloneElement(renderedElement, newProps, newChildren);
     }
 
@@ -172,35 +172,43 @@ var resolveStyles = function (
   var originalKey = renderedElement.ref || renderedElement.key;
   var key = getStateKey(originalKey);
 
-  if (existingKeyMap[key]) {
-    throw new Error(
-      'Radium requires each element with interactive styles to have a unique ' +
-      'key, set using either the ref or key prop. ' +
-      (originalKey ?
-        'Key "' + originalKey + '" is a duplicate.' :
-        'Multiple elements have no key specified.')
-    );
-  }
+  var alreadyGotKey = false;
+  var getKey = function () {
+    if (alreadyGotKey) {
+      return key;
+    }
 
-  existingKeyMap[key] = true;
+    alreadyGotKey = true;
 
-  var util = {
-    mergeStyles,
-    setStyleState,
-    getState,
+    if (existingKeyMap[key]) {
+      throw new Error(
+        'Radium requires each element with interactive styles to have a unique ' +
+        'key, set using either the ref or key prop. ' +
+        (originalKey ?
+          'Key "' + originalKey + '" is a duplicate.' :
+          'Multiple elements have no key specified.')
+      );
+    }
+
+    existingKeyMap[key] = true;
+
+    return key;
   };
 
-  var plugins = [resolveMediaQueries, resolveInteractonStyles];
+  var plugins = [resolveMediaQueries, resolveInteractionStyles];
 
   var currentStyle = style;
   plugins.forEach(plugin => {
     var result = plugin({
+      ExecutionEnvironment,
       component,
       config,
-      key,
+      getState: stateKey => getState(component.state, getKey(), stateKey),
+      mergeStyles,
       props,
-      style: currentStyle,
-      util
+      setState: (stateKey, value, elementKey) =>
+        _setStyleState(component, elementKey || getKey(), stateKey, value),
+      style: currentStyle
     });
 
     currentStyle = result.style;
