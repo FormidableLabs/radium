@@ -1,9 +1,13 @@
 /* @flow */
 
 var MouseUpListener = require('./mouse-up-listener');
+var Prefixer = require('./prefixer');
 var getState = require('./get-state');
 var getStateKey = require('./get-state-key');
-var Prefixer = require('./prefixer');
+var mergeStyles = require('./merge-styles');
+var resolveMediaQueries = require('./resolve-media-queries');
+var checkProps = require('./check-props');
+var setStyleState = require('./set-style-state');
 
 var ExecutionEnvironment = require('exenv');
 var React = require('react');
@@ -17,13 +21,6 @@ var React = require('react');
 //   _radiumMouseUpListener: {remove: () => void},
 // }
 
-var mediaQueryListByQueryString = {};
-
-var _matchMedia = ExecutionEnvironment.canUseDOM &&
-  window &&
-  window.matchMedia &&
-  (mediaQueryString => window.matchMedia(mediaQueryString));
-
 var _isSpecialKey = function (key) {
   return key[0] === ':' || key[0] === '@';
 };
@@ -32,95 +29,12 @@ var _getStyleState = function (component, key, value) {
   return getState(component.state, key, value);
 };
 
-var _setStyleState = function (component, key, newState) {
-  var existing = component._lastRadiumState ||
-    component.state && component.state._radiumStyleState || {};
-
-  var state = { _radiumStyleState: {...existing} };
-  state._radiumStyleState[key] = {...state._radiumStyleState[key], ...newState};
-
-  component._lastRadiumState = state._radiumStyleState;
-  component.setState(state);
-};
-
-// Merge style objects. Special casing for props starting with ';'; the values
-// should be objects, and are merged with others of the same name (instead of
-// overwriting).
-var _mergeStyles = function (styles) {
-  var result = {};
-
-  styles.forEach(function (style) {
-    if (!style || typeof style !== 'object') {
-      return;
-    }
-    if (Array.isArray(style)) {
-      style = _mergeStyles(style);
-    }
-
-    Object.keys(style).forEach(function (key) {
-      if (_isSpecialKey(key) && result[key]) {
-        result[key] = _mergeStyles([result[key], style[key]]);
-      } else {
-        result[key] = style[key];
-      }
-    });
-  });
-
-  return result;
-};
-
 var _mouseUp = function (component) {
   Object.keys(component.state._radiumStyleState).forEach(function (key) {
     if (_getStyleState(component, key, ':active')) {
-      _setStyleState(component, key, {':active': false});
+      setStyleState(component, key, {':active': false});
     }
   });
-};
-
-var _onMediaQueryChange = function (component, query, mediaQueryList) {
-  var state = {};
-  state[query] = mediaQueryList.matches;
-  _setStyleState(component, '_all', state);
-};
-
-var _resolveMediaQueryStyles = function (component, style, config) {
-  var matchMedia = config.matchMedia || _matchMedia;
-  if (!matchMedia) {
-    return style;
-  }
-
-  Object.keys(style)
-  .filter(function (name) { return name[0] === '@'; })
-  .map(function (query) {
-    var mediaQueryStyles = style[query];
-    query = query.replace('@media ', '');
-
-    // Create a global MediaQueryList if one doesn't already exist
-    var mql = mediaQueryListByQueryString[query];
-    if (!mql) {
-      mediaQueryListByQueryString[query] = mql = matchMedia(query);
-    }
-
-    // Keep track of which keys already have listeners
-    if (!component._radiumMediaQueryListenersByQuery) {
-      component._radiumMediaQueryListenersByQuery = {};
-    }
-
-    if (!component._radiumMediaQueryListenersByQuery[query]) {
-      var listener = _onMediaQueryChange.bind(null, component, query);
-      mql.addListener(listener);
-      component._radiumMediaQueryListenersByQuery[query] = {
-        remove: function () { mql.removeListener(listener); }
-      };
-    }
-
-    // Apply media query states
-    if (mql.matches) {
-      style = _mergeStyles([style, mediaQueryStyles]);
-    }
-  });
-
-  return style;
 };
 
 // Wrapper around React.cloneElement. To avoid processing the same element
@@ -243,131 +157,10 @@ var resolveStyles = function (
   // Convenient syntax for multiple styles: `style={[style1, style2, etc]}`
   // Ignores non-objects, so you can do `this.state.isCool && styles.cool`.
   if (Array.isArray(style)) {
-    style = _mergeStyles(style);
+    style = mergeStyles(style);
   }
 
-  if (process.env.NODE_ENV !== 'production') {
-    // Warn if you use longhand and shorthand properties in the same style
-    // object.
-    // https://developer.mozilla.org/en-US/docs/Web/CSS/Shorthand_properties
-
-    var shorthandPropertyExpansions = {
-      'background': [
-        'backgroundAttachment',
-        'backgroundBlendMode',
-        'backgroundClip',
-        'backgroundColor',
-        'backgroundImage',
-        'backgroundOrigin',
-        'backgroundPosition',
-        'backgroundPositionX',
-        'backgroundPositionY',
-        'backgroundRepeat',
-        'backgroundRepeatX',
-        'backgroundRepeatY',
-        'backgroundSize'
-      ],
-      'border': [
-        'borderBottom',
-        'borderBottomColor',
-        'borderBottomStyle',
-        'borderBottomWidth',
-        'borderColor',
-        'borderLeft',
-        'borderLeftColor',
-        'borderLeftStyle',
-        'borderLeftWidth',
-        'borderRight',
-        'borderRightColor',
-        'borderRightStyle',
-        'borderRightWidth',
-        'borderStyle',
-        'borderTop',
-        'borderTopColor',
-        'borderTopStyle',
-        'borderTopWidth',
-        'borderWidth'
-      ],
-      'borderImage': [
-        'borderImageOutset',
-        'borderImageRepeat',
-        'borderImageSlice',
-        'borderImageSource',
-        'borderImageWidth'
-      ],
-      'borderRadius': [
-        'borderBottomLeftRadius',
-        'borderBottomRightRadius',
-        'borderTopLeftRadius',
-        'borderTopRightRadius'
-      ],
-      'font': [
-        'fontFamily',
-        'fontKerning',
-        'fontSize',
-        'fontStretch',
-        'fontStyle',
-        'fontVariant',
-        'fontVariantLigatures',
-        'fontWeight',
-        'lineHeight'
-      ],
-      'listStyle': [
-        'listStyleImage',
-        'listStylePosition',
-        'listStyleType'
-      ],
-      'margin': [
-        'marginBottom',
-        'marginLeft',
-        'marginRight',
-        'marginTop'
-      ],
-      'padding': [
-        'paddingBottom',
-        'paddingLeft',
-        'paddingRight',
-        'paddingTop'
-      ],
-      'transition': [
-        'transitionDelay',
-        'transitionDuration',
-        'transitionProperty',
-        'transitionTimingFunction'
-      ]
-    };
-
-    var checkProps = s => {
-      if (typeof s !== 'object' || !s) {
-        return;
-      }
-
-      var styleKeys = Object.keys(s);
-      styleKeys.forEach(styleKey => {
-        if (
-          shorthandPropertyExpansions[styleKey] &&
-          shorthandPropertyExpansions[styleKey].some(sp => styleKeys.indexOf(sp) !== -1)
-        ) {
-          if (process.env.NODE_ENV !== 'production') {
-            /* eslint-disable no-console */
-            console.warn(
-              'Radium: property "' + styleKey + '" in style object',
-              style,
-              ': do not mix longhand and ' +
-              'shorthand properties in the same style object. Check the render ' +
-              'method of ' + component.constructor.displayName + '.',
-              'See https://github.com/FormidableLabs/radium/issues/95 for more ' +
-              'information.'
-            );
-            /* eslint-enable no-console */
-          }
-        }
-      });
-
-      styleKeys.forEach(k => checkProps(s[k]));
-    };
-    checkProps(style);
-  }
+  checkProps(component, style);
 
   // Bail early if no interactive styles.
   if (
@@ -404,7 +197,7 @@ var resolveStyles = function (
   existingKeyMap[key] = true;
 
   // Media queries can contain pseudo styles, like :hover
-  style = _resolveMediaQueryStyles(component, style, config);
+  style = resolveMediaQueries(component, style, config);
 
   var newStyle = {};
   Object.keys(style).forEach(function (styleKey) {
@@ -421,13 +214,13 @@ var resolveStyles = function (
     var existingOnMouseEnter = props.onMouseEnter;
     newProps.onMouseEnter = function (e) {
       existingOnMouseEnter && existingOnMouseEnter(e);
-      _setStyleState(component, key, {':hover': true});
+      setStyleState(component, key, {':hover': true});
     };
 
     var existingOnMouseLeave = props.onMouseLeave;
     newProps.onMouseLeave = function (e) {
       existingOnMouseLeave && existingOnMouseLeave(e);
-      _setStyleState(component, key, {':hover': false});
+      setStyleState(component, key, {':hover': false});
     };
   }
 
@@ -436,7 +229,7 @@ var resolveStyles = function (
     newProps.onMouseDown = function (e) {
       existingOnMouseDown && existingOnMouseDown(e);
       component._lastMouseDown = Date.now();
-      _setStyleState(component, key, {':active': true});
+      setStyleState(component, key, {':active': true});
     };
   }
 
@@ -444,13 +237,13 @@ var resolveStyles = function (
     var existingOnFocus = props.onFocus;
     newProps.onFocus = function (e) {
       existingOnFocus && existingOnFocus(e);
-      _setStyleState(component, key, {':focus': true});
+      setStyleState(component, key, {':focus': true});
     };
 
     var existingOnBlur = props.onBlur;
     newProps.onBlur = function (e) {
       existingOnBlur && existingOnBlur(e);
-      _setStyleState(component, key, {':focus': false});
+      setStyleState(component, key, {':focus': false});
     };
   }
 
@@ -466,7 +259,7 @@ var resolveStyles = function (
     .map(function (name) { return style[name]; });
 
   if (interactionStyles.length) {
-    newStyle = _mergeStyles([newStyle].concat(interactionStyles));
+    newStyle = mergeStyles([newStyle].concat(interactionStyles));
   }
 
   if (
@@ -481,13 +274,9 @@ var resolveStyles = function (
 
   newProps.style = Prefixer.getPrefixedStyle(component, newStyle);
 
-  return _cloneElement(renderedElement, newProps, newChildren);
-};
+  checkProps(component, newProps.style);
 
-// Exposing methods for tests is ugly, but the alternative, re-requiring the
-// module each time, is too slow
-resolveStyles.__clearStateForTests = function () {
-  mediaQueryListByQueryString = {};
+  return _cloneElement(renderedElement, newProps, newChildren);
 };
 
 module.exports = resolveStyles;
