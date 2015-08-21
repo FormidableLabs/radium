@@ -1,6 +1,4 @@
-var mergeStyles = require('./merge-styles');
-var resolveMediaQueries = require('./resolve-media-queries');
-var setStyleState = require('./set-style-state');
+
 
 var ExecutionEnvironment = require('exenv');
 
@@ -11,13 +9,13 @@ var _matchMedia = ExecutionEnvironment.canUseDOM &&
 
 var mediaQueryListByQueryString = {};
 
-var _onMediaQueryChange = function (component, query, mediaQueryList) {
+var _onMediaQueryChange = function (component, util, query, mediaQueryList) {
   var state = {};
   state[query] = mediaQueryList.matches;
-  setStyleState(component, '_all', state);
+  util.setStyleState(component, '_all', state);
 };
 
-var resolveMediaQueries = function (component, style, config) {
+var resolveMediaQueries = function ({component, style, config, util}) {
   var newStyle = style;
   var matchMedia = config.matchMedia || _matchMedia;
   if (!matchMedia) {
@@ -42,7 +40,7 @@ var resolveMediaQueries = function (component, style, config) {
     }
 
     if (!component._radiumMediaQueryListenersByQuery[query]) {
-      var listener = _onMediaQueryChange.bind(null, component, query);
+      var listener = _onMediaQueryChange.bind(null, component, util, query);
       mql.addListener(listener);
       component._radiumMediaQueryListenersByQuery[query] = {
         remove: function () { console.log('mql', mql);mql.removeListener(listener); }
@@ -51,11 +49,13 @@ var resolveMediaQueries = function (component, style, config) {
 
     // Apply media query states
     if (mql.matches) {
-      newStyle = mergeStyles([newStyle, mediaQueryStyles]);
+      newStyle = util.mergeStyles([newStyle, mediaQueryStyles]);
     }
   });
 
-  return newStyle;
+  return {
+    style: newStyle
+  };
 };
 
 // Exposing methods for tests is ugly, but the alternative, re-requiring the

@@ -1,25 +1,19 @@
 /* @flow */
 
 var MouseUpListener = require('./mouse-up-listener');
-var getState = require('./get-state');
-var mergeStyles = require('./merge-styles');
-var setStyleState = require('./set-style-state');
 
 var ExecutionEnvironment = require('exenv');
 
-var _getStyleState = function (component, key, value) {
-  return getState(component.state, key, value);
-};
-
-var _mouseUp = function (component) {
+var _mouseUp = function (component, util) {
   Object.keys(component.state._radiumStyleState).forEach(function (key) {
-    if (_getStyleState(component, key, ':active')) {
-      setStyleState(component, key, {':active': false});
+    if (util.getState(component.state, key, ':active')) {
+      util.setStyleState(component, key, {':active': false});
     }
   });
 };
 
-var resolveInteractonStyles = function (component, key, props, style) {
+var resolveInteractonStyles = function ({component, key, props, style, util}) {
+	var newComponentFields = {};
 	var newProps = {};
 
 	// Only add handlers if necessary
@@ -30,13 +24,13 @@ var resolveInteractonStyles = function (component, key, props, style) {
 		var existingOnMouseEnter = props.onMouseEnter;
 		newProps.onMouseEnter = function (e) {
 			existingOnMouseEnter && existingOnMouseEnter(e);
-			setStyleState(component, key, {':hover': true});
+			util.setStyleState(component, key, {':hover': true});
 		};
 
 		var existingOnMouseLeave = props.onMouseLeave;
 		newProps.onMouseLeave = function (e) {
 			existingOnMouseLeave && existingOnMouseLeave(e);
-			setStyleState(component, key, {':hover': false});
+			util.setStyleState(component, key, {':hover': false});
 		};
 	}
 
@@ -44,8 +38,8 @@ var resolveInteractonStyles = function (component, key, props, style) {
 		var existingOnMouseDown = props.onMouseDown;
 		newProps.onMouseDown = function (e) {
 			existingOnMouseDown && existingOnMouseDown(e);
-			component._lastMouseDown = Date.now();
-			setStyleState(component, key, {':active': true});
+			newComponentFields._lastMouseDown = Date.now();
+			util.setStyleState(component, key, {':active': true});
 		};
 	}
 
@@ -53,13 +47,13 @@ var resolveInteractonStyles = function (component, key, props, style) {
 		var existingOnFocus = props.onFocus;
 		newProps.onFocus = function (e) {
 			existingOnFocus && existingOnFocus(e);
-			setStyleState(component, key, {':focus': true});
+			util.setStyleState(component, key, {':focus': true});
 		};
 
 		var existingOnBlur = props.onBlur;
 		newProps.onBlur = function (e) {
 			existingOnBlur && existingOnBlur(e);
-			setStyleState(component, key, {':focus': false});
+			util.setStyleState(component, key, {':focus': false});
 		};
 	}
 
@@ -68,8 +62,8 @@ var resolveInteractonStyles = function (component, key, props, style) {
 		!component._radiumMouseUpListener &&
 		ExecutionEnvironment.canUseEventListeners
 	) {
-		component._radiumMouseUpListener = MouseUpListener.subscribe(
-			_mouseUp.bind(null, component)
+		newComponentFields._radiumMouseUpListener = MouseUpListener.subscribe(
+			_mouseUp.bind(null, component, util)
 		);
 	}
 
@@ -77,16 +71,18 @@ var resolveInteractonStyles = function (component, key, props, style) {
 	var interactionStyles = Object.keys(style)
 		.filter(function (name) {
 			return (
-				(name === ':active' && _getStyleState(component, key, ':active')) ||
-				(name === ':hover' && _getStyleState(component, key, ':hover')) ||
-				(name === ':focus' && _getStyleState(component, key, ':focus'))
+				(name === ':active' && util.getState(component.state, key, ':active')) ||
+				(name === ':hover' && util.getState(component.state, key, ':hover')) ||
+				(name === ':focus' && util.getState(component.state, key, ':focus'))
 			);
 		})
 		.map(function (name) { return style[name]; });
-		
-	newProps.style = mergeStyles([style, ...interactionStyles]);
 
-	return newProps;
+	return {
+		componentFields: newComponentFields,
+		props: newProps,
+		style: util.mergeStyles([style, ...interactionStyles]),
+	};
 }
 
 module.exports = resolveInteractonStyles;

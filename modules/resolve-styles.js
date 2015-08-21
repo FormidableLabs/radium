@@ -1,12 +1,13 @@
 /* @flow */
 
 var Prefixer = require('./prefixer');
+var checkProps = require('./check-props');
+var getState = require('./get-state');
 var getStateKey = require('./get-state-key');
 var mergeStyles = require('./merge-styles');
-var resolveMediaQueries = require('./resolve-media-queries');
-var checkProps = require('./check-props');
-var setStyleState = require('./set-style-state');
 var resolveInteractonStyles = require('./resolve-interaction-styles');
+var resolveMediaQueries = require('./resolve-media-queries');
+var setStyleState = require('./set-style-state');
 
 var ExecutionEnvironment = require('exenv');
 var React = require('react');
@@ -183,17 +184,42 @@ var resolveStyles = function (
 
   existingKeyMap[key] = true;
 
-  style = resolveMediaQueries(component, style, config);
+  var util = {
+    mergeStyles,
+    setStyleState,
+    getState,
+  };
 
-  var interactionStyleProps = resolveInteractonStyles(component, key, props, style);
+  var plugins = [resolveMediaQueries, resolveInteractonStyles];
 
-  newProps = {...newProps, ...interactionStyleProps};
+  var currentStyle = style;
+  plugins.forEach(plugin => {
+    var result = plugin({
+      component,
+      config,
+      key,
+      props,
+      style: currentStyle,
+      util
+    });
+
+    currentStyle = result.style;
+
+    newProps = {...newProps, ...result.props};
+
+    if (result.componentFields) {
+      Object.keys(result.componentFields).forEach(newComponentFieldName => {
+        component[newComponentFieldName] =
+          result.componentFields[newComponentFieldName];
+      });
+    }
+  });
 
   // Strip special styles
   var newStyle = {};
-  Object.keys(newProps.style).forEach(function (styleKey) {
+  Object.keys(currentStyle).forEach(function (styleKey) {
     if (!_isSpecialKey(styleKey)) {
-      newStyle[styleKey] = newProps.style[styleKey];
+      newStyle[styleKey] = currentStyle[styleKey];
     }
   });
 
