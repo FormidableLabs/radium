@@ -1,6 +1,8 @@
 /**
  * Based on https://github.com/jsstyles/css-vendor, but without having to
  * convert between different cases all the time.
+ *
+ * @flow
  */
 
 var ExecutionEnvironment = require('exenv');
@@ -162,7 +164,7 @@ var prefixInfo = {
 
 
 if (ExecutionEnvironment.canUseDOM) {
-  domStyle = document.createElement('p').style;
+  domStyle = (document: any).createElement('p').style;
 
   // older Firefox versions may have no float property in style object
   // so we need to add it manually
@@ -171,7 +173,6 @@ if (ExecutionEnvironment.canUseDOM) {
   }
 
   // Based on http://davidwalsh.name/vendor-prefix
-  var cssVendorPrefix;
   var prefixMatch;
   var windowStyles = window.getComputedStyle(document.documentElement, '');
 
@@ -186,9 +187,11 @@ if (ExecutionEnvironment.canUseDOM) {
     }
   }
 
-  cssVendorPrefix = prefixMatch && prefixMatch[0];
+  var cssVendorPrefix = prefixMatch && prefixMatch[0];
 
-  prefixInfo = infoByCssPrefix[cssVendorPrefix] || prefixInfo;
+  prefixInfo = cssVendorPrefix && infoByCssPrefix[cssVendorPrefix] ?
+    infoByCssPrefix[cssVendorPrefix] :
+    prefixInfo;
 }
 
 var _camelCaseRegex = /([a-z])?([A-Z])/g;
@@ -199,7 +202,9 @@ var _camelCaseToDashCase = function (s) {
   return s.replace(_camelCaseRegex, _camelCaseReplacer);
 };
 
-var getPrefixedPropertyName = function (property) {
+var getPrefixedPropertyName = function (
+  property: string
+): {css: string, js: string} {
   if (prefixedPropertyCache.hasOwnProperty(property)) {
     return prefixedPropertyCache[property];
   }
@@ -398,9 +403,11 @@ var _getPrefixedValue = function (component, property, value, originalProperty) 
 
 // Returns a new style object with vendor prefixes added to property names
 // and values.
-var getPrefixedStyle = function (component, style, mode /* 'css' or 'js' */) {
-  mode = mode || 'js';
-
+var getPrefixedStyle = function (
+  component: any, // ReactComponent
+  style: Object,
+  mode: 'css' | 'js' = 'js'
+): Object {
   if (!ExecutionEnvironment.canUseDOM) {
     return Object.keys(style).reduce((newStyle, key) => {
       var value = style[key];
