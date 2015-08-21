@@ -1,13 +1,12 @@
 /* @flow */
 
-var MouseUpListener = require('./mouse-up-listener');
 var Prefixer = require('./prefixer');
-var getState = require('./get-state');
 var getStateKey = require('./get-state-key');
 var mergeStyles = require('./merge-styles');
 var resolveMediaQueries = require('./resolve-media-queries');
 var checkProps = require('./check-props');
 var setStyleState = require('./set-style-state');
+var resolveInteractonStyles = require('./resolve-interaction-styles');
 
 var ExecutionEnvironment = require('exenv');
 var React = require('react');
@@ -23,18 +22,6 @@ var React = require('react');
 
 var _isSpecialKey = function (key) {
   return key[0] === ':' || key[0] === '@';
-};
-
-var _getStyleState = function (component, key, value) {
-  return getState(component.state, key, value);
-};
-
-var _mouseUp = function (component) {
-  Object.keys(component.state._radiumStyleState).forEach(function (key) {
-    if (_getStyleState(component, key, ':active')) {
-      setStyleState(component, key, {':active': false});
-    }
-  });
 };
 
 // Wrapper around React.cloneElement. To avoid processing the same element
@@ -196,81 +183,19 @@ var resolveStyles = function (
 
   existingKeyMap[key] = true;
 
-  // Media queries can contain pseudo styles, like :hover
   style = resolveMediaQueries(component, style, config);
 
+  var interactionStyleProps = resolveInteractonStyles(component, key, props, style);
+
+  newProps = {...newProps, ...interactionStyleProps};
+
+  // Strip special styles
   var newStyle = {};
-  Object.keys(style).forEach(function (styleKey) {
+  Object.keys(newProps.style).forEach(function (styleKey) {
     if (!_isSpecialKey(styleKey)) {
-      newStyle[styleKey] = style[styleKey];
+      newStyle[styleKey] = newProps.style[styleKey];
     }
   });
-
-  // Only add handlers if necessary
-  if (style[':hover'] || style[':active']) {
-    // Always call the existing handler if one is already defined.
-    // This code, and the very similar ones below, could be abstracted a bit
-    // more, but it hurts readability IMO.
-    var existingOnMouseEnter = props.onMouseEnter;
-    newProps.onMouseEnter = function (e) {
-      existingOnMouseEnter && existingOnMouseEnter(e);
-      setStyleState(component, key, {':hover': true});
-    };
-
-    var existingOnMouseLeave = props.onMouseLeave;
-    newProps.onMouseLeave = function (e) {
-      existingOnMouseLeave && existingOnMouseLeave(e);
-      setStyleState(component, key, {':hover': false});
-    };
-  }
-
-  if (style[':active']) {
-    var existingOnMouseDown = props.onMouseDown;
-    newProps.onMouseDown = function (e) {
-      existingOnMouseDown && existingOnMouseDown(e);
-      component._lastMouseDown = Date.now();
-      setStyleState(component, key, {':active': true});
-    };
-  }
-
-  if (style[':focus']) {
-    var existingOnFocus = props.onFocus;
-    newProps.onFocus = function (e) {
-      existingOnFocus && existingOnFocus(e);
-      setStyleState(component, key, {':focus': true});
-    };
-
-    var existingOnBlur = props.onBlur;
-    newProps.onBlur = function (e) {
-      existingOnBlur && existingOnBlur(e);
-      setStyleState(component, key, {':focus': false});
-    };
-  }
-
-  // Merge the styles in the order they were defined
-  var interactionStyles = Object.keys(style)
-    .filter(function (name) {
-      return (
-        (name === ':active' && _getStyleState(component, key, ':active')) ||
-        (name === ':hover' && _getStyleState(component, key, ':hover')) ||
-        (name === ':focus' && _getStyleState(component, key, ':focus'))
-      );
-    })
-    .map(function (name) { return style[name]; });
-
-  if (interactionStyles.length) {
-    newStyle = mergeStyles([newStyle].concat(interactionStyles));
-  }
-
-  if (
-    style[':active'] &&
-    !component._radiumMouseUpListener &&
-    ExecutionEnvironment.canUseEventListeners
-  ) {
-    component._radiumMouseUpListener = MouseUpListener.subscribe(
-      _mouseUp.bind(null, component)
-    );
-  }
 
   newProps.style = Prefixer.getPrefixedStyle(component, newStyle);
 

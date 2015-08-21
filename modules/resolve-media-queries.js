@@ -18,9 +18,10 @@ var _onMediaQueryChange = function (component, query, mediaQueryList) {
 };
 
 var resolveMediaQueries = function (component, style, config) {
+  var newStyle = style;
   var matchMedia = config.matchMedia || _matchMedia;
   if (!matchMedia) {
-    return style;
+    return newStyle;
   }
 
   Object.keys(style)
@@ -50,11 +51,11 @@ var resolveMediaQueries = function (component, style, config) {
 
     // Apply media query states
     if (mql.matches) {
-      style = mergeStyles([style, mediaQueryStyles]);
+      newStyle = mergeStyles([newStyle, mediaQueryStyles]);
     }
   });
 
-  return style;
+  return newStyle;
 };
 
 // Exposing methods for tests is ugly, but the alternative, re-requiring the
