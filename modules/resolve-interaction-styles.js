@@ -78,10 +78,23 @@ var resolveInteractonStyles = function ({component, key, props, style, util}) {
 		})
 		.map(function (name) { return style[name]; });
 
+	var newStyle = util.mergeStyles([style, ...interactionStyles]);
+
+	// Remove media queries
+	newStyle = Object.keys(newStyle).reduce(
+		(styleWithoutInteractions, key) => {
+			if (key !== ':hover' && key !== ':active' && key !== ':focus') {
+				styleWithoutInteractions[key] = newStyle[key];
+			}
+			return styleWithoutInteractions;
+		},
+		{}
+	);
+
 	return {
 		componentFields: newComponentFields,
 		props: newProps,
-		style: util.mergeStyles([style, ...interactionStyles]),
+		style: newStyle
 	};
 }
 

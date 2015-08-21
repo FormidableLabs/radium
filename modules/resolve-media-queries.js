@@ -23,7 +23,7 @@ var resolveMediaQueries = function ({component, style, config, util}) {
   }
 
   Object.keys(style)
-  .filter(function (name) { return name[0] === '@'; })
+  .filter(function (name) { return name.indexOf('@media') === 0; })
   .map(function (query) {
     var mediaQueryStyles = style[query];
     query = query.replace('@media ', '');
@@ -43,7 +43,7 @@ var resolveMediaQueries = function ({component, style, config, util}) {
       var listener = _onMediaQueryChange.bind(null, component, util, query);
       mql.addListener(listener);
       component._radiumMediaQueryListenersByQuery[query] = {
-        remove: function () { console.log('mql', mql);mql.removeListener(listener); }
+        remove() { mql.removeListener(listener); }
       };
     }
 
@@ -52,6 +52,17 @@ var resolveMediaQueries = function ({component, style, config, util}) {
       newStyle = util.mergeStyles([newStyle, mediaQueryStyles]);
     }
   });
+
+  // Remove media queries
+  newStyle = Object.keys(newStyle).reduce(
+    (styleWithoutMedia, key) => {
+      if (key.indexOf('@media') !== 0) {
+        styleWithoutMedia[key] = newStyle[key];
+      }
+      return styleWithoutMedia;
+    },
+    {}
+  );
 
   return {
     style: newStyle
