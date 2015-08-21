@@ -10,21 +10,26 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
- 
+
 import express from "express";
 import React from "react";
-import App from './app.jsx'
-import fs from 'fs'
-const indexHTML = fs.readFileSync(__dirname+'/index.html').toString();
+import App from './app.jsx';
+import fs from 'fs';
+
+const indexHTML = fs.readFileSync(__dirname + '/index.html').toString();
 const htmlRegex = /¡HTML!/;
 const app = express();
 
-console.log(__dirname+'/bundle.js')
-app.use('/bundle.js', express.static(__dirname+'/bundle.js'));
+const host = 'localhost';
+const port = 8000;
+
+app.use('/bundle.js', express.static(__dirname + '/bundle.js'));
 
 app.get('/*', function (req, res) {
-  let content = React.renderToString((<App />));
-  let html = indexHTML.replace(htmlRegex, content);
+  let html = indexHTML.
+    replace('app.js', 'http://localhost:8080/app.js').
+    replace('<!-- {{app}} -->', React.renderToString(<App />));
+
   res.writeHead(200, {
     'Content-Length': html.length,
     'Content-Type': 'text/html'
@@ -33,9 +38,6 @@ app.get('/*', function (req, res) {
   res.end();
 });
 
-var server = app.listen(8080, function () {
-  var host = server.address().address;
-  var port = server.address().port;
-
-  console.log('Example app listening at http://%s:%s', host, port);
+var server = app.listen(port, host, function () {
+  console.log('Access the universal app at http://%s:%d', host, port);
 });
