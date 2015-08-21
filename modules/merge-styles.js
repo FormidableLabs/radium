@@ -1,10 +1,12 @@
-var _isSpecialKey = function (key) {
-  return key[0] === ':' || key[0] === '@';
+var isPlainObject = require('is-plain-object');
+
+var shouldMerge = function (value) {
+  // Don't merge objects overriding toString, since they should be converted
+  // to string values.
+  return isPlainObject(value) && value.toString === Object.prototype.toString;
 };
 
-// Merge style objects. Special casing for props starting with ';'; the values
-// should be objects, and are merged with others of the same name (instead of
-// overwriting).
+// Merge style objects. Deep merge plain object values.
 var mergeStyles = function (styles) {
   var result = {};
 
@@ -18,8 +20,8 @@ var mergeStyles = function (styles) {
     }
 
     Object.keys(style).forEach(function (key) {
-      if (_isSpecialKey(key) && result[key]) {
-        result[key] = _mergeStyles([result[key], style[key]]);
+      if (shouldMerge(style[key]) && shouldMerge(result[key])) {
+        result[key] = mergeStyles([result[key], style[key]]);
       } else {
         result[key] = style[key];
       }

@@ -31,8 +31,9 @@
   "license": "MIT",
   "dependencies": {
     "array-find": "^1.0.0",
-    "exenv": "^1.2.0",
     "babel": "^5.8.21",
+    "exenv": "^1.2.0",
+    "is-plain-object": "^2.0.1",
     "rimraf": "^2.4.0"
   },
   "devDependencies": {
