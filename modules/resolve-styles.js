@@ -123,7 +123,23 @@ var _setStyleState = function (component, key, stateKey, value) {
   component.setState(state);
 };
 
-var _runPlugins = function ({component, getKey, props, config}) {
+var _runPlugins = function ({
+  component,
+  config,
+  existingKeyMap,
+  props,
+  renderedElement
+}) {
+  // Don't run plugins if renderedElement is not a simple ReactDOMElement or has
+  // no style.
+  if (
+    !React.isValidElement(renderedElement) ||
+    typeof renderedElement.type !== 'string' ||
+    !props.style
+  ) {
+    return props;
+  }
+
   var newProps = props;
 
   var checkPropsPlugin = function ({component, style}) {
@@ -151,6 +167,8 @@ var _runPlugins = function ({component, getKey, props, config}) {
     prefix,
     checkPropsPlugin,
   ];
+
+  var getKey = _buildGetKey(renderedElement, existingKeyMap);
 
   var currentStyle = props.style;
   plugins.forEach(plugin => {
@@ -225,7 +243,6 @@ var resolveStyles = function (
     return renderedElement;
   }
 
-  // Recurse over children first in case we bail early.
   var newChildren = _resolveChildren({
     component,
     config,
@@ -240,16 +257,13 @@ var resolveStyles = function (
     existingKeyMap
   });
 
-  // Don't run plugins if renderedElement is not a simple ReactDOMElement or has
-  // no style.
-  if (
-    React.isValidElement(renderedElement) &&
-    typeof renderedElement.type === 'string' &&
-    newProps.style
-  ) {
-    var getKey = _buildGetKey(renderedElement, existingKeyMap);
-    newProps = _runPlugins({component, getKey, props: newProps, config});
-  }
+  newProps = _runPlugins({
+    renderedElement,
+    existingKeyMap,
+    component,
+    props: newProps,
+    config
+  });
 
   // If nothing changed, don't bother cloning the element. Might be a bit
   // wasteful, as we add the sentinal to stop double-processing when we clone.
