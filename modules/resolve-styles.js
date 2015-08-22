@@ -233,18 +233,22 @@ var resolveStyles = function (
     children: renderedElement.props.children
   });
 
-  var props = renderedElement.props;
-  var newProps = _resolveProps({component, props, config, existingKeyMap});
+  var newProps = _resolveProps({
+    component,
+    props: renderedElement.props,
+    config,
+    existingKeyMap
+  });
 
   // Don't run plugins if renderedElement is not a simple ReactDOMElement or has
   // no style.
   if (
     React.isValidElement(renderedElement) &&
     typeof renderedElement.type === 'string' &&
-    props.style
+    newProps.style
   ) {
     var getKey = _buildGetKey(renderedElement, existingKeyMap);
-    newProps = _runPlugins({component, getKey, props, config});
+    newProps = _runPlugins({component, getKey, props: newProps, config});
   }
 
   // If nothing changed, don't bother cloning the element. Might be a bit
