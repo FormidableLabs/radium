@@ -230,6 +230,9 @@ var resolveStyles = function (
     newProps = _runPlugins({component, getKey, props, config});
   }
 
+  // If nothing changed, don't bother cloning the element. Might be a bit
+  // wasteful, as we add the sentinal to stop double-processing when we clone.
+  // Assume benign double-processing is better than uneeded cloning.
   if (oldChildren === newChildren && newProps === renderedElement.props) {
     return renderedElement;
   }
