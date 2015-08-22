@@ -68,6 +68,70 @@ var _buildGetKey = function (renderedElement, existingKeyMap) {
   return getKey;
 };
 
+var _runPlugins = function ({component, getKey, props, config}) {
+  var newProps = props;
+
+  var checkPropsPlugin = function ({component, style}) {
+    checkProps(component, style);
+    return {style};
+  };
+
+  // Convenient syntax for multiple styles: `style={[style1, style2, etc]}`
+  // Ignores non-objects, so you can do `this.state.isCool && styles.cool`.
+  var mergeArray = function ({style, mergeStyles}) {
+    var newStyle = Array.isArray(style) ? mergeStyles(style) : style;
+    return {style: newStyle};
+  };
+
+  var prefix = function ({component, style}) {
+    var newStyle = Prefixer.getPrefixedStyle(component, style);
+    return {style: newStyle};
+  };
+
+  var plugins = [
+    mergeArray,
+    checkPropsPlugin,
+    resolveMediaQueries,
+    resolveInteractionStyles,
+    prefix,
+    checkPropsPlugin,
+  ];
+
+  var currentStyle = props.style;
+  plugins.forEach(plugin => {
+    var result = plugin({
+      ExecutionEnvironment,
+      component,
+      config,
+      getState: stateKey => getState(component.state, getKey(), stateKey),
+      mergeStyles,
+      props,
+      setState: (stateKey, value, elementKey) =>
+        _setStyleState(component, elementKey || getKey(), stateKey, value),
+      style: currentStyle
+    });
+
+    currentStyle = result.style;
+
+    newProps = result.props && Object.keys(result.props).length ?
+      {...newProps, ...result.props} :
+      newProps;
+
+    if (result.componentFields) {
+      Object.keys(result.componentFields).forEach(newComponentFieldName => {
+        component[newComponentFieldName] =
+          result.componentFields[newComponentFieldName];
+      });
+    }
+  });
+
+  if (currentStyle !== props.style) {
+    newProps = {...newProps, style: currentStyle};
+  }
+
+  return newProps;
+};
+
 //
 // The nucleus of Radium. resolveStyles is called on the rendered elements
 // before they are returned in render. It iterates over the elements and
@@ -154,83 +218,27 @@ var resolveStyles = function (
     }
   });
 
-  // Bail early if element is not a simple ReactDOMElement or has no style
+
+  // Don't run plugins if renderedElement is not a simple ReactDOMElement or has
+  // no style.
   if (
-    !React.isValidElement(renderedElement) ||
-    typeof renderedElement.type !== 'string' ||
-    !props.style
+    React.isValidElement(renderedElement) &&
+    typeof renderedElement.type === 'string' &&
+    props.style
   ) {
-    if (oldChildren === newChildren && newProps === renderedElement.props) {
-      return renderedElement;
-    }
-
-    return _cloneElement(
-      renderedElement,
-      newProps !== renderedElement.props ? newProps : {},
-      newChildren
-    );
+    var getKey = _buildGetKey(renderedElement, existingKeyMap);
+    newProps = _runPlugins({component, getKey, props, config});
   }
 
-  var checkPropsPlugin = function ({component, style}) {
-    checkProps(component, style);
-    return {style};
-  };
-
-  // Convenient syntax for multiple styles: `style={[style1, style2, etc]}`
-  // Ignores non-objects, so you can do `this.state.isCool && styles.cool`.
-  var mergeArray = function ({style, mergeStyles}) {
-    var newStyle = Array.isArray(style) ? mergeStyles(style) : style;
-    return {style: newStyle};
-  };
-
-  var prefix = function ({component, style}) {
-    var newStyle = Prefixer.getPrefixedStyle(component, style);
-    return {style: newStyle};
-  };
-
-  var plugins = [
-    mergeArray,
-    checkPropsPlugin,
-    resolveMediaQueries,
-    resolveInteractionStyles,
-    prefix,
-    checkPropsPlugin,
-  ];
-
-  var getKey = _buildGetKey(renderedElement, existingKeyMap);
-  var currentStyle = props.style;
-  plugins.forEach(plugin => {
-    var result = plugin({
-      ExecutionEnvironment,
-      component,
-      config,
-      getState: stateKey => getState(component.state, getKey(), stateKey),
-      mergeStyles,
-      props,
-      setState: (stateKey, value, elementKey) =>
-        _setStyleState(component, elementKey || getKey(), stateKey, value),
-      style: currentStyle
-    });
-
-    currentStyle = result.style;
-
-    newProps = result.props && Object.keys(result.props).length ?
-      {...newProps, ...result.props} :
-      newProps;
-
-    if (result.componentFields) {
-      Object.keys(result.componentFields).forEach(newComponentFieldName => {
-        component[newComponentFieldName] =
-          result.componentFields[newComponentFieldName];
-      });
-    }
-  });
-
-  if (currentStyle !== props.style) {
-    newProps = {...newProps, style: currentStyle};
+  if (oldChildren === newChildren && newProps === renderedElement.props) {
+    return renderedElement;
   }
 
-  return _cloneElement(renderedElement, newProps, newChildren);
+  return _cloneElement(
+    renderedElement,
+    newProps !== renderedElement.props ? newProps : {},
+    newChildren
+  );
 };
 
 module.exports = resolveStyles;
