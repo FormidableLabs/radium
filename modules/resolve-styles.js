@@ -11,15 +11,6 @@ var resolveMediaQueries = require('./resolve-media-queries');
 var ExecutionEnvironment = require('exenv');
 var React = require('react');
 
-// babel-eslint 3.1.7 fails here for some reason, error:
-//   0:0  error  Cannot call method 'isSequenceExpression' of undefined
-//
-// declare class RadiumComponent extends ReactComponent {
-//   _lastMouseDown: number,
-//   _radiumMediaQueryListenersByQuery: Object<string, {remove: () => void}>,
-//   _radiumMouseUpListener: {remove: () => void},
-// }
-
 var _setStyleState = function (component, key, stateKey, value) {
   var existing = component._lastRadiumState ||
     component.state && component.state._radiumStyleState || {};
