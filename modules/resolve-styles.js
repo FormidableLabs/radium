@@ -11,28 +11,46 @@ var resolveMediaQueries = require('./resolve-media-queries');
 var ExecutionEnvironment = require('exenv');
 var React = require('react');
 
-var _setStyleState = function (component, key, stateKey, value) {
-  var existing = component._lastRadiumState ||
-    component.state && component.state._radiumStyleState || {};
-
-  var state = { _radiumStyleState: {...existing} };
-  state._radiumStyleState[key] = {...state._radiumStyleState[key]};
-  state._radiumStyleState[key][stateKey] = value;
-
-  component._lastRadiumState = state._radiumStyleState;
-  component.setState(state);
-};
-
-// Wrapper around React.cloneElement. To avoid processing the same element
-// twice, whenever we clone an element add a special non-enumerable prop to
-// make sure we don't process this element again.
-var _cloneElement = function (renderedElement, newProps, newChildren) {
-  // Only add flag if this is a normal DOM element
-  if (typeof renderedElement.type === 'string') {
-    newProps = {...newProps, _radiumDidResolveStyles: true};
+var _resolveChildren = function ({component, config, existingKeyMap, children}) {
+  if (!children) {
+    return children;
   }
 
-  return React.cloneElement(renderedElement, newProps, newChildren);
+  var childrenType = typeof children;
+
+  if (childrenType === 'string' || childrenType === 'number') {
+    // Don't do anything with a single primitive child
+    return children;
+  }
+
+  if (childrenType === 'function') {
+    // Wrap the function, resolving styles on the result
+    return function () {
+      var result = children.apply(this, arguments);
+      if (React.isValidElement(result)) {
+        return resolveStyles(component, result, config, existingKeyMap);
+      }
+      return result;
+    };
+  }
+
+  if (React.Children.count(children) === 1 && children.type) {
+    // If a React Element is an only child, don't wrap it in an array for
+    // React.Children.map() for React.Children.only() compatibility.
+    var onlyChild = React.Children.only(children);
+    return resolveStyles(component, onlyChild, config, existingKeyMap);
+  }
+
+  return React.Children.map(
+    children,
+    function (child) {
+      if (React.isValidElement(child)) {
+        return resolveStyles(component, child, config, existingKeyMap);
+      }
+
+      return child;
+    }
+  );
 };
 
 // Recurse over props, just like children
@@ -93,6 +111,18 @@ var _buildGetKey = function (renderedElement, existingKeyMap) {
   return getKey;
 };
 
+var _setStyleState = function (component, key, stateKey, value) {
+  var existing = component._lastRadiumState ||
+    component.state && component.state._radiumStyleState || {};
+
+  var state = { _radiumStyleState: {...existing} };
+  state._radiumStyleState[key] = {...state._radiumStyleState[key]};
+  state._radiumStyleState[key][stateKey] = value;
+
+  component._lastRadiumState = state._radiumStyleState;
+  component.setState(state);
+};
+
 var _runPlugins = function ({component, getKey, props, config}) {
   var newProps = props;
 
@@ -103,7 +133,7 @@ var _runPlugins = function ({component, getKey, props, config}) {
 
   // Convenient syntax for multiple styles: `style={[style1, style2, etc]}`
   // Ignores non-objects, so you can do `this.state.isCool && styles.cool`.
-  var mergeArray = function ({style, mergeStyles}) {
+  var mergeStyleArrayPlugin = function ({style, mergeStyles}) {
     var newStyle = Array.isArray(style) ? mergeStyles(style) : style;
     return {style: newStyle};
   };
@@ -114,7 +144,7 @@ var _runPlugins = function ({component, getKey, props, config}) {
   };
 
   var plugins = [
-    mergeArray,
+    mergeStyleArrayPlugin,
     checkPropsPlugin,
     resolveMediaQueries,
     resolveInteractionStyles,
@@ -157,6 +187,18 @@ var _runPlugins = function ({component, getKey, props, config}) {
   return newProps;
 };
 
+// Wrapper around React.cloneElement. To avoid processing the same element
+// twice, whenever we clone an element add a special prop to make sure we don't
+// process this element again.
+var _cloneElement = function (renderedElement, newProps, newChildren) {
+  // Only add flag if this is a normal DOM element
+  if (typeof renderedElement.type === 'string') {
+    newProps = {...newProps, _radiumDidResolveStyles: true};
+  }
+
+  return React.cloneElement(renderedElement, newProps, newChildren);
+};
+
 //
 // The nucleus of Radium. resolveStyles is called on the rendered elements
 // before they are returned in render. It iterates over the elements and
@@ -183,46 +225,15 @@ var resolveStyles = function (
     return renderedElement;
   }
 
-  // Recurse over children first in case we bail early. Note that children only
-  // include those rendered in `this` component. Child nodes in other components
-  // will not be here, so each component needs to use Radium.
-  var oldChildren = renderedElement.props.children;
-  var newChildren = oldChildren;
-  if (oldChildren) {
-    var childrenType = typeof oldChildren;
-    if (childrenType === 'string' || childrenType === 'number') {
-      // Don't do anything with a single primitive child
-      newChildren = oldChildren;
-    } else if (childrenType === 'function') {
-      // Wrap the function, resolving styles on the result
-      newChildren = function () {
-        var result = oldChildren.apply(this, arguments);
-        if (React.isValidElement(result)) {
-          return resolveStyles(component, result, config, existingKeyMap);
-        }
-        return result;
-      };
-    } else if (React.Children.count(oldChildren) === 1 && oldChildren.type) {
-      // If a React Element is an only child, don't wrap it in an array for
-      // React.Children.map() for React.Children.only() compatibility.
-      var onlyChild = React.Children.only(oldChildren);
-      newChildren = resolveStyles(component, onlyChild, config, existingKeyMap);
-    } else {
-      newChildren = React.Children.map(
-        oldChildren,
-        function (child) {
-          if (React.isValidElement(child)) {
-            return resolveStyles(component, child, config, existingKeyMap);
-          }
-
-          return child;
-        }
-      );
-    }
-  }
+  // Recurse over children first in case we bail early.
+  var newChildren = _resolveChildren({
+    component,
+    config,
+    existingKeyMap,
+    children: renderedElement.props.children
+  });
 
   var props = renderedElement.props;
-
   var newProps = _resolveProps({component, props, config, existingKeyMap});
 
   // Don't run plugins if renderedElement is not a simple ReactDOMElement or has
@@ -239,7 +250,10 @@ var resolveStyles = function (
   // If nothing changed, don't bother cloning the element. Might be a bit
   // wasteful, as we add the sentinal to stop double-processing when we clone.
   // Assume benign double-processing is better than uneeded cloning.
-  if (oldChildren === newChildren && newProps === renderedElement.props) {
+  if (
+    newChildren === renderedElement.props.children &&
+    newProps === renderedElement.props
+  ) {
     return renderedElement;
   }
 
