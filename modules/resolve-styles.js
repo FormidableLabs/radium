@@ -195,7 +195,12 @@ var resolveStyles = function (
     return key;
   };
 
-  var plugins = [resolveMediaQueries, resolveInteractionStyles];
+  var prefix = function ({component, style}) {
+    var newStyle = Prefixer.getPrefixedStyle(component, style);
+    return {style: newStyle};
+  };
+
+  var plugins = [resolveMediaQueries, resolveInteractionStyles, prefix];
 
   var currentStyle = style;
   plugins.forEach(plugin => {
@@ -223,9 +228,9 @@ var resolveStyles = function (
     }
   });
 
-  newProps.style = Prefixer.getPrefixedStyle(component, currentStyle);
+  checkProps(component, currentStyle);
 
-  checkProps(component, newProps.style);
+  newProps.style = currentStyle;
 
   return _cloneElement(renderedElement, newProps, newChildren);
 };
