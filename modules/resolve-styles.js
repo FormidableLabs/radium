@@ -11,6 +11,9 @@ var resolveMediaQueries = require('./resolve-media-queries');
 var ExecutionEnvironment = require('exenv');
 var React = require('react');
 
+// Declare early for recursive helpers.
+var resolveStyles;
+
 var _resolveChildren = function ({component, config, existingKeyMap, children}) {
   if (!children) {
     return children;
@@ -123,6 +126,23 @@ var _setStyleState = function (component, key, stateKey, value) {
   component.setState(state);
 };
 
+var checkPropsPlugin = function ({component, style}) {
+  checkProps(component, style);
+  return {style};
+};
+
+// Convenient syntax for multiple styles: `style={[style1, style2, etc]}`
+// Ignores non-objects, so you can do `this.state.isCool && styles.cool`.
+var mergeStyleArrayPlugin = function ({style, mergeStyles}) {
+  var newStyle = Array.isArray(style) ? mergeStyles(style) : style;
+  return {style: newStyle};
+};
+
+var prefix = function ({component, style}) {
+  var newStyle = Prefixer.getPrefixedStyle(component, style);
+  return {style: newStyle};
+};
+
 var _runPlugins = function ({
   component,
   config,
@@ -142,30 +162,13 @@ var _runPlugins = function ({
 
   var newProps = props;
 
-  var checkPropsPlugin = function ({component, style}) {
-    checkProps(component, style);
-    return {style};
-  };
-
-  // Convenient syntax for multiple styles: `style={[style1, style2, etc]}`
-  // Ignores non-objects, so you can do `this.state.isCool && styles.cool`.
-  var mergeStyleArrayPlugin = function ({style, mergeStyles}) {
-    var newStyle = Array.isArray(style) ? mergeStyles(style) : style;
-    return {style: newStyle};
-  };
-
-  var prefix = function ({component, style}) {
-    var newStyle = Prefixer.getPrefixedStyle(component, style);
-    return {style: newStyle};
-  };
-
   var plugins = [
     mergeStyleArrayPlugin,
     checkPropsPlugin,
     resolveMediaQueries,
     resolveInteractionStyles,
     prefix,
-    checkPropsPlugin,
+    checkPropsPlugin
   ];
 
   var getKey = _buildGetKey(renderedElement, existingKeyMap);
@@ -224,7 +227,7 @@ var _cloneElement = function (renderedElement, newProps, newChildren) {
 // interactions (e.g. mouse over). It also replaces the style prop because it
 // adds in the various interaction styles (e.g. :hover).
 //
-var resolveStyles = function (
+resolveStyles = function (
   component: any, // ReactComponent, flow+eslint complaining
   renderedElement: any, // ReactElement
   config: Object = {},
@@ -244,25 +247,25 @@ var resolveStyles = function (
   }
 
   var newChildren = _resolveChildren({
+    children: renderedElement.props.children,
     component,
-    config,
-    existingKeyMap,
-    children: renderedElement.props.children
-  });
-
-  var newProps = _resolveProps({
-    component,
-    props: renderedElement.props,
     config,
     existingKeyMap
   });
 
-  newProps = _runPlugins({
-    renderedElement,
-    existingKeyMap,
+  var newProps = _resolveProps({
     component,
+    config,
+    existingKeyMap,
+    props: renderedElement.props
+  });
+
+  newProps = _runPlugins({
+    component,
+    config,
+    existingKeyMap,
     props: newProps,
-    config
+    renderedElement
   });
 
   // If nothing changed, don't bother cloning the element. Might be a bit

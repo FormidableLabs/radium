@@ -81,7 +81,7 @@ var resolveInteractionStyles = function ({
   var interactionStyles = Object.keys(style)
     .filter(name => _isInteractiveStyleField(name) && getState(name))
     .map(function (name) { return style[name]; });
-    
+
   var newStyle = mergeStyles([style, ...interactionStyles]);
 
   // Remove interactive styles
