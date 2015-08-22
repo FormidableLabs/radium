@@ -35,6 +35,31 @@ var _cloneElement = function (renderedElement, newProps, newChildren) {
   return React.cloneElement(renderedElement, newProps, newChildren);
 };
 
+// Recurse over props, just like children
+var _resolveProps = function ({component, props, config, existingKeyMap}) {
+  var newProps = props;
+
+  Object.keys(props).forEach(prop => {
+    // We already recurse over children above
+    if (prop === 'children') {
+      return;
+    }
+
+    var propValue = props[prop];
+    if (React.isValidElement(propValue)) {
+      newProps = {...newProps};
+      newProps[prop] = resolveStyles(
+        component,
+        propValue,
+        config,
+        existingKeyMap
+      );
+    }
+  });
+
+  return newProps;
+};
+
 var _buildGetKey = function (renderedElement, existingKeyMap) {
   // We need a unique key to correlate state changes due to user interaction
   // with the rendered element, so we know to apply the proper interactive
@@ -197,27 +222,8 @@ var resolveStyles = function (
   }
 
   var props = renderedElement.props;
-  var newProps = props;
 
-  // Recurse over props, just like children
-  Object.keys(props).forEach(prop => {
-    // We already recurse over children above
-    if (prop === 'children') {
-      return;
-    }
-
-    var propValue = props[prop];
-    if (React.isValidElement(propValue)) {
-      newProps = {...newProps};
-      newProps[prop] = resolveStyles(
-        component,
-        propValue,
-        config,
-        existingKeyMap
-      );
-    }
-  });
-
+  var newProps = _resolveProps({component, props, config, existingKeyMap});
 
   // Don't run plugins if renderedElement is not a simple ReactDOMElement or has
   // no style.
