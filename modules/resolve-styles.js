@@ -131,10 +131,11 @@ var resolveStyles = function (
 
   var hasResolvedProps = Object.keys(newProps).length > 0;
 
-  // Bail early if element is not a simple ReactDOMElement.
+  // Bail early if element is not a simple ReactDOMElement or has no style
   if (
     !React.isValidElement(renderedElement) ||
-    typeof renderedElement.type !== 'string'
+    typeof renderedElement.type !== 'string' ||
+    !props.style
   ) {
     if (oldChildren === newChildren && !hasResolvedProps) {
       return renderedElement;
@@ -145,17 +146,6 @@ var resolveStyles = function (
       hasResolvedProps ? newProps : {},
       newChildren
     );
-  }
-
-  var style = props.style;
-
-  // Bail early if no style.
-  if (!style) {
-    if (newChildren || hasResolvedProps) {
-      return _cloneElement(renderedElement, newProps, newChildren);
-    }
-
-    return renderedElement;
   }
 
   // We need a unique key to correlate state changes due to user interaction
@@ -187,7 +177,10 @@ var resolveStyles = function (
     return key;
   };
 
-  checkProps(component, style);
+  var checkPropsPlugin = function ({component, style}) {
+    checkProps(component, style);
+    return {style};
+  };
 
   // Convenient syntax for multiple styles: `style={[style1, style2, etc]}`
   // Ignores non-objects, so you can do `this.state.isCool && styles.cool`.
@@ -203,12 +196,14 @@ var resolveStyles = function (
 
   var plugins = [
     mergeArray,
+    checkPropsPlugin,
     resolveMediaQueries,
     resolveInteractionStyles,
-    prefix
+    prefix,
+    checkPropsPlugin,
   ];
 
-  var currentStyle = style;
+  var currentStyle = props.style;
   plugins.forEach(plugin => {
     var result = plugin({
       ExecutionEnvironment,
@@ -233,8 +228,6 @@ var resolveStyles = function (
       });
     }
   });
-
-  checkProps(component, currentStyle);
 
   newProps.style = currentStyle;
 
