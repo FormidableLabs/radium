@@ -133,7 +133,7 @@ var resolveStyles = function (
   }
 
   var props = renderedElement.props;
-  var newProps = {};
+  var newProps = props;
 
   // Recurse over props, just like children
   Object.keys(props).forEach(prop => {
@@ -144,6 +144,7 @@ var resolveStyles = function (
 
     var propValue = props[prop];
     if (React.isValidElement(propValue)) {
+      newProps = {...newProps};
       newProps[prop] = resolveStyles(
         component,
         propValue,
@@ -153,25 +154,22 @@ var resolveStyles = function (
     }
   });
 
-  var hasResolvedProps = Object.keys(newProps).length > 0;
-
   // Bail early if element is not a simple ReactDOMElement or has no style
   if (
     !React.isValidElement(renderedElement) ||
     typeof renderedElement.type !== 'string' ||
     !props.style
   ) {
-    if (oldChildren === newChildren && !hasResolvedProps) {
+    if (oldChildren === newChildren && newProps === renderedElement.props) {
       return renderedElement;
     }
 
     return _cloneElement(
       renderedElement,
-      hasResolvedProps ? newProps : {},
+      newProps !== renderedElement.props ? newProps : {},
       newChildren
     );
   }
-
 
   var checkPropsPlugin = function ({component, style}) {
     checkProps(component, style);
@@ -216,7 +214,9 @@ var resolveStyles = function (
 
     currentStyle = result.style;
 
-    newProps = {...newProps, ...result.props};
+    newProps = result.props && Object.keys(result.props).length ?
+      {...newProps, ...result.props} :
+      newProps;
 
     if (result.componentFields) {
       Object.keys(result.componentFields).forEach(newComponentFieldName => {
@@ -226,7 +226,9 @@ var resolveStyles = function (
     }
   });
 
-  newProps.style = currentStyle;
+  if (currentStyle !== props.style) {
+    newProps = {...newProps, style: currentStyle};
+  }
 
   return _cloneElement(renderedElement, newProps, newChildren);
 };
