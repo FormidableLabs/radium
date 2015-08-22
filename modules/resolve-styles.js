@@ -44,6 +44,39 @@ var _cloneElement = function (renderedElement, newProps, newChildren) {
   return React.cloneElement(renderedElement, newProps, newChildren);
 };
 
+var _buildGetKey = function (renderedElement, existingKeyMap) {
+  // We need a unique key to correlate state changes due to user interaction
+  // with the rendered element, so we know to apply the proper interactive
+  // styles.
+  var originalKey = renderedElement.ref || renderedElement.key;
+  var key = getStateKey(originalKey);
+
+  var alreadyGotKey = false;
+  var getKey = function () {
+    if (alreadyGotKey) {
+      return key;
+    }
+
+    alreadyGotKey = true;
+
+    if (existingKeyMap[key]) {
+      throw new Error(
+        'Radium requires each element with interactive styles to have a unique ' +
+        'key, set using either the ref or key prop. ' +
+        (originalKey ?
+          'Key "' + originalKey + '" is a duplicate.' :
+          'Multiple elements have no key specified.')
+      );
+    }
+
+    existingKeyMap[key] = true;
+
+    return key;
+  };
+
+  return getKey;
+};
+
 //
 // The nucleus of Radium. resolveStyles is called on the rendered elements
 // before they are returned in render. It iterates over the elements and
@@ -148,34 +181,6 @@ var resolveStyles = function (
     );
   }
 
-  // We need a unique key to correlate state changes due to user interaction
-  // with the rendered element, so we know to apply the proper interactive
-  // styles.
-  var originalKey = renderedElement.ref || renderedElement.key;
-  var key = getStateKey(originalKey);
-
-  var alreadyGotKey = false;
-  var getKey = function () {
-    if (alreadyGotKey) {
-      return key;
-    }
-
-    alreadyGotKey = true;
-
-    if (existingKeyMap[key]) {
-      throw new Error(
-        'Radium requires each element with interactive styles to have a unique ' +
-        'key, set using either the ref or key prop. ' +
-        (originalKey ?
-          'Key "' + originalKey + '" is a duplicate.' :
-          'Multiple elements have no key specified.')
-      );
-    }
-
-    existingKeyMap[key] = true;
-
-    return key;
-  };
 
   var checkPropsPlugin = function ({component, style}) {
     checkProps(component, style);
@@ -203,6 +208,7 @@ var resolveStyles = function (
     checkPropsPlugin,
   ];
 
+  var getKey = _buildGetKey(renderedElement, existingKeyMap);
   var currentStyle = props.style;
   plugins.forEach(plugin => {
     var result = plugin({
