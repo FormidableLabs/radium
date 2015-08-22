@@ -13,7 +13,7 @@ var mediaQueryListByQueryString = {};
 
 var resolveMediaQueries = function ({
   ExecutionEnvironment,
-  component,
+  getComponentField,
   config,
   mergeStyles,
   setState,
@@ -39,14 +39,14 @@ var resolveMediaQueries = function ({
       mediaQueryListByQueryString[query] = mql = matchMedia(query);
     }
 
-    if (
-      !component._radiumMediaQueryListenersByQuery ||
-      !component._radiumMediaQueryListenersByQuery[query]
-    ) {
+    var listenersByQuery =
+      getComponentField('_radiumMediaQueryListenersByQuery');
+
+    if (!listenersByQuery || !listenersByQuery[query]) {
       var listener = () => setState(query, mql.matches, '_all');
       mql.addListener(listener);
       newComponentFields._radiumMediaQueryListenersByQuery = {
-        ...component._radiumMediaQueryListenersByQuery
+        ...listenersByQuery
       };
       newComponentFields._radiumMediaQueryListenersByQuery[query] = {
         remove () { mql.removeListener(listener); }

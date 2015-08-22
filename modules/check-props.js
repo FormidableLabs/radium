@@ -91,7 +91,7 @@ if (process.env.NODE_ENV !== 'production') {
     ]
   };
 
-  checkProps = function (component, style) {
+  checkProps = function ({componentName, style}) {
     if (typeof style !== 'object' || !style) {
       return;
     }
@@ -109,7 +109,7 @@ if (process.env.NODE_ENV !== 'production') {
             style,
             ': do not mix longhand and ' +
             'shorthand properties in the same style object. Check the render ' +
-            'method of ' + component.constructor.displayName + '.',
+            'method of ' + componentName + '.',
             'See https://github.com/FormidableLabs/radium/issues/95 for more ' +
             'information.'
           );
@@ -118,7 +118,8 @@ if (process.env.NODE_ENV !== 'production') {
       }
     });
 
-    styleKeys.forEach(k => checkProps(component, style[k]));
+    styleKeys.forEach(k => checkProps({componentName, style: style[k]}));
+    return {style};
   };
 }
 

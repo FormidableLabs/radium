@@ -126,11 +126,6 @@ var _setStyleState = function (component, key, stateKey, value) {
   component.setState(state);
 };
 
-var checkPropsPlugin = function ({component, style}) {
-  checkProps(component, style);
-  return {style};
-};
-
 // Convenient syntax for multiple styles: `style={[style1, style2, etc]}`
 // Ignores non-objects, so you can do `this.state.isCool && styles.cool`.
 var mergeStyleArrayPlugin = function ({style, mergeStyles}) {
@@ -164,11 +159,11 @@ var _runPlugins = function ({
 
   var plugins = [
     mergeStyleArrayPlugin,
-    checkPropsPlugin,
+    checkProps,
     resolveMediaQueries,
     resolveInteractionStyles,
     prefix,
-    checkPropsPlugin
+    checkProps
   ];
 
   var getKey = _buildGetKey(renderedElement, existingKeyMap);
@@ -177,7 +172,9 @@ var _runPlugins = function ({
   plugins.forEach(plugin => {
     var result = plugin({
       ExecutionEnvironment,
-      component,
+      componentName: component.constructor.displayName ||
+        component.constructor.name,
+      getComponentField: key => component[key],
       config,
       getState: stateKey => getState(component.state, getKey(), stateKey),
       mergeStyles,

@@ -10,7 +10,7 @@ var _isInteractiveStyleField = function (styleFieldName) {
 
 var resolveInteractionStyles = function ({
   ExecutionEnvironment,
-  component,
+  getComponentField,
   getState,
   mergeStyles,
   props,
@@ -63,12 +63,12 @@ var resolveInteractionStyles = function ({
 
   if (
     style[':active'] &&
-    !component._radiumMouseUpListener &&
+    !getComponentField('_radiumMouseUpListener') &&
     ExecutionEnvironment.canUseEventListeners
   ) {
     newComponentFields._radiumMouseUpListener = MouseUpListener.subscribe(
       () => {
-        Object.keys(component.state._radiumStyleState).forEach(function (key) {
+        Object.keys(getComponentField('state')._radiumStyleState).forEach(function (key) {
           if (getState(':active')) {
             setState(':active', false, key);
           }

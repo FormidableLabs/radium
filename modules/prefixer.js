@@ -295,7 +295,12 @@ var _addPixelSuffixToValueIfNeeded = function (originalProperty, value) {
   return value;
 };
 
-var _getPrefixedValue = function (component, property, value, originalProperty) {
+var _getPrefixedValue = function (
+  componentName,
+  property,
+  value,
+  originalProperty
+) {
   if (!Array.isArray(value)) {
     // don't test numbers (pure or stringy), but do add 'px' prefix if needed
     if (!isNaN(value) && value !== null) {
@@ -385,8 +390,8 @@ var _getPrefixedValue = function (component, property, value, originalProperty) 
     if (process.env.NODE_ENV !== 'production') {
       /* eslint-disable no-console */
       if (console && console.warn) {
-        var componentContext = component
-          ? ` in component "${component.constructor.displayName}"`
+        var componentContext = componentName
+          ? ` in component "${componentName}"`
           : '';
 
         console.warn(
@@ -404,7 +409,7 @@ var _getPrefixedValue = function (component, property, value, originalProperty) 
 // Returns a new style object with vendor prefixes added to property names
 // and values.
 var getPrefixedStyle = function (
-  component: any, // ReactComponent
+  componentName: any, // ReactComponent
   style: Object,
   mode: 'css' | 'js' = 'js'
 ): Object {
@@ -428,8 +433,8 @@ var getPrefixedStyle = function (
       if (process.env.NODE_ENV !== 'production') {
         /* eslint-disable no-console */
         if (console && console.warn) {
-          var componentContext = component
-            ? ` in component "${component.constructor.displayName}"`
+          var componentContext = componentName
+            ? ` in component "${componentName}"`
             : '';
 
           console.warn(
@@ -441,7 +446,7 @@ var getPrefixedStyle = function (
       }
     }
 
-    var newValue = _getPrefixedValue(component, newProperty.js, value, property);
+    var newValue = _getPrefixedValue(componentName, newProperty.js, value, property);
 
     prefixedStyle[newProperty[mode]] = newValue;
   });

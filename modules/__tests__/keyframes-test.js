@@ -49,7 +49,7 @@ describe('keyframes', () => {
     expect(document.createElement).not.to.have.been.called;
     expect(document.head.appendChild).not.to.have.been.called;
 
-    var name = keyframes({}, MyComponent);
+    var name = keyframes({}, 'MyComponent');
 
     expect(name.length).to.be.greaterThan(0);
   });
@@ -65,7 +65,7 @@ describe('keyframes', () => {
     expect(document.createElement).not.to.have.been.called;
     expect(document.head.appendChild).not.to.have.been.called;
 
-    var name = keyframes({}, MyComponent);
+    var name = keyframes({}, 'MyComponent');
 
     expect(name.length).to.be.greaterThan(0);
   });
@@ -75,7 +75,7 @@ describe('keyframes', () => {
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
     });
-    var name = keyframes({}, MyComponent);
+    var name = keyframes({}, 'MyComponent');
     expect(name.length).to.be.greaterThan(0);
   });
 
@@ -93,7 +93,7 @@ describe('keyframes', () => {
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
     });
-    var name = keyframes({}, MyComponent);
+    var name = keyframes({}, 'MyComponent');
 
     expect(styleElement.sheet.insertRule.lastCall.args).to.deep.equal([
       '@-webkit-keyframes ' + name + ' {\n\n}\n',
@@ -107,7 +107,7 @@ describe('keyframes', () => {
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
     });
-    var name = keyframes({}, MyComponent);
+    var name = keyframes({}, 'MyComponent');
 
     expect(styleElement.sheet.insertRule.lastCall.args).to.deep.equal([
       '@keyframes ' + name + ' {\n\n}\n',
@@ -127,7 +127,7 @@ describe('keyframes', () => {
       to: {
         width: 200
       }
-    }, MyComponent);
+    }, 'MyComponent');
 
     expect(styleElement.sheet.insertRule.lastCall.args).to.deep.equal([
 `@-webkit-keyframes ${name} {
