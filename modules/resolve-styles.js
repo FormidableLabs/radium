@@ -149,14 +149,6 @@ var resolveStyles = function (
 
   var style = props.style;
 
-  // Convenient syntax for multiple styles: `style={[style1, style2, etc]}`
-  // Ignores non-objects, so you can do `this.state.isCool && styles.cool`.
-  if (Array.isArray(style)) {
-    style = mergeStyles(style);
-  }
-
-  checkProps(component, style);
-
   // Bail early if no style.
   if (!style) {
     if (newChildren || hasResolvedProps) {
@@ -195,12 +187,26 @@ var resolveStyles = function (
     return key;
   };
 
+  checkProps(component, style);
+
+  // Convenient syntax for multiple styles: `style={[style1, style2, etc]}`
+  // Ignores non-objects, so you can do `this.state.isCool && styles.cool`.
+  var mergeArray = function ({style, mergeStyles}) {
+    var newStyle = Array.isArray(style) ? mergeStyles(style) : style;
+    return {style: newStyle};
+  };
+
   var prefix = function ({component, style}) {
     var newStyle = Prefixer.getPrefixedStyle(component, style);
     return {style: newStyle};
   };
 
-  var plugins = [resolveMediaQueries, resolveInteractionStyles, prefix];
+  var plugins = [
+    mergeArray,
+    resolveMediaQueries,
+    resolveInteractionStyles,
+    prefix
+  ];
 
   var currentStyle = style;
   plugins.forEach(plugin => {
