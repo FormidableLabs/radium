@@ -1,12 +1,13 @@
 /* @flow */
 
-var Prefixer = require('./prefixer');
-var checkProps = require('./check-props');
+var checkPropsPlugin = require('./plugins/check-props-plugin');
 var getState = require('./get-state');
 var getStateKey = require('./get-state-key');
+var mergeStyleArrayPlugin = require('./plugins/merge-style-array-plugin');
 var mergeStyles = require('./merge-styles');
-var resolveInteractionStyles = require('./resolve-interaction-styles');
-var resolveMediaQueries = require('./resolve-media-queries');
+var prefixPlugin = require('./plugins/prefix-plugin');
+var resolveInteractionStylesPlugin = require('./plugins/resolve-interaction-styles-plugin');
+var resolveMediaQueriesPlugin = require('./plugins/resolve-media-queries-plugin');
 
 var ExecutionEnvironment = require('exenv');
 var React = require('react');
@@ -126,18 +127,6 @@ var _setStyleState = function (component, key, stateKey, value) {
   component.setState(state);
 };
 
-// Convenient syntax for multiple styles: `style={[style1, style2, etc]}`
-// Ignores non-objects, so you can do `this.state.isCool && styles.cool`.
-var mergeStyleArrayPlugin = function ({style, mergeStyles}) {
-  var newStyle = Array.isArray(style) ? mergeStyles(style) : style;
-  return {style: newStyle};
-};
-
-var prefix = function ({component, style}) {
-  var newStyle = Prefixer.getPrefixedStyle(component, style);
-  return {style: newStyle};
-};
-
 var _runPlugins = function ({
   component,
   config,
@@ -159,11 +148,11 @@ var _runPlugins = function ({
 
   var plugins = [
     mergeStyleArrayPlugin,
-    checkProps,
-    resolveMediaQueries,
-    resolveInteractionStyles,
-    prefix,
-    checkProps
+    checkPropsPlugin,
+    resolveMediaQueriesPlugin,
+    resolveInteractionStylesPlugin,
+    prefixPlugin,
+    checkPropsPlugin
   ];
 
   var getKey = _buildGetKey(renderedElement, existingKeyMap);

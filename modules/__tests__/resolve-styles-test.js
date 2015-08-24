@@ -1,13 +1,13 @@
 var React = require('react/addons');
-var MouseUpListener = require('mouse-up-listener.js');
+var MouseUpListener = require('plugins/mouse-up-listener.js');
 var objectAssign = require('object-assign');
-var resolveMediaQueries = require('inject?-./get-state&-./config!resolve-media-queries.js')({
+var resolveMediaQueriesPlugin = require('inject?-./get-state&-./config!plugins/resolve-media-queries-plugin.js')({
   'exenv': require('__mocks__/exenv.js')
 });
 var resolveStyles = require('inject?-./get-state&-./config!resolve-styles.js')({
   'exenv': require('__mocks__/exenv.js'),
   './prefixer': require('__mocks__/prefixer.js'),
-  './resolve-media-queries': resolveMediaQueries
+  './plugins/resolve-media-queries-plugin': resolveMediaQueriesPlugin
 });
 
 var genComponent = function () {
@@ -557,7 +557,7 @@ describe('resolveStyles', function () {
 
   describe('media queries', function () {
     beforeEach(function () {
-      resolveMediaQueries.__clearStateForTests();
+      resolveMediaQueriesPlugin.__clearStateForTests();
     });
 
     it('listens for media queries', function () {

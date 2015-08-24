@@ -1,10 +1,6 @@
 var styleElement;
 var exenv;
 
-var {Component} = require('react/addons');
-
-class MyComponent extends Component { }
-
 describe('keyframes', () => {
 
   beforeEach(() => {
