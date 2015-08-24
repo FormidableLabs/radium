@@ -121,7 +121,7 @@ var _resolveMediaQueryStyles = function (component, style) {
 var _cloneElement = function (renderedElement, newProps, newChildren) {
   // Only add flag if this is a normal DOM element
   if (typeof renderedElement.type === 'string') {
-  	newProps = {...newProps, _radiumDidResolveStyles: true};
+    newProps = {...newProps, _radiumDidResolveStyles: true};
   }
 
   return React.cloneElement(renderedElement, newProps, newChildren);

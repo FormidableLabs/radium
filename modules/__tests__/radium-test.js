@@ -2,7 +2,7 @@ var Radium = require('index.js');
 var React = require('react/addons');
 
 var {PrintStyleSheet} = Radium;
-var {Component} = React;
+var {Component, PropTypes} = React;
 var TestUtils = React.addons.TestUtils;
 
 var getRenderOutput = function (element) {
@@ -272,6 +272,7 @@ describe('Radium blackbox tests', () => {
   it('resolves styles if an element has element children and spreads props', () => {
     @Radium
     class Inner extends Component {
+      propTypes = { children: PropTypes.node }
       render () {
         return (
           <div {...this.props} style={[{color: 'blue'}, {background: 'red'}]}>
