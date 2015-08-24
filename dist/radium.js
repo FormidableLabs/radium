@@ -86,7 +86,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  var key = getStateKey(elementKey);
 
-	  return !!(state && state._radiumStyleState && state._radiumStyleState[key] && state._radiumStyleState[key][value]) || false;
+	  return !!(state && state._radiumStyleState && state._radiumStyleState[key] && state._radiumStyleState[key][value]);
 	};
 
 	module.exports = getState;
@@ -109,7 +109,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {/* @flow */
+	/* @flow */
 
 	'use strict';
 
@@ -121,7 +121,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var resolveStyles = __webpack_require__(5);
+	var resolveStyles = __webpack_require__(4);
 	var printStyles = __webpack_require__(12);
 
 	var enhanceWithRadium = function enhanceWithRadium(ComposedComponent) {
@@ -173,24 +173,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // with IE <10 any static properties of the superclass aren't inherited and
 	  // so need to be manually populated
 	  // See http://babeljs.io/docs/advanced/caveats/#classes-10-and-below-
-	  var staticKeys = ['defaultProps', 'propTypes', 'contextTypes', 'childContextTypes'];
-
-	  staticKeys.forEach(function (key) {
-	    if (ComposedComponent.hasOwnProperty(key)) {
-	      RadiumEnhancer[key] = ComposedComponent[key];
+	  // This also fixes React Hot Loader by exposing the original components top level
+	  // prototype methods on the Radium enhanced prototype as discussed in #219.
+	  Object.getOwnPropertyNames(ComposedComponent.prototype).forEach(function (key) {
+	    if (!RadiumEnhancer.prototype.hasOwnProperty(key)) {
+	      var descriptor = Object.getOwnPropertyDescriptor(ComposedComponent.prototype, key);
+	      Object.defineProperty(RadiumEnhancer.prototype, key, descriptor);
 	    }
 	  });
-
-	  if (process.env.NODE_ENV !== 'production') {
-	    // This fixes React Hot Loader by exposing the original components top level
-	    // prototype methods on the Radium enhanced prototype as discussed in #219.
-	    Object.keys(ComposedComponent.prototype).forEach(function (key) {
-	      if (!RadiumEnhancer.prototype.hasOwnProperty(key)) {
-	        var descriptor = Object.getOwnPropertyDescriptor(ComposedComponent.prototype, key);
-	        Object.defineProperty(RadiumEnhancer.prototype, key, descriptor);
-	      }
-	    });
-	  }
 
 	  RadiumEnhancer.displayName = ComposedComponent.displayName || ComposedComponent.name || 'Component';
 
@@ -200,111 +190,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = enhanceWithRadium;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 /* 4 */
-/***/ function(module, exports) {
-
-	// shim for using process in browser
-
-	'use strict';
-
-	var process = module.exports = {};
-	var queue = [];
-	var draining = false;
-	var currentQueue;
-	var queueIndex = -1;
-
-	function cleanUpNextTick() {
-	    draining = false;
-	    if (currentQueue.length) {
-	        queue = currentQueue.concat(queue);
-	    } else {
-	        queueIndex = -1;
-	    }
-	    if (queue.length) {
-	        drainQueue();
-	    }
-	}
-
-	function drainQueue() {
-	    if (draining) {
-	        return;
-	    }
-	    var timeout = setTimeout(cleanUpNextTick);
-	    draining = true;
-
-	    var len = queue.length;
-	    while (len) {
-	        currentQueue = queue;
-	        queue = [];
-	        while (++queueIndex < len) {
-	            currentQueue[queueIndex].run();
-	        }
-	        queueIndex = -1;
-	        len = queue.length;
-	    }
-	    currentQueue = null;
-	    draining = false;
-	    clearTimeout(timeout);
-	}
-
-	process.nextTick = function (fun) {
-	    var args = new Array(arguments.length - 1);
-	    if (arguments.length > 1) {
-	        for (var i = 1; i < arguments.length; i++) {
-	            args[i - 1] = arguments[i];
-	        }
-	    }
-	    queue.push(new Item(fun, args));
-	    if (queue.length === 1 && !draining) {
-	        setTimeout(drainQueue, 0);
-	    }
-	};
-
-	// v8 likes predictible objects
-	function Item(fun, array) {
-	    this.fun = fun;
-	    this.array = array;
-	}
-	Item.prototype.run = function () {
-	    this.fun.apply(null, this.array);
-	};
-	process.title = 'browser';
-	process.browser = true;
-	process.env = {};
-	process.argv = [];
-	process.version = ''; // empty string to avoid regexp issues
-	process.versions = {};
-
-	function noop() {}
-
-	process.on = noop;
-	process.addListener = noop;
-	process.once = noop;
-	process.off = noop;
-	process.removeListener = noop;
-	process.removeAllListeners = noop;
-	process.emit = noop;
-
-	process.binding = function (name) {
-	    throw new Error('process.binding is not supported');
-	};
-
-	// TODO(shtylman)
-	process.cwd = function () {
-	    return '/';
-	};
-	process.chdir = function (dir) {
-	    throw new Error('process.chdir is not supported');
-	};
-	process.umask = function () {
-	    return 0;
-	};
-
-/***/ },
-/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/* @flow */
@@ -433,11 +321,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	// twice, whenever we clone an element add a special non-enumerable prop to
 	// make sure we don't process this element again.
 	var _cloneElement = function _cloneElement(renderedElement, newProps, newChildren) {
-	  var clone = React.cloneElement(renderedElement, _extends({}, newProps, {
-	    _radiumDidResolveStyles: true
-	  }), newChildren);
+	  // Only add flag if this is a normal DOM element
+	  if (typeof renderedElement.type === 'string') {
+	    newProps = _extends({}, newProps, { _radiumDidResolveStyles: true });
+	  }
 
-	  return clone;
+	  return React.cloneElement(renderedElement, newProps, newChildren);
 	};
 
 	//
@@ -677,7 +566,108 @@ return /******/ (function(modules) { // webpackBootstrap
 	// owner of an element processes that element, since the owner's render
 	// function will be called first (which will always be the case, since you
 	// can't know what else to render until you render the parent component).
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	// shim for using process in browser
+
+	'use strict';
+
+	var process = module.exports = {};
+	var queue = [];
+	var draining = false;
+	var currentQueue;
+	var queueIndex = -1;
+
+	function cleanUpNextTick() {
+	    draining = false;
+	    if (currentQueue.length) {
+	        queue = currentQueue.concat(queue);
+	    } else {
+	        queueIndex = -1;
+	    }
+	    if (queue.length) {
+	        drainQueue();
+	    }
+	}
+
+	function drainQueue() {
+	    if (draining) {
+	        return;
+	    }
+	    var timeout = setTimeout(cleanUpNextTick);
+	    draining = true;
+
+	    var len = queue.length;
+	    while (len) {
+	        currentQueue = queue;
+	        queue = [];
+	        while (++queueIndex < len) {
+	            currentQueue[queueIndex].run();
+	        }
+	        queueIndex = -1;
+	        len = queue.length;
+	    }
+	    currentQueue = null;
+	    draining = false;
+	    clearTimeout(timeout);
+	}
+
+	process.nextTick = function (fun) {
+	    var args = new Array(arguments.length - 1);
+	    if (arguments.length > 1) {
+	        for (var i = 1; i < arguments.length; i++) {
+	            args[i - 1] = arguments[i];
+	        }
+	    }
+	    queue.push(new Item(fun, args));
+	    if (queue.length === 1 && !draining) {
+	        setTimeout(drainQueue, 0);
+	    }
+	};
+
+	// v8 likes predictible objects
+	function Item(fun, array) {
+	    this.fun = fun;
+	    this.array = array;
+	}
+	Item.prototype.run = function () {
+	    this.fun.apply(null, this.array);
+	};
+	process.title = 'browser';
+	process.browser = true;
+	process.env = {};
+	process.argv = [];
+	process.version = ''; // empty string to avoid regexp issues
+	process.versions = {};
+
+	function noop() {}
+
+	process.on = noop;
+	process.addListener = noop;
+	process.once = noop;
+	process.off = noop;
+	process.removeListener = noop;
+	process.removeAllListeners = noop;
+	process.emit = noop;
+
+	process.binding = function (name) {
+	    throw new Error('process.binding is not supported');
+	};
+
+	// TODO(shtylman)
+	process.cwd = function () {
+	    return '/';
+	};
+	process.chdir = function (dir) {
+	    throw new Error('process.chdir is not supported');
+	};
+	process.umask = function () {
+	    return 0;
+	};
 
 /***/ },
 /* 6 */
@@ -730,6 +720,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */(function(process) {/**
 	 * Based on https://github.com/jsstyles/css-vendor, but without having to
 	 * convert between different cases all the time.
+	 *
+	 * @flow
 	 */
 
 	'use strict';
@@ -901,7 +893,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  // Based on http://davidwalsh.name/vendor-prefix
-	  var cssVendorPrefix;
 	  var prefixMatch;
 	  var windowStyles = window.getComputedStyle(document.documentElement, '');
 
@@ -916,9 +907,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }
 
-	  cssVendorPrefix = prefixMatch && prefixMatch[0];
+	  var cssVendorPrefix = prefixMatch && prefixMatch[0];
 
-	  prefixInfo = infoByCssPrefix[cssVendorPrefix] || prefixInfo;
+	  prefixInfo = cssVendorPrefix && infoByCssPrefix[cssVendorPrefix] ? infoByCssPrefix[cssVendorPrefix] : prefixInfo;
 	}
 
 	var _camelCaseRegex = /([a-z])?([A-Z])/g;
@@ -1024,12 +1015,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }
 
-	  var cacheKey = Array.isArray(value) ? value.join(' || ')
-	  /* babel-eslint bug: https://github.com/babel/babel-eslint/issues/149 */
-	  /* eslint-disable space-infix-ops */
-	  :
-	  /* eslint-enable space-infix-ops */
-	  property + value;
+	  var cacheKey = Array.isArray(value) ? value.join(' || ') : property + value;
 
 	  if (prefixedValueCache.hasOwnProperty(cacheKey)) {
 	    return prefixedValueCache[cacheKey];
@@ -1098,8 +1084,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// Returns a new style object with vendor prefixes added to property names
 	// and values.
-	var getPrefixedStyle = function getPrefixedStyle(component, style, mode /* 'css' or 'js' */) {
-	  mode = mode || 'js';
+	var getPrefixedStyle = function getPrefixedStyle(component, // ReactComponent
+	style) {
+	  var mode = arguments[2] === undefined ? 'js' : arguments[2];
 
 	  if (!ExecutionEnvironment.canUseDOM) {
 	    return Object.keys(style).reduce(function (newStyle, key) {
@@ -1143,7 +1130,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  cssPrefix: prefixInfo.cssPrefix,
 	  jsPrefix: prefixInfo.jsPrefix
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
 /* 8 */
