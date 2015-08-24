@@ -1,5 +1,12 @@
 # Radium Changelog
 
+## 0.13.8 (August 24, 2015)
+
+### Bug Fixes
+
+- Fix static class methods disappearing in IE10, #313
+- Fix bug when using spread operator to pass props to a DOM element, #322
+
 ## 0.13.7 (August 5, 2015)
 
 ### Bug Fixes
