@@ -119,16 +119,12 @@ var _resolveMediaQueryStyles = function (component, style) {
 // twice, whenever we clone an element add a special non-enumerable prop to
 // make sure we don't process this element again.
 var _cloneElement = function (renderedElement, newProps, newChildren) {
-  var clone = React.cloneElement(
-    renderedElement,
-    {
-      ...newProps,
-      _radiumDidResolveStyles: true
-    },
-    newChildren
-  );
+  // Only add flag if this is a normal DOM element
+  if (typeof renderedElement.type === 'string') {
+  	newProps = {...newProps, _radiumDidResolveStyles: true};
+  }
 
-  return clone;
+  return React.cloneElement(renderedElement, newProps, newChildren);
 };
 
 //

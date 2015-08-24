@@ -268,4 +268,37 @@ describe('Radium blackbox tests', () => {
       '}'
     );
   });
+
+  it('resolves styles if an element has element children and spreads props', () => {
+    @Radium
+    class Inner extends Component {
+      render () {
+        return (
+          <div {...this.props} style={[{color: 'blue'}, {background: 'red'}]}>
+            {this.props.children}
+          </div>
+        );
+      }
+    }
+
+    @Radium
+    class Outer extends Component {
+      render () {
+        return (
+          <Inner>
+            <span>We will break you.</span>
+          </Inner>
+        );
+      }
+    }
+
+    var output = TestUtils.renderIntoDocument(<Outer />);
+
+    var div = React.findDOMNode(
+      TestUtils.findRenderedDOMComponentWithTag(output, 'div')
+    );
+
+    expect(div.style.color).to.equal('blue');
+    expect(div.style.background).to.equal('red');
+  });
 });
