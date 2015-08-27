@@ -31,6 +31,13 @@ You can run examples locally by simply doing `npm run examples`; this will start
 
 Please note that if you use `npm run test-dev` as above, Karma will use port `8080`. You can change the port used by the examples by running `npm run examples -- --port 8000`.
 
+### Before submitting a PR...
+
+Thanks for taking the time to help us make Radium even better! Before you go ahead and submit a PR, make sure that you have done the following:
+- Run the tests (you did add tests, right?) using `npm run test-dev`.
+- Run lint using `npm run lint`
+- Run flow using `flow`
+
 ## Dist
 
 Please do not commit changes to files in `dist`. These files are only committed when we tag releases.
