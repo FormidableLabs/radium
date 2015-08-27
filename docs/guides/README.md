@@ -276,8 +276,8 @@ You can query Radium's state using `Radium.getState`. This allows you to style o
 // Inside render
 return (
   <div>
-    <button key="button" style={[styles.button]}>Hover me!</button>
-    {Radium.getState(this.state, 'button', ':hover') ? (
+    <button key="keyForButton" style={[styles.button]}>Hover me!</button>
+    {Radium.getState(this.state, 'keyForButton', ':hover') ? (
       <span>{' '}Hovering!</span>
     ) : null}
   </div>
