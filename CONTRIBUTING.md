@@ -12,7 +12,7 @@ You will find all building blocks that make up Radium in the [`modules`](modules
 
 ### Testing
 
-You will find tests for each module inside [`modules/__tests__`](modules/__tests__). Whenever making any changes, ensure that all existing tests pass by running `karma start`.
+You will find tests for each module inside [`modules/__tests__`](modules/__tests__). Whenever making any changes, ensure that all existing tests pass by running `npm run test`. You can also have [`Karma`](http://karma-runner.github.io/) running in the background and run your tests every time you make a change by doing `npm run test-dev`.
 
 If you are adding a new feature or some extra functionality, you should also make sure to accompany those changes with appropriate tests.
 
@@ -28,6 +28,8 @@ Before commiting any changes, be sure to do `npm run lint`; this will lint all r
 ### Examples
 
 You can run examples locally by simply doing `npm run examples`; this will start a webpack dev server (the config file is found at [examples/webpack.config.js](examples/webpack.config.js)) making Radium examples available at `http://localhost:8080`.
+
+Please note that if you use `npm run test-dev` as above, Karma will use port `8080`. You can change the port used by the examples by running `npm run examples -- --port 8000`.
 
 ## Dist
 
