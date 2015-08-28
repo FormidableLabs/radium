@@ -11,30 +11,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var path = require('path');
-var webpack = require('webpack');
+import Hapi from 'hapi';
+import React from 'react';
+import fs from 'fs';
+import App from './app.jsx';
 
-module.exports = {
-  cache: true,
-  entry: {
-    index: "./examples/index.js"
-  },
-  output: {
-    path: path.join(__dirname),
-    publicPath: '/',
-    filename: '[name].js',
-    chunkFilename: '[chunkhash].js'
-  },
-  module: {
-    loaders: [
-      {
-        test: /\.js$/,
-        loader: 'babel-loader?stage=0'
-      },
-      {
-        test: /\.jsx$/,
-        loader: 'babel-loader?stage=0'
-      }
-    ]
+const server = new Hapi.Server();
+server.connection({host: 'localhost', port: 8000});
+server.start(function () {
+  console.info('==> ✅  Server is listening');
+  console.info('==> 🌎  Go to ' + server.info.uri.toLowerCase());
+});
+
+server.route({
+  method:  '*',
+  path:    '/',
+  handler: (request, reply) => {
+    let index = fs.readFileSync('./examples/universal.html').toString();
+    reply(index.replace('{{app}}', React.renderToString(<App />)));
   }
-}
+});

@@ -110,11 +110,18 @@ var styles = {
 
 ## Examples
 
-To see local examples in action, do this:
+To see local client examples in action, do this:
 
 ```
 npm install
 npm run examples
+```
+
+To serve universal examples in action, do this:
+
+```
+npm install
+npm run universal
 ```
 
 ## How does Radium work?

@@ -20,9 +20,11 @@
     "lint": "eslint modules",
     "postinstall": "node -e \"require('fs').stat('lib', function(e,s){process.exit(e || !s.isDirectory() ? 1 : 0)})\" || npm run lib",
     "prepublish": "npm test && npm run lint && npm run lib",
+    "server": "./node_modules/babel/bin/babel-node.js --stage 0 examples/server.js",
     "test": "karma start",
     "test-coverage": "karma start karma.conf.coverage.js",
-    "test-dev": "karma start --no-single-run --auto-watch"
+    "test-dev": "karma start --no-single-run --auto-watch",
+    "universal": "node ./node_modules/concurrently/src/main.js --kill-others \"npm run examples\" \"npm run server\""
   },
   "license": "MIT",
   "dependencies": {
@@ -35,9 +37,11 @@
     "babel-eslint": "^3.1.23",
     "babel-loader": "^5.1.4",
     "chai": "^3.0.0",
+    "concurrently": "^0.1.1",
     "coveralls": "^2.11.2",
     "eslint": "^0.24.1",
     "eslint-plugin-react": "^3.0.0",
+    "hapi": "^8.6.1",
     "inject-loader": "^2.0.0",
     "isparta-loader": "^0.2.0",
     "karma": "^0.13.3",
