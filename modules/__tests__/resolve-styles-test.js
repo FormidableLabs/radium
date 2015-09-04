@@ -3,7 +3,7 @@ var MouseUpListener = require('plugins/mouse-up-listener.js');
 var objectAssign = require('object-assign');
 var resolveStyles = require('inject!resolve-styles.js')({
   'exenv': require('__mocks__/exenv.js'),
-  './prefixer': require('__mocks__/prefixer.js'),
+  './prefixer': require('__mocks__/prefixer.js')
 });
 
 var genComponent = function () {
