@@ -1,16 +1,26 @@
 /* @flow */
 
-var checkPropsPlugin = require('./plugins/check-props-plugin');
 var getState = require('./get-state');
 var getStateKey = require('./get-state-key');
-var mergeStyleArrayPlugin = require('./plugins/merge-style-array-plugin');
 var mergeStyles = require('./merge-styles');
-var prefixPlugin = require('./plugins/prefix-plugin');
-var resolveInteractionStylesPlugin = require('./plugins/resolve-interaction-styles-plugin');
-var resolveMediaQueriesPlugin = require('./plugins/resolve-media-queries-plugin');
+var Plugins = require('./plugins/');
 
 var ExecutionEnvironment = require('exenv');
 var React = require('react');
+
+var DEFAULT_CONFIG = {
+  allPlugins: [
+    Plugins.mergeStyleArray,
+    Plugins.checkProps,
+    Plugins.resolveMediaQueries,
+    Plugins.resolveInteractionStyles,
+    Plugins.prefix,
+    Plugins.checkProps
+  ]
+};
+
+// Gross
+var globalState = {};
 
 // Declare early for recursive helpers.
 var resolveStyles;
@@ -146,14 +156,7 @@ var _runPlugins = function ({
 
   var newProps = props;
 
-  var plugins = [
-    mergeStyleArrayPlugin,
-    checkPropsPlugin,
-    resolveMediaQueriesPlugin,
-    resolveInteractionStylesPlugin,
-    prefixPlugin,
-    checkPropsPlugin
-  ];
+  var plugins = config.allPlugins || DEFAULT_CONFIG.allPlugins;
 
   var getKey = _buildGetKey(renderedElement, existingKeyMap);
 
@@ -164,6 +167,7 @@ var _runPlugins = function ({
       componentName: component.constructor.displayName ||
         component.constructor.name,
       getComponentField: key => component[key],
+      getGlobalState: key => globalState[key],
       config,
       getState: stateKey => getState(component.state, getKey(), stateKey),
       mergeStyles,
@@ -183,6 +187,12 @@ var _runPlugins = function ({
       Object.keys(result.componentFields).forEach(newComponentFieldName => {
         component[newComponentFieldName] =
           result.componentFields[newComponentFieldName];
+      });
+    }
+
+    if (result.globalState) {
+      Object.keys(result.globalState).forEach(key => {
+        globalState[key] = result.globalState[key];
       });
     }
   });
@@ -216,7 +226,7 @@ var _cloneElement = function (renderedElement, newProps, newChildren) {
 resolveStyles = function (
   component: any, // ReactComponent, flow+eslint complaining
   renderedElement: any, // ReactElement
-  config: Object = {},
+  config: Object = DEFAULT_CONFIG,
   existingKeyMap?: {[key: string]: boolean}
 ): any { // ReactElement
   existingKeyMap = existingKeyMap || {};
@@ -269,6 +279,11 @@ resolveStyles = function (
     newProps !== renderedElement.props ? newProps : {},
     newChildren
   );
+};
+
+// Only for use by tests
+resolveStyles.__clearStateForTests = function () {
+  globalState = {};
 };
 
 module.exports = resolveStyles;

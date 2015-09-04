@@ -9,11 +9,10 @@ var _getWindowMatchMedia = function (ExecutionEnvironment) {
   return _windowMatchMedia;
 };
 
-var mediaQueryListByQueryString = {};
-
 var resolveMediaQueries = function ({
   ExecutionEnvironment,
   getComponentField,
+  getGlobalState,
   config,
   mergeStyles,
   setState,
@@ -26,6 +25,9 @@ var resolveMediaQueries = function ({
   if (!matchMedia) {
     return newStyle;
   }
+
+  var mediaQueryListByQueryString =
+    getGlobalState('mediaQueryListByQueryString') || {};
 
   Object.keys(style)
   .filter(function (name) { return name.indexOf('@media') === 0; })
@@ -72,14 +74,9 @@ var resolveMediaQueries = function ({
 
   return {
     componentFields: newComponentFields,
+    globalState: {mediaQueryListByQueryString},
     style: newStyle
   };
-};
-
-// Exposing methods for tests is ugly, but the alternative, re-requiring the
-// module each time, is too slow
-resolveMediaQueries.__clearStateForTests = function () {
-  mediaQueryListByQueryString = {};
 };
 
 module.exports = resolveMediaQueries;
