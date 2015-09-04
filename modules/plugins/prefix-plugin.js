@@ -2,8 +2,8 @@
 
 var Prefixer = require('../prefixer');
 
-var prefixPlugin = function ({component, style}) {
-  var newStyle = Prefixer.getPrefixedStyle(component, style);
+var prefixPlugin = function ({componentName, style}) {
+  var newStyle = Prefixer.getPrefixedStyle(componentName, style);
   return {style: newStyle};
 };
 
