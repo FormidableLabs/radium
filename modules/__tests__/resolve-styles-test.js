@@ -1,10 +1,10 @@
 var React = require('react/addons');
 var MouseUpListener = require('plugins/mouse-up-listener.js');
 var objectAssign = require('object-assign');
-var resolveMediaQueriesPlugin = require('inject?-./get-state&-./config!plugins/resolve-media-queries-plugin.js')({
+var resolveMediaQueriesPlugin = require('inject!plugins/resolve-media-queries-plugin.js')({
   'exenv': require('__mocks__/exenv.js')
 });
-var resolveStyles = require('inject?-./get-state&-./config!resolve-styles.js')({
+var resolveStyles = require('inject!resolve-styles.js')({
   'exenv': require('__mocks__/exenv.js'),
   './prefixer': require('__mocks__/prefixer.js'),
   './plugins/resolve-media-queries-plugin': resolveMediaQueriesPlugin
