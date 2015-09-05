@@ -395,7 +395,7 @@ var _getPrefixedValue = function (
           : '';
 
         console.warn(
-          `Unsupported CSS value "${value}" for property "${property}$"` +
+          `Unsupported CSS value "${value}" for property "${property}"` +
             componentContext
         );
       }
