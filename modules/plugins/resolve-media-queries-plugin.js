@@ -1,3 +1,7 @@
+/** @flow */
+
+import type {PluginConfig, PluginResult} from '.';
+
 var _windowMatchMedia;
 var _getWindowMatchMedia = function (ExecutionEnvironment) {
   if (_windowMatchMedia === undefined) {
@@ -17,7 +21,7 @@ var resolveMediaQueries = function ({
   mergeStyles,
   setState,
   style
-}) {
+}: PluginConfig): PluginResult {
   var newComponentFields = {};
   var newStyle = style;
   var matchMedia = config.matchMedia ||

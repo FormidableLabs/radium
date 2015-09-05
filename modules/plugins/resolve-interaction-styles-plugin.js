@@ -1,4 +1,6 @@
-/* @flow */
+/** @flow */
+
+import type {PluginConfig, PluginResult} from '.';
 
 var MouseUpListener = require('./mouse-up-listener');
 
@@ -8,15 +10,17 @@ var _isInteractiveStyleField = function (styleFieldName) {
     styleFieldName === ':focus';
 };
 
-var resolveInteractionStyles = function ({
-  ExecutionEnvironment,
-  getComponentField,
-  getState,
-  mergeStyles,
-  props,
-  setState,
-  style
-}) {
+var resolveInteractionStyles = function (config: PluginConfig): PluginResult {
+  var {
+    ExecutionEnvironment,
+    getComponentField,
+    getState,
+    mergeStyles,
+    props,
+    setState,
+    style
+  } = config;
+
   var newComponentFields = {};
   var newProps = {};
 
@@ -82,7 +86,7 @@ var resolveInteractionStyles = function ({
     .filter(name => _isInteractiveStyleField(name) && getState(name))
     .map(function (name) { return style[name]; });
 
-  var newStyle = mergeStyles([style, ...interactionStyles]);
+  var newStyle = mergeStyles([style].concat(interactionStyles));
 
   // Remove interactive styles
   newStyle = Object.keys(newStyle).reduce(

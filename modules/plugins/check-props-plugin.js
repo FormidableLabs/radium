@@ -1,6 +1,8 @@
 /* @flow */
 
-var checkProps = function () {};
+import type {PluginConfig, PluginResult} from '.';
+
+var checkProps = (function () {}: any);
 
 if (process.env.NODE_ENV !== 'production') {
   // Warn if you use longhand and shorthand properties in the same style
@@ -93,7 +95,8 @@ if (process.env.NODE_ENV !== 'production') {
     ]
   };
 
-  checkProps = function ({componentName, style}) {
+  checkProps = function (config: PluginConfig): PluginResult {
+    var {componentName, style} = config;
     if (typeof style !== 'object' || !style) {
       return;
     }
@@ -120,8 +123,8 @@ if (process.env.NODE_ENV !== 'production') {
       }
     });
 
-    styleKeys.forEach(k => checkProps({componentName, style: style[k]}));
-    return {style};
+    styleKeys.forEach(k => checkProps({...config, style: style[k]}));
+    return;
   };
 }
 

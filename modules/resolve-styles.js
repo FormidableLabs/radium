@@ -1,5 +1,7 @@
 /* @flow */
 
+import type {Config} from './config';
+
 var getState = require('./get-state');
 var getStateKey = require('./get-state-key');
 var mergeStyles = require('./merge-styles');
@@ -9,7 +11,7 @@ var ExecutionEnvironment = require('exenv');
 var React = require('react');
 
 var DEFAULT_CONFIG = {
-  allPlugins: [
+  plugins: [
     Plugins.mergeStyleArray,
     Plugins.checkProps,
     Plugins.resolveMediaQueries,
@@ -23,9 +25,19 @@ var DEFAULT_CONFIG = {
 var globalState = {};
 
 // Declare early for recursive helpers.
-var resolveStyles;
+var resolveStyles = ((null: any): (
+  component: any, // ReactComponent, flow+eslint complaining
+  renderedElement: any,
+  config: Config,
+  existingKeyMap?: {[key: string]: bool}
+) => any);
 
-var _resolveChildren = function ({component, config, existingKeyMap, children}) {
+var _resolveChildren = function ({
+  children,
+  component,
+  config,
+  existingKeyMap
+}) {
   if (!children) {
     return children;
   }
@@ -68,7 +80,12 @@ var _resolveChildren = function ({component, config, existingKeyMap, children}) 
 };
 
 // Recurse over props, just like children
-var _resolveProps = function ({component, props, config, existingKeyMap}) {
+var _resolveProps = function ({
+  component,
+  config,
+  existingKeyMap,
+  props
+}) {
   var newProps = props;
 
   Object.keys(props).forEach(prop => {
@@ -156,7 +173,7 @@ var _runPlugins = function ({
 
   var newProps = props;
 
-  var plugins = config.allPlugins || DEFAULT_CONFIG.allPlugins;
+  var plugins = config.plugins || DEFAULT_CONFIG.plugins;
 
   var getKey = _buildGetKey(renderedElement, existingKeyMap);
 
@@ -175,25 +192,26 @@ var _runPlugins = function ({
       setState: (stateKey, value, elementKey) =>
         _setStyleState(component, elementKey || getKey(), stateKey, value),
       style: currentStyle
-    });
+    }) || {};
 
-    currentStyle = result.style;
+    currentStyle = result.style || currentStyle;
 
     newProps = result.props && Object.keys(result.props).length ?
       {...newProps, ...result.props} :
       newProps;
 
-    if (result.componentFields) {
-      Object.keys(result.componentFields).forEach(newComponentFieldName => {
-        component[newComponentFieldName] =
-          result.componentFields[newComponentFieldName];
-      });
+    var newComponentFields = result.componentFields;
+    if (newComponentFields) {
+      for (var fieldName in newComponentFields) {
+        component[fieldName] = newComponentFields[fieldName];
+      }
     }
 
-    if (result.globalState) {
-      Object.keys(result.globalState).forEach(key => {
-        globalState[key] = result.globalState[key];
-      });
+    var newGlobalState = result.globalState;
+    if (newGlobalState) {
+      for (var key in newGlobalState) {
+        globalState[key] = newGlobalState[key];
+      }
     }
   });
 
@@ -226,7 +244,7 @@ var _cloneElement = function (renderedElement, newProps, newChildren) {
 resolveStyles = function (
   component: any, // ReactComponent, flow+eslint complaining
   renderedElement: any, // ReactElement
-  config: Object = DEFAULT_CONFIG,
+  config: Config = DEFAULT_CONFIG,
   existingKeyMap?: {[key: string]: boolean}
 ): any { // ReactElement
   existingKeyMap = existingKeyMap || {};
