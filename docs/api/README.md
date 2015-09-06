@@ -273,14 +273,11 @@ All plugins are functions accept a PluginConfig, and return a PluginResult. The 
 **PluginConfig**
 ```js
 type PluginConfig = {
-  // uses the exenv npm module
-  ExecutionEnvironment: {
-    canUseEventListeners: bool,
-    canUseDOM: bool,
-  },
-
   // May not be readable if code has been minified
   componentName: string,
+
+	// The Radium configuration
+  config: Config,
 
   // Retrieve the value of a field on the component
   getComponentField: (key: string) => any,
@@ -289,16 +286,12 @@ type PluginConfig = {
   // Used so that tests can easily clear global state.
   getGlobalState: (key: string) => any,
 
-  // The Radium configuration
-  config: Config,
-
   // Retrieve the value of some state specific to the rendered element.
   // Requires the element to have a unique key or ref or for an element key
   // to be passed in.
   getState: (stateKey: string, elementKey?: string) => any,
 
-  // Access to the mergeStyles utility. Useful when the plugin should return a
-  // style to be further processed, as in media styles containing hover styles.
+  // Access to the mergeStyles utility
   mergeStyles: (styles: Array<Object>) => Object,
 
   // The props of the rendered element. This can be changed by each plugin,
@@ -313,7 +306,13 @@ type PluginConfig = {
   // The style prop of the rendered element. This can be changed by each plugin,
   // and successive plugins will see the result of previous plugins. Kept
   // separate from `props` for ease of use.
-  style: Object
+  style: Object,
+
+  // uses the exenv npm module
+  ExecutionEnvironment: {
+    canUseEventListeners: bool,
+    canUseDOM: bool,
+  }
 };
 ```
 

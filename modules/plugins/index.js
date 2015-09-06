@@ -9,14 +9,11 @@ var resolveInteractionStylesPlugin = require('./resolve-interaction-styles-plugi
 var resolveMediaQueriesPlugin = require('./resolve-media-queries-plugin');
 
 export type PluginConfig = {
-  // uses the exenv npm module
-  ExecutionEnvironment: {
-    canUseEventListeners: bool,
-    canUseDOM: bool,
-  },
-
   // May not be readable if code has been minified
   componentName: string,
+
+	// The Radium configuration
+  config: Config,
 
   // Retrieve the value of a field on the component
   getComponentField: (key: string) => any,
@@ -24,9 +21,6 @@ export type PluginConfig = {
   // Retrieve the value of a field global to the Radium module
   // Used so that tests can easily clear global state.
   getGlobalState: (key: string) => any,
-
-  // The Radium configuration
-  config: Config,
 
   // Retrieve the value of some state specific to the rendered element.
   // Requires the element to have a unique key or ref or for an element key
@@ -48,7 +42,13 @@ export type PluginConfig = {
   // The style prop of the rendered element. This can be changed by each plugin,
   // and successive plugins will see the result of previous plugins. Kept
   // separate from `props` for ease of use.
-  style: Object
+  style: Object,
+
+  // uses the exenv npm module
+  ExecutionEnvironment: {
+    canUseEventListeners: bool,
+    canUseDOM: bool,
+  }
 };
 
 export type PluginResult = ?{
