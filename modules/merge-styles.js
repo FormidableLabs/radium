@@ -16,7 +16,7 @@ var mergeStyles = function (styles) {
     }
 
     if (Array.isArray(style)) {
-      style = _mergeStyles(style);
+      style = mergeStyles(style);
     }
 
     Object.keys(style).forEach(function (key) {

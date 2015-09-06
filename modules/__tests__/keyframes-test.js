@@ -126,7 +126,7 @@ describe('keyframes', () => {
     }, 'MyComponent');
 
     expect(styleElement.sheet.insertRule.lastCall.args).to.deep.equal([
-`@-webkit-keyframes ${name} {
+      `@-webkit-keyframes ${name} {
   from {
     width: 100;
   }

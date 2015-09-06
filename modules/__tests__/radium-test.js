@@ -353,7 +353,7 @@ describe('Radium blackbox tests', () => {
   });
 
   describe('plugins', () => {
-    it('runs a custum plugin', () => {
+    it('runs a custom plugin', () => {
       var makeItRedPlugin = () => ({style: {color: 'red'}});
 
       @Radium({plugins: [makeItRedPlugin]})

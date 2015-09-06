@@ -12,7 +12,7 @@ export type PluginConfig = {
   // May not be readable if code has been minified
   componentName: string,
 
-	// The Radium configuration
+  // The Radium configuration
   config: Config,
 
   // Retrieve the value of a field on the component

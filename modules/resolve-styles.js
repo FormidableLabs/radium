@@ -201,19 +201,15 @@ var _runPlugins = function ({
       {...newProps, ...result.props} :
       newProps;
 
-    var newComponentFields = result.componentFields;
-    if (newComponentFields) {
-      for (var fieldName in newComponentFields) {
-        component[fieldName] = newComponentFields[fieldName];
-      }
-    }
+    var newComponentFields = result.componentFields || {};
+    Object.keys(newComponentFields).forEach(fieldName => {
+      component[fieldName] = newComponentFields[fieldName];
+    });
 
-    var newGlobalState = result.globalState;
-    if (newGlobalState) {
-      for (var key in newGlobalState) {
-        globalState[key] = newGlobalState[key];
-      }
-    }
+    var newGlobalState = result.globalState || {};
+    Object.keys(newGlobalState).forEach(key => {
+      globalState[key] = newGlobalState[key];
+    });
   });
 
   if (newStyle !== props.style) {
