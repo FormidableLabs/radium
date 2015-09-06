@@ -46,8 +46,11 @@ var _mergeStyles = function (styles) {
   var result = {};
 
   styles.forEach(function (style) {
-    if (!style || typeof style !== 'object' || Array.isArray(style)) {
+    if (!style || typeof style !== 'object') {
       return;
+    }
+    if (Array.isArray(style)) {
+      style = _mergeStyles(style);
     }
 
     Object.keys(style).forEach(function (key) {
