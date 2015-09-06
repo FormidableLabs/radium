@@ -351,4 +351,25 @@ describe('Radium blackbox tests', () => {
       {color: 'blue'}
     );
   });
+
+  describe('plugins', () => {
+    it('runs a custum plugin', () => {
+      var makeItRedPlugin = () => ({style: {color: 'red'}});
+
+      @Radium({plugins: [makeItRedPlugin]})
+      class TestComponent extends Component {
+        render () {
+          return <div style={{}} />;
+        }
+      }
+
+      var output = TestUtils.renderIntoDocument(<TestComponent />);
+
+      var div = React.findDOMNode(
+        TestUtils.findRenderedDOMComponentWithTag(output, 'div')
+      );
+
+      expect(div.style.color).to.equal('red');
+    });
+  });
 });
