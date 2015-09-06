@@ -5,8 +5,10 @@
 - [Radium](#radium)
   - [Sample Style Object](#sample-style-object)
   - [config.matchMedia](#configmatchmedia)
+  - [config.plugins](#configplugins)
 - [getState](#getstate)
 - [keyframes](#keyframes)
+- [Plugins](#plugins)
 - [Style Component](#style-component)
 - [PrintStyleSheet Component](#printstylesheet-component)
 
@@ -65,12 +67,13 @@ will be merged with and overwrite previous configs. That way, you can still
 override settings on a per-component basis:
 
 ```as
-@MyRadium({...special config...})
+@MyRadium(config)
 class MySpecialComponent extends React.Component { ... }
 ```
 
 Possible configuration values:
 - [`matchMedia`](#configmatchmedia)
+- [`plugins`](#configplugins)
 
 ### Sample Style Object
 
@@ -209,6 +212,11 @@ Usage:
     Radium.getState(this.state, 'button', ':hover')
 ```
 
+### config.plugins
+**Array&lt;Plugin&gt;**
+
+Replaces all plugins with the provided set. See [Plugins](#plugins) for more information.
+
 ## keyframes
 
 **Radium.keyframes(keyframes, componentName)**
@@ -242,6 +250,90 @@ var styles = {
     height: '4px',
     margin: '0 auto',
   }
+};
+```
+
+## Plugins
+
+### Built-ins
+
+Almost everything that Radium does, except iteration, is implemented as a plugin. Radium ships with a base set of plugins, all of which can be accessed via `Radium.Plugins.pluginName`. They are called in the following order:
+
+- `mergeStyleArray` - If the `style` attribute is an array, intelligently merge each style object in the array. Deep merges nested style objects, such as `:hover`.
+- `checkProps` - Performs basic correctness checks, such as ensuring you do not mix longhand and shorthand properties.
+- `resolveMediaQueries` - Handles style entries like `'@media (...)': { ... }`, applying them only when the appropriate media query is hit. Can be configured using [config.matchMedia](#configmatchmedia).
+- `resolveInteractionStyles` - Handles `':hover'`, `':focus'`, and `':active'` styles.
+- `prefix` - Uses in-browser detection and a small mapping to add vendor prefixes to CSS properties and values.
+- `checkProps` - Same as above, just run after everything else.
+
+### Plugin Interface
+
+All plugins are functions accept a PluginConfig, and return a PluginResult. The annotated flow types follow. A plugin is called once for every *rendered element* that has a `style` attribute, for example the `div` and `span` in `return <div style={...}><span style={...} /></div>;`.
+
+**PluginConfig**
+```js
+type PluginConfig = {
+  // uses the exenv npm module
+  ExecutionEnvironment: {
+    canUseEventListeners: bool,
+    canUseDOM: bool,
+  },
+
+  // May not be readable if code has been minified
+  componentName: string,
+
+  // Retrieve the value of a field on the component
+  getComponentField: (key: string) => any,
+
+  // Retrieve the value of a field global to the Radium module
+  // Used so that tests can easily clear global state.
+  getGlobalState: (key: string) => any,
+
+  // The Radium configuration
+  config: Config,
+
+  // Retrieve the value of some state specific to the rendered element.
+  // Requires the element to have a unique key or ref or for an element key
+  // to be passed in.
+  getState: (stateKey: string, elementKey?: string) => any,
+
+  // Access to the mergeStyles utility. Useful when the plugin should return a
+  // style to be further processed, as in media styles containing hover styles.
+  mergeStyles: (styles: Array<Object>) => Object,
+
+  // The props of the rendered element. This can be changed by each plugin,
+  // and successive plugins will see the result of previous plugins.
+  props: Object,
+
+  // Calls setState on the component with the given key and value.
+  // By default this is specific to the rendered element, but you can override
+  // by passing in the `elementKey` parameter.
+  setState: (stateKey: string, value: any, elementKey?: string) => void,
+
+  // The style prop of the rendered element. This can be changed by each plugin,
+  // and successive plugins will see the result of previous plugins. Kept
+  // separate from `props` for ease of use.
+  style: Object
+};
+```
+
+**PluginResult**
+
+```js
+type PluginResult = ?{
+  // Merged into the component directly. Useful for storing things for which you
+  // don't need to re-render, event subscriptions, for instance.
+  componentFields?: Object,
+
+  // Merged into a Radium controlled global state object. Use this instead of
+  // module level state for ease of clearing state between tests.
+  globalState?: Object,
+
+  // Merged into the rendered element's props.
+  props?: Object,
+
+  // Replaces (not merged into) the rendered element's style property.
+  style?: Object,
 };
 ```
 
