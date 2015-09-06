@@ -177,7 +177,7 @@ var _runPlugins = function ({
 
   var getKey = _buildGetKey(renderedElement, existingKeyMap);
 
-  var currentStyle = props.style;
+  var newStyle = props.style;
   plugins.forEach(plugin => {
     var result = plugin({
       ExecutionEnvironment,
@@ -186,15 +186,16 @@ var _runPlugins = function ({
       getComponentField: key => component[key],
       getGlobalState: key => globalState[key],
       config,
-      getState: stateKey => getState(component.state, getKey(), stateKey),
+      getState: (stateKey, elementKey) =>
+        getState(component.state, elementKey || getKey(), stateKey),
       mergeStyles,
-      props,
+      props: newProps,
       setState: (stateKey, value, elementKey) =>
         _setStyleState(component, elementKey || getKey(), stateKey, value),
-      style: currentStyle
+      style: newStyle
     }) || {};
 
-    currentStyle = result.style || currentStyle;
+    newStyle = result.style || newStyle;
 
     newProps = result.props && Object.keys(result.props).length ?
       {...newProps, ...result.props} :
@@ -215,8 +216,8 @@ var _runPlugins = function ({
     }
   });
 
-  if (currentStyle !== props.style) {
-    newProps = {...newProps, style: currentStyle};
+  if (newStyle !== props.style) {
+    newProps = {...newProps, style: newStyle};
   }
 
   return newProps;
