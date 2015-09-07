@@ -32,6 +32,28 @@ describe('Radium blackbox tests', () => {
     );
   });
 
+  it('merges nested styles', () => {
+    @Radium
+    class TestComponent extends Component {
+      render () {
+        return (
+          <div style={[
+            [{color: 'blue'}, [{height: '2px', padding: '9px'}]],
+            {background: 'red'}
+          ]} />
+        );
+      }
+    }
+
+    var output = getRenderOutput(<TestComponent />);
+
+    console.log(output.props.style);
+
+    expect(output.props.style).to.deep.equal(
+      {color: 'blue', background: 'red', height: '2px', padding: '9px'}
+    );
+  });
+
   it('resolves styles on props', () => {
     class InnerComponent extends Component {}
 
