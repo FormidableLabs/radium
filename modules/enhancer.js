@@ -46,8 +46,16 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
 
   // Class inheritance uses Object.create and because of __proto__ issues
   // with IE <10 any static properties of the superclass aren't inherited and
-  // so need to be manually populated
+  // so need to be manually populated. We only want to go over that object's
+  // non-enumerable properties, so use Object.keys.
   // See http://babeljs.io/docs/advanced/caveats/#classes-10-and-below-
+  Object.keys(ComposedComponent).forEach(key => {
+    if (!RadiumEnhancer.hasOwnProperty(key)) {
+      var descriptor = Object.getOwnPropertyDescriptor(ComposedComponent, key);
+      Object.defineProperty(RadiumEnhancer, key, descriptor);
+    }
+  });
+
   // This also fixes React Hot Loader by exposing the original components top level
   // prototype methods on the Radium enhanced prototype as discussed in #219.
   Object.getOwnPropertyNames(ComposedComponent.prototype).forEach(key => {
