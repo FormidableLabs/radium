@@ -1,5 +1,6 @@
 /** @flow */
 
+import type {MatchMediaType} from '../config';
 import type {PluginConfig, PluginResult} from '.';
 
 var _windowMatchMedia;
@@ -8,7 +9,8 @@ var _getWindowMatchMedia = function (ExecutionEnvironment) {
     _windowMatchMedia = !!ExecutionEnvironment.canUseDOM &&
       !!window &&
       !!window.matchMedia &&
-      (mediaQueryString => window.matchMedia(mediaQueryString));
+      (mediaQueryString => window.matchMedia(mediaQueryString)) ||
+      null;
   }
   return _windowMatchMedia;
 };
@@ -24,7 +26,7 @@ var resolveMediaQueries = function ({
 }: PluginConfig): PluginResult {
   var newComponentFields = {};
   var newStyle = style;
-  var matchMedia = config.matchMedia ||
+  var matchMedia: ?MatchMediaType = config.matchMedia ||
     _getWindowMatchMedia(ExecutionEnvironment);
   if (!matchMedia) {
     return newStyle;
@@ -41,7 +43,7 @@ var resolveMediaQueries = function ({
 
     // Create a global MediaQueryList if one doesn't already exist
     var mql = mediaQueryListByQueryString[query];
-    if (!mql) {
+    if (!mql && matchMedia) {
       mediaQueryListByQueryString[query] = mql = matchMedia(query);
     }
 
