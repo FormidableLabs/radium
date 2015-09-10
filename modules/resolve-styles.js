@@ -281,7 +281,7 @@ resolveStyles = function (
 
   // If nothing changed, don't bother cloning the element. Might be a bit
   // wasteful, as we add the sentinal to stop double-processing when we clone.
-  // Assume benign double-processing is better than uneeded cloning.
+  // Assume benign double-processing is better than unneeded cloning.
   if (
     newChildren === renderedElement.props.children &&
     newProps === renderedElement.props
