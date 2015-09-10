@@ -13,7 +13,7 @@
     "example": "examples"
   },
   "scripts": {
-    "babel": "rimraf lib && babel --stage 0 modules/ -d lib/",
+    "babel": "rimraf lib && babel modules/ -d lib/",
     "dist": "webpack && webpack --config=webpack.config.minified.js",
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
     "flow": "node -e \"process.exit(process.platform === 'win32' ? 0 : 1)\" || flow check",
@@ -37,8 +37,8 @@
     "rimraf": "^2.4.0"
   },
   "devDependencies": {
-    "babel-eslint": "^3.1.23",
-    "babel-loader": "^5.1.4",
+    "babel-eslint": "^4.1.1",
+    "babel-loader": "^5.3.2",
     "chai": "^3.0.0",
     "concurrently": "^0.1.1",
     "coveralls": "^2.11.2",
