@@ -434,4 +434,20 @@ Radium(React.createClass({
 }));
 ```
 
-Somewhere in near the root of your app, create a `<PrintStyleSheet />` component and it will render a style tag containing all the CSS needed for printing, wrapped in a `@media print` query. You should only render <PrintStyleSheet /> once. It will contain all the print styles for every component.
+In your root component render `<PrintStyleSheet />` and it will render a style tag containing all the CSS needed for printing, wrapped in a `@media print` query. You should only render `<PrintStyleSheet />` once. It will contain all the print styles for every component.
+
+**App.js**
+```as
+import {PrintStyleSheet} from 'radium';
+
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <PrintStyleSheet />
+        ... rest of your app ...
+      </div>
+    );
+  }
+}
+```
