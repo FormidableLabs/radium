@@ -22,6 +22,7 @@
     "prepublish": "npm test && npm run lint && npm run lib",
     "test": "karma start",
     "test-coverage": "karma start karma.conf.coverage.js",
+    "test-ie": "karma start karma.conf.ie.js",
     "test-dev": "karma start --no-single-run --auto-watch"
   },
   "license": "MIT",
@@ -43,6 +44,7 @@
     "karma": "^0.13.3",
     "karma-babel-preprocessor": "^5.2.1",
     "karma-coverage": "^0.4.2",
+    "karma-ie-launcher": "^0.2.0",
     "karma-mocha": "^0.2.0",
     "karma-mocha-reporter": "^1.0.2",
     "karma-phantomjs-launcher": "^0.2.0",
