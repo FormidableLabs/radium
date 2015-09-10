@@ -191,6 +191,11 @@ class MyComponent extends React.Component { ... }
 
 See [#146](https://github.com/FormidableLabs/radium/pull/146) for more info.
 
+### config.plugins
+**Array&lt;Plugin&gt;**
+
+Replaces all plugins with the provided set. See [Plugins](#plugins) for more information.
+
 ## getState
 
 **Radium.getState(state, elementKey, value)**
@@ -211,11 +216,6 @@ Usage:
 ```as
     Radium.getState(this.state, 'button', ':hover')
 ```
-
-### config.plugins
-**Array&lt;Plugin&gt;**
-
-Replaces all plugins with the provided set. See [Plugins](#plugins) for more information.
 
 ## keyframes
 
