@@ -3,6 +3,16 @@
 var resolveStyles = require('./resolve-styles.js');
 var printStyles = require('./print-styles.js');
 
+var copyProperties = function (source, target) {
+  Object.getOwnPropertyNames(source).forEach(key => {
+    const ignoreKeys = ['type', 'arguments', 'callee', 'caller', 'length', 'name', 'prototype'];
+    if (ignoreKeys.indexOf(key) < 0 && !target.hasOwnProperty(key)) {
+      var descriptor = Object.getOwnPropertyDescriptor(source, key);
+      Object.defineProperty(target, key, descriptor);
+    }
+  });
+};
+
 var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
   class RadiumEnhancer extends ComposedComponent {
     _radiumMediaQueryListenersByQuery: {[query: string]: {remove: () => void}};
@@ -49,21 +59,11 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
   // so need to be manually populated. We only want to go over that object's
   // non-enumerable properties, so use Object.keys.
   // See http://babeljs.io/docs/advanced/caveats/#classes-10-and-below-
-  Object.keys(ComposedComponent).forEach(key => {
-    if (!RadiumEnhancer.hasOwnProperty(key)) {
-      var descriptor = Object.getOwnPropertyDescriptor(ComposedComponent, key);
-      Object.defineProperty(RadiumEnhancer, key, descriptor);
-    }
-  });
+  copyProperties(ComposedComponent, RadiumEnhancer);
 
   // This also fixes React Hot Loader by exposing the original components top level
   // prototype methods on the Radium enhanced prototype as discussed in #219.
-  Object.getOwnPropertyNames(ComposedComponent.prototype).forEach(key => {
-    if (!RadiumEnhancer.prototype.hasOwnProperty(key)) {
-      var descriptor = Object.getOwnPropertyDescriptor(ComposedComponent.prototype, key);
-      Object.defineProperty(RadiumEnhancer.prototype, key, descriptor);
-    }
-  });
+  copyProperties(ComposedComponent.prototype, RadiumEnhancer.prototype);
 
   RadiumEnhancer.displayName =
     ComposedComponent.displayName ||
