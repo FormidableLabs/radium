@@ -11,26 +11,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var path = require('path');
-var webpack = require('webpack');
+import express from 'express';
+import proxy from 'express-http-proxy';
+import React from 'react';
+import App from './app.jsx';
+import fs from 'fs';
 
-module.exports = {
-  cache: true,
-  entry: {
-    app: "./examples/client.js"
-  },
-  output: {
-    path: path.join(__dirname),
-    publicPath: '/',
-    filename: '[name].js',
-    chunkFilename: '[chunkhash].js'
-  },
-  module: {
-    loaders: [
-      {
-        test: /\.jsx?$/,
-        loader: 'babel-loader?stage=0'
-      }
-    ]
-  }
-}
+const indexHTML = fs.readFileSync(__dirname + '/index.html').toString();
+const app = express();
+const host = 'localhost';
+const port = 8000;
+
+app.use('/app.js', proxy('localhost:8080', {forwardPath: () => '/app.js'}));
+
+app.get('/', (req, res) => {
+  res.write(indexHTML.replace('<!-- {{app}} -->', React.renderToString(
+    <App />
+  )));
+  res.end();
+});
+
+app.listen(port, host, () => {
+  console.log('Access the universal app at http://%s:%d', host, port);
+});

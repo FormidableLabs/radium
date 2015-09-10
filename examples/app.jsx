@@ -94,36 +94,29 @@ var App = React.createClass({
 
     return (
       <div>
-        <p><HoverMessage /></p>
+        <p /><HoverMessage />
 
-        <p><TwoSquares /></p>
+        <p /><TwoSquares />
 
-        <p><Spinner /></p>
+        <p /><Spinner />
 
-        <p>
-          <Button onClick={this._remount}>Unmount and remount</Button>
-        </p>
+        <p /><Button onClick={this._remount}>Unmount and remount</Button>
 
-        <p>
-          <Button>Button</Button>
-        </p>
+        <p /><Button>Button</Button>
 
-        <p>
-          <Button color="red">Button</Button>
-        </p>
+        <p /><Button color="red">Button</Button>
 
-        <p>
-          <Button
-            style={{
-              fontSize: '1.5em',
-              borderRadius: 3
-            }}
-          >
-            Button
-          </Button>
-        </p>
+        <p />
+        <Button
+          style={{
+            fontSize: '1.5em',
+            borderRadius: 3
+          }}
+        >
+          Button
+        </Button>
 
-        <div style={{width: 220}}>
+        <div style={{margin: '20px 0', width: 220}}>
           {Array.apply(null, Array(100)).map(function(_, i) {
             return <div style={tileStyle} key={'tile' + i}/>
           })}
@@ -154,11 +147,9 @@ var App = React.createClass({
           }}
         />
 
-        <p>
-          <ComputedWell>Click me!</ComputedWell>
-        </p>
+        <ComputedWell>Click me!</ComputedWell>
 
-        <p className="scoping-class">
+        <div className="scoping-class">
           <Style
             scopeSelector=".scoping-class"
             rules={{
@@ -168,7 +159,7 @@ var App = React.createClass({
             }}
           />
           <span>This content has scoped styles</span>
-        </p>
+        </div>
 
         <PrintStyleSheet />
       </div>
@@ -227,4 +218,4 @@ var spinnerStyles = {
   }
 };
 
-React.render(<App />, document.getElementById('app'));
+module.exports = App;
