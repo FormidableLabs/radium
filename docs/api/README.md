@@ -189,7 +189,7 @@ var MyRadium = require('./myradium');
 class MyComponent extends React.Component { ... }
 ```
 
-See #146 for more info.
+See [#146](https://github.com/FormidableLabs/radium/pull/146) for more info.
 
 ## getState
 
