@@ -56,8 +56,7 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
 
   // Class inheritance uses Object.create and because of __proto__ issues
   // with IE <10 any static properties of the superclass aren't inherited and
-  // so need to be manually populated. We only want to go over that object's
-  // non-enumerable properties, so use Object.keys.
+  // so need to be manually populated.
   // See http://babeljs.io/docs/advanced/caveats/#classes-10-and-below-
   copyProperties(ComposedComponent, RadiumEnhancer);
 
