@@ -3,6 +3,16 @@
 var resolveStyles = require('./resolve-styles.js');
 var printStyles = require('./print-styles.js');
 
+var copyProperties = function (source, target) {
+  Object.getOwnPropertyNames(source).forEach(key => {
+    var ignoreKeys = ['type', 'arguments', 'callee', 'caller', 'length', 'name', 'prototype'];
+    if (ignoreKeys.indexOf(key) < 0 && !target.hasOwnProperty(key)) {
+      var descriptor = Object.getOwnPropertyDescriptor(source, key);
+      Object.defineProperty(target, key, descriptor);
+    }
+  });
+};
+
 var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
   class RadiumEnhancer extends ComposedComponent {
     _radiumMediaQueryListenersByQuery: {[query: string]: {remove: () => void}};
@@ -46,16 +56,15 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
 
   // Class inheritance uses Object.create and because of __proto__ issues
   // with IE <10 any static properties of the superclass aren't inherited and
-  // so need to be manually populated
+  // so need to be manually populated.
   // See http://babeljs.io/docs/advanced/caveats/#classes-10-and-below-
-  // This also fixes React Hot Loader by exposing the original components top level
-  // prototype methods on the Radium enhanced prototype as discussed in #219.
-  Object.getOwnPropertyNames(ComposedComponent.prototype).forEach(key => {
-    if (!RadiumEnhancer.prototype.hasOwnProperty(key)) {
-      var descriptor = Object.getOwnPropertyDescriptor(ComposedComponent.prototype, key);
-      Object.defineProperty(RadiumEnhancer.prototype, key, descriptor);
-    }
-  });
+  copyProperties(ComposedComponent, RadiumEnhancer);
+
+  if (process.env.NODE_ENV !== 'production') {
+    // This also fixes React Hot Loader by exposing the original components top level
+    // prototype methods on the Radium enhanced prototype as discussed in #219.
+    copyProperties(ComposedComponent.prototype, RadiumEnhancer.prototype);
+  }
 
   RadiumEnhancer.displayName =
     ComposedComponent.displayName ||
