@@ -60,9 +60,11 @@ var enhanceWithRadium = function (ComposedComponent: constructor): constructor {
   // See http://babeljs.io/docs/advanced/caveats/#classes-10-and-below-
   copyProperties(ComposedComponent, RadiumEnhancer);
 
-  // This also fixes React Hot Loader by exposing the original components top level
-  // prototype methods on the Radium enhanced prototype as discussed in #219.
-  copyProperties(ComposedComponent.prototype, RadiumEnhancer.prototype);
+  if (process.env.NODE_ENV !== 'production') {
+    // This also fixes React Hot Loader by exposing the original components top level
+    // prototype methods on the Radium enhanced prototype as discussed in #219.
+    copyProperties(ComposedComponent.prototype, RadiumEnhancer.prototype);
+  }
 
   RadiumEnhancer.displayName =
     ComposedComponent.displayName ||
