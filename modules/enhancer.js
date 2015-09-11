@@ -5,7 +5,7 @@ var printStyles = require('./print-styles.js');
 
 var copyProperties = function (source, target) {
   Object.getOwnPropertyNames(source).forEach(key => {
-    const ignoreKeys = ['type', 'arguments', 'callee', 'caller', 'length', 'name', 'prototype'];
+    var ignoreKeys = ['type', 'arguments', 'callee', 'caller', 'length', 'name', 'prototype'];
     if (ignoreKeys.indexOf(key) < 0 && !target.hasOwnProperty(key)) {
       var descriptor = Object.getOwnPropertyDescriptor(source, key);
       Object.defineProperty(target, key, descriptor);
