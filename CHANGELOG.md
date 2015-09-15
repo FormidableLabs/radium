@@ -1,5 +1,24 @@
 # Radium Changelog
 
+## 0.14.0 (September 15, 2015)
+
+### Breaking Changes
+
+- `Config.setMatchMedia` has been replaced by the `matchMedia` field in the config passed to `@Radium` ([see documentation](https://github.com/FormidableLabs/radium/tree/master/docs/api#configmatchmedia))
+
+### New Features
+
+- Plugin system, via the config passed to `@Radium` (see docs for [`config.plugins`](https://github.com/FormidableLabs/radium/tree/master/docs/api#configplugins) and the [plugin API](https://github.com/FormidableLabs/radium/tree/master/docs/api#plugins))
+
+### Improvements
+
+- Flatten nested arrays in `style`, #344, thanks @almost
+- Universal/isomorphic example `npm run universal`, thanks @jurgob and @moret
+
+### Bug Fixes
+
+- Static properties are now copied again in IE < 10, #349, thanks @bobbyrenwick
+
 ## 0.13.8 (August 24, 2015)
 
 ### Bug Fixes
