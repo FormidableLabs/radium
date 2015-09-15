@@ -1,10 +1,9 @@
 /** @flow */
+/* eslint-disable no-use-before-define, block-scoped-var */
 
 import type {PluginConfig, PluginResult} from './plugins';
 
-/* eslint-disable no-use-before-define */
 type MediaQueryListListener = (mql: MediaQueryList) => void;
-/* eslint-enable no-use-before-define */
 
 type MediaQueryList = {
   matches: bool;
