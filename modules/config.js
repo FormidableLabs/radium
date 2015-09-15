@@ -1,25 +1,21 @@
-/* @flow */
+/** @flow */
 
-var ExecutionEnvironment = require('exenv');
+import type {PluginConfig, PluginResult} from './plugins';
 
-var _matchMediaFunction = ExecutionEnvironment.canUseDOM &&
-  window &&
-  window.matchMedia &&
-  (mediaQueryString => window.matchMedia(mediaQueryString));
+/* eslint-disable no-use-before-define */
+type MediaQueryListListener = (mql: MediaQueryList) => void;
+/* eslint-enable no-use-before-define */
 
-module.exports = {
-  canMatchMedia (): boolean {
-    return typeof _matchMediaFunction === 'function';
-  },
+type MediaQueryList = {
+  matches: bool;
+  addListener(listener: MediaQueryListListener): void;
+  removeListener(listener: MediaQueryListListener): void;
+};
 
-  matchMedia (query: string): {
-    addListener: () => void,
-    removeListener: () => void
-  } {
-    return _matchMediaFunction(query);
-  },
+export type Plugin = (pluginConfig: PluginConfig) => PluginResult;
+export type MatchMediaType = (mediaQueryString: string) => MediaQueryList;
 
-  setMatchMedia (nextMatchMediaFunction: Function) {
-    _matchMediaFunction = nextMatchMediaFunction;
-  }
+export type Config = {
+  matchMedia?: MatchMediaType;
+  plugins?: Array<Plugin>;
 };

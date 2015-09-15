@@ -322,4 +322,54 @@ describe('Radium blackbox tests', () => {
     expect(div.style.color).to.equal('blue');
     expect(div.style.background).to.equal('red');
   });
+
+  it('accepts a config', () => {
+    var truthyMatchMedia = function () {
+      return {
+        matches: true,
+        addListener: function () {},
+        removeListener: function () {}
+      };
+    };
+
+    @Radium({
+      matchMedia: truthyMatchMedia
+    })
+    class TestComponent extends Component {
+      render () {
+        return (
+          <div style={{
+            '@media (min-width: 600px)': {color: 'blue'}
+          }} />
+        );
+      }
+    }
+
+    var output = getRenderOutput(<TestComponent />);
+
+    expect(output.props.style).to.deep.equal(
+      {color: 'blue'}
+    );
+  });
+
+  describe('plugins', () => {
+    it('runs a custom plugin', () => {
+      var makeItRedPlugin = () => ({style: {color: 'red'}});
+
+      @Radium({plugins: [makeItRedPlugin]})
+      class TestComponent extends Component {
+        render () {
+          return <div style={{}} />;
+        }
+      }
+
+      var output = TestUtils.renderIntoDocument(<TestComponent />);
+
+      var div = React.findDOMNode(
+        TestUtils.findRenderedDOMComponentWithTag(output, 'div')
+      );
+
+      expect(div.style.color).to.equal('red');
+    });
+  });
 });

@@ -15,17 +15,17 @@ module.exports = function (config) {
         preLoaders: [{
           test: /\.jsx?$/,
           include: path.resolve('modules/__tests__/'),
-          loader: 'babel?stage=0'
+          loader: 'babel'
         }, {
           test: /\.jsx?$/,
           include: path.resolve('modules/'),
           exclude: /(__tests__|__mocks__)/,
-          loader: 'isparta?{ babel: { stage: 0 } }'
+          loader: 'isparta?babel'
         }],
         loaders: [{
           test: /\.jsx?$/,
           exclude: [/node_modules/],
-          loader: 'babel?stage=0'
+          loader: 'babel'
         }, {
           test: /\.css$/,
           loader: 'style-loader!css-loader'

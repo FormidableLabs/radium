@@ -27,7 +27,7 @@ if (isAnimationSupported) {
 // keyframes, and returns a string with the generated animation name.
 var keyframes = function (
   keyframeRules: {[percentage: string]: {[key: string]: string|number}},
-  component: any
+  componentName?: string
 ): string {
   var name = 'Animation' + animationIndex;
   animationIndex += 1;
@@ -39,7 +39,7 @@ var keyframes = function (
   var rule = '@' + keyframesPrefixed + ' ' + name + ' {\n' +
     Object.keys(keyframeRules).map(function (percentage) {
       var props = keyframeRules[percentage];
-      var prefixedProps = Prefixer.getPrefixedStyle(component, props, 'css');
+      var prefixedProps = Prefixer.getPrefixedStyle(componentName, props, 'css');
       var serializedProps = createMarkupForStyles(prefixedProps, '  ');
       return '  ' + percentage + ' {\n  ' + serializedProps + '\n  }';
     }).join('\n') +

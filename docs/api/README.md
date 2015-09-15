@@ -4,9 +4,11 @@
 
 - [Radium](#radium)
   - [Sample Style Object](#sample-style-object)
+  - [config.matchMedia](#configmatchmedia)
+  - [config.plugins](#configplugins)
 - [getState](#getstate)
 - [keyframes](#keyframes)
-- [Config.setMatchMedia](#configsetmatchmedia)
+- [Plugins](#plugins)
 - [Style Component](#style-component)
 - [PrintStyleSheet Component](#printstylesheet-component)
 
@@ -34,6 +36,44 @@ module.exports = Radium(MyComponent);
 `Radium`s primary job is to apply interactive or media query styles, but even if you are not using any special styles, the higher order component will still:
 - Merge arrays of styles passed as the `style` attribute
 - Automatically vendor prefix the `style` object
+
+You can also pass a configuration object to `@Radium`:
+
+```a
+@Radium({matchMedia: mockMatchMedia})
+class MyComponent extends React.Component { ... }
+
+// or with createClass
+
+var MyComponent = React.createClass({ ... });
+module.exports = Radium({matchMedia: mockMatchMedia})(MyComponent);
+```
+
+You may want to have project-wide Radium settings. Simply create a function that
+wraps Radium, and use it instead of `@Radium`:
+
+```as
+function ConfiguredRadium(component) {
+  return Radium(config)(component);
+}
+
+// Usage
+@ConfiguredRadium
+class MyComponent extends React.Component { ... }
+```
+
+Radium can be called any number of times with a config object, and later configs
+will be merged with and overwrite previous configs. That way, you can still
+override settings on a per-component basis:
+
+```as
+@ConfiguredRadium(config)
+class MySpecialComponent extends React.Component { ... }
+```
+
+Possible configuration values:
+- [`matchMedia`](#configmatchmedia)
+- [`plugins`](#configplugins)
 
 ### Sample Style Object
 
@@ -95,6 +135,67 @@ var styles = {
 };
 ```
 
+### config.matchMedia
+
+Allows you to replace the `matchMedia` function that Radium uses. The default is `window.matchMedia`, and the primary use case for replacing it is to use media queries on the server. You'll have to send the width and height of the page to the server somehow, and then use a [mock for match media](https://github.com/azazdeaz/match-media-mock) that implements the [`window.matchMedia` API](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia). Your code could look like this:
+
+**Server**
+
+```as
+var ConfiguredRadium = require('./configured-radium');
+var matchMediaMock = require('match-media-mock').create();
+ConfiguredRadium.setMatchMedia(matchMediaMock);
+
+app.get('/app/:width/:height', function(req, res) {
+  matchMediaMock.setConfig({
+    type: 'screen',
+    width: req.params.width,
+    height: req.params.height,
+  });
+
+  // Your application code uses `@ConfiguredRadium` instead of `@Radium`
+  var html = React.renderToString(<RadiumApp />);
+
+  res.end(html);
+});
+```
+
+**ConfiguredRadium.js**
+
+```as
+var Radium = require('radium');
+
+var _matchMedia = null;
+
+function ConfiguredRadium(component) {
+  return Radium({
+    matchMedia: _matchMedia
+  })(component);
+}
+
+ConfiguredRadium.setMatchMedia = function (matchMedia) {
+  _matchMedia = matchMedia;
+};
+
+module.exports = ConfiguredRadium;
+```
+
+**MyComponent.js**
+
+```as
+var ConfiguredRadium = require('./configured-radium');
+
+@ConfiguredRadium
+class MyComponent extends React.Component { ... }
+```
+
+See [#146](https://github.com/FormidableLabs/radium/pull/146) for more info.
+
+### config.plugins
+**Array&lt;Plugin&gt;**
+
+Replaces all plugins with the provided set. See [Plugins](#plugins) for more information.
+
 ## getState
 
 **Radium.getState(state, elementKey, value)**
@@ -118,11 +219,11 @@ Usage:
 
 ## keyframes
 
-**Radium.keyframes(keyframes, component)**
+**Radium.keyframes(keyframes, componentName)**
 
 Create a keyframes animation for use in any inline style. `keyframes` is a helper that translates the keyframes object you pass in to CSS and injects the `@keyframes` (prefixed properly) definition into a style sheet. Automatically generates and returns a name for the keyframes, that you can then use in the value for `animation`. Radium will automatically apply vendor prefixing to keyframe styles.
 
-`Radium.keyframes` takes a second optional parameter, `component`. This is optional as you may not always have a component to pass. If you do have a `component` however, it is a good idea to pass that as a parameter for better warning & error reporting.
+`Radium.keyframes` takes a second optional parameter, `componentName`. This is optional as you may not always have a component name to pass. If you do have a `componentName` however, it is a good idea to pass that as a parameter for better warning & error reporting.
 
 ```as
 @Radium
@@ -140,7 +241,7 @@ var pulseKeyframes = Radium.keyframes({
   '0%': {width: '10%'},
   '50%': {width: '50%'},
   '100%': {width: '10%'},
-});
+}, 'Spinner');
 
 var styles = {
   inner: {
@@ -152,29 +253,88 @@ var styles = {
 };
 ```
 
-## Config.setMatchMedia
+## Plugins
 
-Allows you to replace the `matchMedia` function that Radium uses. The default is `window.matchMedia`, and the primary use case for replacing it is to use media queries on the server. You'll have to send the width and height of the page to the server somehow, and then use a [mock for match media](https://github.com/azazdeaz/match-media-mock) that implements the [`window.matchMedia` API](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia). Your server code could look like this:
+### Built-ins
 
-```as
-var Radium = require('radium');
-var matchMediaMock = require('match-media-mock').create();
-Radium.Config.setMatchMedia(matchMediaMock);
+Almost everything that Radium does, except iteration, is implemented as a plugin. Radium ships with a base set of plugins, all of which can be accessed via `Radium.Plugins.pluginName`. They are called in the following order:
 
-app.get('/app/:width/:height', function(req, res) {
-  matchMediaMock.setConfig({
-    type: 'screen',
-    width: req.params.width,
-    height: req.params.height,
-  });
+- `mergeStyleArray` - If the `style` attribute is an array, intelligently merge each style object in the array. Deep merges nested style objects, such as `:hover`.
+- `checkProps` - Performs basic correctness checks, such as ensuring you do not mix longhand and shorthand properties.
+- `resolveMediaQueries` - Handles style entries like `'@media (...)': { ... }`, applying them only when the appropriate media query is hit. Can be configured using [config.matchMedia](#configmatchmedia).
+- `resolveInteractionStyles` - Handles `':hover'`, `':focus'`, and `':active'` styles.
+- `prefix` - Uses in-browser detection and a small mapping to add vendor prefixes to CSS properties and values.
+- `checkProps` - Same as above, just run after everything else.
 
-  var html = React.renderToString(<RadiumApp/>);
+### Plugin Interface
 
-  res.end(html);
-});
+All plugins are functions accept a PluginConfig, and return a PluginResult. The annotated flow types follow. A plugin is called once for every *rendered element* that has a `style` attribute, for example the `div` and `span` in `return <div style={...}><span style={...} /></div>;`.
+
+**PluginConfig**
+```js
+type PluginConfig = {
+  // May not be readable if code has been minified
+  componentName: string,
+
+  // The Radium configuration
+  config: Config,
+
+  // Retrieve the value of a field on the component
+  getComponentField: (key: string) => any,
+
+  // Retrieve the value of a field global to the Radium module
+  // Used so that tests can easily clear global state.
+  getGlobalState: (key: string) => any,
+
+  // Retrieve the value of some state specific to the rendered element.
+  // Requires the element to have a unique key or ref or for an element key
+  // to be passed in.
+  getState: (stateKey: string, elementKey?: string) => any,
+
+  // Access to the mergeStyles utility
+  mergeStyles: (styles: Array<Object>) => Object,
+
+  // The props of the rendered element. This can be changed by each plugin,
+  // and successive plugins will see the result of previous plugins.
+  props: Object,
+
+  // Calls setState on the component with the given key and value.
+  // By default this is specific to the rendered element, but you can override
+  // by passing in the `elementKey` parameter.
+  setState: (stateKey: string, value: any, elementKey?: string) => void,
+
+  // The style prop of the rendered element. This can be changed by each plugin,
+  // and successive plugins will see the result of previous plugins. Kept
+  // separate from `props` for ease of use.
+  style: Object,
+
+  // uses the exenv npm module
+  ExecutionEnvironment: {
+    canUseEventListeners: bool,
+    canUseDOM: bool,
+  }
+};
 ```
 
-See #146 for more info.
+**PluginResult**
+
+```js
+type PluginResult = ?{
+  // Merged into the component directly. Useful for storing things for which you
+  // don't need to re-render, event subscriptions, for instance.
+  componentFields?: Object,
+
+  // Merged into a Radium controlled global state object. Use this instead of
+  // module level state for ease of clearing state between tests.
+  globalState?: Object,
+
+  // Merged into the rendered element's props.
+  props?: Object,
+
+  // Replaces (not merged into) the rendered element's style property.
+  style?: Object,
+};
+```
 
 ## Style Component
 
@@ -274,4 +434,20 @@ Radium(React.createClass({
 }));
 ```
 
-Somewhere in near the root of your app, create a `<PrintStyleSheet />` component and it will render a style tag containing all the CSS needed for printing, wrapped in a `@media print` query. You should only render <PrintStyleSheet /> once. It will contain all the print styles for every component.
+In your root component render `<PrintStyleSheet />` and it will render a style tag containing all the CSS needed for printing, wrapped in a `@media print` query. You should only render `<PrintStyleSheet />` once. It will contain all the print styles for every component.
+
+**App.js**
+```as
+import {PrintStyleSheet} from 'radium';
+
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <PrintStyleSheet />
+        ... rest of your app ...
+      </div>
+    );
+  }
+}
+```
