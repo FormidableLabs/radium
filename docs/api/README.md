@@ -53,12 +53,12 @@ You may want to have project-wide Radium settings. Simply create a function that
 wraps Radium, and use it instead of `@Radium`:
 
 ```as
-function MyRadium(component) {
+function ConfiguredRadium(component) {
   return Radium(config)(component);
 }
 
 // Usage
-@MyRadium
+@ConfiguredRadium
 class MyComponent extends React.Component { ... }
 ```
 
@@ -67,7 +67,7 @@ will be merged with and overwrite previous configs. That way, you can still
 override settings on a per-component basis:
 
 ```as
-@MyRadium(config)
+@ConfiguredRadium(config)
 class MySpecialComponent extends React.Component { ... }
 ```
 
@@ -142,9 +142,9 @@ Allows you to replace the `matchMedia` function that Radium uses. The default is
 **Server**
 
 ```as
-var MyRadium = require('./myradium');
+var ConfiguredRadium = require('./configured-radium');
 var matchMediaMock = require('match-media-mock').create();
-MyRadium.setMatchMedia(matchMediaMock);
+ConfiguredRadium.setMatchMedia(matchMediaMock);
 
 app.get('/app/:width/:height', function(req, res) {
   matchMediaMock.setConfig({
@@ -153,39 +153,39 @@ app.get('/app/:width/:height', function(req, res) {
     height: req.params.height,
   });
 
-  // Your application code uses `@MyRadium` instead of `@Radium`
+  // Your application code uses `@ConfiguredRadium` instead of `@Radium`
   var html = React.renderToString(<RadiumApp />);
 
   res.end(html);
 });
 ```
 
-**MyRadium.js**
+**ConfiguredRadium.js**
 
 ```as
 var Radium = require('radium');
 
 var _matchMedia = null;
 
-function MyRadium(component) {
+function ConfiguredRadium(component) {
   return Radium({
     matchMedia: _matchMedia
   })(component);
 }
 
-MyRadium.setMatchMedia = function (matchMedia) {
+ConfiguredRadium.setMatchMedia = function (matchMedia) {
   _matchMedia = matchMedia;
 };
 
-module.exports = MyRadium;
+module.exports = ConfiguredRadium;
 ```
 
 **MyComponent.js**
 
 ```as
-var MyRadium = require('./myradium');
+var ConfiguredRadium = require('./configured-radium');
 
-@MyRadium
+@ConfiguredRadium
 class MyComponent extends React.Component { ... }
 ```
 
