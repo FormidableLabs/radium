@@ -7,7 +7,7 @@
 		exports["Radium"] = factory(require("react"));
 	else
 		root["Radium"] = factory(root["React"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_20__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_19__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -61,11 +61,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = function (ComposedComponent /*: constructor*/) {
 	  return Enhancer(ComposedComponent);
 	};
-	module.exports.Plugins = __webpack_require__(10);
-	module.exports.PrintStyleSheet = __webpack_require__(22);
-	module.exports.Style = __webpack_require__(23);
-	module.exports.getState = __webpack_require__(5);
-	module.exports.keyframes = __webpack_require__(25);
+	module.exports.Plugins = __webpack_require__(9);
+	module.exports.PrintStyleSheet = __webpack_require__(21);
+	module.exports.Style = __webpack_require__(22);
+	module.exports.getState = __webpack_require__(4);
+	module.exports.keyframes = __webpack_require__(24);
 
 /***/ },
 /* 1 */
@@ -79,13 +79,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _get = function get(_x2, _x3, _x4) { var _again = true; _function: while (_again) { var object = _x2, property = _x3, receiver = _x4; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x2 = parent; _x3 = property; _x4 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var objectAssign = __webpack_require__(3);
-	var resolveStyles = __webpack_require__(4);
-	var printStyles = __webpack_require__(21);
+	var resolveStyles = __webpack_require__(3);
+	var printStyles = __webpack_require__(20);
 
 	var KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = ['arguments', 'callee', 'caller', 'length', 'name', 'prototype', 'type'];
 
@@ -102,7 +103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var config /*:: ?: Object*/ = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
 	  if (typeof configOrComposedComponent !== 'function') {
-	    var newConfig = objectAssign({}, config, configOrComposedComponent);
+	    var newConfig = _extends({}, config, configOrComposedComponent);
 	    return function (configOrComponent) {
 	      return enhanceWithRadium(configOrComponent, newConfig);
 	    };
@@ -282,50 +283,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 3 */
-/***/ function(module, exports) {
-
-	'use strict';
-	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-	function ToObject(val) {
-		if (val == null) {
-			throw new TypeError('Object.assign cannot be called with null or undefined');
-		}
-
-		return Object(val);
-	}
-
-	function ownEnumerableKeys(obj) {
-		var keys = Object.getOwnPropertyNames(obj);
-
-		if (Object.getOwnPropertySymbols) {
-			keys = keys.concat(Object.getOwnPropertySymbols(obj));
-		}
-
-		return keys.filter(function (key) {
-			return propIsEnumerable.call(obj, key);
-		});
-	}
-
-	module.exports = Object.assign || function (target, source) {
-		var from;
-		var keys;
-		var to = ToObject(target);
-
-		for (var s = 1; s < arguments.length; s++) {
-			from = arguments[s];
-			keys = ownEnumerableKeys(Object(from));
-
-			for (var i = 0; i < keys.length; i++) {
-				to[keys[i]] = from[keys[i]];
-			}
-		}
-
-		return to;
-	};
-
-/***/ },
-/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* @flow */
@@ -336,13 +293,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/*:: import type {Config} from './config';*/
 
-	var _getState = __webpack_require__(5);
-	var getStateKey = __webpack_require__(6);
-	var mergeStyles = __webpack_require__(7);
-	var Plugins = __webpack_require__(10);
+	var _getState = __webpack_require__(4);
+	var getStateKey = __webpack_require__(5);
+	var mergeStyles = __webpack_require__(6);
+	var Plugins = __webpack_require__(9);
 
-	var ExecutionEnvironment = __webpack_require__(15);
-	var React = __webpack_require__(20);
+	var ExecutionEnvironment = __webpack_require__(14);
+	var React = __webpack_require__(19);
 
 	var DEFAULT_CONFIG = {
 	  plugins: [Plugins.mergeStyleArray, Plugins.checkProps, Plugins.resolveMediaQueries, Plugins.resolveInteractionStyles, Plugins.prefix, Plugins.checkProps]
@@ -606,14 +563,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	// ReactComponent, flow+eslint complaining
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* @flow */
 
 	'use strict';
 
-	var getStateKey = __webpack_require__(6);
+	var getStateKey = __webpack_require__(5);
 
 	var VALID_KEYS = [':active', ':focus', ':hover'];
 
@@ -630,7 +587,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = getState;
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports) {
 
 	/* @flow */
@@ -644,12 +601,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = getStateKey;
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isPlainObject = __webpack_require__(8);
+	var isPlainObject = __webpack_require__(7);
 
 	var shouldMerge = function shouldMerge(value) {
 	  // Don't merge objects overriding toString, since they should be converted
@@ -685,7 +642,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = mergeStyles;
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -697,7 +654,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var isObject = __webpack_require__(9);
+	var isObject = __webpack_require__(8);
 
 	function isObjectObject(o) {
 	  return isObject(o) === true && Object.prototype.toString.call(o) === '[object Object]';
@@ -726,7 +683,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports) {
 
 	/*!
@@ -743,7 +700,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @flow */
@@ -757,11 +714,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/*:: import type {Config} from '../config';*/
 
-	var checkPropsPlugin = __webpack_require__(11);
-	var mergeStyleArrayPlugin = __webpack_require__(12);
-	var prefixPlugin = __webpack_require__(13);
-	var resolveInteractionStylesPlugin = __webpack_require__(17);
-	var resolveMediaQueriesPlugin = __webpack_require__(19);
+	var checkPropsPlugin = __webpack_require__(10);
+	var mergeStyleArrayPlugin = __webpack_require__(11);
+	var prefixPlugin = __webpack_require__(12);
+	var resolveInteractionStylesPlugin = __webpack_require__(16);
+	var resolveMediaQueriesPlugin = __webpack_require__(18);
 
 	/*:: export type PluginConfig = {
 	  // May not be readable if code has been minified
@@ -868,7 +825,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// Replaces (not merged into) the rendered element's style property.
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/* @flow */
@@ -930,7 +887,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports) {
 
 	/* @flow */
@@ -950,7 +907,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = mergeStyleArrayPlugin;
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* @flow */
@@ -959,7 +916,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/*:: import type {PluginConfig, PluginResult} from '.';*/
 
-	var Prefixer = __webpack_require__(14);
+	var Prefixer = __webpack_require__(13);
 
 	var prefixPlugin = function prefixPlugin(_ref /*: PluginConfig*/) /*: PluginResult*/ {
 	  var componentName = _ref.componentName;
@@ -972,7 +929,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = prefixPlugin;
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -984,8 +941,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var ExecutionEnvironment = __webpack_require__(15);
-	var arrayFind = __webpack_require__(16);
+	var ExecutionEnvironment = __webpack_require__(14);
+	var arrayFind = __webpack_require__(15);
 
 	var VENDOR_PREFIX_REGEX = /-(moz|webkit|ms|o)-/;
 
@@ -1391,7 +1348,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
-/* 15 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -1431,7 +1388,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	})();
 
 /***/ },
-/* 16 */
+/* 15 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1459,7 +1416,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = find;
 
 /***/ },
-/* 17 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @flow */
@@ -1468,7 +1425,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/*:: import type {PluginConfig, PluginResult} from '.';*/
 
-	var MouseUpListener = __webpack_require__(18);
+	var MouseUpListener = __webpack_require__(17);
 
 	var _isInteractiveStyleField = function _isInteractiveStyleField(styleFieldName) {
 	  return styleFieldName === ':hover' || styleFieldName === ':active' || styleFieldName === ':focus';
@@ -1564,7 +1521,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = resolveInteractionStyles;
 
 /***/ },
-/* 18 */
+/* 17 */
 /***/ function(module, exports) {
 
 	/* @flow */
@@ -1608,7 +1565,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 19 */
+/* 18 */
 /***/ function(module, exports) {
 
 	/** @flow */
@@ -1699,13 +1656,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = resolveMediaQueries;
 
 /***/ },
-/* 20 */
+/* 19 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_20__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_19__;
 
 /***/ },
-/* 21 */
+/* 20 */
 /***/ function(module, exports) {
 
 	/* @flow */
@@ -1783,15 +1740,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 22 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var React = __webpack_require__(20);
+	var React = __webpack_require__(19);
 
-	var Style = __webpack_require__(23);
-	var printStyles = __webpack_require__(21);
+	var Style = __webpack_require__(22);
+	var printStyles = __webpack_require__(20);
 
 	var PrintStyle = React.createClass({
 	  displayName: 'PrintStyle',
@@ -1830,15 +1787,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = PrintStyle;
 
 /***/ },
-/* 23 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var createMarkupForStyles = __webpack_require__(24);
-	var Prefixer = __webpack_require__(14);
+	var createMarkupForStyles = __webpack_require__(23);
+	var Prefixer = __webpack_require__(13);
 
-	var React = __webpack_require__(20);
+	var React = __webpack_require__(19);
 
 	var buildCssString = function buildCssString(component, selector, rules) {
 	  if (!selector || !rules) {
@@ -1921,7 +1878,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Style;
 
 /***/ },
-/* 24 */
+/* 23 */
 /***/ function(module, exports) {
 
 	/* @flow */
@@ -1938,17 +1895,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = createMarkupForStyles;
 
 /***/ },
-/* 25 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* @flow */
 
 	'use strict';
 
-	var createMarkupForStyles = __webpack_require__(24);
-	var Prefixer = __webpack_require__(14);
+	var createMarkupForStyles = __webpack_require__(23);
+	var Prefixer = __webpack_require__(13);
 
-	var ExecutionEnvironment = __webpack_require__(15);
+	var ExecutionEnvironment = __webpack_require__(14);
 
 	var isAnimationSupported = ExecutionEnvironment.canUseDOM && Prefixer.getPrefixedPropertyName('animation') !== false;
 

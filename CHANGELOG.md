@@ -1,5 +1,11 @@
 # Radium Changelog
 
+## 0.14.1 (September 15, 2015)
+
+### Bug Fixes
+
+- Don't require object-assign, which wasn't in normal dependencies
+
 ## 0.14.0 (September 15, 2015)
 
 ### Breaking Changes
