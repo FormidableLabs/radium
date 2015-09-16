@@ -1,6 +1,5 @@
 /* @flow */
 
-var objectAssign = require('object-assign');
 var resolveStyles = require('./resolve-styles.js');
 var printStyles = require('./print-styles.js');
 
@@ -31,7 +30,7 @@ var enhanceWithRadium = function (
   config?: Object = {},
 ): constructor {
   if (typeof configOrComposedComponent !== 'function') {
-    var newConfig = objectAssign({}, config, configOrComposedComponent);
+    var newConfig = {...config, ...configOrComposedComponent};
     return function (configOrComponent) {
       return enhanceWithRadium(configOrComponent, newConfig);
     };
