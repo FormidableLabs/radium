@@ -45,12 +45,6 @@ var keyframes = function (
     }).join('\n') +
     '\n}\n';
 
-  // for flow
-  /* istanbul ignore next */
-  if (!animationStyleSheet) {
-    throw new Error('keyframes not initialized properly');
-  }
-
   animationStyleSheet.sheet.insertRule(
     rule,
     animationStyleSheet.sheet.cssRules.length
