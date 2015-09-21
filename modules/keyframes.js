@@ -29,6 +29,12 @@ var keyframes = function (
   keyframeRules: {[percentage: string]: {[key: string]: string|number}},
   componentName?: string
 ): string {
+  // for flow
+  /* istanbul ignore next */
+  if (!animationStyleSheet) {
+    throw new Error('keyframes not initialized properly');
+  }
+
   var name = 'Animation' + animationIndex;
   animationIndex += 1;
 
