@@ -196,6 +196,36 @@ See [#146](https://github.com/FormidableLabs/radium/pull/146) for more info.
 
 Replaces all plugins with the provided set. See [Plugins](#plugins) for more information.
 
+Because the `plugins` config replaces all plugins, you have to provide the built-ins if you want to keep the default Radium functionality. A simple example of creating and addding a `styleLogger` plugin:
+
+```js
+function styleLogger({componentName, style}) {
+  console.log('Name: ' + componentName, style);
+}
+
+function ConfiguredRadium(component) {
+  return Radium({
+    plugins: [
+      Radium.Plugins.mergeStyleArray,
+      Radium.Plugins.checkProps,
+      Radium.Plugins.resolveMediaQueries,
+      Radium.Plugins.resolveInteractionStyles,
+      Radium.Plugins.prefix,
+      styleLogger,
+      Radium.Plugins.checkProps,
+    ],
+  })(component);
+}
+
+// Usage
+@ConfiguredRadium
+class MyComponent extends React.Component { ... }
+```
+
+You will typically want to put plugins before the final `checkProps` so that you can still benefit from the checks it provides. If your plugin might produce other pseudo-style blocks, like `@media` consumed by `resolveMediaQueries` or `:hover` consumed by `resolveInteractionStyles`, you would want to have your plugin run before those plugins. 
+
+You can of course omit any or all of the built-in plugins, and replace them with your own version. For example, you may want to omit `Radium.Plugins.prefix` entirely if you aren't using vendor prefixes or are using a [compile-time solution](https://github.com/UXtemple/babel-plugin-react-autoprefix) instead. 
+
 ## getState
 
 **Radium.getState(state, elementKey, value)**
@@ -334,6 +364,24 @@ type PluginResult = ?{
   // Replaces (not merged into) the rendered element's style property.
   style?: Object,
 };
+```
+
+If your plugin consumes custom style blocks, it should merge any applicable style blocks and strip any others out of the style object before returning to avoid errors farther down. For example, a hypothetical `enumPropResolver` might know how to resolve keys of the form `'propName=value'`, such that if `this.props.propName === 'value'`, it will merge in that style object. `enumPropResolver` should then also strip any other keys that will not be merged. Thus, if this style object is passed to `enumPropResolver`, and `this.props.type === 'error'`:
+
+```js
+{
+  'type=success': {color: 'blue'},
+  'type=error': {color: 'red'},
+  'type=warning': {color: 'yellow'},
+}
+```
+
+`enumPropResolver` should then return an object with the style property equal to:
+
+```js
+{
+  color: 'red'
+}
 ```
 
 ## Style Component
