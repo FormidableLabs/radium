@@ -36,6 +36,12 @@ var keyframes = function (
     return name;
   }
 
+  // for flow
+  /* istanbul ignore next */
+  if (!animationStyleSheet) {
+    throw new Error('keyframes not initialized properly');
+  }
+
   var rule = '@' + keyframesPrefixed + ' ' + name + ' {\n' +
     Object.keys(keyframeRules).map(function (percentage) {
       var props = keyframeRules[percentage];
@@ -44,12 +50,6 @@ var keyframes = function (
       return '  ' + percentage + ' {\n  ' + serializedProps + '\n  }';
     }).join('\n') +
     '\n}\n';
-
-  // for flow
-  /* istanbul ignore next */
-  if (!animationStyleSheet) {
-    throw new Error('keyframes not initialized properly');
-  }
 
   animationStyleSheet.sheet.insertRule(
     rule,
