@@ -10,6 +10,8 @@ var _isInteractiveStyleField = function (styleFieldName) {
     styleFieldName === ':focus';
 };
 
+var lastHover;
+
 var resolveInteractionStyles = function (config: PluginConfig): PluginResult {
   var {
     ExecutionEnvironment,
@@ -32,7 +34,11 @@ var resolveInteractionStyles = function (config: PluginConfig): PluginResult {
     var existingOnMouseEnter = props.onMouseEnter;
     newProps.onMouseEnter = function (e) {
       existingOnMouseEnter && existingOnMouseEnter(e);
+      if (lastHover) {
+        lastHover.setState(':hover', false);
+      }
       setState(':hover', true);
+      lastHover = config;
     };
 
     var existingOnMouseLeave = props.onMouseLeave;
