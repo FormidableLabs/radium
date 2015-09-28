@@ -196,7 +196,7 @@ See [#146](https://github.com/FormidableLabs/radium/pull/146) for more info.
 
 Replaces all plugins with the provided set. See [Plugins](#plugins) for more information.
 
-Because the `plugins` config replaces all plugins, you have to provide the built-ins if you want to keep the default Radium functionality. A simple example of creating and addding a `styleLogger` plugin:
+Because the `plugins` config replaces all plugins, you have to provide the built-ins if you want to keep the default Radium functionality. A simple example of creating and adding a `styleLogger` plugin:
 
 ```js
 function styleLogger({componentName, style}) {
