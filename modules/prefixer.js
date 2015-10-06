@@ -409,7 +409,7 @@ var _getPrefixedValue = function (
 // Returns a new style object with vendor prefixes added to property names
 // and values.
 var getPrefixedStyle = function (
-  componentName: string,
+  componentName: ?string,
   style: Object,
   mode: 'css' | 'js' = 'js'
 ): Object {
