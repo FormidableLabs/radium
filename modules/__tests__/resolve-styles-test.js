@@ -427,7 +427,6 @@ describe('resolveStyles', function () {
 
         var style = {background: 'blue'};
         style[':' + pseudo] = {background: 'red'};
-        style[offHandlerName] = originalOffHandler;
 
         var renderedElement = <div style={style} />;
         renderedElement.props[offHandlerName] = originalOffHandler;

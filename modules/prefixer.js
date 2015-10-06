@@ -409,7 +409,7 @@ var _getPrefixedValue = function (
 // Returns a new style object with vendor prefixes added to property names
 // and values.
 var getPrefixedStyle = function (
-  componentName: any, // ReactComponent
+  componentName: string,
   style: Object,
   mode: 'css' | 'js' = 'js'
 ): Object {
@@ -438,7 +438,7 @@ var getPrefixedStyle = function (
             : '';
 
           console.warn(
-            `Unsupported CSS property "${property}$"` + componentContext
+            `Unsupported CSS property "${property}"` + componentContext
           );
         }
         /* eslint-enable no-console */
