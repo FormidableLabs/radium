@@ -25,7 +25,7 @@ var resolveInteractionStyles = function (config: PluginConfig): PluginResult {
   var newProps = {};
 
   // Only add handlers if necessary
-  if (style[':hover'] || style[':active']) {
+  if (style[':hover']) {
     // Always call the existing handler if one is already defined.
     // This code, and the very similar ones below, could be abstracted a bit
     // more, but it hurts readability IMO.
@@ -47,7 +47,23 @@ var resolveInteractionStyles = function (config: PluginConfig): PluginResult {
     newProps.onMouseDown = function (e) {
       existingOnMouseDown && existingOnMouseDown(e);
       newComponentFields._lastMouseDown = Date.now();
-      setState(':active', true);
+      setState(':active', 'viamousedown');
+    };
+
+    var existingOnKeyDown = props.onKeyDown;
+    newProps.onKeyDown = function (e) {
+      existingOnKeyDown && existingOnKeyDown(e);
+      if (e.key === ' ' || e.key === 'Enter') {
+        setState(':active', 'viakeydown');
+      }
+    };
+
+    var existingOnKeyUp = props.onKeyUp;
+    newProps.onKeyUp = function (e) {
+      existingOnKeyUp && existingOnKeyUp(e);
+      if (e.key === ' ' || e.key === 'Enter') {
+        setState(':active', false);
+      }
     };
   }
 
@@ -73,7 +89,7 @@ var resolveInteractionStyles = function (config: PluginConfig): PluginResult {
     newComponentFields._radiumMouseUpListener = MouseUpListener.subscribe(
       () => {
         Object.keys(getComponentField('state')._radiumStyleState).forEach(function (key) {
-          if (getState(':active')) {
+          if (getState(':active') === 'viamousedown') {
             setState(':active', false, key);
           }
         });

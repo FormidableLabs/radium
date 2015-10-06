@@ -352,6 +352,38 @@ describe('Radium blackbox tests', () => {
     );
   });
 
+  it('adds active styles on space', () => {
+    @Radium
+    class TestComponent extends Component {
+      render () {
+        return (
+          <div style={{
+            background: 'red',
+            color: 'blue',
+            ':active': {color: 'green'}
+          }} />
+        );
+      }
+    }
+
+    var output = TestUtils.renderIntoDocument(<TestComponent />);
+
+    var div = React.findDOMNode(
+      TestUtils.findRenderedDOMComponentWithTag(output, 'div')
+    );
+
+    expect(div.style.color).to.equal('blue');
+    expect(div.style.background).to.equal('red');
+
+    TestUtils.SimulateNative.keyDown(div, {key: ' '});
+
+    expect(div.style.color).to.equal('green');
+
+    TestUtils.SimulateNative.keyUp(div, {key: ' '});
+
+    expect(div.style.color).to.equal('blue');
+  });
+
   describe('plugins', () => {
     it('runs a custom plugin', () => {
       var makeItRedPlugin = () => ({style: {color: 'red'}});
