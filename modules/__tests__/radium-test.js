@@ -384,6 +384,39 @@ describe('Radium blackbox tests', () => {
     expect(div.style.color).to.equal('blue');
   });
 
+  it('works with children as keyed object ala React Router', () => {
+    @Radium
+    class TestComponent extends Component {
+      render () {
+        return (
+          <div>
+            {this.props.children.nav}
+            {this.props.children.main}
+          </div>
+        );
+      }
+    }
+
+    var output = TestUtils.renderIntoDocument(
+      <TestComponent>
+        {{
+          nav: <nav>nav</nav>,
+          main: <main>main</main>,
+        }}
+      </TestComponent>
+    );
+
+    var nav = React.findDOMNode(
+      TestUtils.findRenderedDOMComponentWithTag(output, 'nav')
+    );
+    expect(nav.innerText).to.equal('nav');
+
+    var main = React.findDOMNode(
+      TestUtils.findRenderedDOMComponentWithTag(output, 'main')
+    );
+    expect(main.innerText).to.equal('main');
+  });
+
   describe('plugins', () => {
     it('runs a custom plugin', () => {
       var makeItRedPlugin = () => ({style: {color: 'red'}});
