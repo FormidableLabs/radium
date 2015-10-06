@@ -417,6 +417,39 @@ describe('Radium blackbox tests', () => {
     expect(main.innerText).to.equal('main');
   });
 
+  it('preserves array children as arrays', () => {
+    @Radium
+    class TestComponent extends Component {
+      render () {
+        expect(Array.isArray(this.props.children)).to.equal(true);
+        return (
+          <div>
+            {this.props.children}
+          </div>
+        );
+      }
+    }
+
+    var output = TestUtils.renderIntoDocument(
+      <TestComponent>
+        {[
+          <nav key="nav">nav</nav>,
+          <main key="main">main</main>,
+        ]}
+      </TestComponent>
+    );
+
+    var nav = React.findDOMNode(
+      TestUtils.findRenderedDOMComponentWithTag(output, 'nav')
+    );
+    expect(nav.innerText).to.equal('nav');
+
+    var main = React.findDOMNode(
+      TestUtils.findRenderedDOMComponentWithTag(output, 'main')
+    );
+    expect(main.innerText).to.equal('main');
+  });
+
   describe('plugins', () => {
     it('runs a custom plugin', () => {
       var makeItRedPlugin = () => ({style: {color: 'red'}});
