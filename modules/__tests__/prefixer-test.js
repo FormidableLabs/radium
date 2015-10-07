@@ -1,8 +1,6 @@
 var browserPrefix = '';
 var mockStyle = {};
 
-var {Component} = require('react/addons');
-
 describe('Prefixer', () => {
   var exenv;
 
@@ -287,7 +285,8 @@ describe('Prefixer', () => {
   it('adds px to properties requiring units', () => {
     mockStyle = {height: 'auto'};
     var Prefixer = require('inject!prefixer.js')({'exenv': exenv});
-    expect(Prefixer.getPrefixedStyle('MyComponent', {height: 400})).to.deep.equal({height: '400px'});
+    expect(Prefixer.getPrefixedStyle('MyComponent', {height: 400}))
+      .to.deep.equal({height: '400px'});
   });
 
   it('doesn\'t add px to properties requiring units if value is 0', () => {

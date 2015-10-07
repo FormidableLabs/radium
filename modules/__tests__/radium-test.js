@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 var Radium = require('index.js');
 var React = require('react/addons');
 
@@ -401,7 +403,7 @@ describe('Radium blackbox tests', () => {
       <TestComponent>
         {{
           nav: <nav>nav</nav>,
-          main: <main>main</main>,
+          main: <main>main</main>
         }}
       </TestComponent>
     );
@@ -434,7 +436,7 @@ describe('Radium blackbox tests', () => {
       <TestComponent>
         {[
           <nav key="nav">nav</nav>,
-          <main key="main">main</main>,
+          <main key="main">main</main>
         ]}
       </TestComponent>
     );
