@@ -1,14 +1,16 @@
+/* @flow */
+
 var createMarkupForStyles = require('../create-markup-for-styles');
 var Prefixer = require('../prefixer');
 
 var React = require('react');
 
-var buildCssString = function (component, selector, rules) {
+var buildCssString = function (selector: string, rules: Object): ?string {
   if (!selector || !rules) {
-    return;
+    return null;
   }
 
-  var prefixedRules = Prefixer.getPrefixedStyle(component, rules, 'css');
+  var prefixedRules = Prefixer.getPrefixedStyle('Style', rules, 'css');
   var serializedRules = createMarkupForStyles(prefixedRules);
 
   return selector + '{' + serializedRules + '}';
@@ -20,13 +22,13 @@ var Style = React.createClass({
     scopeSelector: React.PropTypes.string
   },
 
-  getDefaultProps: function () {
+  getDefaultProps(): {scopeSelector: string} {
     return {
       scopeSelector: ''
     };
   },
 
-  _buildStyles: function (styles) {
+  _buildStyles(styles: Object): string {
     return Object.keys(styles).reduce((accumulator, selector) => {
       var rules = styles[selector];
 
@@ -38,30 +40,32 @@ var Style = React.createClass({
             this.props.scopeSelector + ' ' :
             ''
           ) + selector;
-        accumulator += buildCssString(this, completeSelector, rules);
+        accumulator += buildCssString(completeSelector, rules) || '';
       }
 
       return accumulator;
     }, '');
   },
 
-  _buildMediaQueryString: function (mediaQueryObj) {
+  _buildMediaQueryString(
+    stylesByMediaQuery: {[mediaQuery: string]: Object}
+  ): string {
     var contextMediaQueries = this._getContextMediaQueries();
     var mediaQueryString = '';
 
-    Object.keys(mediaQueryObj).forEach(query => {
+    Object.keys(stylesByMediaQuery).forEach(query => {
       var completeQuery = contextMediaQueries[query] ?
         contextMediaQueries[query] :
         query;
       mediaQueryString += '@media ' + completeQuery + '{' +
-        this._buildStyles(mediaQueryObj[query]) +
+        this._buildStyles(stylesByMediaQuery[query]) +
         '}';
     });
 
     return mediaQueryString;
   },
 
-  _getContextMediaQueries: function () {
+  _getContextMediaQueries(): {[mediaQuery: string]: Object} {
     var contextMediaQueries = {};
     if (this.context && this.context.mediaQueries) {
       Object.keys(this.context.mediaQueries).forEach(function (query) {
@@ -72,7 +76,7 @@ var Style = React.createClass({
     return contextMediaQueries;
   },
 
-  render: function () {
+  render(): ?ReactElement {
     if (!this.props.rules) {
       return null;
     }
