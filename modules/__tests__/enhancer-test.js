@@ -3,7 +3,7 @@ var Enhancer = require('inject!enhancer.js')({
   './resolve-styles.js': resolveStyles
 });
 
-var React = require('react/addons');
+var React = require('react');
 var {Component} = React;
 
 describe('Enhancer', () => {

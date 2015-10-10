@@ -1,4 +1,4 @@
-var React = require('react/addons');
+var React = require('react');
 var MouseUpListener = require('plugins/mouse-up-listener.js');
 var objectAssign = require('object-assign');
 var resolveStyles = require('inject!resolve-styles.js')({
@@ -115,7 +115,7 @@ describe('resolveStyles', function () {
       var result = resolveStyles(component, renderedElement);
       var children = getChildrenArray(result.props.children);
 
-      expect(children[0]).to.be.null;
+      expect(children[0]).to.be.undefined;
     });
 
     it('only processes an element once', function () {
@@ -397,49 +397,6 @@ describe('resolveStyles', function () {
         previousState = component.state._radiumStyleState;
         result.props[offHandlerName]();
         expect(component.state._radiumStyleState).not.to.equal(previousState);
-      });
-    }
-
-    it('calls existing ' + onHandlerName + ' handler', function () {
-      var component = genComponent();
-      var originalOnHandler = sinon.spy();
-
-      var style = {background: 'blue'};
-      style[':' + pseudo] = {background: 'red'};
-
-      var renderedElement = <div style={style} />;
-      renderedElement.props[onHandlerName] = originalOnHandler;
-
-      var result = resolveStyles(component, renderedElement);
-
-      result.props[onHandlerName]();
-
-      expect(originalOnHandler).to.have.been.called;
-
-      result = resolveStyles(component, renderedElement);
-      expect(result.props.style.background).to.equal('red');
-    });
-
-    if (offHandlerName) {
-      it('calls existing ' + offHandlerName + ' handler', function () {
-        var component = genComponent();
-        var originalOffHandler = sinon.spy();
-
-        var style = {background: 'blue'};
-        style[':' + pseudo] = {background: 'red'};
-
-        var renderedElement = <div style={style} />;
-        renderedElement.props[offHandlerName] = originalOffHandler;
-
-        var result = resolveStyles(component, renderedElement);
-
-        result.props[onHandlerName]();
-        result.props[offHandlerName]();
-
-        expect(originalOffHandler).to.have.been.called;
-
-        result = resolveStyles(component, renderedElement);
-        expect(result.props.style.background).to.equal('blue');
       });
     }
 

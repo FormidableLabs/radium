@@ -1,17 +1,24 @@
 /* eslint-disable react/prop-types */
 
 var Radium = require('index.js');
-var React = require('react/addons');
+var React = require('react');
+var ReactDOM = require('react-dom');
+var TestUtils = require('react-addons-test-utils');
 
 var {PrintStyleSheet} = Radium;
 var {Component, PropTypes} = React;
-var TestUtils = React.addons.TestUtils;
 
 var getRenderOutput = function (element) {
   var renderer = TestUtils.createRenderer();
   renderer.render(element);
   return renderer.getRenderOutput();
 };
+
+var getElement = function (output, tagName) {
+  return ReactDOM.findDOMNode(
+    TestUtils.findRenderedDOMComponentWithTag(output, tagName)
+  );
+}
 
 describe('Radium blackbox tests', () => {
   it('merges styles', () => {
@@ -98,9 +105,7 @@ describe('Radium blackbox tests', () => {
 
     var output = TestUtils.renderIntoDocument(<TestComponent />);
 
-    var div = React.findDOMNode(
-      TestUtils.findRenderedDOMComponentWithTag(output, 'div')
-    );
+    var div = getElement(output, 'div');
 
     expect(div.style.color).to.equal('blue');
     expect(div.style.background).to.equal('red');
@@ -135,9 +140,7 @@ describe('Radium blackbox tests', () => {
 
     var output = TestUtils.renderIntoDocument(<TestComponent />);
 
-    var div = React.findDOMNode(
-      TestUtils.findRenderedDOMComponentWithTag(output, 'div')
-    );
+    var div = getElement(output, 'div');
 
     expect(div.style.color).to.equal('blue');
     expect(div.style.background).to.equal('red');
@@ -164,9 +167,7 @@ describe('Radium blackbox tests', () => {
 
     var output = TestUtils.renderIntoDocument(<TestComponent />);
 
-    var div = React.findDOMNode(
-      TestUtils.findRenderedDOMComponentWithTag(output, 'div')
-    );
+    var div = getElement(output, 'div');
 
     expect(div.style.color).to.equal('blue');
     expect(div.style.background).to.equal('red');
@@ -192,9 +193,7 @@ describe('Radium blackbox tests', () => {
 
     var output = TestUtils.renderIntoDocument(<TestComponent />);
 
-    var div = React.findDOMNode(
-      TestUtils.findRenderedDOMComponentWithTag(output, 'div')
-    );
+    var div = getElement(output, 'div');
 
     expect(div.style.color).to.equal('blue');
     expect(div.style.background).to.equal('red');
@@ -229,14 +228,10 @@ describe('Radium blackbox tests', () => {
 
     var output = TestUtils.renderIntoDocument(<TestComponent />);
 
-    var header = React.findDOMNode(
-      TestUtils.findRenderedDOMComponentWithTag(output, 'header')
-    );
+    var header = getElement(output, 'header');
     expect(header.style.color).to.equal('yellow');
 
-    var footer = React.findDOMNode(
-      TestUtils.findRenderedDOMComponentWithTag(output, 'footer')
-    );
+    var footer = getElement(output, 'footer');
     expect(footer.style.color).to.equal('green');
 
     TestUtils.SimulateNative.mouseOver(header);
@@ -278,9 +273,7 @@ describe('Radium blackbox tests', () => {
 
     var output = TestUtils.renderIntoDocument(<PrintStyleSheet />);
 
-    var style = React.findDOMNode(
-      TestUtils.findRenderedDOMComponentWithTag(output, 'style')
-    );
+    var style = getElement(output, 'style');
 
     expect(style.innerText).to.equal(
       '@media print{' +
@@ -317,9 +310,7 @@ describe('Radium blackbox tests', () => {
 
     var output = TestUtils.renderIntoDocument(<Outer />);
 
-    var div = React.findDOMNode(
-      TestUtils.findRenderedDOMComponentWithTag(output, 'div')
-    );
+    var div = getElement(output, 'div');
 
     expect(div.style.color).to.equal('blue');
     expect(div.style.background).to.equal('red');
@@ -370,9 +361,7 @@ describe('Radium blackbox tests', () => {
 
     var output = TestUtils.renderIntoDocument(<TestComponent />);
 
-    var div = React.findDOMNode(
-      TestUtils.findRenderedDOMComponentWithTag(output, 'div')
-    );
+    var div = getElement(output, 'div');
 
     expect(div.style.color).to.equal('blue');
     expect(div.style.background).to.equal('red');
@@ -408,14 +397,10 @@ describe('Radium blackbox tests', () => {
       </TestComponent>
     );
 
-    var nav = React.findDOMNode(
-      TestUtils.findRenderedDOMComponentWithTag(output, 'nav')
-    );
+    var nav = getElement(output, 'nav');
     expect(nav.innerText).to.equal('nav');
 
-    var main = React.findDOMNode(
-      TestUtils.findRenderedDOMComponentWithTag(output, 'main')
-    );
+    var main = getElement(output, 'main');
     expect(main.innerText).to.equal('main');
   });
 
@@ -441,15 +426,121 @@ describe('Radium blackbox tests', () => {
       </TestComponent>
     );
 
-    var nav = React.findDOMNode(
-      TestUtils.findRenderedDOMComponentWithTag(output, 'nav')
-    );
+    var nav = getElement(output, 'nav');
     expect(nav.innerText).to.equal('nav');
 
-    var main = React.findDOMNode(
-      TestUtils.findRenderedDOMComponentWithTag(output, 'main')
-    );
+    var main = getElement(output, 'main');
     expect(main.innerText).to.equal('main');
+  });
+
+  it('calls existing onMouseEnter handler', () => {
+    var handleMouseEnter = sinon.spy();
+
+    @Radium
+    class TestComponent extends Component {
+      render () {
+        return (
+          <div
+            onMouseEnter={handleMouseEnter}
+            style={{':hover': {color: 'red'}}}
+          />
+        );
+      }
+    }
+
+    var output = TestUtils.renderIntoDocument(<TestComponent />);
+    var div = getElement(output, 'div');
+    TestUtils.SimulateNative.mouseOver(div);
+
+    expect(handleMouseEnter).to.have.been.called;
+  });
+
+  it('calls existing onMouseLeave handler', () => {
+    var handleMouseLeave = sinon.spy();
+
+    @Radium
+    class TestComponent extends Component {
+      render () {
+        return (
+          <div
+            onMouseLeave={handleMouseLeave}
+            style={{':hover': {color: 'red'}}}
+          />
+        );
+      }
+    }
+
+    var output = TestUtils.renderIntoDocument(<TestComponent />);
+    var div = getElement(output, 'div');
+    TestUtils.SimulateNative.mouseOut(div);
+
+    expect(handleMouseLeave).to.have.been.called;
+  });
+
+  it('calls existing onMouseDown handler', () => {
+    var handleMouseDown = sinon.spy();
+
+    @Radium
+    class TestComponent extends Component {
+      render () {
+        return (
+          <div
+            onMouseDown={handleMouseDown}
+            style={{':active': {color: 'red'}}}
+          />
+        );
+      }
+    }
+
+    var output = TestUtils.renderIntoDocument(<TestComponent />);
+    var div = getElement(output, 'div');
+    TestUtils.SimulateNative.mouseDown(div);
+
+    expect(handleMouseDown).to.have.been.called;
+  });
+
+  it('calls existing onFocus handler', () => {
+    var handleFocus = sinon.spy();
+
+    @Radium
+    class TestComponent extends Component {
+      render () {
+        return (
+          <input
+            onFocus={handleFocus}
+            style={{':focus': {color: 'red'}}}
+          />
+        );
+      }
+    }
+
+    var output = TestUtils.renderIntoDocument(<TestComponent />);
+    var input = getElement(output, 'input');
+    TestUtils.SimulateNative.focus(input);
+
+    expect(handleFocus).to.have.been.called;
+  });
+
+  it('calls existing onBlur handler', () => {
+    var handleBlur = sinon.spy();
+
+    @Radium
+    class TestComponent extends Component {
+      render () {
+        return (
+          <input
+            onBlur={handleBlur}
+            style={{':focus': {color: 'red'}}}
+          />
+        );
+      }
+    }
+
+    var output = TestUtils.renderIntoDocument(<TestComponent />);
+    var input = getElement(output, 'input');
+    TestUtils.SimulateNative.blur(input);
+
+    expect(handleBlur).to.have.been.called;
   });
 
   describe('plugins', () => {
@@ -465,9 +556,7 @@ describe('Radium blackbox tests', () => {
 
       var output = TestUtils.renderIntoDocument(<TestComponent />);
 
-      var div = React.findDOMNode(
-        TestUtils.findRenderedDOMComponentWithTag(output, 'div')
-      );
+      var div = getElement(output, 'div');
 
       expect(div.style.color).to.equal('red');
     });
