@@ -222,9 +222,9 @@ function ConfiguredRadium(component) {
 class MyComponent extends React.Component { ... }
 ```
 
-You will typically want to put plugins before the final `checkProps` so that you can still benefit from the checks it provides. If your plugin might produce other pseudo-style blocks, like `@media` consumed by `resolveMediaQueries` or `:hover` consumed by `resolveInteractionStyles`, you would want to have your plugin run before those plugins. 
+You will typically want to put plugins before the final `checkProps` so that you can still benefit from the checks it provides. If your plugin might produce other pseudo-style blocks, like `@media` consumed by `resolveMediaQueries` or `:hover` consumed by `resolveInteractionStyles`, you would want to have your plugin run before those plugins.
 
-You can of course omit any or all of the built-in plugins, and replace them with your own version. For example, you may want to omit `Radium.Plugins.prefix` entirely if you aren't using vendor prefixes or are using a [compile-time solution](https://github.com/UXtemple/babel-plugin-react-autoprefix) instead. 
+You can of course omit any or all of the built-in plugins, and replace them with your own version. For example, you may want to omit `Radium.Plugins.prefix` entirely if you aren't using vendor prefixes or are using a [compile-time solution](https://github.com/UXtemple/babel-plugin-react-autoprefix) instead.
 
 ## getState
 
@@ -249,11 +249,13 @@ Usage:
 
 ## keyframes
 
-**Radium.keyframes(keyframes, componentName)**
+**Radium.keyframes(keyframes, [componentName], [prefixFunction])**
 
 Create a keyframes animation for use in any inline style. `keyframes` is a helper that translates the keyframes object you pass in to CSS and injects the `@keyframes` (prefixed properly) definition into a style sheet. Automatically generates and returns a name for the keyframes, that you can then use in the value for `animation`. Radium will automatically apply vendor prefixing to keyframe styles.
 
-`Radium.keyframes` takes a second optional parameter, `componentName`. This is optional as you may not always have a component name to pass. If you do have a `componentName` however, it is a good idea to pass that as a parameter for better warning & error reporting.
+`Radium.keyframes` takes an optional second parameter, `componentName`. This is optional as you may not always have a component name to pass. If you do have a `componentName` however, it is a good idea to pass that as a parameter for better warning & error reporting.
+
+`Radium.keyframes` takes an optional third parameter, `prefixFunction`. `prefixFunction` replaces the built-in prefixer with a function of your own. `prefixFunction` is called with two arguments, the `styles` object, and the `componentName`, e.g. `prefixFunction(styles, componentName)`.
 
 ```as
 @Radium
@@ -285,7 +287,7 @@ var styles = {
 
 ## Plugins
 
-### Built-ins
+### Built-in Plugins
 
 Almost everything that Radium does, except iteration, is implemented as a plugin. Radium ships with a base set of plugins, all of which can be accessed via `Radium.Plugins.pluginName`. They are called in the following order:
 
@@ -434,6 +436,10 @@ A string that any included selectors in `rules` will be appended to. Use to scop
   />
 </div>
 ```
+
+#### prefix
+
+Optional prop to replace the built-in prefixer with a function of your own. `prefix` is called with two arguments, the `styles` object, and the `componentName`, e.g. `prefix(styles, componentName)`.
 
 ## PrintStyleSheet component
 

@@ -9,7 +9,8 @@ describe('keyframes', () => {
       sheet: {
         insertRule: sinon.spy(),
         cssRules: []
-      }
+      },
+      style: {WebkitAnimationName: ''}
     };
 
     sinon.stub(document, 'createElement', () => {
@@ -51,14 +52,16 @@ describe('keyframes', () => {
   });
 
   it('doesn\'t touch the DOM if animation not supported (IE9)', () => {
-    var Prefixer = require('__mocks__/prefixer.js');
-    Prefixer.__setNextPrefixedPropertyName(false);
-    var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
-      'exenv': exenv,
-      './prefixer': Prefixer
+    document.createElement.restore();
+    sinon.stub(document, 'createElement', () => {
+      return {style: {}};
     });
 
-    expect(document.createElement).not.to.have.been.called;
+    var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+      'exenv': exenv,
+      './prefixer': require('__mocks__/prefixer.js')
+    });
+
     expect(document.head.appendChild).not.to.have.been.called;
 
     var name = keyframes({}, 'MyComponent');
@@ -98,17 +101,19 @@ describe('keyframes', () => {
   });
 
   it('doesn\'t prefix @keyframes if not needed', () => {
-    styleElement.sheet.cssRules = [{cssText: 'blah'}];
+    document.createElement.restore();
+    sinon.stub(document, 'createElement', () => {
+      return {...styleElement, style: {animationName: ''}};
+    });
     var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
     });
     var name = keyframes({}, 'MyComponent');
 
-    expect(styleElement.sheet.insertRule.lastCall.args).to.deep.equal([
-      '@keyframes ' + name + ' {\n\n}\n',
-      1
-    ]);
+    expect(styleElement.sheet.insertRule.lastCall.args[0]).to.equal(
+      '@keyframes ' + name + ' {\n\n}\n'
+    );
   });
 
   it('serializes keyframes', () => {
@@ -125,7 +130,7 @@ describe('keyframes', () => {
       }
     }, 'MyComponent');
 
-    expect(styleElement.sheet.insertRule.lastCall.args).to.deep.equal([
+    expect(styleElement.sheet.insertRule.lastCall.args[0]).to.equal(
       `@-webkit-keyframes ${name} {
   from {
     width: 100;
@@ -134,8 +139,6 @@ describe('keyframes', () => {
     width: 200;
   }
 }
-`,
-      0
-    ]);
+`);
   });
 });
