@@ -35,8 +35,6 @@
     "babel-plugin-flow-comments": "^1.0.9",
     "exenv": "^1.2.0",
     "is-plain-object": "^2.0.1",
-    "react-addons-test-utils": "^0.14.0",
-    "react-dom": "^0.14.0",
     "rimraf": "^2.4.0"
   },
   "devDependencies": {
@@ -69,6 +67,8 @@
     "object-assign": "^3.0.0",
     "phantomjs": "^1.9.17",
     "react": "^0.14.0",
+    "react-addons-test-utils": "^0.14.0",
+    "react-dom": "^0.14.0",
     "sinon": "^1.15.3",
     "sinon-chai": "^2.8.0",
     "webpack": "^1.9.11",
