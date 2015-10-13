@@ -18,7 +18,7 @@ var getElement = function (output, tagName) {
   return ReactDOM.findDOMNode(
     TestUtils.findRenderedDOMComponentWithTag(output, tagName)
   );
-}
+};
 
 describe('Radium blackbox tests', () => {
   it('merges styles', () => {
