@@ -553,8 +553,8 @@ describe('Radium blackbox tests', () => {
       render () {
         return (
           <div>
-            <span style={{':hover': {color: 'red'}}} ref={() => {}} key="a" />
-            <nav style={{':hover': {color: 'red'}}} ref={() => {}} key="b" />
+            <span key="a" ref={() => {}} style={{':hover': {color: 'red'}}} />
+            <nav key="b" ref={() => {}} style={{':hover': {color: 'red'}}} />
           </div>
         );
       }
@@ -634,4 +634,25 @@ describe('Radium blackbox tests', () => {
     console.warn.restore();
   });
   /* eslint-enable no-console */
+
+  it('works with stateless components', () => {
+    let MyStatelessComponent = props => (
+      <div style={{color: 'blue', ':hover': {color: 'red'}}}>
+        {props.children}
+      </div>
+    );
+    MyStatelessComponent = Radium(MyStatelessComponent);
+
+    var output = TestUtils.renderIntoDocument(
+      <MyStatelessComponent>hello world</MyStatelessComponent>
+    );
+    var div = getElement(output, 'div');
+
+    expect(div.style.color).to.equal('blue');
+    expect(div.innerText).to.equal('hello world');
+
+    TestUtils.SimulateNative.mouseOver(div);
+
+    expect(div.style.color).to.equal('red');
+  });
 });
