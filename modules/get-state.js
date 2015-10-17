@@ -2,17 +2,11 @@
 
 var getStateKey = require('./get-state-key');
 
-var VALID_KEYS = [':active', ':focus', ':hover'];
-
 var getState = function (
   state: {_radiumStyleState: {[key: string]: {[value: string]: boolean}}},
   elementKey: string,
   value: string
 ): any {
-  if (VALID_KEYS.indexOf(value) === -1) {
-    throw new Error('Radium.getState invalid value param: `' + value + '`');
-  }
-
   var key = getStateKey(elementKey);
 
   return (
