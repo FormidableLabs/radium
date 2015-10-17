@@ -543,6 +543,31 @@ describe('Radium blackbox tests', () => {
     expect(handleBlur).to.have.been.called;
   });
 
+  it('ignores callback refs', () => {
+    @Radium
+    class TestComponent extends Component {
+      render () {
+        return (
+          <div>
+            <span style={{':hover': {color: 'red'}}} ref={() => {}} key="a" />
+            <nav style={{':hover': {color: 'red'}}} ref={() => {}} key="b" />
+          </div>
+        );
+      }
+    }
+
+    var output = TestUtils.renderIntoDocument(<TestComponent />);
+    var span = getElement(output, 'span');
+    var nav = getElement(output, 'nav');
+
+    TestUtils.SimulateNative.mouseOver(span);
+    expect(span.style.color).to.equal('red');
+    expect(nav.style.color).to.equal('');
+
+    TestUtils.SimulateNative.mouseOver(nav);
+    expect(nav.style.color).to.equal('red');
+  });
+
   describe('plugins', () => {
     it('runs a custom plugin', () => {
       var makeItRedPlugin = () => ({style: {color: 'red'}});
