@@ -18,11 +18,11 @@ var infoByCssPrefix = {
     jsPrefix: 'Moz',
     alternativeProperties: {
       // OLD - Firefox 19-
-      alignItems: [{css: '-moz-box-align', js: 'MozBoxAlign'}],
-      flex: [{css: '-moz-box-flex', js: 'MozBoxFlex'}],
-      flexDirection: [{css: '-moz-box-orient', js: 'MozBoxOrient'}],
-      justifyContent: [{css: '-moz-box-pack', js: 'MozBoxPack'}],
-      order: [{css: '-moz-box-ordinal-group', js: 'MozBoxOrdinalGroup'}]
+      alignItems: ['MozBoxAlign'],
+      flex: ['MozBoxFlex'],
+      flexDirection: ['MozBoxOrient'],
+      justifyContent: ['MozBoxPack'],
+      order: ['MozBoxOrdinalGroup']
     },
     alternativeValues: {
       // OLD - Firefox 19-
@@ -49,11 +49,11 @@ var infoByCssPrefix = {
     jsPrefix: 'ms',
     alternativeProperties: {
       // TWEENER - IE 10
-      alignContent: [{css: '-ms-flex-line-pack', js: 'msFlexLinePack'}],
-      alignItems: [{css: '-ms-flex-align', js: 'msFlexAlign'}],
-      alignSelf: [{css: '-ms-flex-align-item', js: 'msFlexAlignItem'}],
-      justifyContent: [{css: '-ms-flex-pack', js: 'msFlexPack'}],
-      order: [{css: '-ms-flex-order', js: 'msFlexOrder'}]
+      alignContent: ['msFlexLinePack'],
+      alignItems: ['msFlexAlign'],
+      alignSelf: ['msFlexAlignItem'],
+      justifyContent: ['msFlexPack'],
+      order: ['msFlexOrder']
     },
     alternativeValues: {
       // TWEENER - IE 10
@@ -92,11 +92,11 @@ var infoByCssPrefix = {
     jsPrefix: 'Webkit',
     alternativeProperties: {
       // OLD - iOS 6-, Safari 3.1-6
-      alignItems: [{css: '-webkit-box-align', js: 'WebkitBoxAlign'}],
-      flex: [{css: '-webkit-box-flex', js: 'MozBoxFlex'}],
-      flexDirection: [{css: '-webkit-box-orient', js: 'WebkitBoxOrient'}],
-      justifyContent: [{css: '-webkit-box-pack', js: 'WebkitBoxPack'}],
-      order: [{css: '-webkit-box-ordinal-group', js: 'WebkitBoxOrdinalGroup'}]
+      alignItems: ['WebkitBoxAlign'],
+      flex: ['MozBoxFlex'],
+      flexDirection: ['WebkitBoxOrient'],
+      justifyContent: ['WebkitBoxPack'],
+      order: ['WebkitBoxOrdinalGroup']
     },
     alternativeValues: {
       // OLD - iOS 6-, Safari 3.1-6
@@ -194,36 +194,19 @@ if (ExecutionEnvironment.canUseDOM) {
     prefixInfo;
 }
 
-var _camelCaseRegex = /([a-z])?([A-Z])/g;
-var _camelCaseReplacer = function (match, p1, p2) {
-  return p1 + '-' + p2.toLowerCase();
-};
-var _camelCaseToDashCase = function (s) {
-  return s.replace(_camelCaseRegex, _camelCaseReplacer);
-};
-
-var getPrefixedPropertyName = function (
-  property: string
-): {css: string, js: string} {
+var getPrefixedPropertyName = function (property: string): string {
   if (prefixedPropertyCache.hasOwnProperty(property)) {
     return prefixedPropertyCache[property];
   }
 
-  var unprefixed = {
-    css: _camelCaseToDashCase(property),
-    js: property,
-    isDefaultForServer: true
-  };
+  var unprefixed = property;
 
   // Try the prefixed version first. Chrome in particular has the `filter` and
   // `webkitFilter` properties availalbe on the style object, but only the
   // prefixed version actually works.
   var possiblePropertyNames = [
     // Prefixed
-    {
-      css: prefixInfo.cssPrefix + _camelCaseToDashCase(property),
-      js: prefixInfo.jsPrefix + property[0].toUpperCase() + property.slice(1)
-    },
+    prefixInfo.jsPrefix + property[0].toUpperCase() + property.slice(1),
     unprefixed
   ];
 
@@ -240,13 +223,15 @@ var getPrefixedPropertyName = function (
   var workingProperty = arrayFind(
     possiblePropertyNames,
     function (possiblePropertyName) {
-      if (possiblePropertyName.js in domStyle) {
+      if (possiblePropertyName in domStyle) {
         return possiblePropertyName;
       }
     }
   ) || false;
 
-  return prefixedPropertyCache[property] = workingProperty;
+  prefixedPropertyCache[property] = workingProperty;
+
+  return prefixedPropertyCache[property];
 };
 
 // We are un-prefixing values before checking for isUnitlessNumber,
@@ -409,16 +394,14 @@ var _getPrefixedValue = function (
 // Returns a new style object with vendor prefixes added to property names
 // and values.
 var getPrefixedStyle = function (
-  componentName: ?string,
   style: Object,
-  mode: 'css' | 'js' = 'js'
+  componentName: ?string,
 ): Object {
   if (!ExecutionEnvironment.canUseDOM) {
     return Object.keys(style).reduce((newStyle, key) => {
       var value = style[key];
-      var newKey = mode === 'css' ? _camelCaseToDashCase(key) : key;
       var newValue = Array.isArray(value) ? value[0] : value;
-      newStyle[newKey] = newValue;
+      newStyle[key] = newValue;
       return newStyle;
     }, {});
   }
@@ -428,7 +411,7 @@ var getPrefixedStyle = function (
     var value = style[property];
 
     var newProperty = getPrefixedPropertyName(property);
-    if (newProperty === false) {
+    if (!newProperty) {
       // Ignore unsupported properties
       if (process.env.NODE_ENV !== 'production') {
         /* eslint-disable no-console */
@@ -446,16 +429,15 @@ var getPrefixedStyle = function (
       }
     }
 
-    var newValue = _getPrefixedValue(componentName, newProperty.js, value, property);
+    var newValue = _getPrefixedValue(componentName, newProperty, value, property);
 
-    prefixedStyle[newProperty[mode]] = newValue;
+    prefixedStyle[newProperty] = newValue;
   });
   return prefixedStyle;
 };
 
 
 module.exports = {
-  getPrefixedPropertyName,
   getPrefixedStyle,
   cssPrefix: prefixInfo.cssPrefix,
   jsPrefix: prefixInfo.jsPrefix

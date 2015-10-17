@@ -1,29 +1,38 @@
 /* @flow */
 
+var camelCasePropsToDashCase = require('../camel-case-props-to-dash-case');
 var createMarkupForStyles = require('../create-markup-for-styles');
 var Prefixer = require('../prefixer');
 
 var React = require('react');
 
-var buildCssString = function (selector: string, rules: Object): ?string {
+var buildCssString = function (
+  selector: string,
+  rules: Object,
+  prefix: (rules: Object, componentName: string) => Object
+): ?string {
   if (!selector || !rules) {
     return null;
   }
 
-  var prefixedRules = Prefixer.getPrefixedStyle('Style', rules, 'css');
-  var serializedRules = createMarkupForStyles(prefixedRules);
+  var prefixedRules = prefix(rules, 'Style');
+  var cssPrefixedRules = camelCasePropsToDashCase(prefixedRules);
+  var serializedRules = createMarkupForStyles(cssPrefixedRules);
 
   return selector + '{' + serializedRules + '}';
 };
 
 var Style = React.createClass({
   propTypes: {
+    prefix: React.PropTypes.func.isRequired,
+
     rules: React.PropTypes.object,
     scopeSelector: React.PropTypes.string
   },
 
   getDefaultProps (): {scopeSelector: string} {
     return {
+      prefix: Prefixer.getPrefixedStyle,
       scopeSelector: ''
     };
   },
@@ -40,7 +49,7 @@ var Style = React.createClass({
             this.props.scopeSelector + ' ' :
             ''
           ) + selector;
-        accumulator += buildCssString(completeSelector, rules) || '';
+        accumulator += buildCssString(completeSelector, rules, this.props.prefix) || '';
       }
 
       return accumulator;
