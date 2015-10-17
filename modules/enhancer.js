@@ -1,5 +1,7 @@
 /* @flow */
 
+var {Component} = require('react');
+
 var resolveStyles = require('./resolve-styles.js');
 var printStyles = require('./print-styles.js');
 
@@ -26,7 +28,7 @@ var copyProperties = function (source, target) {
 };
 
 var enhanceWithRadium = function (
-  configOrComposedComponent: constructor | Object,
+  configOrComposedComponent: constructor | Function | Object,
   config?: Object = {},
 ): constructor {
   if (typeof configOrComposedComponent !== 'function') {
@@ -36,7 +38,20 @@ var enhanceWithRadium = function (
     };
   }
 
-  var ComposedComponent = configOrComposedComponent;
+  var component: Function = configOrComposedComponent;
+  var ComposedComponent: constructor = component;
+
+  // Handle stateless components
+
+  if (!ComposedComponent.render && !ComposedComponent.prototype.render) {
+    ComposedComponent = class extends Component {
+      render () {
+        return component(this.props);
+      }
+    };
+    ComposedComponent.displayName = component.displayName || component.name;
+  }
+
   class RadiumEnhancer extends ComposedComponent {
     _radiumMediaQueryListenersByQuery: {[query: string]: {remove: () => void}};
     _radiumMouseUpListener: {remove: () => void};

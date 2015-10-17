@@ -22,6 +22,7 @@ describe('Enhancer', () => {
         super();
         this.state = {foo: 'bar'};
       }
+      render () {}
     }
     var Enhanced = Enhancer(Composed);
 
@@ -38,6 +39,7 @@ describe('Enhancer', () => {
       constructor (props) {
         super(props);
       }
+      render () {}
     }
     var Enhanced = Enhancer(Composed);
 
@@ -70,6 +72,7 @@ describe('Enhancer', () => {
         super();
         constructorMock();
       }
+      render () {}
     }
     var Enhanced = Enhancer(Composed);
 
@@ -88,7 +91,9 @@ describe('Enhancer', () => {
   });
 
   it('sets up classNames on for printStyles have a copy', () => {
-    class Composed extends Component {}
+    class Composed extends Component {
+      render () {}
+    }
     Composed.displayName = 'PrintStyleTest';
     Composed.printStyles = {
       foo: { display: 'none' },
@@ -108,6 +113,7 @@ describe('Enhancer', () => {
       componentWillUnmount () {
         existingComponentWillUnmount();
       }
+      render () {}
     }
     var Enhanced = Enhancer(Composed);
 
@@ -124,6 +130,7 @@ describe('Enhancer', () => {
         super();
         this._radiumMouseUpListener = { remove: removeMouseUpListener };
       }
+      render () {}
     }
     var Enhanced = Enhancer(Composed);
 
@@ -144,6 +151,7 @@ describe('Enhancer', () => {
         super();
         this._radiumMediaQueryListenersByQuery = mediaQueryListenersByQuery;
       }
+      render () {}
     }
     var Enhanced = Enhancer(Composed);
 
@@ -160,6 +168,7 @@ describe('Enhancer', () => {
       static staticMethod () {
         return { bar: 'foo' };
       }
+      render () {}
     }
 
     Composed.defaultProps = { foo: 'bar' };
