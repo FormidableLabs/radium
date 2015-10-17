@@ -21,6 +21,10 @@ var getElement = function (output, tagName) {
 };
 
 describe('Radium blackbox tests', () => {
+  beforeEach(() => {
+    Radium.__clearStateForTests();
+  });
+
   it('merges styles', () => {
     @Radium
     class TestComponent extends Component {
@@ -561,4 +565,48 @@ describe('Radium blackbox tests', () => {
       expect(div.style.color).to.equal('red');
     });
   });
+
+  /* eslint-disable no-console */
+  it('doesn\'t try to setState if not mounted', () => {
+    sinon.stub(console, 'error');
+    sinon.stub(console, 'warn');
+
+    var addListener = sinon.spy();
+    var mockMatchMedia = function () {
+      return {
+        matches: true,
+        addListener: addListener,
+        removeListener () {}
+      };
+    };
+
+    @Radium({matchMedia: mockMatchMedia})
+    class TestComponent extends Component {
+      render () {
+        return (
+          <div style={{
+            '@media (min-width: 600px)': {color: 'blue'}
+          }} />
+        );
+      }
+    }
+
+    var output = TestUtils.renderIntoDocument(
+      <TestComponent/>
+    );
+
+    expect(addListener).to.have.been.called;
+
+    ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(output).parentNode);
+
+    var listener = addListener.lastCall.args[0];
+    listener(mockMatchMedia);
+
+    expect(console.error).not.to.have.been.called;
+    expect(console.warn).not.to.have.been.called;
+
+    console.error.restore();
+    console.warn.restore();
+  });
+  /* eslint-enable no-console */
 });

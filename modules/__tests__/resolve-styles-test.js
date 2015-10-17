@@ -11,7 +11,8 @@ var genComponent = function () {
     setState: sinon.spy(function (newState) {
       objectAssign(this.state, newState);
     }),
-    state: {}
+    state: {},
+    _radiumIsMounted: true
   };
 };
 

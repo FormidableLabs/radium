@@ -40,27 +40,26 @@ var enhanceWithRadium = function (
   class RadiumEnhancer extends ComposedComponent {
     _radiumMediaQueryListenersByQuery: {[query: string]: {remove: () => void}};
     _radiumMouseUpListener: {remove: () => void};
+    _radiumIsMounted: bool;
 
     constructor () {
       super(...arguments);
 
       this.state = this.state || {};
       this.state._radiumStyleState = {};
+      this._radiumIsMounted = true;
 
       if (RadiumEnhancer.printStyleClass) {
         this.printStyleClass = RadiumEnhancer.printStyleClass;
       }
     }
 
-    render () {
-      var renderedElement = super.render();
-      return resolveStyles(this, renderedElement, config);
-    }
-
     componentWillUnmount () {
       if (super.componentWillUnmount) {
         super.componentWillUnmount();
       }
+
+      this._radiumIsMounted = false;
 
       if (this._radiumMouseUpListener) {
         this._radiumMouseUpListener.remove();
@@ -74,6 +73,11 @@ var enhanceWithRadium = function (
           this
         );
       }
+    }
+
+    render () {
+      var renderedElement = super.render();
+      return resolveStyles(this, renderedElement, config);
     }
   }
 
