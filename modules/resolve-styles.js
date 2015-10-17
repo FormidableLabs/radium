@@ -145,6 +145,10 @@ var _buildGetKey = function (renderedElement, existingKeyMap) {
 };
 
 var _setStyleState = function (component, key, stateKey, value) {
+  if (!component._radiumIsMounted) {
+    return;
+  }
+
   var existing = component._lastRadiumState ||
     component.state && component.state._radiumStyleState || {};
 
@@ -185,9 +189,9 @@ var _runPlugins = function ({
       ExecutionEnvironment,
       componentName: component.constructor.displayName ||
         component.constructor.name,
+      config,
       getComponentField: key => component[key],
       getGlobalState: key => globalState[key],
-      config,
       getState: (stateKey, elementKey) =>
         getState(component.state, elementKey || getKey(), stateKey),
       mergeStyles,
