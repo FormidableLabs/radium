@@ -113,7 +113,9 @@ var _buildGetKey = function (renderedElement, existingKeyMap) {
   // We need a unique key to correlate state changes due to user interaction
   // with the rendered element, so we know to apply the proper interactive
   // styles.
-  var originalKey = renderedElement.ref || renderedElement.key;
+  var originalKey = typeof renderedElement.ref === 'string' ?
+    renderedElement.ref :
+    renderedElement.key;
   var key = getStateKey(originalKey);
 
   var alreadyGotKey = false;
