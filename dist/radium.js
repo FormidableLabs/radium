@@ -7,7 +7,7 @@
 		exports["Radium"] = factory(require("react"));
 	else
 		root["Radium"] = factory(root["React"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_19__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_3__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -61,11 +61,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = function (ComposedComponent /*: constructor*/) {
 	  return Enhancer(ComposedComponent);
 	};
-	module.exports.Plugins = __webpack_require__(9);
+	module.exports.Plugins = __webpack_require__(10);
 	module.exports.PrintStyleSheet = __webpack_require__(21);
 	module.exports.Style = __webpack_require__(22);
-	module.exports.getState = __webpack_require__(4);
-	module.exports.keyframes = __webpack_require__(24);
+	module.exports.getState = __webpack_require__(5);
+	module.exports.keyframes = __webpack_require__(25);
+	module.exports.__clearStateForTests = __webpack_require__(4).__clearStateForTests;
 
 /***/ },
 /* 1 */
@@ -85,7 +86,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var resolveStyles = __webpack_require__(3);
+	var _require = __webpack_require__(3);
+
+	var Component = _require.Component;
+
+	var resolveStyles = __webpack_require__(4);
 	var printStyles = __webpack_require__(20);
 
 	var KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = ['arguments', 'callee', 'caller', 'length', 'name', 'prototype', 'type'];
@@ -99,7 +104,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	};
 
-	var enhanceWithRadium = function enhanceWithRadium(configOrComposedComponent /*: constructor | Object*/) /*: constructor*/ {
+	var enhanceWithRadium = function enhanceWithRadium(configOrComposedComponent /*: constructor | Function | Object*/) /*: constructor*/ {
 	  var config /*:: ?: Object*/ = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
 	  if (typeof configOrComposedComponent !== 'function') {
@@ -109,7 +114,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	  }
 
-	  var ComposedComponent = configOrComposedComponent;
+	  var component /*: Function*/ = configOrComposedComponent;
+	  var ComposedComponent /*: constructor*/ = component;
+
+	  // Handle stateless components
+
+	  if (!ComposedComponent.render && !ComposedComponent.prototype.render) {
+	    ComposedComponent = (function (_Component) {
+	      _inherits(_class, _Component);
+
+	      function _class() {
+	        _classCallCheck(this, _class);
+
+	        _get(Object.getPrototypeOf(_class.prototype), 'constructor', this).apply(this, arguments);
+	      }
+
+	      _createClass(_class, [{
+	        key: 'render',
+	        value: function render() {
+	          return component(this.props);
+	        }
+	      }]);
+
+	      return _class;
+	    })(Component);
+	    ComposedComponent.displayName = component.displayName || component.name;
+	  }
 
 	  var RadiumEnhancer = (function (_ComposedComponent) {
 	    _inherits(RadiumEnhancer, _ComposedComponent);
@@ -121,6 +151,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      this.state = this.state || {};
 	      this.state._radiumStyleState = {};
+	      this._radiumIsMounted = true;
 
 	      if (RadiumEnhancer.printStyleClass) {
 	        this.printStyleClass = RadiumEnhancer.printStyleClass;
@@ -133,17 +164,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // See http://babeljs.io/docs/advanced/caveats/#classes-10-and-below-
 
 	    _createClass(RadiumEnhancer, [{
-	      key: 'render',
-	      value: function render() {
-	        var renderedElement = _get(Object.getPrototypeOf(RadiumEnhancer.prototype), 'render', this).call(this);
-	        return resolveStyles(this, renderedElement, config);
-	      }
-	    }, {
 	      key: 'componentWillUnmount',
 	      value: function componentWillUnmount() {
 	        if (_get(Object.getPrototypeOf(RadiumEnhancer.prototype), 'componentWillUnmount', this)) {
 	          _get(Object.getPrototypeOf(RadiumEnhancer.prototype), 'componentWillUnmount', this).call(this);
 	        }
+
+	        this._radiumIsMounted = false;
 
 	        if (this._radiumMouseUpListener) {
 	          this._radiumMouseUpListener.remove();
@@ -154,6 +181,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this._radiumMediaQueryListenersByQuery[query].remove();
 	          }, this);
 	        }
+	      }
+	    }, {
+	      key: 'render',
+	      value: function render() {
+	        var renderedElement = _get(Object.getPrototypeOf(RadiumEnhancer.prototype), 'render', this).call(this);
+	        return resolveStyles(this, renderedElement, config);
 	      }
 	    }]);
 
@@ -283,6 +316,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 3 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
+
+/***/ },
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* @flow */
@@ -293,13 +332,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/*:: import type {Config} from './config';*/
 
-	var _getState = __webpack_require__(4);
-	var getStateKey = __webpack_require__(5);
-	var mergeStyles = __webpack_require__(6);
-	var Plugins = __webpack_require__(9);
+	var _getState = __webpack_require__(5);
+	var getStateKey = __webpack_require__(6);
+	var mergeStyles = __webpack_require__(7);
+	var Plugins = __webpack_require__(10);
 
-	var ExecutionEnvironment = __webpack_require__(14);
-	var React = __webpack_require__(19);
+	var ExecutionEnvironment = __webpack_require__(15);
+	var React = __webpack_require__(3);
 
 	var DEFAULT_CONFIG = {
 	  plugins: [Plugins.mergeStyleArray, Plugins.checkProps, Plugins.resolveMediaQueries, Plugins.resolveInteractionStyles, Plugins.prefix, Plugins.checkProps]
@@ -389,7 +428,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // We need a unique key to correlate state changes due to user interaction
 	  // with the rendered element, so we know to apply the proper interactive
 	  // styles.
-	  var originalKey = renderedElement.ref || renderedElement.key;
+	  var originalKey = typeof renderedElement.ref === 'string' ? renderedElement.ref : renderedElement.key;
 	  var key = getStateKey(originalKey);
 
 	  var alreadyGotKey = false;
@@ -413,6 +452,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var _setStyleState = function _setStyleState(component, key, stateKey, value) {
+	  if (!component._radiumIsMounted) {
+	    return;
+	  }
+
 	  var existing = component._lastRadiumState || component.state && component.state._radiumStyleState || {};
 
 	  var state = { _radiumStyleState: _extends({}, existing) };
@@ -447,13 +490,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var result = plugin({
 	      ExecutionEnvironment: ExecutionEnvironment,
 	      componentName: component.constructor.displayName || component.constructor.name,
+	      config: config,
 	      getComponentField: function getComponentField(key) {
 	        return component[key];
 	      },
 	      getGlobalState: function getGlobalState(key) {
 	        return globalState[key];
 	      },
-	      config: config,
 	      getState: function getState(stateKey, elementKey) {
 	        return _getState(component.state, elementKey || getKey(), stateKey);
 	      },
@@ -563,31 +606,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	// ReactComponent, flow+eslint complaining
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* @flow */
 
 	'use strict';
 
-	var getStateKey = __webpack_require__(5);
+	var getStateKey = __webpack_require__(6);
 
-	var VALID_KEYS = [':active', ':focus', ':hover'];
-
-	var getState = function getState(state /*: {_radiumStyleState: {[key: string]: {[value: string]: boolean}}}*/, elementKey /*: string*/, value /*: string*/) /*: boolean*/ {
-	  if (VALID_KEYS.indexOf(value) === -1) {
-	    throw new Error('Radium.getState invalid value param: `' + value + '`');
-	  }
-
+	var getState = function getState(state /*: {_radiumStyleState: {[key: string]: {[value: string]: boolean}}}*/, elementKey /*: string*/, value /*: string*/) /*: any*/ {
 	  var key = getStateKey(elementKey);
 
-	  return !!(state && state._radiumStyleState && state._radiumStyleState[key] && state._radiumStyleState[key][value]);
+	  return !!state && !!state._radiumStyleState && !!state._radiumStyleState[key] && state._radiumStyleState[key][value];
 	};
 
 	module.exports = getState;
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	/* @flow */
@@ -601,12 +638,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = getStateKey;
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isPlainObject = __webpack_require__(7);
+	var isPlainObject = __webpack_require__(8);
 
 	var shouldMerge = function shouldMerge(value) {
 	  // Don't merge objects overriding toString, since they should be converted
@@ -642,7 +679,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = mergeStyles;
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -654,7 +691,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var isObject = __webpack_require__(8);
+	var isObject = __webpack_require__(9);
 
 	function isObjectObject(o) {
 	  return isObject(o) === true && Object.prototype.toString.call(o) === '[object Object]';
@@ -683,7 +720,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	/*!
@@ -700,7 +737,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @flow */
@@ -714,11 +751,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/*:: import type {Config} from '../config';*/
 
-	var checkPropsPlugin = __webpack_require__(10);
-	var mergeStyleArrayPlugin = __webpack_require__(11);
-	var prefixPlugin = __webpack_require__(12);
-	var resolveInteractionStylesPlugin = __webpack_require__(16);
-	var resolveMediaQueriesPlugin = __webpack_require__(18);
+	var checkPropsPlugin = __webpack_require__(11);
+	var mergeStyleArrayPlugin = __webpack_require__(12);
+	var prefixPlugin = __webpack_require__(13);
+	var resolveInteractionStylesPlugin = __webpack_require__(17);
+	var resolveMediaQueriesPlugin = __webpack_require__(19);
 
 	/*:: export type PluginConfig = {
 	  // May not be readable if code has been minified
@@ -825,7 +862,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// Replaces (not merged into) the rendered element's style property.
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/* @flow */
@@ -887,7 +924,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	/* @flow */
@@ -907,7 +944,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = mergeStyleArrayPlugin;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* @flow */
@@ -916,20 +953,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/*:: import type {PluginConfig, PluginResult} from '.';*/
 
-	var Prefixer = __webpack_require__(13);
+	var Prefixer = __webpack_require__(14);
 
 	var prefixPlugin = function prefixPlugin(_ref /*: PluginConfig*/) /*: PluginResult*/ {
 	  var componentName = _ref.componentName;
 	  var style = _ref.style;
 
-	  var newStyle = Prefixer.getPrefixedStyle(componentName, style);
+	  var newStyle = Prefixer.getPrefixedStyle(style, componentName);
 	  return { style: newStyle };
 	};
 
 	module.exports = prefixPlugin;
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -941,8 +978,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var ExecutionEnvironment = __webpack_require__(14);
-	var arrayFind = __webpack_require__(15);
+	var ExecutionEnvironment = __webpack_require__(15);
+	var arrayFind = __webpack_require__(16);
 
 	var VENDOR_PREFIX_REGEX = /-(moz|webkit|ms|o)-/;
 
@@ -954,11 +991,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    jsPrefix: 'Moz',
 	    alternativeProperties: {
 	      // OLD - Firefox 19-
-	      alignItems: [{ css: '-moz-box-align', js: 'MozBoxAlign' }],
-	      flex: [{ css: '-moz-box-flex', js: 'MozBoxFlex' }],
-	      flexDirection: [{ css: '-moz-box-orient', js: 'MozBoxOrient' }],
-	      justifyContent: [{ css: '-moz-box-pack', js: 'MozBoxPack' }],
-	      order: [{ css: '-moz-box-ordinal-group', js: 'MozBoxOrdinalGroup' }]
+	      alignItems: ['MozBoxAlign'],
+	      flex: ['MozBoxFlex'],
+	      flexDirection: ['MozBoxOrient'],
+	      justifyContent: ['MozBoxPack'],
+	      order: ['MozBoxOrdinalGroup']
 	    },
 	    alternativeValues: {
 	      // OLD - Firefox 19-
@@ -985,11 +1022,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    jsPrefix: 'ms',
 	    alternativeProperties: {
 	      // TWEENER - IE 10
-	      alignContent: [{ css: '-ms-flex-line-pack', js: 'msFlexLinePack' }],
-	      alignItems: [{ css: '-ms-flex-align', js: 'msFlexAlign' }],
-	      alignSelf: [{ css: '-ms-flex-align-item', js: 'msFlexAlignItem' }],
-	      justifyContent: [{ css: '-ms-flex-pack', js: 'msFlexPack' }],
-	      order: [{ css: '-ms-flex-order', js: 'msFlexOrder' }]
+	      alignContent: ['msFlexLinePack'],
+	      alignItems: ['msFlexAlign'],
+	      alignSelf: ['msFlexAlignItem'],
+	      justifyContent: ['msFlexPack'],
+	      order: ['msFlexOrder']
 	    },
 	    alternativeValues: {
 	      // TWEENER - IE 10
@@ -1028,11 +1065,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    jsPrefix: 'Webkit',
 	    alternativeProperties: {
 	      // OLD - iOS 6-, Safari 3.1-6
-	      alignItems: [{ css: '-webkit-box-align', js: 'WebkitBoxAlign' }],
-	      flex: [{ css: '-webkit-box-flex', js: 'MozBoxFlex' }],
-	      flexDirection: [{ css: '-webkit-box-orient', js: 'WebkitBoxOrient' }],
-	      justifyContent: [{ css: '-webkit-box-pack', js: 'WebkitBoxPack' }],
-	      order: [{ css: '-webkit-box-ordinal-group', js: 'WebkitBoxOrdinalGroup' }]
+	      alignItems: ['WebkitBoxAlign'],
+	      flex: ['MozBoxFlex'],
+	      flexDirection: ['WebkitBoxOrient'],
+	      justifyContent: ['WebkitBoxPack'],
+	      order: ['WebkitBoxOrdinalGroup']
 	    },
 	    alternativeValues: {
 	      // OLD - iOS 6-, Safari 3.1-6
@@ -1127,34 +1164,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  prefixInfo = cssVendorPrefix && infoByCssPrefix[cssVendorPrefix] ? infoByCssPrefix[cssVendorPrefix] : prefixInfo;
 	}
 
-	var _camelCaseRegex = /([a-z])?([A-Z])/g;
-	var _camelCaseReplacer = function _camelCaseReplacer(match, p1, p2) {
-	  return p1 + '-' + p2.toLowerCase();
-	};
-	var _camelCaseToDashCase = function _camelCaseToDashCase(s) {
-	  return s.replace(_camelCaseRegex, _camelCaseReplacer);
-	};
-
-	var getPrefixedPropertyName = function getPrefixedPropertyName(property /*: string*/) /*: {css: string, js: string}*/ {
+	var getPrefixedPropertyName = function getPrefixedPropertyName(property /*: string*/) /*: string*/ {
 	  if (prefixedPropertyCache.hasOwnProperty(property)) {
 	    return prefixedPropertyCache[property];
 	  }
 
-	  var unprefixed = {
-	    css: _camelCaseToDashCase(property),
-	    js: property,
-	    isDefaultForServer: true
-	  };
+	  var unprefixed = property;
 
 	  // Try the prefixed version first. Chrome in particular has the `filter` and
 	  // `webkitFilter` properties availalbe on the style object, but only the
 	  // prefixed version actually works.
 	  var possiblePropertyNames = [
 	  // Prefixed
-	  {
-	    css: prefixInfo.cssPrefix + _camelCaseToDashCase(property),
-	    js: prefixInfo.jsPrefix + property[0].toUpperCase() + property.slice(1)
-	  }, unprefixed];
+	  prefixInfo.jsPrefix + property[0].toUpperCase() + property.slice(1), unprefixed];
 
 	  // Alternative property names
 	  if (prefixInfo.alternativeProperties && prefixInfo.alternativeProperties[property]) {
@@ -1162,12 +1184,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  var workingProperty = arrayFind(possiblePropertyNames, function (possiblePropertyName) {
-	    if (possiblePropertyName.js in domStyle) {
+	    if (possiblePropertyName in domStyle) {
 	      return possiblePropertyName;
 	    }
 	  }) || false;
 
-	  return prefixedPropertyCache[property] = workingProperty;
+	  prefixedPropertyCache[property] = workingProperty;
+
+	  return prefixedPropertyCache[property];
 	};
 
 	// We are un-prefixing values before checking for isUnitlessNumber,
@@ -1299,16 +1323,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// Returns a new style object with vendor prefixes added to property names
 	// and values.
-	var getPrefixedStyle = function getPrefixedStyle(componentName /*: any*/, // ReactComponent
-	style /*: Object*/) /*: Object*/ {
-	  var mode /*: 'css' | 'js'*/ = arguments.length <= 2 || arguments[2] === undefined ? 'js' : arguments[2];
-
+	var getPrefixedStyle = function getPrefixedStyle(style /*: Object*/, componentName /*: ?string*/) /*: Object*/ {
 	  if (!ExecutionEnvironment.canUseDOM) {
 	    return Object.keys(style).reduce(function (newStyle, key) {
 	      var value = style[key];
-	      var newKey = mode === 'css' ? _camelCaseToDashCase(key) : key;
 	      var newValue = Array.isArray(value) ? value[0] : value;
-	      newStyle[newKey] = newValue;
+	      newStyle[key] = newValue;
 	      return newStyle;
 	    }, {});
 	  }
@@ -1318,29 +1338,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var value = style[property];
 
 	    var newProperty = getPrefixedPropertyName(property);
-	    if (newProperty === false) {
+	    if (!newProperty) {
 	      // Ignore unsupported properties
 	      if (process.env.NODE_ENV !== 'production') {
 	        /* eslint-disable no-console */
 	        if (console && console.warn) {
 	          var componentContext = componentName ? ' in component "' + componentName + '"' : '';
 
-	          console.warn('Unsupported CSS property "' + property + '$"' + componentContext);
+	          console.warn('Unsupported CSS property "' + property + '"' + componentContext);
 	        }
 	        /* eslint-enable no-console */
 	        return;
 	      }
 	    }
 
-	    var newValue = _getPrefixedValue(componentName, newProperty.js, value, property);
+	    var newValue = _getPrefixedValue(componentName, newProperty, value, property);
 
-	    prefixedStyle[newProperty[mode]] = newValue;
+	    prefixedStyle[newProperty] = newValue;
 	  });
 	  return prefixedStyle;
 	};
 
 	module.exports = {
-	  getPrefixedPropertyName: getPrefixedPropertyName,
 	  getPrefixedStyle: getPrefixedStyle,
 	  cssPrefix: prefixInfo.cssPrefix,
 	  jsPrefix: prefixInfo.jsPrefix
@@ -1348,7 +1367,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -1388,7 +1407,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	})();
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1416,7 +1435,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = find;
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @flow */
@@ -1425,7 +1444,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/*:: import type {PluginConfig, PluginResult} from '.';*/
 
-	var MouseUpListener = __webpack_require__(17);
+	var MouseUpListener = __webpack_require__(18);
 
 	var _isInteractiveStyleField = function _isInteractiveStyleField(styleFieldName) {
 	  return styleFieldName === ':hover' || styleFieldName === ':active' || styleFieldName === ':focus';
@@ -1444,7 +1463,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var newProps = {};
 
 	  // Only add handlers if necessary
-	  if (style[':hover'] || style[':active']) {
+	  if (style[':hover']) {
 	    // Always call the existing handler if one is already defined.
 	    // This code, and the very similar ones below, could be abstracted a bit
 	    // more, but it hurts readability IMO.
@@ -1466,7 +1485,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	    newProps.onMouseDown = function (e) {
 	      existingOnMouseDown && existingOnMouseDown(e);
 	      newComponentFields._lastMouseDown = Date.now();
-	      setState(':active', true);
+	      setState(':active', 'viamousedown');
+	    };
+
+	    var existingOnKeyDown = props.onKeyDown;
+	    newProps.onKeyDown = function (e) {
+	      existingOnKeyDown && existingOnKeyDown(e);
+	      if (e.key === ' ' || e.key === 'Enter') {
+	        setState(':active', 'viakeydown');
+	      }
+	    };
+
+	    var existingOnKeyUp = props.onKeyUp;
+	    newProps.onKeyUp = function (e) {
+	      existingOnKeyUp && existingOnKeyUp(e);
+	      if (e.key === ' ' || e.key === 'Enter') {
+	        setState(':active', false);
+	      }
 	    };
 	  }
 
@@ -1487,7 +1522,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (style[':active'] && !getComponentField('_radiumMouseUpListener') && ExecutionEnvironment.canUseEventListeners) {
 	    newComponentFields._radiumMouseUpListener = MouseUpListener.subscribe(function () {
 	      Object.keys(getComponentField('state')._radiumStyleState).forEach(function (key) {
-	        if (getState(':active')) {
+	        if (getState(':active') === 'viamousedown') {
 	          setState(':active', false, key);
 	        }
 	      });
@@ -1521,7 +1556,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = resolveInteractionStyles;
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	/* @flow */
@@ -1565,7 +1600,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	/** @flow */
@@ -1656,12 +1691,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = resolveMediaQueries;
 
 /***/ },
-/* 19 */
-/***/ function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_19__;
-
-/***/ },
 /* 20 */
 /***/ function(module, exports) {
 
@@ -1745,7 +1774,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var React = __webpack_require__(19);
+	var React = __webpack_require__(3);
 
 	var Style = __webpack_require__(22);
 	var printStyles = __webpack_require__(20);
@@ -1790,20 +1819,24 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* @flow */
+
 	'use strict';
 
-	var createMarkupForStyles = __webpack_require__(23);
-	var Prefixer = __webpack_require__(13);
+	var camelCasePropsToDashCase = __webpack_require__(23);
+	var createMarkupForStyles = __webpack_require__(24);
+	var Prefixer = __webpack_require__(14);
 
-	var React = __webpack_require__(19);
+	var React = __webpack_require__(3);
 
-	var buildCssString = function buildCssString(component, selector, rules) {
+	var buildCssString = function buildCssString(selector /*: string*/, rules /*: Object*/, prefix /*: (rules: Object, componentName: string) => Object*/) /*: ?string*/ {
 	  if (!selector || !rules) {
-	    return;
+	    return null;
 	  }
 
-	  var prefixedRules = Prefixer.getPrefixedStyle(component, rules, 'css');
-	  var serializedRules = createMarkupForStyles(prefixedRules);
+	  var prefixedRules = prefix(rules, 'Style');
+	  var cssPrefixedRules = camelCasePropsToDashCase(prefixedRules);
+	  var serializedRules = createMarkupForStyles(cssPrefixedRules);
 
 	  return selector + '{' + serializedRules + '}';
 	};
@@ -1812,17 +1845,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	  displayName: 'Style',
 
 	  propTypes: {
+	    prefix: React.PropTypes.func.isRequired,
+
 	    rules: React.PropTypes.object,
 	    scopeSelector: React.PropTypes.string
 	  },
 
-	  getDefaultProps: function getDefaultProps() {
+	  getDefaultProps: function getDefaultProps() /*: {scopeSelector: string}*/ {
 	    return {
+	      prefix: Prefixer.getPrefixedStyle,
 	      scopeSelector: ''
 	    };
 	  },
 
-	  _buildStyles: function _buildStyles(styles) {
+	  _buildStyles: function _buildStyles(styles /*: Object*/) /*: string*/ {
 	    var _this = this;
 
 	    return Object.keys(styles).reduce(function (accumulator, selector) {
@@ -1832,28 +1868,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	        accumulator += _this._buildMediaQueryString(rules);
 	      } else {
 	        var completeSelector = (_this.props.scopeSelector ? _this.props.scopeSelector + ' ' : '') + selector;
-	        accumulator += buildCssString(_this, completeSelector, rules);
+	        accumulator += buildCssString(completeSelector, rules, _this.props.prefix) || '';
 	      }
 
 	      return accumulator;
 	    }, '');
 	  },
 
-	  _buildMediaQueryString: function _buildMediaQueryString(mediaQueryObj) {
+	  _buildMediaQueryString: function _buildMediaQueryString(stylesByMediaQuery /*: {[mediaQuery: string]: Object}*/) /*: string*/ {
 	    var _this2 = this;
 
 	    var contextMediaQueries = this._getContextMediaQueries();
 	    var mediaQueryString = '';
 
-	    Object.keys(mediaQueryObj).forEach(function (query) {
+	    Object.keys(stylesByMediaQuery).forEach(function (query) {
 	      var completeQuery = contextMediaQueries[query] ? contextMediaQueries[query] : query;
-	      mediaQueryString += '@media ' + completeQuery + '{' + _this2._buildStyles(mediaQueryObj[query]) + '}';
+	      mediaQueryString += '@media ' + completeQuery + '{' + _this2._buildStyles(stylesByMediaQuery[query]) + '}';
 	    });
 
 	    return mediaQueryString;
 	  },
 
-	  _getContextMediaQueries: function _getContextMediaQueries() {
+	  _getContextMediaQueries: function _getContextMediaQueries() /*: {[mediaQuery: string]: Object}*/ {
 	    var contextMediaQueries = {};
 	    if (this.context && this.context.mediaQueries) {
 	      Object.keys(this.context.mediaQueries).forEach((function (query) {
@@ -1864,7 +1900,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return contextMediaQueries;
 	  },
 
-	  render: function render() {
+	  render: function render() /*: ?ReactElement*/ {
 	    if (!this.props.rules) {
 	      return null;
 	    }
@@ -1885,8 +1921,36 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var createMarkupForStyles = function createMarkupForStyles(style /*: Object*/, spaces /*: string*/) /*: string*/ {
-	  spaces = spaces || '';
+	var _camelCaseRegex = /([a-z])?([A-Z])/g;
+	var _camelCaseReplacer = function _camelCaseReplacer(match, p1, p2) {
+	  return p1 + '-' + p2.toLowerCase();
+	};
+	var _camelCaseToDashCase = function _camelCaseToDashCase(s) {
+	  return s.replace(_camelCaseRegex, _camelCaseReplacer);
+	};
+
+	var camelCasePropsToDashCase = function camelCasePropsToDashCase(prefixedStyle /*: Object*/) /*: Object*/ {
+	  // Since prefix is expected to work on inline style objects, we must
+	  // translate the keys to dash case for rendering to CSS.
+	  return Object.keys(prefixedStyle).reduce(function (result, key) {
+	    result[_camelCaseToDashCase(key)] = prefixedStyle[key];
+	    return result;
+	  }, {});
+	};
+
+	module.exports = camelCasePropsToDashCase;
+
+/***/ },
+/* 24 */
+/***/ function(module, exports) {
+
+	/* @flow */
+
+	'use strict';
+
+	var createMarkupForStyles = function createMarkupForStyles(style /*: Object*/) /*: string*/ {
+	  var spaces /*: string*/ = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
+
 	  return Object.keys(style).map(function (property) {
 	    return spaces + property + ': ' + style[property] + ';';
 	  }).join('\n');
@@ -1895,38 +1959,55 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = createMarkupForStyles;
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* @flow */
 
 	'use strict';
 
-	var createMarkupForStyles = __webpack_require__(23);
-	var Prefixer = __webpack_require__(13);
+	var camelCasePropsToDashCase = __webpack_require__(23);
+	var createMarkupForStyles = __webpack_require__(24);
+	var Prefixer = __webpack_require__(14);
 
-	var ExecutionEnvironment = __webpack_require__(14);
+	var ExecutionEnvironment = __webpack_require__(15);
 
-	var isAnimationSupported = ExecutionEnvironment.canUseDOM && Prefixer.getPrefixedPropertyName('animation') !== false;
+	var isAnimationSupported = false;
+	var keyframesPrefixed = 'keyframes';
+
+	if (ExecutionEnvironment.canUseDOM) {
+	  // Animation feature detection and keyframes prefixing from MDN:
+	  // https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Detecting_CSS_animation_support
+	  var domPrefixes = ['Webkit', 'Moz', 'O', 'ms'];
+	  var element = (document.createElement('div') /*: any*/);
+
+	  if (element.style.animationName !== undefined) {
+	    isAnimationSupported = true;
+	  } else {
+	    domPrefixes.some(function (prefix) {
+	      if (element.style[prefix + 'AnimationName'] !== undefined) {
+	        keyframesPrefixed = '-' + prefix.toLowerCase() + '-keyframes';
+	        isAnimationSupported = true;
+	        return true;
+	      }
+	      return false;
+	    });
+	  }
+	}
 
 	var animationIndex = 1;
 	var animationStyleSheet = null;
-	var keyframesPrefixed = 'keyframes';
 
 	if (isAnimationSupported) {
 	  animationStyleSheet = (document.createElement('style') /*: any*/);
 	  document.head.appendChild(animationStyleSheet);
-
-	  // Test if prefix needed for keyframes (copied from PrefixFree)
-	  animationStyleSheet.textContent = '@keyframes {}';
-	  if (!animationStyleSheet.sheet.cssRules.length) {
-	    keyframesPrefixed = Prefixer.cssPrefix + 'keyframes';
-	  }
 	}
 
 	// Simple animation helper that injects CSS into a style object containing the
 	// keyframes, and returns a string with the generated animation name.
 	var keyframes = function keyframes(keyframeRules /*: {[percentage: string]: {[key: string]: string|number}}*/, componentName /*:: ?: string*/) /*: string*/ {
+	  var prefix /*: (style: Object, componentName: ?string) => Object*/ = arguments.length <= 2 || arguments[2] === undefined ? Prefixer.getPrefixedStyle : arguments[2];
+
 	  var name = 'Animation' + animationIndex;
 	  animationIndex += 1;
 
@@ -1936,8 +2017,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  var rule = '@' + keyframesPrefixed + ' ' + name + ' {\n' + Object.keys(keyframeRules).map(function (percentage) {
 	    var props = keyframeRules[percentage];
-	    var prefixedProps = Prefixer.getPrefixedStyle(componentName, props, 'css');
-	    var serializedProps = createMarkupForStyles(prefixedProps, '  ');
+	    var prefixedProps = prefix(props, componentName);
+	    var cssPrefixedProps = camelCasePropsToDashCase(prefixedProps);
+	    var serializedProps = createMarkupForStyles(cssPrefixedProps, '  ');
 	    return '  ' + percentage + ' {\n  ' + serializedProps + '\n  }';
 	  }).join('\n') + '\n}\n';
 

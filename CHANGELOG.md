@@ -1,5 +1,22 @@
 # Radium Changelog
 
+## 0.14.2 (October 17, 2015)
+
+### Bug Fixes
+
+- `:active` styles now triggered by space or enter
+- Callback `ref`s are now ignored, fixing #346
+- Heave use of media queries no longer causes setState on an unmounted component, fixing #382
+
+### New Features
+
+- Stateless components (function taking props) are now supported
+
+### Improvements
+
+- Updated examples to for React 0.14.0
+- Allow replacing the prefixer used by `Radium.keyframes` and `<Style>`
+
 ## 0.14.1 (September 15, 2015)
 
 ### Bug Fixes
