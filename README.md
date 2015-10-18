@@ -50,7 +50,7 @@ Convinced about CSS in JS with React, but not Radium? Check out our comprehensiv
 
 ## Usage
 
-Start by adding the `@Radium` decorator to your component class. Alternatively, wrap `Radium()` around your component, like `module.exports = Radium(Component)`, or `Component = Radium(Component)`, which works with classes and `createClass`. Then, write a style object as you normally would with inline styles, and add in styles for interactive states and media queries. Pass the style object to your component via `style={...}` and let Radium do the rest!
+Start by adding the `@Radium` decorator to your component class. Alternatively, wrap `Radium()` around your component, like `module.exports = Radium(Component)`, or `Component = Radium(Component)`, which works with classes, `createClass`, and stateless components (functions that take props and return a ReactElement). Then, write a style object as you normally would with inline styles, and add in styles for interactive states and media queries. Pass the style object to your component via `style={...}` and let Radium do the rest!
 
 ```as
 <Button kind="primary">Radium Button</Button>
