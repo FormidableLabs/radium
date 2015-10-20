@@ -1,12 +1,18 @@
 # Radium Changelog
 
+## 0.14.3 (October 19, 2015)
+
+### Bug Fixes
+
+- camelCasePropsToDashCase handles uppercase first character correctly, fixing #387
+
 ## 0.14.2 (October 17, 2015)
 
 ### Bug Fixes
 
 - `:active` styles now triggered by space or enter
 - Callback `ref`s are now ignored, fixing #346
-- Heave use of media queries no longer causes setState on an unmounted component, fixing #382
+- Heavy use of media queries no longer causes setState on an unmounted component, fixing #382
 
 ### New Features
 
