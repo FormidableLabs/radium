@@ -2,7 +2,7 @@
 
 var _camelCaseRegex = /([a-z])?([A-Z])/g;
 var _camelCaseReplacer = function (match, p1, p2) {
-  return p1 + '-' + p2.toLowerCase();
+  return (p1 || '') + '-' + p2.toLowerCase();
 };
 var _camelCaseToDashCase = function (s) {
   return s.replace(_camelCaseRegex, _camelCaseReplacer);
