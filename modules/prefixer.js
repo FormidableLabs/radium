@@ -5,14 +5,14 @@
  * @flow
  */
 
-var ExecutionEnvironment = require('exenv');
-var arrayFind = require('array-find');
+const ExecutionEnvironment = require('exenv');
+const arrayFind = require('array-find');
 
-var VENDOR_PREFIX_REGEX = /-(moz|webkit|ms|o)-/;
+const VENDOR_PREFIX_REGEX = /-(moz|webkit|ms|o)-/;
 
-var vendorPrefixes = ['Webkit', 'ms', 'Moz', 'O'];
+const vendorPrefixes = ['Webkit', 'ms', 'Moz', 'O'];
 
-var infoByCssPrefix = {
+const infoByCssPrefix = {
   '-moz-': {
     cssPrefix: '-moz-',
     jsPrefix: 'Moz',
@@ -127,7 +127,7 @@ var infoByCssPrefix = {
  * ba81b60ad8e93b747be42a03b797065932c49c96/
  * src/renderers/dom/shared/CSSProperty.js
  */
-var isUnitlessNumber = {
+const isUnitlessNumber = {
   boxFlex: true,
   boxFlexGroup: true,
   columnCount: true,
@@ -154,10 +154,10 @@ var isUnitlessNumber = {
   strokeWidth: true
 };
 
-var domStyle = {};
-var prefixedPropertyCache = {};
-var prefixedValueCache = {};
-var prefixInfo = {
+let domStyle = {};
+const prefixedPropertyCache = {};
+const prefixedValueCache = {};
+let prefixInfo = {
   cssPrefix: '',
   jsPrefix: ''
 };
@@ -173,13 +173,13 @@ if (ExecutionEnvironment.canUseDOM) {
   }
 
   // Based on http://davidwalsh.name/vendor-prefix
-  var prefixMatch;
-  var windowStyles = window.getComputedStyle(document.documentElement, '');
+  let prefixMatch;
+  const windowStyles = window.getComputedStyle(document.documentElement, '');
 
   // Array.prototype.slice.call(windowStyles) fails with
   // "Uncaught TypeError: undefined is not a function"
   // in older versions Android (KitKat) web views
-  for (var i = 0; i < windowStyles.length; i++) {
+  for (let i = 0; i < windowStyles.length; i++) {
     prefixMatch = windowStyles[i].match(VENDOR_PREFIX_REGEX);
 
     if (prefixMatch) {
@@ -187,24 +187,24 @@ if (ExecutionEnvironment.canUseDOM) {
     }
   }
 
-  var cssVendorPrefix = prefixMatch && prefixMatch[0];
+  const cssVendorPrefix = prefixMatch && prefixMatch[0];
 
   prefixInfo = cssVendorPrefix && infoByCssPrefix[cssVendorPrefix] ?
     infoByCssPrefix[cssVendorPrefix] :
     prefixInfo;
 }
 
-var getPrefixedPropertyName = function (property: string): string {
+const getPrefixedPropertyName = function (property: string): string {
   if (prefixedPropertyCache.hasOwnProperty(property)) {
     return prefixedPropertyCache[property];
   }
 
-  var unprefixed = property;
+  const unprefixed = property;
 
   // Try the prefixed version first. Chrome in particular has the `filter` and
   // `webkitFilter` properties availalbe on the style object, but only the
   // prefixed version actually works.
-  var possiblePropertyNames = [
+  let possiblePropertyNames = [
     // Prefixed
     prefixInfo.jsPrefix + property[0].toUpperCase() + property.slice(1),
     unprefixed
@@ -220,7 +220,7 @@ var getPrefixedPropertyName = function (property: string): string {
     );
   }
 
-  var workingProperty = arrayFind(
+  const workingProperty = arrayFind(
     possiblePropertyNames,
     function (possiblePropertyName) {
       if (possiblePropertyName in domStyle) {
@@ -238,8 +238,8 @@ var getPrefixedPropertyName = function (property: string): string {
 // otherwise we are at risk of being in a situation where someone
 // explicitly passes something like `MozBoxFlex: 1` and that will
 // in turn get transformed into `MozBoxFlex: 1px`.
-var _getUnprefixedProperty = function (property) {
-  var noPrefixProperty = property;
+const _getUnprefixedProperty = function (property) {
+  let noPrefixProperty = property;
 
   vendorPrefixes.some(prefix => {
     // Let's check if the property starts with a vendor prefix
@@ -267,8 +267,8 @@ var _getUnprefixedProperty = function (property) {
 // (https://github.com/facebook/react/issues/1873), and if they do, this
 // should change to a warning or be removed in favor of React's warning.
 // Same goes for below.
-var _addPixelSuffixToValueIfNeeded = function (originalProperty, value) {
-  var unPrefixedProperty = _getUnprefixedProperty(originalProperty);
+const _addPixelSuffixToValueIfNeeded = function (originalProperty, value) {
+  const unPrefixedProperty = _getUnprefixedProperty(originalProperty);
 
   if (
     value !== 0 &&
@@ -280,7 +280,7 @@ var _addPixelSuffixToValueIfNeeded = function (originalProperty, value) {
   return value;
 };
 
-var _getPrefixedValue = function (
+const _getPrefixedValue = function (
   componentName,
   property,
   value,
@@ -306,7 +306,7 @@ var _getPrefixedValue = function (
     }
   }
 
-  var cacheKey = Array.isArray(value) ? (
+  const cacheKey = Array.isArray(value) ? (
     value.join(' || ')
   ) : (
     property + value
@@ -316,7 +316,7 @@ var _getPrefixedValue = function (
     return prefixedValueCache[cacheKey];
   }
 
-  var possibleValues;
+  let possibleValues;
   if (Array.isArray(value)) {
     // Add px for the same values React would, otherwise the testing below will
     // fail and it will try to fallback.
@@ -351,7 +351,7 @@ var _getPrefixedValue = function (
   }
 
   // Test possible value in order
-  var workingValue = arrayFind(
+  const workingValue = arrayFind(
     possibleValues,
     function (possibleValue) {
       domStyle[property] = '';
@@ -375,7 +375,7 @@ var _getPrefixedValue = function (
     if (process.env.NODE_ENV !== 'production') {
       /* eslint-disable no-console */
       if (console && console.warn) {
-        var componentContext = componentName
+        const componentContext = componentName
           ? ` in component "${componentName}"`
           : '';
 
@@ -393,30 +393,30 @@ var _getPrefixedValue = function (
 
 // Returns a new style object with vendor prefixes added to property names
 // and values.
-var getPrefixedStyle = function (
+const getPrefixedStyle = function (
   style: Object,
   componentName: ?string,
 ): Object {
   if (!ExecutionEnvironment.canUseDOM) {
     return Object.keys(style).reduce((newStyle, key) => {
-      var value = style[key];
-      var newValue = Array.isArray(value) ? value[0] : value;
+      const value = style[key];
+      const newValue = Array.isArray(value) ? value[0] : value;
       newStyle[key] = newValue;
       return newStyle;
     }, {});
   }
 
-  var prefixedStyle = {};
+  const prefixedStyle = {};
   Object.keys(style).forEach(function (property) {
-    var value = style[property];
+    const value = style[property];
 
-    var newProperty = getPrefixedPropertyName(property);
+    const newProperty = getPrefixedPropertyName(property);
     if (!newProperty) {
       // Ignore unsupported properties
       if (process.env.NODE_ENV !== 'production') {
         /* eslint-disable no-console */
         if (console && console.warn) {
-          var componentContext = componentName
+          const componentContext = componentName
             ? ` in component "${componentName}"`
             : '';
 
@@ -429,7 +429,7 @@ var getPrefixedStyle = function (
       }
     }
 
-    var newValue = _getPrefixedValue(componentName, newProperty, value, property);
+    const newValue = _getPrefixedValue(componentName, newProperty, value, property);
 
     prefixedStyle[newProperty] = newValue;
   });

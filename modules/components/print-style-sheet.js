@@ -1,9 +1,9 @@
-var React = require('react');
+const React = require('react');
 
-var Style = require('./style.js');
-var printStyles = require('../print-styles.js');
+const Style = require('./style.js');
+const printStyles = require('../print-styles.js');
 
-var PrintStyle = React.createClass({
+const PrintStyle = React.createClass({
   getInitialState: function () {
     return this._getStylesState();
   },

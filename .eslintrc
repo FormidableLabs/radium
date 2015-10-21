@@ -152,6 +152,7 @@ rules:
     no-unused-vars: 2              # disallow declaration of variables that are not used in
                                    #    the code
     no-use-before-define: 2        # disallow use of variables before they are defined
+    no-var: 1
 
     ###########################################################################
     #                                                                         #

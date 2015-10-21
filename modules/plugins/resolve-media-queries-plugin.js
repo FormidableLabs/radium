@@ -3,8 +3,8 @@
 import type {MatchMediaType} from '../config';
 import type {PluginConfig, PluginResult} from '.';
 
-var _windowMatchMedia;
-var _getWindowMatchMedia = function (ExecutionEnvironment) {
+let _windowMatchMedia;
+const _getWindowMatchMedia = function (ExecutionEnvironment) {
   if (_windowMatchMedia === undefined) {
     _windowMatchMedia = !!ExecutionEnvironment.canUseDOM &&
       !!window &&
@@ -15,7 +15,7 @@ var _getWindowMatchMedia = function (ExecutionEnvironment) {
   return _windowMatchMedia;
 };
 
-var resolveMediaQueries = function ({
+const resolveMediaQueries = function ({
   ExecutionEnvironment,
   getComponentField,
   getGlobalState,
@@ -24,34 +24,34 @@ var resolveMediaQueries = function ({
   setState,
   style
 }: PluginConfig): PluginResult {
-  var newComponentFields = {};
-  var newStyle = style;
-  var matchMedia: ?MatchMediaType = config.matchMedia ||
+  const newComponentFields = {};
+  let newStyle = style;
+  const matchMedia: ?MatchMediaType = config.matchMedia ||
     _getWindowMatchMedia(ExecutionEnvironment);
   if (!matchMedia) {
     return newStyle;
   }
 
-  var mediaQueryListByQueryString =
+  const mediaQueryListByQueryString =
     getGlobalState('mediaQueryListByQueryString') || {};
 
   Object.keys(style)
   .filter(function (name) { return name.indexOf('@media') === 0; })
   .map(function (query) {
-    var mediaQueryStyles = style[query];
+    const mediaQueryStyles = style[query];
     query = query.replace('@media ', '');
 
     // Create a global MediaQueryList if one doesn't already exist
-    var mql = mediaQueryListByQueryString[query];
+    let mql = mediaQueryListByQueryString[query];
     if (!mql && matchMedia) {
       mediaQueryListByQueryString[query] = mql = matchMedia(query);
     }
 
-    var listenersByQuery =
+    const listenersByQuery =
       getComponentField('_radiumMediaQueryListenersByQuery');
 
     if (!listenersByQuery || !listenersByQuery[query]) {
-      var listener = () => setState(query, mql.matches, '_all');
+      const listener = () => setState(query, mql.matches, '_all');
       mql.addListener(listener);
       newComponentFields._radiumMediaQueryListenersByQuery = {
         ...listenersByQuery

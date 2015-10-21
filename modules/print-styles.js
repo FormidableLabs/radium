@@ -1,16 +1,16 @@
 /* @flow */
 
-var allPrintStyles = {};
-var listeners = [];
+const allPrintStyles = {};
+const listeners = [];
 
-var subscribe = function (listener: () => void): {remove: () => void} {
+const subscribe = function (listener: () => void): {remove: () => void} {
   if (listeners.indexOf(listener) === -1) {
     listeners.push(listener);
   }
 
   return {
     remove: function () {
-      var listenerIndex = listeners.indexOf(listener);
+      const listenerIndex = listeners.indexOf(listener);
 
       if (listenerIndex > -1) {
         listeners.splice(listenerIndex, 1);
@@ -19,15 +19,15 @@ var subscribe = function (listener: () => void): {remove: () => void} {
   };
 };
 
-var _emitChange = function () {
+const _emitChange = function () {
   listeners.forEach(listener => listener());
 };
 
-var _appendImportantToEachValue = function (styleObj) {
-  var importantStyleObj = {};
+const _appendImportantToEachValue = function (styleObj) {
+  const importantStyleObj = {};
 
   Object.keys(styleObj).forEach(key => {
-    var value = styleObj[key];
+    let value = styleObj[key];
 
     // This breaks unitless values but they'll be deprecated soon anyway
     // https://github.com/facebook/react/issues/1873
@@ -38,16 +38,16 @@ var _appendImportantToEachValue = function (styleObj) {
   return importantStyleObj;
 };
 
-var addPrintStyles = function (Component: constructor) {
+const addPrintStyles = function (Component: constructor) {
   if (!Component.printStyles) {
     return;
   }
 
-  var printStyleClass = {};
+  const printStyleClass = {};
 
   Object.keys(Component.printStyles).forEach((key) => {
-    var styles = Component.printStyles[key];
-    var className = `Radium-${Component.displayName}-${key}`;
+    const styles = Component.printStyles[key];
+    const className = `Radium-${Component.displayName}-${key}`;
     allPrintStyles[`.${className}`] = _appendImportantToEachValue(styles);
     printStyleClass[key] = className;
   });
@@ -58,7 +58,7 @@ var addPrintStyles = function (Component: constructor) {
   return printStyleClass;
 };
 
-var getPrintStyles = function (): Object  {
+const getPrintStyles = function (): Object  {
   return allPrintStyles;
 };
 

@@ -1,5 +1,5 @@
 /** @flow */
-/* eslint-disable no-use-before-define, block-scoped-var */
+/* eslint-disable no-use-before-define, block-scoped-const */
 
 import type {PluginConfig, PluginResult} from './plugins';
 

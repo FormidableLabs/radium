@@ -1,8 +1,8 @@
-var camelCasePropsToDashCase = require('camel-case-props-to-dash-case.js');
+const camelCasePropsToDashCase = require('camel-case-props-to-dash-case.js');
 
 describe('camelCasePropsToDashCase', function () {
   it('converts to dash case correctly', function () {
-    var result = camelCasePropsToDashCase({
+    const result = camelCasePropsToDashCase({
       borderLeft: '1px solid black',
       WebkitBoxSizing: 'border-box'
     });

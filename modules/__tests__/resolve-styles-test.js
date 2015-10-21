@@ -1,12 +1,12 @@
-var React = require('react');
-var MouseUpListener = require('plugins/mouse-up-listener.js');
-var objectAssign = require('object-assign');
-var resolveStyles = require('inject!resolve-styles.js')({
+const React = require('react');
+const MouseUpListener = require('plugins/mouse-up-listener.js');
+const objectAssign = require('object-assign');
+const resolveStyles = require('inject!resolve-styles.js')({
   'exenv': require('__mocks__/exenv.js'),
   './prefixer': require('__mocks__/prefixer.js')
 });
 
-var genComponent = function () {
+const genComponent = function () {
   return {
     setState: sinon.spy(function (newState) {
       objectAssign(this.state, newState);
@@ -17,15 +17,15 @@ var genComponent = function () {
 };
 
 // http://stackoverflow.com/a/25395068/13932
-var permutate = function (arr) {
-  var permutations = [];
+const permutate = function (arr) {
+  const permutations = [];
   if (arr.length === 1) {
     return [arr];
   }
 
-  for (var i = 0; i < arr.length; i++) {
-    var subPerms = permutate(arr.slice(0, i).concat(arr.slice(i + 1)));
-    for (var j = 0; j < subPerms.length; j++) {
+  for (const i = 0; i < arr.length; i++) {
+    const subPerms = permutate(arr.slice(0, i).concat(arr.slice(i + 1)));
+    for (const j = 0; j < subPerms.length; j++) {
       subPerms[j].unshift(arr[i]);
       permutations.push(subPerms[j]);
     }
@@ -34,8 +34,8 @@ var permutate = function (arr) {
   return permutations;
 };
 
-var getChildrenArray = function (children) {
-  var childrenArray = [];
+const getChildrenArray = function (children) {
+  const childrenArray = [];
   React.Children.forEach(children, function (child) {
     childrenArray.push(child);
   });
@@ -51,70 +51,70 @@ describe('resolveStyles', function () {
   describe('no-op behavior', function () {
 
     it('handles null rendered element', function () {
-      var component = genComponent();
+      const component = genComponent();
 
       resolveStyles(component, null);
     });
 
     it('doesn\'t explode', function () {
-      var component = genComponent();
-      var renderedElement = <div />;
+      const component = genComponent();
+      const renderedElement = <div />;
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
 
       expect(result).to.equal(renderedElement);
       expect(result.props).to.equal(renderedElement.props);
     });
 
     it('passes through normal style objects', function () {
-      var component = genComponent();
-      var renderedElement = <div style={{color: 'blue'}} />;
+      const component = genComponent();
+      const renderedElement = <div style={{color: 'blue'}} />;
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
 
       expect(result.props.style).to.deep.equal(renderedElement.props.style);
     });
 
     it('passes through normal style objects of children', function () {
-      var component = genComponent();
-      var style = {color: 'blue'};
-      var renderedElement = (
+      const component = genComponent();
+      const style = {color: 'blue'};
+      const renderedElement = (
         <div>
           <div style={style} />
         </div>
       );
 
-      var result = resolveStyles(component, renderedElement);
-      var children = getChildrenArray(result.props.children);
+      const result = resolveStyles(component, renderedElement);
+      const children = getChildrenArray(result.props.children);
       expect(children[0].props.style).to.deep.equal(style);
     });
 
     it('doesn\'t wrap string children in spans', function () {
-      var component = genComponent();
-      var renderedElement = <div>Hello</div>;
+      const component = genComponent();
+      const renderedElement = <div>Hello</div>;
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
       expect(result.props.children).to.equal('Hello');
     });
 
     it('doesn\'t wrap number children in spans', function () {
-      var component = genComponent();
-      var renderedElement = <div>{88347}</div>;
+      const component = genComponent();
+      const renderedElement = <div>{88347}</div>;
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
       expect(result.props.children).to.equal(88347);
     });
 
     it('ignores invalid children', function () {
-      var component = genComponent();
+      const component = genComponent();
 
       // JSX won't let this through, so do it with a plain object instead
-      var renderedElement = {props: {
+      const renderedElement = {props: {
         children: [null]
       }};
 
-      var result = resolveStyles(component, renderedElement);
-      var children = getChildrenArray(result.props.children);
+      const result = resolveStyles(component, renderedElement);
+      const children = getChildrenArray(result.props.children);
 
       expect(children[0]).to.be.undefined;
     });
@@ -122,15 +122,15 @@ describe('resolveStyles', function () {
     it('only processes an element once', function () {
       sinon.spy(React, 'cloneElement');
 
-      var component = genComponent();
-      var renderedElement = (
+      const component = genComponent();
+      const renderedElement = (
         <div style={[
           {background: 'white'},
           {color: 'blue'}
         ]} />
       );
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
       result = resolveStyles(component, result);
 
       expect(result.props.style).to.deep.equal({
@@ -148,15 +148,15 @@ describe('resolveStyles', function () {
   describe('style array', function () {
 
     it('merges an array of style objects', function () {
-      var component = genComponent();
-      var renderedElement = (
+      const component = genComponent();
+      const renderedElement = (
         <div style={[
           {background: 'white'},
           {color: 'blue'}
         ]} />
       );
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
 
       expect(result.props.style).to.deep.equal({
         background: 'white',
@@ -165,8 +165,8 @@ describe('resolveStyles', function () {
     });
 
     it('skips falsy and non-object entries', function () {
-      var component = genComponent();
-      var renderedElement = (
+      const component = genComponent();
+      const renderedElement = (
         <div style={[
           {background: 'white'},
           false,
@@ -178,7 +178,7 @@ describe('resolveStyles', function () {
         ]} />
       );
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
 
       expect(result.props.style).to.deep.equal({
         background: 'white',
@@ -187,15 +187,15 @@ describe('resolveStyles', function () {
     });
 
     it('overwrites earlier styles with later ones', function () {
-      var component = genComponent();
-      var renderedElement = (
+      const component = genComponent();
+      const renderedElement = (
         <div style={[
           {background: 'white'},
           {background: 'blue'}
         ]} />
       );
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
 
       expect(result.props.style).to.deep.equal({
         background: 'blue'
@@ -203,15 +203,15 @@ describe('resolveStyles', function () {
     });
 
     it('merges nested special styles', function () {
-      var component = genComponent();
-      var renderedElement = (
+      const component = genComponent();
+      const renderedElement = (
         <div style={[
           {':hover': { background: 'white'}},
           {':hover': {color: 'blue'}}
         ]} />
       );
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
       result.props.onMouseEnter();
       result = resolveStyles(component, renderedElement);
 
@@ -223,26 +223,26 @@ describe('resolveStyles', function () {
 
   });
 
-  var createPseduoStyleTests = function (pseudo, onHandlerName, offHandlerName) {
+  const createPseduoStyleTests = function (pseudo, onHandlerName, offHandlerName) {
 
     it('strips special styles if not applied', function () {
-      var component = genComponent();
-      var style = {background: 'blue'};
+      const component = genComponent();
+      const style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
-      var renderedElement = <div style={style} />;
+      const renderedElement = <div style={style} />;
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
 
       expect(result.props.style).to.deep.equal({background: 'blue'});
     });
 
     it('adds appropriate handlers for ' + pseudo + ' styles', function () {
-      var component = genComponent();
-      var style = {background: 'blue'};
+      const component = genComponent();
+      const style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
-      var renderedElement = <div style={style} />;
+      const renderedElement = <div style={style} />;
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
 
       expect(typeof result.props[onHandlerName]).to.equal('function');
       if (offHandlerName) {
@@ -251,12 +251,12 @@ describe('resolveStyles', function () {
     });
 
     it('adds ' + pseudo + ' styles ' + onHandlerName, function () {
-      var component = genComponent();
-      var style = {background: 'blue'};
+      const component = genComponent();
+      const style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
-      var renderedElement = <div style={style} />;
+      const renderedElement = <div style={style} />;
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).to.equal('blue');
 
       result.props[onHandlerName]();
@@ -270,13 +270,13 @@ describe('resolveStyles', function () {
     });
 
     it('throws if multiple elements have the same key', function () {
-      var component = genComponent();
-      var style = {background: 'blue'};
+      const component = genComponent();
+      const style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
 
       // Use ref instead of key here because React.Children.map will discard
       // the duplicate keyed element.
-      var renderedElement = (
+      const renderedElement = (
         <div>
           <div ref="foo" style={style} />
           <div ref="foo" style={style} />
@@ -289,11 +289,11 @@ describe('resolveStyles', function () {
     });
 
     it('throws if multiple elements have no key', function () {
-      var component = genComponent();
-      var style = {background: 'blue'};
+      const component = genComponent();
+      const style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
 
-      var renderedElement = (
+      const renderedElement = (
         <div>
           <div style={style} />
           <div style={style} />
@@ -306,19 +306,19 @@ describe('resolveStyles', function () {
     });
 
     it('adds ' + pseudo + ' styles to correct element by key', function () {
-      var component = genComponent();
-      var style = {background: 'blue'};
+      const component = genComponent();
+      const style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
 
-      var renderedElement = (
+      const renderedElement = (
         <div>
           <div key="foo" />
           <div key="bar" style={style} />
         </div>
       );
 
-      var result = resolveStyles(component, renderedElement);
-      var children = getChildrenArray(result.props.children);
+      const result = resolveStyles(component, renderedElement);
+      const children = getChildrenArray(result.props.children);
       expect(children[0].props.style).to.be.undefined;
       expect(children[1].props.style.background).to.equal('blue');
 
@@ -331,19 +331,19 @@ describe('resolveStyles', function () {
     });
 
     it('adds ' + pseudo + ' styles to correct element by ref', function () {
-      var component = genComponent();
-      var style = {background: 'blue'};
+      const component = genComponent();
+      const style = {background: 'blue'};
       style[':' + pseudo] = {background: 'red'};
 
-      var renderedElement = (
+      const renderedElement = (
         <div>
           <div ref="foo" />
           <div ref="bar" style={style} />
         </div>
       );
 
-      var result = resolveStyles(component, renderedElement);
-      var children = getChildrenArray(result.props.children);
+      const result = resolveStyles(component, renderedElement);
+      const children = getChildrenArray(result.props.children);
       expect(children[0].props.style).to.be.undefined;
       expect(children[1].props.style.background).to.equal('blue');
 
@@ -357,12 +357,12 @@ describe('resolveStyles', function () {
 
     if (offHandlerName) {
       it('removes ' + pseudo + ' styles ' + offHandlerName, function () {
-        var component = genComponent();
-        var style = {background: 'blue'};
+        const component = genComponent();
+        const style = {background: 'blue'};
         style[':' + pseudo] = {background: 'red'};
-        var renderedElement = <div style={style} />;
+        const renderedElement = <div style={style} />;
 
-        var result = resolveStyles(component, renderedElement);
+        const result = resolveStyles(component, renderedElement);
 
         result.props[onHandlerName]();
 
@@ -378,16 +378,16 @@ describe('resolveStyles', function () {
       });
 
       it('doesn\'t mutate state', function () {
-        var component = genComponent();
-        var style = {background: 'blue'};
+        const component = genComponent();
+        const style = {background: 'blue'};
         style[':' + pseudo] = {background: 'red'};
-        var renderedElement = <div style={style} />;
+        const renderedElement = <div style={style} />;
 
-        var result = resolveStyles(component, renderedElement);
+        const result = resolveStyles(component, renderedElement);
 
         // Capturing a reference to the existing state is enough, since Radium
         // MUST return a new copy for shouldComponentUpdate.
-        var previousState = component.state._radiumStyleState;
+        const previousState = component.state._radiumStyleState;
         result.props[onHandlerName]();
         // If they are still equal here, that means we mutated the existing
         // state, which will break shouldComponentUpdate.
@@ -415,8 +415,8 @@ describe('resolveStyles', function () {
     createPseduoStyleTests('active', 'onMouseDown');
 
     it('subscribes to mouse up listener', function () {
-      var component = genComponent();
-      var renderedElement = <div style={{':active': {background: 'red'}}} />;
+      const component = genComponent();
+      const renderedElement = <div style={{':active': {background: 'red'}}} />;
 
       resolveStyles(component, renderedElement);
 
@@ -424,14 +424,14 @@ describe('resolveStyles', function () {
     });
 
     it('adds active styles on mouse down', function () {
-      var component = genComponent();
-      var style = {
+      const component = genComponent();
+      const style = {
         background: 'blue',
         ':active': {background: 'red'}
       };
-      var renderedElement = <div style={style} />;
+      const renderedElement = <div style={style} />;
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).to.equal('blue');
 
       result.props.onMouseDown();
@@ -442,14 +442,14 @@ describe('resolveStyles', function () {
     });
 
     it('removes active styles on mouse up', function () {
-      var component = genComponent();
-      var style = {
+      const component = genComponent();
+      const style = {
         background: 'blue',
         ':active': {background: 'red'}
       };
-      var renderedElement = <div style={style} />;
+      const renderedElement = <div style={style} />;
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
 
       result.props.onMouseDown();
 
@@ -464,14 +464,14 @@ describe('resolveStyles', function () {
     });
 
     it('ignores mouse up if no active styles', function () {
-      var component = genComponent();
-      var style = {
+      const component = genComponent();
+      const style = {
         background: 'blue',
         ':active': {background: 'red'}
       };
-      var renderedElement = <div style={style} />;
+      const renderedElement = <div style={style} />;
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
 
       result.props.onMouseDown();
 
@@ -484,20 +484,20 @@ describe('resolveStyles', function () {
     });
 
     it('calls existing onMouseDown handler', function () {
-      var component = genComponent();
-      var style = {
+      const component = genComponent();
+      const style = {
         background: 'blue',
         ':active': {background: 'red'}
       };
-      var originalOnMouseDown = sinon.spy();
-      var renderedElement = (
+      const originalOnMouseDown = sinon.spy();
+      const renderedElement = (
         <div
           onMouseDown={originalOnMouseDown}
           style={style}
         />
       );
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
 
       result.props.onMouseDown();
 
@@ -514,13 +514,13 @@ describe('resolveStyles', function () {
     });
 
     it('listens for media queries', function () {
-      var component = genComponent();
-      var addListener = sinon.spy();
-      var matchMedia = sinon.spy(function () {
+      const component = genComponent();
+      const addListener = sinon.spy();
+      const matchMedia = sinon.spy(function () {
         return {addListener: addListener};
       });
 
-      var renderedElement = (
+      const renderedElement = (
         <div style={{
           '@media (max-width: 400px)': {background: 'red'}
         }} />
@@ -532,13 +532,13 @@ describe('resolveStyles', function () {
     });
 
     it('only listens once for a single element', function () {
-      var component = genComponent();
-      var addListener = sinon.spy();
-      var matchMedia = sinon.spy(function () {
+      const component = genComponent();
+      const addListener = sinon.spy();
+      const matchMedia = sinon.spy(function () {
         return {addListener: addListener};
       });
 
-      var renderedElement = (
+      const renderedElement = (
         <div style={{
           '@media (max-width: 400px)': {background: 'red'}
         }} />
@@ -552,14 +552,14 @@ describe('resolveStyles', function () {
     });
 
     it('listens once per component', function () {
-      var component1 = genComponent();
-      var component2 = genComponent();
-      var addListener = sinon.spy();
-      var matchMedia = sinon.spy(function () {
+      const component1 = genComponent();
+      const component2 = genComponent();
+      const addListener = sinon.spy();
+      const matchMedia = sinon.spy(function () {
         return {addListener: addListener};
       });
 
-      var renderedElement = (
+      const renderedElement = (
         <div>
           <div
             key="first"
@@ -580,35 +580,35 @@ describe('resolveStyles', function () {
     });
 
     it('applies styles when media query matches', function () {
-      var component = genComponent();
-      var matchMedia = sinon.spy(function () {
+      const component = genComponent();
+      const matchMedia = sinon.spy(function () {
         return {
           addListener: sinon.spy(),
           matches: true
         };
       });
 
-      var renderedElement = (
+      const renderedElement = (
         <div style={{
           background: 'blue',
           '@media (max-width: 400px)': {background: 'red'}
         }} />
       );
 
-      var result = resolveStyles(component, renderedElement, {matchMedia});
+      const result = resolveStyles(component, renderedElement, {matchMedia});
       expect(result.props.style.background).to.equal('red');
     });
 
     it('merges nested pseudo styles', function () {
-      var component = genComponent();
-      var matchMedia = sinon.spy(function () {
+      const component = genComponent();
+      const matchMedia = sinon.spy(function () {
         return {
           addListener: sinon.spy(),
           matches: true
         };
       });
 
-      var renderedElement = (
+      const renderedElement = (
         <div style={[
           {
             background: 'blue',
@@ -633,7 +633,7 @@ describe('resolveStyles', function () {
         ]} />
       );
 
-      var result = resolveStyles(component, renderedElement, {matchMedia});
+      const result = resolveStyles(component, renderedElement, {matchMedia});
       expect(result.props.style.background).to.equal('red');
 
       result.props.onMouseEnter();
@@ -644,20 +644,20 @@ describe('resolveStyles', function () {
     });
 
     it('calls component setState when media query changes', function () {
-      var component1 = genComponent();
-      var component2 = genComponent();
-      var listeners = [];
-      var addListener = sinon.spy(
+      const component1 = genComponent();
+      const component2 = genComponent();
+      const listeners = [];
+      const addListener = sinon.spy(
         function (listener) {
           listeners.push(listener);
         }
       );
-      var mql = {addListener: addListener};
-      var matchMedia = sinon.spy(function () {
+      const mql = {addListener: addListener};
+      const matchMedia = sinon.spy(function () {
         return mql;
       });
 
-      var renderedElement = (
+      const renderedElement = (
         <div style={{
           background: 'blue',
           '@media (max-width: 400px)': {background: 'red'}
@@ -674,16 +674,16 @@ describe('resolveStyles', function () {
     });
 
     it('saves listeners on component for later removal', function () {
-      var component = genComponent();
-      var mql = {
+      const component = genComponent();
+      const mql = {
         addListener: sinon.spy(),
         removeListener: sinon.spy()
       };
-      var matchMedia = sinon.spy(function () {
+      const matchMedia = sinon.spy(function () {
         return mql;
       });
 
-      var renderedElement = (
+      const renderedElement = (
         <div style={{
           background: 'blue',
           '@media (max-width: 400px)': {background: 'red'}
@@ -705,30 +705,30 @@ describe('resolveStyles', function () {
   describe('multiple states triggered at once', function () {
 
     describe('applies pseudo styles in the defined order', function () {
-      var component = genComponent();
-      var stylePermutations = permutate([
+      const component = genComponent();
+      const stylePermutations = permutate([
         {name: ':active', style: {background: 'red'}},
         {name: ':focus', style: {background: 'yellow'}},
         {name: ':hover', style: {background: 'blue'}}
       ]);
-      var onHandlerPermutations = permutate([
+      const onHandlerPermutations = permutate([
         'onFocus',
         'onMouseDown',
         'onMouseEnter'
       ]);
 
-      var createMultiPseudoTest = function (pseudoStyles, onHandlers) {
-        var name = 'applies pseudo styles in the defined order: ' +
+      const createMultiPseudoTest = function (pseudoStyles, onHandlers) {
+        const name = 'applies pseudo styles in the defined order: ' +
           pseudoStyles.map(function (pseudo) { return pseudo.name; }).join(', ') +
           ' when handlers called in order: ' + onHandlers.join(', ');
         it(name, function () {
-          var style = {};
+          const style = {};
           pseudoStyles.forEach(function (pseudo) {
             style[pseudo.name] = pseudo.style;
           });
-          var renderedElement = <div style={style} />;
+          const renderedElement = <div style={style} />;
 
-          var result = resolveStyles(component, renderedElement);
+          const result = resolveStyles(component, renderedElement);
 
           onHandlers.forEach(function (onHandler) {
             result.props[onHandler]();
@@ -752,17 +752,17 @@ describe('resolveStyles', function () {
 
   describe('React.Children.only', function () {
     it('doesn\'t break React.Children.only', function () {
-      var component = genComponent();
-      var renderedElement = <div><span /></div>;
+      const component = genComponent();
+      const renderedElement = <div><span /></div>;
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
 
       expect(React.Children.only(result.props.children)).to.be.ok;
     });
 
     it('doesn\'t break when only child isn\'t ReactElement', function () {
-      var component = genComponent();
-      var renderedElement = <div>Foo</div>;
+      const component = genComponent();
+      const renderedElement = <div>Foo</div>;
 
       resolveStyles(component, renderedElement);
     });
@@ -770,28 +770,28 @@ describe('resolveStyles', function () {
 
   describe('ReactComponentElement children', function () {
     it('doesn\'t resolve ReactComponentElement children', function () {
-      var component = genComponent();
+      const component = genComponent();
       class CustomComponent extends React.Component {}
-      var style = {':hover': {}};
-      var renderedElement = (
+      const style = {':hover': {}};
+      const renderedElement = (
         <div>
           <CustomComponent style={style}/>
         </div>
       );
 
-      var result = resolveStyles(component, renderedElement);
-      var children = getChildrenArray(result.props.children);
+      const result = resolveStyles(component, renderedElement);
+      const children = getChildrenArray(result.props.children);
       expect(children[0].props.style).to.deep.equal(style);
     });
 
     it('resolves ReactDOMElement children of ReactComponentElements', function () {
-      var component = genComponent();
+      const component = genComponent();
       class CustomComponent extends React.Component {}
-      var style = [
+      const style = [
         {background: 'white'},
         {color: 'blue'}
       ];
-      var renderedElement = (
+      const renderedElement = (
         <div style={style}>
           <CustomComponent style={style}>
             <div style={style} />
@@ -799,16 +799,16 @@ describe('resolveStyles', function () {
         </div>
       );
 
-      var result = resolveStyles(component, renderedElement);
+      const result = resolveStyles(component, renderedElement);
       expect(result.props.style).to.deep.equal({
         background: 'white',
         color: 'blue'
       });
 
-      var children = getChildrenArray(result.props.children);
+      const children = getChildrenArray(result.props.children);
       expect(children[0].props.style).to.deep.equal(style);
 
-      var componentChildren = getChildrenArray(children[0].props.children);
+      const componentChildren = getChildrenArray(children[0].props.children);
       expect(componentChildren[0].props.style).to.deep.equal({
         background: 'white',
         color: 'blue'
@@ -828,8 +828,8 @@ describe('resolveStyles', function () {
     });
 
     it('warns when mixing longhand and shorthand properties', function () {
-      var component = genComponent();
-      var renderedElement = (
+      const component = genComponent();
+      const renderedElement = (
         <div style={{
           border: '1px solid black',
           borderWidth: '0 1px 1px 1px'
@@ -844,8 +844,8 @@ describe('resolveStyles', function () {
     });
 
     it('warns when mixing longhand and shorthand properties in nested styles', function () {
-      var component = genComponent();
-      var renderedElement = (
+      const component = genComponent();
+      const renderedElement = (
         <div style={{
           ':hover': {
             border: '1px solid black',
@@ -862,8 +862,8 @@ describe('resolveStyles', function () {
     });
 
     it('does not warn when mixing border and borderRadius', function () {
-      var component = genComponent();
-      var renderedElement = (
+      const component = genComponent();
+      const renderedElement = (
         <div style={{
           border: '1px solid black',
           borderRadius: '5px'
@@ -876,8 +876,8 @@ describe('resolveStyles', function () {
     });
 
     it('does not throw when passed a falsy entry value', function () {
-      var component = genComponent();
-      var renderedElement = <div style={{height: null }} />;
+      const component = genComponent();
+      const renderedElement = <div style={{height: null }} />;
 
       expect(function () {
         resolveStyles(component, renderedElement);

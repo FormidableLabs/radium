@@ -1,13 +1,13 @@
 /** @flow */
-/* eslint-disable block-scoped-var */
+/* eslint-disable block-scoped-const */
 
 import type {Config} from '../config';
 
-var checkPropsPlugin = require('./check-props-plugin');
-var mergeStyleArrayPlugin = require('./merge-style-array-plugin');
-var prefixPlugin = require('./prefix-plugin');
-var resolveInteractionStylesPlugin = require('./resolve-interaction-styles-plugin');
-var resolveMediaQueriesPlugin = require('./resolve-media-queries-plugin');
+const checkPropsPlugin = require('./check-props-plugin');
+const mergeStyleArrayPlugin = require('./merge-style-array-plugin');
+const prefixPlugin = require('./prefix-plugin');
+const resolveInteractionStylesPlugin = require('./resolve-interaction-styles-plugin');
+const resolveMediaQueriesPlugin = require('./resolve-media-queries-plugin');
 
 export type PluginConfig = {
   // May not be readable if code has been minified

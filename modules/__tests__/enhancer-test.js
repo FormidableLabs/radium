@@ -1,17 +1,17 @@
-var resolveStyles = sinon.spy(require('resolve-styles.js'));
-var Enhancer = require('inject!enhancer.js')({
+const resolveStyles = sinon.spy(require('resolve-styles.js'));
+const Enhancer = require('inject!enhancer.js')({
   './resolve-styles.js': resolveStyles
 });
 
-var React = require('react');
-var {Component} = React;
+const React = require('react');
+const {Component} = React;
 
 describe('Enhancer', () => {
   it('sets up initial state', () => {
     class Composed extends Component { }
-    var Enhanced = Enhancer(Composed);
+    const Enhanced = Enhancer(Composed);
 
-    var instance = new Enhanced();
+    const instance = new Enhanced();
 
     expect(instance.state).to.deep.equal({_radiumStyleState: {}});
   });
@@ -24,9 +24,9 @@ describe('Enhancer', () => {
       }
       render () {}
     }
-    var Enhanced = Enhancer(Composed);
+    const Enhanced = Enhancer(Composed);
 
-    var instance = new Enhanced();
+    const instance = new Enhanced();
 
 
     expect(instance.state).to.deep.equal(
@@ -41,24 +41,24 @@ describe('Enhancer', () => {
       }
       render () {}
     }
-    var Enhanced = Enhancer(Composed);
+    const Enhanced = Enhancer(Composed);
 
-    var instance = new Enhanced({foo: 'bar'});
+    const instance = new Enhanced({foo: 'bar'});
 
     expect(instance.props).to.deep.equal({foo: 'bar'});
   });
 
   it('calls existing render function, then resolveStyles', () => {
-    var renderMock = sinon.spy();
+    const renderMock = sinon.spy();
     class Composed extends Component {
       render () {
         renderMock();
         return null;
       }
     }
-    var Enhanced = Enhancer(Composed);
+    const Enhanced = Enhancer(Composed);
 
-    var instance = new Enhanced();
+    const instance = new Enhanced();
     instance.render();
 
     expect(renderMock).to.have.been.called;
@@ -66,7 +66,7 @@ describe('Enhancer', () => {
   });
 
   it('calls existing constructor only once', () => {
-    var constructorMock = sinon.spy();
+    const constructorMock = sinon.spy();
     class Composed extends Component {
       constructor () {
         super();
@@ -74,7 +74,7 @@ describe('Enhancer', () => {
       }
       render () {}
     }
-    var Enhanced = Enhancer(Composed);
+    const Enhanced = Enhancer(Composed);
 
     new Enhanced(); // eslint-disable-line no-new
 
@@ -85,7 +85,7 @@ describe('Enhancer', () => {
     class Composed extends Component {}
     Composed.displayName = 'Composed';
 
-    var Enhanced = Enhancer(Composed);
+    const Enhanced = Enhancer(Composed);
 
     expect(Enhanced.displayName).to.equal(Composed.displayName);
   });
@@ -100,31 +100,31 @@ describe('Enhancer', () => {
       bar: { display: 'block' }
     };
 
-    var Enhanced = Enhancer(Composed);
+    const Enhanced = Enhancer(Composed);
 
-    var enhanced = new Enhanced();
+    const enhanced = new Enhanced();
     expect(enhanced.printStyleClass.foo).to.equal('Radium-PrintStyleTest-foo');
     expect(enhanced.printStyleClass.bar).to.equal('Radium-PrintStyleTest-bar');
   });
 
   it('calls existing componentWillUnmount function', () => {
-    var existingComponentWillUnmount = sinon.spy();
+    const existingComponentWillUnmount = sinon.spy();
     class Composed extends Component {
       componentWillUnmount () {
         existingComponentWillUnmount();
       }
       render () {}
     }
-    var Enhanced = Enhancer(Composed);
+    const Enhanced = Enhancer(Composed);
 
-    var instance = new Enhanced();
+    const instance = new Enhanced();
     instance.componentWillUnmount();
 
     expect(existingComponentWillUnmount).to.have.been.called;
   });
 
   it('removes mouse up listener on componentWillUnmount', () => {
-    var removeMouseUpListener = sinon.spy();
+    const removeMouseUpListener = sinon.spy();
     class Composed extends Component {
       constructor () {
         super();
@@ -132,16 +132,16 @@ describe('Enhancer', () => {
       }
       render () {}
     }
-    var Enhanced = Enhancer(Composed);
+    const Enhanced = Enhancer(Composed);
 
-    var instance = new Enhanced();
+    const instance = new Enhanced();
     instance.componentWillUnmount();
 
     expect(removeMouseUpListener).to.have.been.called;
   });
 
   it('removes media query listeners on componentWillUnmount', () => {
-    var mediaQueryListenersByQuery = {
+    const mediaQueryListenersByQuery = {
       '(min-width: 1000px)': { remove: sinon.spy() },
       '(max-width: 600px)': { remove: sinon.spy() },
       '(min-resolution: 2dppx)': { remove: sinon.spy() }
@@ -153,9 +153,9 @@ describe('Enhancer', () => {
       }
       render () {}
     }
-    var Enhanced = Enhancer(Composed);
+    const Enhanced = Enhancer(Composed);
 
-    var instance = new Enhanced();
+    const instance = new Enhanced();
     instance.componentWillUnmount();
 
     Object.keys(mediaQueryListenersByQuery).forEach(function (key) {
@@ -173,14 +173,14 @@ describe('Enhancer', () => {
 
     Composed.defaultProps = { foo: 'bar' };
 
-    var Enhanced = Enhancer(Composed);
+    const Enhanced = Enhancer(Composed);
 
     expect(Enhanced.defaultProps).to.deep.equal({ foo: 'bar' });
     expect(Enhanced.staticMethod()).to.deep.equal({ bar: 'foo' });
   });
 
   it('copies methods across to top level prototype', () => {
-    var Composed = React.createClass({
+    const Composed = React.createClass({
 
       getStyles: function () {
         return [{ color: 'black' }];
@@ -196,7 +196,7 @@ describe('Enhancer', () => {
 
     });
 
-    var Enhanced = Enhancer(Composed);
+    const Enhanced = Enhancer(Composed);
 
     Object.keys(Composed.prototype).forEach(key => {
       expect(Enhanced.prototype.hasOwnProperty(key)).to.equal(true);

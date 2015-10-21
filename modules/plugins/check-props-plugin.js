@@ -2,14 +2,14 @@
 
 import type {PluginConfig, PluginResult} from '.';
 
-var checkProps = (function () {}: any);
+let checkProps = (function () {}: any);
 
 if (process.env.NODE_ENV !== 'production') {
   // Warn if you use longhand and shorthand properties in the same style
   // object.
   // https://developer.mozilla.org/en-US/docs/Web/CSS/Shorthand_properties
 
-  var shorthandPropertyExpansions = {
+  const shorthandPropertyExpansions = {
     'background': [
       'backgroundAttachment',
       'backgroundBlendMode',
@@ -96,12 +96,12 @@ if (process.env.NODE_ENV !== 'production') {
   };
 
   checkProps = function (config: PluginConfig): PluginResult {
-    var {componentName, style} = config;
+    const {componentName, style} = config;
     if (typeof style !== 'object' || !style) {
       return;
     }
 
-    var styleKeys = Object.keys(style);
+    const styleKeys = Object.keys(style);
     styleKeys.forEach(styleKey => {
       if (
         shorthandPropertyExpansions[styleKey] &&

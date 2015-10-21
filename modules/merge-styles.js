@@ -1,14 +1,14 @@
-var isPlainObject = require('is-plain-object');
+const isPlainObject = require('is-plain-object');
 
-var shouldMerge = function (value) {
+const shouldMerge = function (value) {
   // Don't merge objects overriding toString, since they should be converted
   // to string values.
   return isPlainObject(value) && value.toString === Object.prototype.toString;
 };
 
 // Merge style objects. Deep merge plain object values.
-var mergeStyles = function (styles) {
-  var result = {};
+const mergeStyles = function (styles) {
+  const result = {};
 
   styles.forEach(function (style) {
     if (!style || typeof style !== 'object') {

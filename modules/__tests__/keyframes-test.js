@@ -1,5 +1,5 @@
-var styleElement;
-var exenv;
+let styleElement;
+let exenv;
 
 describe('keyframes', () => {
 
@@ -38,7 +38,7 @@ describe('keyframes', () => {
       canUseEventListeners: false
     };
 
-    var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+    const keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
     });
@@ -46,7 +46,7 @@ describe('keyframes', () => {
     expect(document.createElement).not.to.have.been.called;
     expect(document.head.appendChild).not.to.have.been.called;
 
-    var name = keyframes({}, 'MyComponent');
+    const name = keyframes({}, 'MyComponent');
 
     expect(name.length).to.be.greaterThan(0);
   });
@@ -57,42 +57,42 @@ describe('keyframes', () => {
       return {style: {}};
     });
 
-    var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+    const keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
     });
 
     expect(document.head.appendChild).not.to.have.been.called;
 
-    var name = keyframes({}, 'MyComponent');
+    const name = keyframes({}, 'MyComponent');
 
     expect(name.length).to.be.greaterThan(0);
   });
 
   it('returns a name for the keyframes', () => {
-    var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+    const keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
     });
-    var name = keyframes({}, 'MyComponent');
+    const name = keyframes({}, 'MyComponent');
     expect(name.length).to.be.greaterThan(0);
   });
 
   it('does not always require a component', () => {
-    var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+    const keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
     });
-    var name = keyframes({});
+    const name = keyframes({});
     expect(name.length).to.be.greaterThan(0);
   });
 
   it('prefixes @keyframes if needed', () => {
-    var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+    const keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
     });
-    var name = keyframes({}, 'MyComponent');
+    const name = keyframes({}, 'MyComponent');
 
     expect(styleElement.sheet.insertRule.lastCall.args).to.deep.equal([
       '@-webkit-keyframes ' + name + ' {\n\n}\n',
@@ -105,11 +105,11 @@ describe('keyframes', () => {
     sinon.stub(document, 'createElement', () => {
       return {...styleElement, style: {animationName: ''}};
     });
-    var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+    const keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
     });
-    var name = keyframes({}, 'MyComponent');
+    const name = keyframes({}, 'MyComponent');
 
     expect(styleElement.sheet.insertRule.lastCall.args[0]).to.equal(
       '@keyframes ' + name + ' {\n\n}\n'
@@ -117,11 +117,11 @@ describe('keyframes', () => {
   });
 
   it('serializes keyframes', () => {
-    var keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+    const keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
     });
-    var name = keyframes({
+    const name = keyframes({
       from: {
         width: 100
       },

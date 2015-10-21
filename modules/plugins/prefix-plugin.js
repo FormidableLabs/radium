@@ -2,12 +2,12 @@
 
 import type {PluginConfig, PluginResult} from '.';
 
-var Prefixer = require('../prefixer');
+const Prefixer = require('../prefixer');
 
-var prefixPlugin = function (
+const prefixPlugin = function (
   {componentName, style}: PluginConfig
 ): PluginResult {
-  var newStyle = Prefixer.getPrefixedStyle(style, componentName);
+  const newStyle = Prefixer.getPrefixedStyle(style, componentName);
   return {style: newStyle};
 };
 

@@ -2,15 +2,15 @@
 
 import type {Config} from './config';
 
-var getState = require('./get-state');
-var getStateKey = require('./get-state-key');
-var mergeStyles = require('./merge-styles');
-var Plugins = require('./plugins/');
+const getState = require('./get-state');
+const getStateKey = require('./get-state-key');
+const mergeStyles = require('./merge-styles');
+const Plugins = require('./plugins/');
 
-var ExecutionEnvironment = require('exenv');
-var React = require('react');
+const ExecutionEnvironment = require('exenv');
+const React = require('react');
 
-var DEFAULT_CONFIG = {
+const DEFAULT_CONFIG = {
   plugins: [
     Plugins.mergeStyleArray,
     Plugins.checkProps,
@@ -22,17 +22,17 @@ var DEFAULT_CONFIG = {
 };
 
 // Gross
-var globalState = {};
+let globalState = {};
 
 // Declare early for recursive helpers.
-var resolveStyles = ((null: any): (
+let resolveStyles = ((null: any): (
   component: any, // ReactComponent, flow+eslint complaining
   renderedElement: any,
   config: Config,
   existingKeyMap?: {[key: string]: bool}
 ) => any);
 
-var _resolveChildren = function ({
+const _resolveChildren = function ({
   children,
   component,
   config,
@@ -42,7 +42,7 @@ var _resolveChildren = function ({
     return children;
   }
 
-  var childrenType = typeof children;
+  const childrenType = typeof children;
 
   if (childrenType === 'string' || childrenType === 'number') {
     // Don't do anything with a single primitive child
@@ -52,7 +52,7 @@ var _resolveChildren = function ({
   if (childrenType === 'function') {
     // Wrap the function, resolving styles on the result
     return function () {
-      var result = children.apply(this, arguments);
+      const result = children.apply(this, arguments);
       if (React.isValidElement(result)) {
         return resolveStyles(component, result, config, existingKeyMap);
       }
@@ -63,7 +63,7 @@ var _resolveChildren = function ({
   if (React.Children.count(children) === 1 && children.type) {
     // If a React Element is an only child, don't wrap it in an array for
     // React.Children.map() for React.Children.only() compatibility.
-    var onlyChild = React.Children.only(children);
+    const onlyChild = React.Children.only(children);
     return resolveStyles(component, onlyChild, config, existingKeyMap);
   }
 
@@ -80,13 +80,13 @@ var _resolveChildren = function ({
 };
 
 // Recurse over props, just like children
-var _resolveProps = function ({
+const _resolveProps = function ({
   component,
   config,
   existingKeyMap,
   props
 }) {
-  var newProps = props;
+  let newProps = props;
 
   Object.keys(props).forEach(prop => {
     // We already recurse over children above
@@ -94,7 +94,7 @@ var _resolveProps = function ({
       return;
     }
 
-    var propValue = props[prop];
+    const propValue = props[prop];
     if (React.isValidElement(propValue)) {
       newProps = {...newProps};
       newProps[prop] = resolveStyles(
@@ -109,17 +109,17 @@ var _resolveProps = function ({
   return newProps;
 };
 
-var _buildGetKey = function (renderedElement, existingKeyMap) {
+const _buildGetKey = function (renderedElement, existingKeyMap) {
   // We need a unique key to correlate state changes due to user interaction
   // with the rendered element, so we know to apply the proper interactive
   // styles.
-  var originalKey = typeof renderedElement.ref === 'string' ?
+  const originalKey = typeof renderedElement.ref === 'string' ?
     renderedElement.ref :
     renderedElement.key;
-  var key = getStateKey(originalKey);
+  const key = getStateKey(originalKey);
 
-  var alreadyGotKey = false;
-  var getKey = function () {
+  let alreadyGotKey = false;
+  const getKey = function () {
     if (alreadyGotKey) {
       return key;
     }
@@ -144,15 +144,15 @@ var _buildGetKey = function (renderedElement, existingKeyMap) {
   return getKey;
 };
 
-var _setStyleState = function (component, key, stateKey, value) {
+const _setStyleState = function (component, key, stateKey, value) {
   if (!component._radiumIsMounted) {
     return;
   }
 
-  var existing = component._lastRadiumState ||
+  const existing = component._lastRadiumState ||
     component.state && component.state._radiumStyleState || {};
 
-  var state = { _radiumStyleState: {...existing} };
+  const state = { _radiumStyleState: {...existing} };
   state._radiumStyleState[key] = {...state._radiumStyleState[key]};
   state._radiumStyleState[key][stateKey] = value;
 
@@ -160,7 +160,7 @@ var _setStyleState = function (component, key, stateKey, value) {
   component.setState(state);
 };
 
-var _runPlugins = function ({
+const _runPlugins = function ({
   component,
   config,
   existingKeyMap,
@@ -177,15 +177,15 @@ var _runPlugins = function ({
     return props;
   }
 
-  var newProps = props;
+  let newProps = props;
 
-  var plugins = config.plugins || DEFAULT_CONFIG.plugins;
+  const plugins = config.plugins || DEFAULT_CONFIG.plugins;
 
-  var getKey = _buildGetKey(renderedElement, existingKeyMap);
+  const getKey = _buildGetKey(renderedElement, existingKeyMap);
 
-  var newStyle = props.style;
+  let newStyle = props.style;
   plugins.forEach(plugin => {
-    var result = plugin({
+    const result = plugin({
       ExecutionEnvironment,
       componentName: component.constructor.displayName ||
         component.constructor.name,
@@ -207,12 +207,12 @@ var _runPlugins = function ({
       {...newProps, ...result.props} :
       newProps;
 
-    var newComponentFields = result.componentFields || {};
+    const newComponentFields = result.componentFields || {};
     Object.keys(newComponentFields).forEach(fieldName => {
       component[fieldName] = newComponentFields[fieldName];
     });
 
-    var newGlobalState = result.globalState || {};
+    const newGlobalState = result.globalState || {};
     Object.keys(newGlobalState).forEach(key => {
       globalState[key] = newGlobalState[key];
     });
@@ -228,7 +228,7 @@ var _runPlugins = function ({
 // Wrapper around React.cloneElement. To avoid processing the same element
 // twice, whenever we clone an element add a special prop to make sure we don't
 // process this element again.
-var _cloneElement = function (renderedElement, newProps, newChildren) {
+const _cloneElement = function (renderedElement, newProps, newChildren) {
   // Only add flag if this is a normal DOM element
   if (typeof renderedElement.type === 'string') {
     newProps = {...newProps, _radiumDidResolveStyles: true};
@@ -263,14 +263,14 @@ resolveStyles = function (
     return renderedElement;
   }
 
-  var newChildren = _resolveChildren({
+  const newChildren = _resolveChildren({
     children: renderedElement.props.children,
     component,
     config,
     existingKeyMap
   });
 
-  var newProps = _resolveProps({
+  let newProps = _resolveProps({
     component,
     config,
     existingKeyMap,

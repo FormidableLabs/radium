@@ -1,12 +1,12 @@
 /* @flow */
 
-var camelCasePropsToDashCase = require('../camel-case-props-to-dash-case');
-var createMarkupForStyles = require('../create-markup-for-styles');
-var Prefixer = require('../prefixer');
+const camelCasePropsToDashCase = require('../camel-case-props-to-dash-case');
+const createMarkupForStyles = require('../create-markup-for-styles');
+const Prefixer = require('../prefixer');
 
-var React = require('react');
+const React = require('react');
 
-var buildCssString = function (
+const buildCssString = function (
   selector: string,
   rules: Object,
   prefix: (rules: Object, componentName: string) => Object
@@ -15,14 +15,14 @@ var buildCssString = function (
     return null;
   }
 
-  var prefixedRules = prefix(rules, 'Style');
-  var cssPrefixedRules = camelCasePropsToDashCase(prefixedRules);
-  var serializedRules = createMarkupForStyles(cssPrefixedRules);
+  const prefixedRules = prefix(rules, 'Style');
+  const cssPrefixedRules = camelCasePropsToDashCase(prefixedRules);
+  const serializedRules = createMarkupForStyles(cssPrefixedRules);
 
   return selector + '{' + serializedRules + '}';
 };
 
-var Style = React.createClass({
+const Style = React.createClass({
   propTypes: {
     prefix: React.PropTypes.func.isRequired,
 
@@ -39,12 +39,12 @@ var Style = React.createClass({
 
   _buildStyles (styles: Object): string {
     return Object.keys(styles).reduce((accumulator, selector) => {
-      var rules = styles[selector];
+      const rules = styles[selector];
 
       if (selector === 'mediaQueries') {
         accumulator += this._buildMediaQueryString(rules);
       } else {
-        var completeSelector = (
+        const completeSelector = (
           this.props.scopeSelector ?
             this.props.scopeSelector + ' ' :
             ''
@@ -59,11 +59,11 @@ var Style = React.createClass({
   _buildMediaQueryString (
     stylesByMediaQuery: {[mediaQuery: string]: Object}
   ): string {
-    var contextMediaQueries = this._getContextMediaQueries();
-    var mediaQueryString = '';
+    const contextMediaQueries = this._getContextMediaQueries();
+    let mediaQueryString = '';
 
     Object.keys(stylesByMediaQuery).forEach(query => {
-      var completeQuery = contextMediaQueries[query] ?
+      const completeQuery = contextMediaQueries[query] ?
         contextMediaQueries[query] :
         query;
       mediaQueryString += '@media ' + completeQuery + '{' +
@@ -75,7 +75,7 @@ var Style = React.createClass({
   },
 
   _getContextMediaQueries (): {[mediaQuery: string]: Object} {
-    var contextMediaQueries = {};
+    const contextMediaQueries = {};
     if (this.context && this.context.mediaQueries) {
       Object.keys(this.context.mediaQueries).forEach(function (query) {
         contextMediaQueries[query] = this.context.mediaQueries[query].media;
@@ -90,7 +90,7 @@ var Style = React.createClass({
       return null;
     }
 
-    var styles = this._buildStyles(this.props.rules);
+    const styles = this._buildStyles(this.props.rules);
 
     return (
       <style dangerouslySetInnerHTML={{__html: styles}} />

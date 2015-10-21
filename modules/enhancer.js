@@ -1,11 +1,11 @@
 /* @flow */
 
-var {Component, PropTypes} = require('react');
+const {Component, PropTypes} = require('react');
 
-var resolveStyles = require('./resolve-styles.js');
-var printStyles = require('./print-styles.js');
+const resolveStyles = require('./resolve-styles.js');
+const printStyles = require('./print-styles.js');
 
-var KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
+const KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
   'arguments',
   'callee',
   'caller',
@@ -15,31 +15,31 @@ var KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
   'type'
 ];
 
-var copyProperties = function (source, target) {
+const copyProperties = function (source, target) {
   Object.getOwnPropertyNames(source).forEach(key => {
     if (
       KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES.indexOf(key) < 0 &&
       !target.hasOwnProperty(key)
     ) {
-      var descriptor = Object.getOwnPropertyDescriptor(source, key);
+      const descriptor = Object.getOwnPropertyDescriptor(source, key);
       Object.defineProperty(target, key, descriptor);
     }
   });
 };
 
-var enhanceWithRadium = function (
+const enhanceWithRadium = function (
   configOrComposedComponent: constructor | Function | Object,
   config?: Object = {},
 ): constructor {
   if (typeof configOrComposedComponent !== 'function') {
-    var newConfig = {...config, ...configOrComposedComponent};
+    const newConfig = {...config, ...configOrComposedComponent};
     return function (configOrComponent) {
       return enhanceWithRadium(configOrComponent, newConfig);
     };
   }
 
-  var component: Function = configOrComposedComponent;
-  var ComposedComponent: constructor = component;
+  const component: Function = configOrComposedComponent;
+  let ComposedComponent: constructor = component;
 
   // Handle stateless components
 
@@ -90,7 +90,7 @@ var enhanceWithRadium = function (
     }
 
     render () {
-      var renderedElement = super.render();
+      const renderedElement = super.render();
       return resolveStyles(this, renderedElement, config);
     }
   }
