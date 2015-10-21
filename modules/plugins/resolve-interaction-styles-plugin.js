@@ -122,4 +122,4 @@ const resolveInteractionStyles = function (config: PluginConfig): PluginResult {
   };
 };
 
-module.exports = resolveInteractionStyles;
+export default resolveInteractionStyles;

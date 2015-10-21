@@ -6,4 +6,4 @@ const createMarkupForStyles = function (style: Object, spaces: string = ''): str
   }).join('\n');
 };
 
-module.exports = createMarkupForStyles;
+export default createMarkupForStyles;

@@ -17,4 +17,4 @@ const getState = function (
   );
 };
 
-module.exports = getState;
+export default getState;

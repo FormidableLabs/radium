@@ -31,4 +31,4 @@ const mergeStyles = function (styles) {
   return result;
 };
 
-module.exports = mergeStyles;
+export default mergeStyles;

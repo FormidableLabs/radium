@@ -6,4 +6,4 @@ const getStateKey = function (elementKey: ?string): string {
     elementKey.toString();
 };
 
-module.exports = getStateKey;
+export default getStateKey;

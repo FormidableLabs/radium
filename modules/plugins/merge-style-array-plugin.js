@@ -12,4 +12,4 @@ const mergeStyleArrayPlugin = function ({
   return {style: newStyle};
 };
 
-module.exports = mergeStyleArrayPlugin;
+export default mergeStyleArrayPlugin;

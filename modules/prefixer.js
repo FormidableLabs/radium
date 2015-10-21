@@ -437,7 +437,7 @@ const getPrefixedStyle = function (
 };
 
 
-module.exports = {
+export default {
   getPrefixedStyle,
   cssPrefix: prefixInfo.cssPrefix,
   jsPrefix: prefixInfo.jsPrefix

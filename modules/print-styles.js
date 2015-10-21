@@ -62,7 +62,7 @@ const getPrintStyles = function (): Object  {
   return allPrintStyles;
 };
 
-module.exports = {
+export default {
   addPrintStyles,
   getPrintStyles,
   subscribe

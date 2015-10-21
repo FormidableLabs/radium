@@ -74,4 +74,4 @@ const keyframes = function (
   return name;
 };
 
-module.exports = keyframes;
+export default keyframes;

@@ -11,4 +11,4 @@ const prefixPlugin = function (
   return {style: newStyle};
 };
 
-module.exports = prefixPlugin;
+export default prefixPlugin;

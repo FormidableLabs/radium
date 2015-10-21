@@ -307,4 +307,4 @@ resolveStyles.__clearStateForTests = function () {
   globalState = {};
 };
 
-module.exports = resolveStyles;
+export default resolveStyles;

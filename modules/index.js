@@ -1,9 +1,18 @@
 import Enhancer from './enhancer';
+import Plugins from './plugins';
+import PrintStyleSheet from './components/print-style-sheet';
+import Style from './components/style';
+import getState from './get-state';
+import keyframes from './keyframes';
+import {__clearStateForTests} from './resolve-styles';
 
-module.exports = (ComposedComponent: constructor) => Enhancer(ComposedComponent);
-module.exports.Plugins = require('./plugins');
-module.exports.PrintStyleSheet = require('./components/print-style-sheet');
-module.exports.Style = require('./components/style');
-module.exports.getState = require('./get-state');
-module.exports.keyframes = require('./keyframes');
-module.exports.__clearStateForTests = require('./resolve-styles').__clearStateForTests;
+export default function Radium(ComposedComponent: constructor) {
+ return Enhancer(ComposedComponent);
+}
+
+Radium.Plugins = Plugins;
+Radium.PrintStyleSheet = PrintStyleSheet;
+Radium.Style = Style;
+Radium.getState = getState;
+Radium.keyframes = keyframes;
+Radium.__clearStateForTests = __clearStateForTests;

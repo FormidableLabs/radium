@@ -68,7 +68,7 @@ export type PluginResult = ?{
   style?: Object,
 };
 
-module.exports = {
+export default {
   checkProps: checkPropsPlugin,
   mergeStyleArray: mergeStyleArrayPlugin,
   prefix: prefixPlugin,

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   canUseDOM: true,
   canUseEventListeners: true
 };

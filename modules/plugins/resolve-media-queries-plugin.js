@@ -85,4 +85,4 @@ const resolveMediaQueries = function ({
   };
 };
 
-module.exports = resolveMediaQueries;
+export default resolveMediaQueries;

@@ -17,4 +17,4 @@ const camelCasePropsToDashCase = function (prefixedStyle: Object): Object {
   }, {});
 };
 
-module.exports = camelCasePropsToDashCase;
+export default camelCasePropsToDashCase;

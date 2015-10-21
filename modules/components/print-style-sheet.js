@@ -39,4 +39,4 @@ const PrintStyle = React.createClass({
   }
 });
 
-module.exports = PrintStyle;
+export default PrintStyle;

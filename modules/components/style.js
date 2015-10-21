@@ -98,4 +98,4 @@ const Style = React.createClass({
   }
 });
 
-module.exports = Style;
+export default Style;

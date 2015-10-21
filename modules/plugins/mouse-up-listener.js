@@ -32,6 +32,6 @@ const subscribe = function (callback: () => void): {remove: () => void} {
   };
 };
 
-module.exports = {
+export default {
   subscribe: subscribe
 };
