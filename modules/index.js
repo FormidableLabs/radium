@@ -7,7 +7,7 @@ import keyframes from './keyframes';
 import {__clearStateForTests} from './resolve-styles';
 
 export default function Radium(ComposedComponent: constructor) {
- return Enhancer(ComposedComponent);
+  return Enhancer(ComposedComponent);
 }
 
 Radium.Plugins = Plugins;

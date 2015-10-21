@@ -18,7 +18,7 @@ if (ExecutionEnvironment.canUseDOM) {
   if (element.style.animationName !== undefined) {
     isAnimationSupported = true;
   } else {
-    domPrefixes.some(function (prefix) {
+    domPrefixes.some(function(prefix) {
       if (element.style[prefix + 'AnimationName'] !== undefined) {
         keyframesPrefixed = '-' + prefix.toLowerCase() + '-keyframes';
         isAnimationSupported = true;
@@ -39,7 +39,7 @@ if (isAnimationSupported) {
 
 // Simple animation helper that injects CSS into a style object containing the
 // keyframes, and returns a string with the generated animation name.
-const keyframes = function (
+const keyframes = function(
   keyframeRules: {[percentage: string]: {[key: string]: string|number}},
   componentName?: string,
   prefix: (style: Object, componentName: ?string) => Object = Prefixer.getPrefixedStyle
@@ -52,7 +52,7 @@ const keyframes = function (
   }
 
   const rule = '@' + keyframesPrefixed + ' ' + name + ' {\n' +
-    Object.keys(keyframeRules).map(function (percentage) {
+    Object.keys(keyframeRules).map(function(percentage) {
       const props = keyframeRules[percentage];
       const prefixedProps = prefix(props, componentName);
       const cssPrefixedProps = camelCasePropsToDashCase(prefixedProps);

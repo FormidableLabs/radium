@@ -15,7 +15,7 @@ const KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
   'type'
 ];
 
-const copyProperties = function (source, target) {
+const copyProperties = function(source, target) {
   Object.getOwnPropertyNames(source).forEach(key => {
     if (
       KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES.indexOf(key) < 0 &&
@@ -33,7 +33,7 @@ export default function enhanceWithRadium(
 ): constructor {
   if (typeof configOrComposedComponent !== 'function') {
     const newConfig = {...config, ...configOrComposedComponent};
-    return function (configOrComponent) {
+    return function(configOrComponent) {
       return enhanceWithRadium(configOrComponent, newConfig);
     };
   }
@@ -42,10 +42,9 @@ export default function enhanceWithRadium(
   let ComposedComponent: constructor = component;
 
   // Handle stateless components
-
   if (!ComposedComponent.render && !ComposedComponent.prototype.render) {
     ComposedComponent = class extends Component {
-      render () {
+      render() {
         return component(this.props, this.context);
       }
     };
@@ -56,7 +55,7 @@ export default function enhanceWithRadium(
     _radiumMouseUpListener: {remove: () => void};
     _radiumIsMounted: bool;
 
-    constructor () {
+    constructor() {
       super(...arguments);
 
       this.state = this.state || {};
@@ -68,7 +67,7 @@ export default function enhanceWithRadium(
       }
     }
 
-    componentWillUnmount () {
+    componentWillUnmount() {
       if (super.componentWillUnmount) {
         super.componentWillUnmount();
       }
@@ -81,7 +80,7 @@ export default function enhanceWithRadium(
 
       if (this._radiumMediaQueryListenersByQuery) {
         Object.keys(this._radiumMediaQueryListenersByQuery).forEach(
-          function (query) {
+          function(query) {
             this._radiumMediaQueryListenersByQuery[query].remove();
           },
           this
@@ -89,7 +88,7 @@ export default function enhanceWithRadium(
       }
     }
 
-    render () {
+    render() {
       const renderedElement = super.render();
       return resolveStyles(this, renderedElement, config);
     }

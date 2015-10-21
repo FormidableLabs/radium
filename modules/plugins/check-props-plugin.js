@@ -2,7 +2,7 @@
 
 import type {PluginConfig, PluginResult} from '.';
 
-let checkProps = (function () {}: any);
+let checkProps = (function() {}: any);
 
 if (process.env.NODE_ENV !== 'production') {
   // Warn if you use longhand and shorthand properties in the same style
@@ -95,7 +95,7 @@ if (process.env.NODE_ENV !== 'production') {
     ]
   };
 
-  checkProps = function (config: PluginConfig): PluginResult {
+  checkProps = function(config: PluginConfig): PluginResult {
     const {componentName, style} = config;
     if (typeof style !== 'object' || !style) {
       return;

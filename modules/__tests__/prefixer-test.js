@@ -83,8 +83,8 @@ describe('Prefixer', () => {
     browserPrefix = '-webkit-';
     const transformGetter = sinon.stub().returns('foo');
     mockStyle = {
-      get transform () { return transformGetter(); },
-      set transform (value) { }
+      get transform() { return transformGetter(); },
+      set transform(value) { }
     };
     const Prefixer = require('inject!prefixer.js')({'exenv': exenv});
     Prefixer.getPrefixedStyle({transform: 'foo'});
@@ -149,8 +149,8 @@ describe('Prefixer', () => {
   it('ignores unsupported values', () => {
     browserPrefix = '-webkit-';
     mockStyle = {
-      get transform () { return ''; },
-      set transform (value) { }
+      get transform() { return ''; },
+      set transform(value) { }
     };
     const Prefixer = require('inject!prefixer.js')({'exenv': exenv});
     expect(
@@ -195,8 +195,8 @@ describe('Prefixer', () => {
     browserPrefix = '-webkit-';
     let flexValue = '';
     mockStyle = {
-      get display () { return flexValue; },
-      set display (value) {
+      get display() { return flexValue; },
+      set display(value) {
         if (value === '-webkit-flex') {
           flexValue = '-webkit-flex';
         } else {
@@ -214,8 +214,8 @@ describe('Prefixer', () => {
     browserPrefix = '-webkit-';
     let flexValue = '';
     mockStyle = {
-      get display () { return flexValue; },
-      set display (value) {
+      get display() { return flexValue; },
+      set display(value) {
         if (value === '-webkit-box') {
           flexValue = '-webkit-box';
         } else {
@@ -233,8 +233,8 @@ describe('Prefixer', () => {
     browserPrefix = '-webkit-';
     let flexValue = '';
     mockStyle = {
-      get color () { return flexValue; },
-      set color (value) {
+      get color() { return flexValue; },
+      set color(value) {
         if (value === '#fff') {
           flexValue = '#fff';
         } else {
@@ -282,7 +282,7 @@ describe('Prefixer', () => {
     mockStyle = {color: 'inherit'};
     const Prefixer = require('inject!prefixer.js')({'exenv': exenv});
     const colorHelper = {
-      toString () {
+      toString() {
         return 'white';
       }
     };

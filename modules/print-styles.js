@@ -3,13 +3,13 @@
 const allPrintStyles = {};
 const listeners = [];
 
-const subscribe = function (listener: () => void): {remove: () => void} {
+const subscribe = function(listener: () => void): {remove: () => void} {
   if (listeners.indexOf(listener) === -1) {
     listeners.push(listener);
   }
 
   return {
-    remove: function () {
+    remove: function() {
       const listenerIndex = listeners.indexOf(listener);
 
       if (listenerIndex > -1) {
@@ -19,11 +19,11 @@ const subscribe = function (listener: () => void): {remove: () => void} {
   };
 };
 
-const _emitChange = function () {
+const _emitChange = function() {
   listeners.forEach(listener => listener());
 };
 
-const _appendImportantToEachValue = function (styleObj) {
+const _appendImportantToEachValue = function(styleObj) {
   const importantStyleObj = {};
 
   Object.keys(styleObj).forEach(key => {
@@ -38,7 +38,7 @@ const _appendImportantToEachValue = function (styleObj) {
   return importantStyleObj;
 };
 
-const addPrintStyles = function (Component: constructor) {
+const addPrintStyles = function(Component: constructor) {
   if (!Component.printStyles) {
     return;
   }
@@ -58,7 +58,7 @@ const addPrintStyles = function (Component: constructor) {
   return printStyleClass;
 };
 
-const getPrintStyles = function (): Object  {
+const getPrintStyles = function(): Object  {
   return allPrintStyles;
 };
 

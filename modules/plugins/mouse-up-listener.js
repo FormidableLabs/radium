@@ -3,13 +3,13 @@
 const _callbacks = [];
 let _mouseUpListenerIsActive = false;
 
-const _handleMouseUp = function (ev) {
-  _callbacks.forEach(function (callback) {
+const _handleMouseUp = function(ev) {
+  _callbacks.forEach(function(callback) {
     callback(ev);
   });
 };
 
-const subscribe = function (callback: () => void): {remove: () => void} {
+const subscribe = function(callback: () => void): {remove: () => void} {
   if (_callbacks.indexOf(callback) === -1) {
     _callbacks.push(callback);
   }
@@ -20,7 +20,7 @@ const subscribe = function (callback: () => void): {remove: () => void} {
   }
 
   return {
-    remove: function () {
+    remove: function() {
       const index = _callbacks.indexOf(callback);
       _callbacks.splice(index, 1);
 

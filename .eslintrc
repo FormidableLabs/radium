@@ -184,7 +184,7 @@ rules:
     consistent-this: [2, "self"]   # enforces consistent naming when capturing the current execution context
     eol-last: 2                    # enforce newline at the end of file, with no multiple empty lines
     func-names: 0                  # require function expressions to have a name
-    func-style: [2, "expression"] # enforces use of function expressions
+    func-style: [0, "expression"] # enforces use of function expressions
     key-spacing: 2                 # enforces spacing between keys and values in object literal properties
     indent: [2, 2]
     max-nested-callbacks: [2, 4]   # specify the maximum depth callbacks can be nested
@@ -218,7 +218,7 @@ rules:
     spaced-comment: 2         # require or disallow a space immediately following
                                    #    the // in a line comment
     wrap-regex: 0                  # require regex literals to be wrapped in parentheses
-    space-before-function-paren: [2, "always"]
+    space-before-function-paren: [2, "never"]
 
     ###########################################################################
     #                                                                         #

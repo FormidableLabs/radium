@@ -1,16 +1,16 @@
 import isPlainObject from 'is-plain-object';
 
-const shouldMerge = function (value) {
+const shouldMerge = function(value) {
   // Don't merge objects overriding toString, since they should be converted
   // to string values.
   return isPlainObject(value) && value.toString === Object.prototype.toString;
 };
 
 // Merge style objects. Deep merge plain object values.
-const mergeStyles = function (styles) {
+const mergeStyles = function(styles) {
   const result = {};
 
-  styles.forEach(function (style) {
+  styles.forEach(function(style) {
     if (!style || typeof style !== 'object') {
       return;
     }
@@ -19,7 +19,7 @@ const mergeStyles = function (styles) {
       style = mergeStyles(style);
     }
 
-    Object.keys(style).forEach(function (key) {
+    Object.keys(style).forEach(function(key) {
       if (shouldMerge(style[key]) && shouldMerge(result[key])) {
         result[key] = mergeStyles([result[key], style[key]]);
       } else {

@@ -32,7 +32,7 @@ let resolveStyles = ((null: any): (
   existingKeyMap?: {[key: string]: bool}
 ) => any);
 
-const _resolveChildren = function ({
+const _resolveChildren = function({
   children,
   component,
   config,
@@ -51,7 +51,7 @@ const _resolveChildren = function ({
 
   if (childrenType === 'function') {
     // Wrap the function, resolving styles on the result
-    return function () {
+    return function() {
       const result = children.apply(this, arguments);
       if (React.isValidElement(result)) {
         return resolveStyles(component, result, config, existingKeyMap);
@@ -69,7 +69,7 @@ const _resolveChildren = function ({
 
   return React.Children.map(
     children,
-    function (child) {
+    function(child) {
       if (React.isValidElement(child)) {
         return resolveStyles(component, child, config, existingKeyMap);
       }
@@ -80,7 +80,7 @@ const _resolveChildren = function ({
 };
 
 // Recurse over props, just like children
-const _resolveProps = function ({
+const _resolveProps = function({
   component,
   config,
   existingKeyMap,
@@ -109,7 +109,7 @@ const _resolveProps = function ({
   return newProps;
 };
 
-const _buildGetKey = function (renderedElement, existingKeyMap) {
+const _buildGetKey = function(renderedElement, existingKeyMap) {
   // We need a unique key to correlate state changes due to user interaction
   // with the rendered element, so we know to apply the proper interactive
   // styles.
@@ -119,7 +119,7 @@ const _buildGetKey = function (renderedElement, existingKeyMap) {
   const key = getStateKey(originalKey);
 
   let alreadyGotKey = false;
-  const getKey = function () {
+  const getKey = function() {
     if (alreadyGotKey) {
       return key;
     }
@@ -144,7 +144,7 @@ const _buildGetKey = function (renderedElement, existingKeyMap) {
   return getKey;
 };
 
-const _setStyleState = function (component, key, stateKey, value) {
+const _setStyleState = function(component, key, stateKey, value) {
   if (!component._radiumIsMounted) {
     return;
   }
@@ -160,7 +160,7 @@ const _setStyleState = function (component, key, stateKey, value) {
   component.setState(state);
 };
 
-const _runPlugins = function ({
+const _runPlugins = function({
   component,
   config,
   existingKeyMap,
@@ -228,7 +228,7 @@ const _runPlugins = function ({
 // Wrapper around React.cloneElement. To avoid processing the same element
 // twice, whenever we clone an element add a special prop to make sure we don't
 // process this element again.
-const _cloneElement = function (renderedElement, newProps, newChildren) {
+const _cloneElement = function(renderedElement, newProps, newChildren) {
   // Only add flag if this is a normal DOM element
   if (typeof renderedElement.type === 'string') {
     newProps = {...newProps, _radiumDidResolveStyles: true};
@@ -244,7 +244,7 @@ const _cloneElement = function (renderedElement, newProps, newChildren) {
 // interactions (e.g. mouse over). It also replaces the style prop because it
 // adds in the various interaction styles (e.g. :hover).
 //
-resolveStyles = function (
+resolveStyles = function(
   component: any, // ReactComponent, flow+eslint complaining
   renderedElement: any, // ReactElement
   config: Config = DEFAULT_CONFIG,
@@ -303,7 +303,7 @@ resolveStyles = function (
 };
 
 // Only for use by tests
-resolveStyles.__clearStateForTests = function () {
+resolveStyles.__clearStateForTests = function() {
   globalState = {};
 };
 

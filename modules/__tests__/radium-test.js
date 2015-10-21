@@ -5,13 +5,13 @@ import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
 
-const getRenderOutput = function (element) {
+const getRenderOutput = function(element) {
   const renderer = TestUtils.createRenderer();
   renderer.render(element);
   return renderer.getRenderOutput();
 };
 
-const getElement = function (output, tagName) {
+const getElement = function(output, tagName) {
   return ReactDOM.findDOMNode(
     TestUtils.findRenderedDOMComponentWithTag(output, tagName)
   );
@@ -25,7 +25,7 @@ describe('Radium blackbox tests', () => {
   it('merges styles', () => {
     @Radium
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <div style={[
             {color: 'blue'},
@@ -45,7 +45,7 @@ describe('Radium blackbox tests', () => {
   it('merges nested styles', () => {
     @Radium
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <div style={[
             [{color: 'blue'}, [{height: '2px', padding: '9px'}]],
@@ -67,7 +67,7 @@ describe('Radium blackbox tests', () => {
 
     @Radium
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <InnerComponent header={
             <div style={[{color: 'blue'}, {background: 'red'} ]}/>
@@ -85,14 +85,14 @@ describe('Radium blackbox tests', () => {
 
   it('resolves styles on props', () => {
     class InnerComponent extends Component {
-      render () {
+      render() {
         return this.props.stuff;
       }
     }
 
     @Radium
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <InnerComponent stuff={
             <div style={[
@@ -118,14 +118,14 @@ describe('Radium blackbox tests', () => {
 
   it('resolves styles on functions', () => {
     class InnerComponent extends Component {
-      render () {
+      render() {
         return this.props.children('arg');
       }
     }
 
     @Radium
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <InnerComponent>{arg =>
             <div style={[
@@ -155,7 +155,7 @@ describe('Radium blackbox tests', () => {
   it('adds hover styles', () => {
     @Radium
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <div style={{
             background: 'red',
@@ -181,7 +181,7 @@ describe('Radium blackbox tests', () => {
   it('adds active styles', () => {
     @Radium
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <div style={{
             background: 'red',
@@ -207,7 +207,7 @@ describe('Radium blackbox tests', () => {
   it('resolves styles on multiple elements nested far down, Issue #307', () => {
     @Radium
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <section>
             <section>
@@ -253,7 +253,7 @@ describe('Radium blackbox tests', () => {
         }
       },
 
-      render () {
+      render() {
         return (
           <div />
         );
@@ -261,7 +261,7 @@ describe('Radium blackbox tests', () => {
     }));
 
     class TestComponent2 extends Component {
-      render () {
+      render() {
         return <div />;
       }
     }
@@ -289,7 +289,7 @@ describe('Radium blackbox tests', () => {
     @Radium
     class Inner extends Component {
       propTypes = { children: PropTypes.node }
-      render () {
+      render() {
         return (
           <div {...this.props} style={[{color: 'blue'}, {background: 'red'}]}>
             {this.props.children}
@@ -300,7 +300,7 @@ describe('Radium blackbox tests', () => {
 
     @Radium
     class Outer extends Component {
-      render () {
+      render() {
         return (
           <Inner>
             <span>We will break you.</span>
@@ -318,11 +318,11 @@ describe('Radium blackbox tests', () => {
   });
 
   it('accepts a config', () => {
-    const truthyMatchMedia = function () {
+    const truthyMatchMedia = function() {
       return {
         matches: true,
-        addListener: function () {},
-        removeListener: function () {}
+        addListener: function() {},
+        removeListener: function() {}
       };
     };
 
@@ -330,7 +330,7 @@ describe('Radium blackbox tests', () => {
       matchMedia: truthyMatchMedia
     })
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <div style={{
             '@media (min-width: 600px)': {color: 'blue'}
@@ -349,7 +349,7 @@ describe('Radium blackbox tests', () => {
   it('adds active styles on space', () => {
     @Radium
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <div style={{
             background: 'red',
@@ -379,7 +379,7 @@ describe('Radium blackbox tests', () => {
   it('works with children as keyed object ala React Router', () => {
     @Radium
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <div>
             {this.props.children.nav}
@@ -408,7 +408,7 @@ describe('Radium blackbox tests', () => {
   it('preserves array children as arrays', () => {
     @Radium
     class TestComponent extends Component {
-      render () {
+      render() {
         expect(Array.isArray(this.props.children)).to.equal(true);
         return (
           <div>
@@ -439,7 +439,7 @@ describe('Radium blackbox tests', () => {
 
     @Radium
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <div
             onMouseEnter={handleMouseEnter}
@@ -461,7 +461,7 @@ describe('Radium blackbox tests', () => {
 
     @Radium
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <div
             onMouseLeave={handleMouseLeave}
@@ -483,7 +483,7 @@ describe('Radium blackbox tests', () => {
 
     @Radium
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <div
             onMouseDown={handleMouseDown}
@@ -505,7 +505,7 @@ describe('Radium blackbox tests', () => {
 
     @Radium
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <input
             onFocus={handleFocus}
@@ -527,7 +527,7 @@ describe('Radium blackbox tests', () => {
 
     @Radium
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <input
             onBlur={handleBlur}
@@ -547,7 +547,7 @@ describe('Radium blackbox tests', () => {
   it('ignores callback refs', () => {
     @Radium
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <div>
             <span key="a" ref={() => {}} style={{':hover': {color: 'red'}}} />
@@ -575,7 +575,7 @@ describe('Radium blackbox tests', () => {
 
       @Radium({plugins: [makeItRedPlugin]})
       class TestComponent extends Component {
-        render () {
+        render() {
           return <div style={{}} />;
         }
       }
@@ -594,17 +594,17 @@ describe('Radium blackbox tests', () => {
     sinon.stub(console, 'warn');
 
     const addListener = sinon.spy();
-    const mockMatchMedia = function () {
+    const mockMatchMedia = function() {
       return {
         matches: true,
         addListener: addListener,
-        removeListener () {}
+        removeListener() {}
       };
     };
 
     @Radium({matchMedia: mockMatchMedia})
     class TestComponent extends Component {
-      render () {
+      render() {
         return (
           <div style={{
             '@media (min-width: 600px)': {color: 'blue'}

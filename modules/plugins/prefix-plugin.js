@@ -4,7 +4,7 @@ import type {PluginConfig, PluginResult} from '.';
 
 import Prefixer from '../prefixer';
 
-const prefixPlugin = function (
+const prefixPlugin = function(
   {componentName, style}: PluginConfig
 ): PluginResult {
   const newStyle = Prefixer.getPrefixedStyle(style, componentName);

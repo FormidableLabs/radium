@@ -4,7 +4,7 @@ import type {MatchMediaType} from '../config';
 import type {PluginConfig, PluginResult} from '.';
 
 let _windowMatchMedia;
-const _getWindowMatchMedia = function (ExecutionEnvironment) {
+const _getWindowMatchMedia = function(ExecutionEnvironment) {
   if (_windowMatchMedia === undefined) {
     _windowMatchMedia = !!ExecutionEnvironment.canUseDOM &&
       !!window &&
@@ -15,7 +15,7 @@ const _getWindowMatchMedia = function (ExecutionEnvironment) {
   return _windowMatchMedia;
 };
 
-const resolveMediaQueries = function ({
+export default function resolveMediaQueries({
   ExecutionEnvironment,
   getComponentField,
   getGlobalState,
@@ -36,8 +36,8 @@ const resolveMediaQueries = function ({
     getGlobalState('mediaQueryListByQueryString') || {};
 
   Object.keys(style)
-  .filter(function (name) { return name.indexOf('@media') === 0; })
-  .map(function (query) {
+  .filter(function(name) { return name.indexOf('@media') === 0; })
+  .map(function(query) {
     const mediaQueryStyles = style[query];
     query = query.replace('@media ', '');
 
@@ -57,7 +57,7 @@ const resolveMediaQueries = function ({
         ...listenersByQuery
       };
       newComponentFields._radiumMediaQueryListenersByQuery[query] = {
-        remove () { mql.removeListener(listener); }
+        remove() { mql.removeListener(listener); }
       };
     }
 
@@ -83,6 +83,4 @@ const resolveMediaQueries = function ({
     globalState: {mediaQueryListByQueryString},
     style: newStyle
   };
-};
-
-export default resolveMediaQueries;
+}

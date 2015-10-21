@@ -17,16 +17,15 @@ describe('Enhancer', () => {
 
   it('merges with existing state', () => {
     class Composed extends Component {
-      constructor () {
+      constructor() {
         super();
         this.state = {foo: 'bar'};
       }
-      render () {}
+      render() {}
     }
     const Enhanced = Enhancer(Composed);
 
     const instance = new Enhanced();
-
 
     expect(instance.state).to.deep.equal(
       {foo: 'bar', _radiumStyleState: {}}
@@ -35,10 +34,10 @@ describe('Enhancer', () => {
 
   it('receives the given props', () => {
     class Composed extends Component {
-      constructor (props) {
+      constructor(props) {
         super(props);
       }
-      render () {}
+      render() {}
     }
     const Enhanced = Enhancer(Composed);
 
@@ -50,7 +49,7 @@ describe('Enhancer', () => {
   it('calls existing render function, then resolveStyles', () => {
     const renderMock = sinon.spy();
     class Composed extends Component {
-      render () {
+      render() {
         renderMock();
         return null;
       }
@@ -67,11 +66,11 @@ describe('Enhancer', () => {
   it('calls existing constructor only once', () => {
     const constructorMock = sinon.spy();
     class Composed extends Component {
-      constructor () {
+      constructor() {
         super();
         constructorMock();
       }
-      render () {}
+      render() {}
     }
     const Enhanced = Enhancer(Composed);
 
@@ -91,7 +90,7 @@ describe('Enhancer', () => {
 
   it('sets up classNames on for printStyles have a copy', () => {
     class Composed extends Component {
-      render () {}
+      render() {}
     }
     Composed.displayName = 'PrintStyleTest';
     Composed.printStyles = {
@@ -109,10 +108,10 @@ describe('Enhancer', () => {
   it('calls existing componentWillUnmount function', () => {
     const existingComponentWillUnmount = sinon.spy();
     class Composed extends Component {
-      componentWillUnmount () {
+      componentWillUnmount() {
         existingComponentWillUnmount();
       }
-      render () {}
+      render() {}
     }
     const Enhanced = Enhancer(Composed);
 
@@ -125,11 +124,11 @@ describe('Enhancer', () => {
   it('removes mouse up listener on componentWillUnmount', () => {
     const removeMouseUpListener = sinon.spy();
     class Composed extends Component {
-      constructor () {
+      constructor() {
         super();
         this._radiumMouseUpListener = { remove: removeMouseUpListener };
       }
-      render () {}
+      render() {}
     }
     const Enhanced = Enhancer(Composed);
 
@@ -146,28 +145,28 @@ describe('Enhancer', () => {
       '(min-resolution: 2dppx)': { remove: sinon.spy() }
     };
     class Composed extends Component {
-      constructor () {
+      constructor() {
         super();
         this._radiumMediaQueryListenersByQuery = mediaQueryListenersByQuery;
       }
-      render () {}
+      render() {}
     }
     const Enhanced = Enhancer(Composed);
 
     const instance = new Enhanced();
     instance.componentWillUnmount();
 
-    Object.keys(mediaQueryListenersByQuery).forEach(function (key) {
+    Object.keys(mediaQueryListenersByQuery).forEach(function(key) {
       expect(mediaQueryListenersByQuery[key].remove).to.have.been.called;
     });
   });
 
   it('manually populates all static properties for IE <10', () => {
     class Composed extends Component {
-      static staticMethod () {
+      static staticMethod() {
         return { bar: 'foo' };
       }
-      render () {}
+      render() {}
     }
 
     Composed.defaultProps = { foo: 'bar' };
@@ -181,11 +180,11 @@ describe('Enhancer', () => {
   it('copies methods across to top level prototype', () => {
     const Composed = React.createClass({
 
-      getStyles: function () {
+      getStyles: function() {
         return [{ color: 'black' }];
       },
 
-      render: function () {
+      render: function() {
         return (
           <div style={this.getStyles()}>
             Hello World!

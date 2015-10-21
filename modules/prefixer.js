@@ -194,7 +194,7 @@ if (ExecutionEnvironment.canUseDOM) {
     prefixInfo;
 }
 
-const getPrefixedPropertyName = function (property: string): string {
+const getPrefixedPropertyName = function(property: string): string {
   if (prefixedPropertyCache.hasOwnProperty(property)) {
     return prefixedPropertyCache[property];
   }
@@ -222,7 +222,7 @@ const getPrefixedPropertyName = function (property: string): string {
 
   const workingProperty = arrayFind(
     possiblePropertyNames,
-    function (possiblePropertyName) {
+    function(possiblePropertyName) {
       if (possiblePropertyName in domStyle) {
         return possiblePropertyName;
       }
@@ -238,7 +238,7 @@ const getPrefixedPropertyName = function (property: string): string {
 // otherwise we are at risk of being in a situation where someone
 // explicitly passes something like `MozBoxFlex: 1` and that will
 // in turn get transformed into `MozBoxFlex: 1px`.
-const _getUnprefixedProperty = function (property) {
+const _getUnprefixedProperty = function(property) {
   let noPrefixProperty = property;
 
   vendorPrefixes.some(prefix => {
@@ -267,7 +267,7 @@ const _getUnprefixedProperty = function (property) {
 // (https://github.com/facebook/react/issues/1873), and if they do, this
 // should change to a warning or be removed in favor of React's warning.
 // Same goes for below.
-const _addPixelSuffixToValueIfNeeded = function (originalProperty, value) {
+const _addPixelSuffixToValueIfNeeded = function(originalProperty, value) {
   const unPrefixedProperty = _getUnprefixedProperty(originalProperty);
 
   if (
@@ -280,7 +280,7 @@ const _addPixelSuffixToValueIfNeeded = function (originalProperty, value) {
   return value;
 };
 
-const _getPrefixedValue = function (
+const _getPrefixedValue = function(
   componentName,
   property,
   value,
@@ -353,7 +353,7 @@ const _getPrefixedValue = function (
   // Test possible value in order
   const workingValue = arrayFind(
     possibleValues,
-    function (possibleValue) {
+    function(possibleValue) {
       domStyle[property] = '';
       domStyle[property] = possibleValue;
 
@@ -393,7 +393,7 @@ const _getPrefixedValue = function (
 
 // Returns a new style object with vendor prefixes added to property names
 // and values.
-const getPrefixedStyle = function (
+const getPrefixedStyle = function(
   style: Object,
   componentName: ?string,
 ): Object {
@@ -407,7 +407,7 @@ const getPrefixedStyle = function (
   }
 
   const prefixedStyle = {};
-  Object.keys(style).forEach(function (property) {
+  Object.keys(style).forEach(function(property) {
     const value = style[property];
 
     const newProperty = getPrefixedPropertyName(property);
