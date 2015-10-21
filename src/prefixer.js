@@ -407,7 +407,7 @@ const getPrefixedStyle = function(
   }
 
   const prefixedStyle = {};
-  Object.keys(style).forEach(function(property) {
+  Object.keys(style).forEach(property => {
     const value = style[property];
 
     const newProperty = getPrefixedPropertyName(property);

@@ -2,7 +2,7 @@
 
 import type {PluginConfig, PluginResult} from '.';
 
-let checkProps = (function() {}: any);
+let checkProps = (() => {}: any);
 
 if (process.env.NODE_ENV !== 'production') {
   // Warn if you use longhand and shorthand properties in the same style

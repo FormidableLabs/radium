@@ -10,7 +10,7 @@ const shouldMerge = function(value) {
 const mergeStyles = function(styles) {
   const result = {};
 
-  styles.forEach(function(style) {
+  styles.forEach(style => {
     if (!style || typeof style !== 'object') {
       return;
     }
@@ -19,7 +19,7 @@ const mergeStyles = function(styles) {
       style = mergeStyles(style);
     }
 
-    Object.keys(style).forEach(function(key) {
+    Object.keys(style).forEach(key => {
       if (shouldMerge(style[key]) && shouldMerge(result[key])) {
         result[key] = mergeStyles([result[key], style[key]]);
       } else {

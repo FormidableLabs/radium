@@ -4,7 +4,7 @@ const _callbacks = [];
 let _mouseUpListenerIsActive = false;
 
 const _handleMouseUp = function(ev) {
-  _callbacks.forEach(function(callback) {
+  _callbacks.forEach(callback => {
     callback(ev);
   });
 };

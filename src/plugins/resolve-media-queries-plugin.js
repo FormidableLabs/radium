@@ -36,8 +36,8 @@ export default function resolveMediaQueries({
     getGlobalState('mediaQueryListByQueryString') || {};
 
   Object.keys(style)
-  .filter(function(name) { return name.indexOf('@media') === 0; })
-  .map(function(query) {
+  .filter(name => name.indexOf('@media') === 0)
+  .map(query => {
     const mediaQueryStyles = style[query];
     query = query.replace('@media ', '');
 

@@ -156,7 +156,7 @@ describe('Enhancer', () => {
     const instance = new Enhanced();
     instance.componentWillUnmount();
 
-    Object.keys(mediaQueryListenersByQuery).forEach(function(key) {
+    Object.keys(mediaQueryListenersByQuery).forEach(key => {
       expect(mediaQueryListenersByQuery[key].remove).to.have.been.called;
     });
   });

@@ -77,7 +77,7 @@ const Style = React.createClass({
   _getContextMediaQueries(): {[mediaQuery: string]: Object} {
     const contextMediaQueries = {};
     if (this.context && this.context.mediaQueries) {
-      Object.keys(this.context.mediaQueries).forEach(function(query) {
+      Object.keys(this.context.mediaQueries).forEach(query => {
         contextMediaQueries[query] = this.context.mediaQueries[query].media;
       }.bind(this));
     }

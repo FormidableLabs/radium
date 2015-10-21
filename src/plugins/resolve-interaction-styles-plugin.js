@@ -88,7 +88,7 @@ const resolveInteractionStyles = function(config: PluginConfig): PluginResult {
   ) {
     newComponentFields._radiumMouseUpListener = MouseUpListener.subscribe(
       () => {
-        Object.keys(getComponentField('state')._radiumStyleState).forEach(function(key) {
+        Object.keys(getComponentField('state')._radiumStyleState).forEach(key => {
           if (getState(':active') === 'viamousedown') {
             setState(':active', false, key);
           }
@@ -100,7 +100,7 @@ const resolveInteractionStyles = function(config: PluginConfig): PluginResult {
   // Merge the styles in the order they were defined
   const interactionStyles = Object.keys(style)
     .filter(name => _isInteractiveStyleField(name) && getState(name))
-    .map(function(name) { return style[name]; });
+    .map(name => style[name]);
 
   let newStyle = mergeStyles([style].concat(interactionStyles));
 

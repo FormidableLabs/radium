@@ -44,7 +44,7 @@ const getChildrenArray = function(children) {
 
 describe('resolveStyles', function() {
 
-  beforeEach(function() {
+  beforeEach(() => {
     MouseUpListener.subscribe = sinon.spy();
   });
 
@@ -283,7 +283,7 @@ describe('resolveStyles', function() {
         </div>
       );
 
-      expect(function() {
+      expect(() => {
         resolveStyles(component, renderedElement);
       }).to.throw();
     });
@@ -300,7 +300,7 @@ describe('resolveStyles', function() {
         </div>
       );
 
-      expect(function() {
+      expect(() => {
         resolveStyles(component, renderedElement);
       }).to.throw();
     });
@@ -509,14 +509,14 @@ describe('resolveStyles', function() {
   });
 
   describe('media queries', function() {
-    beforeEach(function() {
+    beforeEach(() => {
       resolveStyles.__clearStateForTests();
     });
 
     it('listens for media queries', function() {
       const component = genComponent();
       const addListener = sinon.spy();
-      const matchMedia = sinon.spy(function() {
+      const matchMedia = sinon.spy(() => {
         return {addListener: addListener};
       });
 
@@ -534,7 +534,7 @@ describe('resolveStyles', function() {
     it('only listens once for a single element', function() {
       const component = genComponent();
       const addListener = sinon.spy();
-      const matchMedia = sinon.spy(function() {
+      const matchMedia = sinon.spy(() => {
         return {addListener: addListener};
       });
 
@@ -555,7 +555,7 @@ describe('resolveStyles', function() {
       const component1 = genComponent();
       const component2 = genComponent();
       const addListener = sinon.spy();
-      const matchMedia = sinon.spy(function() {
+      const matchMedia = sinon.spy(() => {
         return {addListener: addListener};
       });
 
@@ -581,7 +581,7 @@ describe('resolveStyles', function() {
 
     it('applies styles when media query matches', function() {
       const component = genComponent();
-      const matchMedia = sinon.spy(function() {
+      const matchMedia = sinon.spy(() => {
         return {
           addListener: sinon.spy(),
           matches: true
@@ -601,7 +601,7 @@ describe('resolveStyles', function() {
 
     it('merges nested pseudo styles', function() {
       const component = genComponent();
-      const matchMedia = sinon.spy(function() {
+      const matchMedia = sinon.spy(() => {
         return {
           addListener: sinon.spy(),
           matches: true
@@ -653,7 +653,7 @@ describe('resolveStyles', function() {
         }
       );
       const mql = {addListener: addListener};
-      const matchMedia = sinon.spy(function() {
+      const matchMedia = sinon.spy(() => {
         return mql;
       });
 
@@ -667,7 +667,7 @@ describe('resolveStyles', function() {
       resolveStyles(component1, renderedElement, {matchMedia});
       resolveStyles(component2, renderedElement, {matchMedia});
 
-      listeners.forEach(function(listener) { listener(mql); });
+      listeners.forEach(listener => { listener(mql); });
 
       expect(component1.setState).to.have.been.called;
       expect(component2.setState).to.have.been.called;
@@ -679,7 +679,7 @@ describe('resolveStyles', function() {
         addListener: sinon.spy(),
         removeListener: sinon.spy()
       };
-      const matchMedia = sinon.spy(function() {
+      const matchMedia = sinon.spy(() => {
         return mql;
       });
 
@@ -719,18 +719,18 @@ describe('resolveStyles', function() {
 
       const createMultiPseudoTest = function(pseudoStyles, onHandlers) {
         const name = 'applies pseudo styles in the defined order: ' +
-          pseudoStyles.map(function(pseudo) { return pseudo.name; }).join(', ') +
+          pseudoStyles.map(pseudo => pseudo.name).join(', ') +
           ' when handlers called in order: ' + onHandlers.join(', ');
         it(name, function() {
           const style = {};
-          pseudoStyles.forEach(function(pseudo) {
+          pseudoStyles.forEach(pseudo => {
             style[pseudo.name] = pseudo.style;
           });
           const renderedElement = <div style={style} />;
 
           let result = resolveStyles(component, renderedElement);
 
-          onHandlers.forEach(function(onHandler) {
+          onHandlers.forEach(onHandler => {
             result.props[onHandler]();
           });
 
@@ -742,8 +742,8 @@ describe('resolveStyles', function() {
         });
       };
 
-      stylePermutations.forEach(function(pseudoStyles) {
-        onHandlerPermutations.forEach(function(onHandlers) {
+      stylePermutations.forEach(pseudoStyles => {
+        onHandlerPermutations.forEach(onHandlers => {
           createMultiPseudoTest(pseudoStyles, onHandlers);
         });
       });
@@ -818,11 +818,11 @@ describe('resolveStyles', function() {
 
   /* eslint-disable no-console */
   describe('warnings', function() {
-    beforeEach(function() {
+    beforeEach(() => {
       sinon.stub(console, 'warn');
     });
 
-    afterEach(function() {
+    afterEach(() => {
       console.warn.restore();
       process.env.NODE_ENV = null;
     });
@@ -879,7 +879,7 @@ describe('resolveStyles', function() {
       const component = genComponent();
       const renderedElement = <div style={{height: null }} />;
 
-      expect(function() {
+      expect(() => {
         resolveStyles(component, renderedElement);
       }).to.not.throw();
     });

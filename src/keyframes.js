@@ -18,7 +18,7 @@ if (ExecutionEnvironment.canUseDOM) {
   if (element.style.animationName !== undefined) {
     isAnimationSupported = true;
   } else {
-    domPrefixes.some(function(prefix) {
+    domPrefixes.some(prefix => {
       if (element.style[prefix + 'AnimationName'] !== undefined) {
         keyframesPrefixed = '-' + prefix.toLowerCase() + '-keyframes';
         isAnimationSupported = true;
@@ -52,7 +52,7 @@ const keyframes = function(
   }
 
   const rule = '@' + keyframesPrefixed + ' ' + name + ' {\n' +
-    Object.keys(keyframeRules).map(function(percentage) {
+    Object.keys(keyframeRules).map(percentage => {
       const props = keyframeRules[percentage];
       const prefixedProps = prefix(props, componentName);
       const cssPrefixedProps = camelCasePropsToDashCase(prefixedProps);

@@ -45,7 +45,7 @@ const addPrintStyles = function(Component: constructor) {
 
   const printStyleClass = {};
 
-  Object.keys(Component.printStyles).forEach((key) => {
+  Object.keys(Component.printStyles).forEach(key => {
     const styles = Component.printStyles[key];
     const className = `Radium-${Component.displayName}-${key}`;
     allPrintStyles[`.${className}`] = _appendImportantToEachValue(styles);
