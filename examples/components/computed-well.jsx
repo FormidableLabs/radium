@@ -12,7 +12,7 @@
  */
 
 var React = require('react');
-var Radium = require('../../modules/index');
+var Radium = require('../../src/index');
 
 var ComputedWell = React.createClass({
   getInitialState: function () {

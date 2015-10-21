@@ -11,7 +11,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var Radium = require('../../modules');
+var Radium = require('../../src');
 var React = require('react');
 
 @Radium

@@ -3,7 +3,7 @@ var webpack = require('webpack');
 
 module.exports = {
   cache: true,
-  entry: path.join(__dirname, '/modules/index.js'),
+  entry: path.join(__dirname, '/src/index.js'),
   externals: [
     {
       "react": {

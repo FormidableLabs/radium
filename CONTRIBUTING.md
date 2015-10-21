@@ -8,11 +8,11 @@ Thanks for contributing!
 npm install
 ```
 
-You will find all building blocks that make up Radium in the [`modules`](modules) folder.
+You will find all building blocks that make up Radium in the [`src`](src) folder.
 
 ### Testing
 
-You will find tests for each module inside [`modules/__tests__`](modules/__tests__). Whenever making any changes, ensure that all existing tests pass by running `npm run test`. You can also have [`Karma`](http://karma-runner.github.io/) running in the background and run your tests every time you make a change by doing `npm run test-dev`.
+You will find tests for each module inside [`src/__tests__`](src/__tests__). Whenever making any changes, ensure that all existing tests pass by running `npm run test`. You can also have [`Karma`](http://karma-runner.github.io/) running in the background and run your tests every time you make a change by doing `npm run test-dev`.
 
 If you are adding a new feature or some extra functionality, you should also make sure to accompany those changes with appropriate tests.
 

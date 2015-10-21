@@ -22,7 +22,7 @@
     "karma.conf.coverage.js",
     "karma.conf.js",
     "lib",
-    "modules",
+    "src",
     "node_modules",
     "package.json",
     "webpack.config.js",

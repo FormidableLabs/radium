@@ -4,21 +4,21 @@ module.exports = function (config) {
     basePath: '',
     frameworks: ['mocha', 'sinon-chai', 'phantomjs-shim'],
     files: [
-      'modules/__tests__/**/*.js'
+      'src/__tests__/**/*.js'
     ],
     preprocessors: {
-      'modules/__tests__/**/*.js': ['webpack']
+      'src/__tests__/**/*.js': ['webpack']
     },
     webpack: {
       cache: true,
       module: {
         preLoaders: [{
           test: /\.jsx?$/,
-          include: path.resolve('modules/__tests__/'),
+          include: path.resolve('src/__tests__/'),
           loader: 'babel'
         }, {
           test: /\.jsx?$/,
-          include: path.resolve('modules/'),
+          include: path.resolve('src/'),
           exclude: /(__tests__|__mocks__)/,
           loader: 'isparta?babel'
         }],
@@ -33,7 +33,7 @@ module.exports = function (config) {
       },
       resolve: {
         root: [__dirname],
-        modulesDirectories: ['node_modules', 'modules'],
+        modulesDirectories: ['node_modules', 'src'],
         extensions: ['', '.js', '.jsx']
       }
     },

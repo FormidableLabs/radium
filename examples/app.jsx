@@ -15,9 +15,9 @@ var React = require('react');
 
 var Button = require('./components/button.jsx');
 var ComputedWell = require('./components/computed-well.jsx');
-var Style = require('../modules/components/style.js');
-var PrintStyleSheet = require('../modules/components/print-style-sheet.js');
-var Radium = require('../modules');
+var Style = require('../src/components/style.js');
+var PrintStyleSheet = require('../src/components/print-style-sheet.js');
+var Radium = require('../src');
 
 //
 // Radium with ES6 class syntax

@@ -13,12 +13,12 @@
     "example": "examples"
   },
   "scripts": {
-    "babel": "rimraf lib && babel modules/ -d lib/",
+    "babel": "rimraf lib && babel src/ -d lib/",
     "dist": "webpack && webpack --config=webpack.config.minified.js",
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
     "flow": "node -e \"process.exit(process.platform === 'win32' ? 0 : 1)\" || flow check",
     "lib": "npm run babel && rimraf lib/__tests__ lib/__mocks__",
-    "lint": "eslint modules && npm run flow",
+    "lint": "eslint src && npm run flow",
     "postinstall": "node -e \"require('fs').stat('lib', function(e,s){process.exit(e || !s.isDirectory() ? 1 : 0)})\" || npm run lib",
     "prepublish": "npm test && npm run lint && npm run lib",
     "start": "./node_modules/.bin/babel-node --stage 0 examples/server.js",
