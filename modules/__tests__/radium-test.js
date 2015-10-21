@@ -1,12 +1,9 @@
 /* eslint-disable react/prop-types */
 
-const Radium = require('index.js');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const TestUtils = require('react-addons-test-utils');
-
-const {PrintStyleSheet} = Radium;
-const {Component, PropTypes} = React;
+import Radium, {PrintStyleSheet} from 'index.js';
+import React, {Component, PropTypes} from 'react';
+import ReactDOM from 'react-dom';
+import TestUtils from 'react-addons-test-utils';
 
 const getRenderOutput = function (element) {
   const renderer = TestUtils.createRenderer();

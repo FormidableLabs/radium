@@ -2,7 +2,7 @@
 
 import type {PluginConfig, PluginResult} from '.';
 
-const MouseUpListener = require('./mouse-up-listener');
+import MouseUpListener from './mouse-up-listener';
 
 const _isInteractiveStyleField = function (styleFieldName) {
   return styleFieldName === ':hover' ||

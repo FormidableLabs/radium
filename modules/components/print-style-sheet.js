@@ -1,7 +1,7 @@
-const React = require('react');
+import React from 'react';
 
-const Style = require('./style.js');
-const printStyles = require('../print-styles.js');
+import Style from './style.js';
+import printStyles from '../print-styles.js';
 
 const PrintStyle = React.createClass({
   getInitialState: function () {

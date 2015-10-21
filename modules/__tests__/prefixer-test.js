@@ -193,7 +193,7 @@ describe('Prefixer', () => {
 
   it('uses prefixed value if unprefixed setter fails and it works', () => {
     browserPrefix = '-webkit-';
-    const flexValue = '';
+    let flexValue = '';
     mockStyle = {
       get display () { return flexValue; },
       set display (value) {
@@ -212,7 +212,7 @@ describe('Prefixer', () => {
 
   it('uses alternative value if all others fail and it works', () => {
     browserPrefix = '-webkit-';
-    const flexValue = '';
+    let flexValue = '';
     mockStyle = {
       get display () { return flexValue; },
       set display (value) {
@@ -231,7 +231,7 @@ describe('Prefixer', () => {
 
   it('uses fallback in value array if first value fails and it works', () => {
     browserPrefix = '-webkit-';
-    const flexValue = '';
+    let flexValue = '';
     mockStyle = {
       get color () { return flexValue; },
       set color (value) {

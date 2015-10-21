@@ -2,7 +2,7 @@
 
 import type {PluginConfig, PluginResult} from '.';
 
-const Prefixer = require('../prefixer');
+import Prefixer from '../prefixer';
 
 const prefixPlugin = function (
   {componentName, style}: PluginConfig

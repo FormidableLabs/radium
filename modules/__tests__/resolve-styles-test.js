@@ -1,6 +1,6 @@
-const React = require('react');
-const MouseUpListener = require('plugins/mouse-up-listener.js');
-const objectAssign = require('object-assign');
+import React from 'react';
+import MouseUpListener from 'plugins/mouse-up-listener.js';
+import objectAssign from 'object-assign';
 const resolveStyles = require('inject!resolve-styles.js')({
   'exenv': require('__mocks__/exenv.js'),
   './prefixer': require('__mocks__/prefixer.js')
@@ -23,9 +23,9 @@ const permutate = function (arr) {
     return [arr];
   }
 
-  for (const i = 0; i < arr.length; i++) {
+  for (let i = 0; i < arr.length; i++) {
     const subPerms = permutate(arr.slice(0, i).concat(arr.slice(i + 1)));
-    for (const j = 0; j < subPerms.length; j++) {
+    for (let j = 0; j < subPerms.length; j++) {
       subPerms[j].unshift(arr[i]);
       permutations.push(subPerms[j]);
     }
@@ -130,7 +130,7 @@ describe('resolveStyles', function () {
         ]} />
       );
 
-      const result = resolveStyles(component, renderedElement);
+      let result = resolveStyles(component, renderedElement);
       result = resolveStyles(component, result);
 
       expect(result.props.style).to.deep.equal({
@@ -211,7 +211,7 @@ describe('resolveStyles', function () {
         ]} />
       );
 
-      const result = resolveStyles(component, renderedElement);
+      let result = resolveStyles(component, renderedElement);
       result.props.onMouseEnter();
       result = resolveStyles(component, renderedElement);
 
@@ -256,7 +256,7 @@ describe('resolveStyles', function () {
       style[':' + pseudo] = {background: 'red'};
       const renderedElement = <div style={style} />;
 
-      const result = resolveStyles(component, renderedElement);
+      let result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).to.equal('blue');
 
       result.props[onHandlerName]();
@@ -317,8 +317,8 @@ describe('resolveStyles', function () {
         </div>
       );
 
-      const result = resolveStyles(component, renderedElement);
-      const children = getChildrenArray(result.props.children);
+      let result = resolveStyles(component, renderedElement);
+      let children = getChildrenArray(result.props.children);
       expect(children[0].props.style).to.be.undefined;
       expect(children[1].props.style.background).to.equal('blue');
 
@@ -342,8 +342,8 @@ describe('resolveStyles', function () {
         </div>
       );
 
-      const result = resolveStyles(component, renderedElement);
-      const children = getChildrenArray(result.props.children);
+      let result = resolveStyles(component, renderedElement);
+      let children = getChildrenArray(result.props.children);
       expect(children[0].props.style).to.be.undefined;
       expect(children[1].props.style.background).to.equal('blue');
 
@@ -362,7 +362,7 @@ describe('resolveStyles', function () {
         style[':' + pseudo] = {background: 'red'};
         const renderedElement = <div style={style} />;
 
-        const result = resolveStyles(component, renderedElement);
+        let result = resolveStyles(component, renderedElement);
 
         result.props[onHandlerName]();
 
@@ -383,11 +383,11 @@ describe('resolveStyles', function () {
         style[':' + pseudo] = {background: 'red'};
         const renderedElement = <div style={style} />;
 
-        const result = resolveStyles(component, renderedElement);
+        let result = resolveStyles(component, renderedElement);
 
         // Capturing a reference to the existing state is enough, since Radium
         // MUST return a new copy for shouldComponentUpdate.
-        const previousState = component.state._radiumStyleState;
+        let previousState = component.state._radiumStyleState;
         result.props[onHandlerName]();
         // If they are still equal here, that means we mutated the existing
         // state, which will break shouldComponentUpdate.
@@ -431,7 +431,7 @@ describe('resolveStyles', function () {
       };
       const renderedElement = <div style={style} />;
 
-      const result = resolveStyles(component, renderedElement);
+      let result = resolveStyles(component, renderedElement);
       expect(result.props.style.background).to.equal('blue');
 
       result.props.onMouseDown();
@@ -449,7 +449,7 @@ describe('resolveStyles', function () {
       };
       const renderedElement = <div style={style} />;
 
-      const result = resolveStyles(component, renderedElement);
+      let result = resolveStyles(component, renderedElement);
 
       result.props.onMouseDown();
 
@@ -471,7 +471,7 @@ describe('resolveStyles', function () {
       };
       const renderedElement = <div style={style} />;
 
-      const result = resolveStyles(component, renderedElement);
+      let result = resolveStyles(component, renderedElement);
 
       result.props.onMouseDown();
 
@@ -497,7 +497,7 @@ describe('resolveStyles', function () {
         />
       );
 
-      const result = resolveStyles(component, renderedElement);
+      let result = resolveStyles(component, renderedElement);
 
       result.props.onMouseDown();
 
@@ -633,7 +633,7 @@ describe('resolveStyles', function () {
         ]} />
       );
 
-      const result = resolveStyles(component, renderedElement, {matchMedia});
+      let result = resolveStyles(component, renderedElement, {matchMedia});
       expect(result.props.style.background).to.equal('red');
 
       result.props.onMouseEnter();
@@ -728,7 +728,7 @@ describe('resolveStyles', function () {
           });
           const renderedElement = <div style={style} />;
 
-          const result = resolveStyles(component, renderedElement);
+          let result = resolveStyles(component, renderedElement);
 
           onHandlers.forEach(function (onHandler) {
             result.props[onHandler]();

@@ -1,4 +1,4 @@
-const Enhancer = require('./enhancer');
+import Enhancer from './enhancer';
 
 module.exports = (ComposedComponent: constructor) => Enhancer(ComposedComponent);
 module.exports.Plugins = require('./plugins');

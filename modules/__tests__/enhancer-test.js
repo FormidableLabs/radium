@@ -3,8 +3,7 @@ const Enhancer = require('inject!enhancer.js')({
   './resolve-styles.js': resolveStyles
 });
 
-const React = require('react');
-const {Component} = React;
+import React, {Component} from 'react';
 
 describe('Enhancer', () => {
   it('sets up initial state', () => {

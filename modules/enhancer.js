@@ -1,9 +1,9 @@
 /* @flow */
 
-const {Component, PropTypes} = require('react');
+import {Component, PropTypes} from 'react';
 
-const resolveStyles = require('./resolve-styles.js');
-const printStyles = require('./print-styles.js');
+import resolveStyles from './resolve-styles.js';
+import printStyles from './print-styles.js';
 
 const KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
   'arguments',

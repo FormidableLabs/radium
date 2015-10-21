@@ -2,13 +2,13 @@
 
 import type {Config} from './config';
 
-const getState = require('./get-state');
-const getStateKey = require('./get-state-key');
-const mergeStyles = require('./merge-styles');
-const Plugins = require('./plugins/');
+import getState from './get-state';
+import getStateKey from './get-state-key';
+import mergeStyles from './merge-styles';
+import Plugins from './plugins/';
 
-const ExecutionEnvironment = require('exenv');
-const React = require('react');
+import ExecutionEnvironment from 'exenv';
+import React from 'react';
 
 const DEFAULT_CONFIG = {
   plugins: [

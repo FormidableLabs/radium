@@ -1,6 +1,6 @@
 /* @flow */
 
-const getStateKey = require('./get-state-key');
+import getStateKey from './get-state-key';
 
 const getState = function (
   state: {_radiumStyleState: {[key: string]: {[value: string]: boolean}}},

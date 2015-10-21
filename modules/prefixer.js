@@ -5,8 +5,8 @@
  * @flow
  */
 
-const ExecutionEnvironment = require('exenv');
-const arrayFind = require('array-find');
+import ExecutionEnvironment from 'exenv';
+import arrayFind from 'array-find';
 
 const VENDOR_PREFIX_REGEX = /-(moz|webkit|ms|o)-/;
 

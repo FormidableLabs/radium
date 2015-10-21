@@ -1,10 +1,10 @@
 /* @flow */
 
-const camelCasePropsToDashCase = require('../camel-case-props-to-dash-case');
-const createMarkupForStyles = require('../create-markup-for-styles');
-const Prefixer = require('../prefixer');
+import camelCasePropsToDashCase from '../camel-case-props-to-dash-case';
+import createMarkupForStyles from '../create-markup-for-styles';
+import Prefixer from '../prefixer';
 
-const React = require('react');
+import React from 'react';
 
 const buildCssString = function (
   selector: string,

@@ -1,4 +1,4 @@
-const isPlainObject = require('is-plain-object');
+import isPlainObject from 'is-plain-object';
 
 const shouldMerge = function (value) {
   // Don't merge objects overriding toString, since they should be converted

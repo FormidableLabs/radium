@@ -3,11 +3,11 @@
 
 import type {Config} from '../config';
 
-const checkPropsPlugin = require('./check-props-plugin');
-const mergeStyleArrayPlugin = require('./merge-style-array-plugin');
-const prefixPlugin = require('./prefix-plugin');
-const resolveInteractionStylesPlugin = require('./resolve-interaction-styles-plugin');
-const resolveMediaQueriesPlugin = require('./resolve-media-queries-plugin');
+import checkPropsPlugin from './check-props-plugin';
+import mergeStyleArrayPlugin from './merge-style-array-plugin';
+import prefixPlugin from './prefix-plugin';
+import resolveInteractionStylesPlugin from './resolve-interaction-styles-plugin';
+import resolveMediaQueriesPlugin from './resolve-media-queries-plugin';
 
 export type PluginConfig = {
   // May not be readable if code has been minified

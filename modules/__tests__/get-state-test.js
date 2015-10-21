@@ -1,4 +1,4 @@
-const getState = require('get-state.js');
+import getState from 'get-state.js';
 
 describe('getState', function () {
   it('successfully gets the state if passed number zero', function () {

@@ -1,10 +1,10 @@
 /* @flow */
 
-const camelCasePropsToDashCase = require('./camel-case-props-to-dash-case');
-const createMarkupForStyles = require('./create-markup-for-styles');
-const Prefixer = require('./prefixer');
+import camelCasePropsToDashCase from './camel-case-props-to-dash-case';
+import createMarkupForStyles from './create-markup-for-styles';
+import Prefixer from './prefixer';
 
-const ExecutionEnvironment = require('exenv');
+import ExecutionEnvironment from 'exenv';
 
 let isAnimationSupported = false;
 let keyframesPrefixed = 'keyframes';
