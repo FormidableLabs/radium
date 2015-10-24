@@ -46,10 +46,11 @@ var enhanceWithRadium = function (
   if (!ComposedComponent.render && !ComposedComponent.prototype.render) {
     ComposedComponent = class extends Component {
       render () {
-        return component(this.props);
+        return component(this.props, this.context);
       }
     };
     ComposedComponent.displayName = component.displayName || component.name;
+    ComposedComponent.contextTypes = component.contextTypes;
   }
 
   class RadiumEnhancer extends ComposedComponent {
