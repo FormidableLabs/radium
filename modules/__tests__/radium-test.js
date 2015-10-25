@@ -655,4 +655,44 @@ describe('Radium blackbox tests', () => {
 
     expect(div.style.color).to.equal('red');
   });
+
+  it('works with stateless components with context', () => {
+    let MyStatelessComponent = (props, context) => (
+      <div style={{color: 'blue', ':hover': {color: context.hoverColor}}}>
+        {props.children}
+      </div>
+    );
+    MyStatelessComponent.contextTypes = {
+      hoverColor: PropTypes.string
+    };
+    MyStatelessComponent = Radium(MyStatelessComponent);
+
+    class ContextGivingWrapper extends Component {
+      getChildContext () {
+        return {
+          hoverColor: 'green'
+        };
+      }
+      render () {
+        return this.props.children;
+      }
+    }
+    ContextGivingWrapper.childContextTypes = {
+      hoverColor: PropTypes.string
+    };
+
+    var output = TestUtils.renderIntoDocument(
+      <ContextGivingWrapper>
+        <MyStatelessComponent>hello world</MyStatelessComponent>
+      </ContextGivingWrapper>
+    );
+    var div = getElement(output, 'div');
+
+    expect(div.style.color).to.equal('blue');
+    expect(div.innerText).to.equal('hello world');
+
+    TestUtils.SimulateNative.mouseOver(div);
+
+    expect(div.style.color).to.equal('green');
+  });
 });
