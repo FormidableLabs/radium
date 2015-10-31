@@ -5,6 +5,7 @@
 .*/node_modules/babel-core/.*
 .*/node_modules/babel-loader/.*
 .*/node_modules/flow-bin/.*
+.*/node_modules/inline-style-prefixer/.*
 .*/node_modules/mkdirp/.*
 .*/node_modules/nodemon/.*
 .*/node_modules/react-hot-loader/.*
@@ -15,3 +16,6 @@
 
 [include]
 src
+
+[libs]
+interfaces
