@@ -26,7 +26,7 @@ class HoverMessage extends React.Component {
   render() {
     return (
       <div>
-        <button key="button" style={{':hover': {}}}>Hover me!</button>
+        <button key="button" style={{display: 'flex', ':hover': {}}}>Hover me!</button>
         {Radium.getState(this.state, 'button', ':hover') ? (
           <span>{' '}Hovering!</span>
         ) : null}
