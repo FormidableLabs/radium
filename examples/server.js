@@ -26,7 +26,7 @@ app.use('/app.js', proxy('localhost:8080', {forwardPath: () => '/app.js'}));
 
 app.get('/', (req, res) => {
   res.write(indexHTML.replace('<!-- {{app}} -->', React.renderToString(
-    <App />
+    <App radiumConfig={{userAgent: req.headers['user-agent']}} />
   )));
   res.end();
 });
