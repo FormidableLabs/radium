@@ -573,15 +573,16 @@ describe('Radium blackbox tests', () => {
     it('runs a custom plugin', () => {
       const makeItRedPlugin = () => ({style: {color: 'red'}});
 
-      @Radium({plugins: [makeItRedPlugin]})
+      @Radium
       class TestComponent extends Component {
         render() {
           return <div style={{}} />;
         }
       }
 
-      const output = TestUtils.renderIntoDocument(<TestComponent />);
-
+      const output = TestUtils.renderIntoDocument(
+        <TestComponent radiumConfig={{plugins: [makeItRedPlugin]}} />
+      );
       const div = getElement(output, 'div');
 
       expect(div.style.color).to.equal('red');
@@ -727,4 +728,47 @@ describe('Radium blackbox tests', () => {
     console.warn.restore();
   });
   /* eslint-enable no-console */
+
+  describe.only('config', () => {
+    it('receives config from radiumConfig prop', () => {
+      var plugin = sinon.spy();
+
+      @Radium
+      class TestComponent extends Component {
+        render () {
+          return <div style={{}} />;
+        }
+      }
+
+      var output = TestUtils.renderIntoDocument(
+        <TestComponent radiumConfig={{plugins: [plugin]}} />
+      );
+
+      expect(plugin).to.have.been.called;
+    });
+
+    it('receives config from context', () => {
+      var plugin = sinon.spy();
+
+      @Radium
+      class ParentComponent extends Component {
+        render () {
+          return <div style={{}}><ChildComponent /></div>;
+        }
+      }
+
+      @Radium
+      class ChildComponent extends Component {
+        render () {
+          return <div style={{}} />;
+        }
+      }
+
+      var output = TestUtils.renderIntoDocument(
+        <ParentComponent radiumConfig={{plugins: [plugin]}} />
+      );
+
+      expect(plugin).to.have.callCount(2);
+    });
+  });
 });

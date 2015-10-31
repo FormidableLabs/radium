@@ -1,6 +1,6 @@
 /* @flow */
 
-import {Component, PropTypes} from 'react';
+import React, {Component, PropTypes} from 'react';
 
 import resolveStyles from './resolve-styles.js';
 import printStyles from './print-styles.js';
@@ -48,6 +48,8 @@ export default function enhanceWithRadium(
         return component(this.props, this.context);
       }
     };
+    ComposedComponent.displayName = composedComponent.displayName ||
+      composedComponent.name;
   }
 
   class RadiumEnhancer extends ComposedComponent {
@@ -88,9 +90,28 @@ export default function enhanceWithRadium(
       }
     }
 
-    render() {
-      const renderedElement = super.render();
-      return resolveStyles(this, renderedElement, config);
+    getChildContext() {
+      const superChildContext = super.getChildContext ?
+        super.getChildContext :
+        {};
+
+      if (!this.props.radiumConfig) {
+        return superChildContext;
+      }
+
+      return {
+        ...superChildContext,
+        radiumConfig: this.props.radiumConfig,
+      };
+    }
+
+    render () {
+      var renderedElement = super.render();
+      return resolveStyles(
+        this,
+        renderedElement,
+        this.props.radiumConfig || this.context.radiumConfig,
+      );
     }
   }
 
@@ -123,6 +144,16 @@ export default function enhanceWithRadium(
     'Component';
 
   RadiumEnhancer.printStyleClass = printStyles.addPrintStyles(RadiumEnhancer);
+
+  RadiumEnhancer.contextTypes = {
+    ...RadiumEnhancer.contextTypes,
+    radiumConfig: React.PropTypes.object,
+  };
+
+  RadiumEnhancer.childContextTypes = {
+    ...RadiumEnhancer.childContextTypes,
+    radiumConfig: React.PropTypes.object,
+  };
 
   return RadiumEnhancer;
 }
