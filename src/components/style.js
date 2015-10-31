@@ -9,13 +9,13 @@ import React from 'react';
 const buildCssString = function(
   selector: string,
   rules: Object,
-  prefix: (rules: Object, componentName: string) => Object
-): ?string {
+  userAgent: ?string,
+): string {
   if (!selector || !rules) {
-    return null;
+    return '';
   }
 
-  const prefixedRules = prefix(rules, 'Style');
+  const prefixedRules = Prefixer.getPrefixedStyle(rules, 'Style', userAgent);
   const cssPrefixedRules = camelCasePropsToDashCase(prefixedRules);
   const serializedRules = createMarkupForStyles(cssPrefixedRules);
 
@@ -24,10 +24,12 @@ const buildCssString = function(
 
 const Style = React.createClass({
   propTypes: {
-    prefix: React.PropTypes.func.isRequired,
-
     rules: React.PropTypes.object,
     scopeSelector: React.PropTypes.string
+  },
+
+  contextTypes: {
+    radiumConfig: React.PropTypes.object,
   },
 
   getDefaultProps(): {scopeSelector: string} {
@@ -49,7 +51,12 @@ const Style = React.createClass({
             this.props.scopeSelector + ' ' :
             ''
           ) + selector;
-        accumulator += buildCssString(completeSelector, rules, this.props.prefix) || '';
+        accumulator += buildCssString(
+          completeSelector,
+          rules,
+          this.context && this.context.radiumConfig &&
+            this.context.radiumConfig.userAgent
+        );
       }
 
       return accumulator;
