@@ -15,6 +15,7 @@ export type Plugin = (pluginConfig: PluginConfig) => PluginResult;
 export type MatchMediaType = (mediaQueryString: string) => MediaQueryList;
 
 export type Config = {
-  matchMedia?: MatchMediaType;
-  plugins?: Array<Plugin>;
+  matchMedia?: MatchMediaType,
+  plugins?: Array<Plugin>,
+  userAgent?: string,
 };
