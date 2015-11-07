@@ -705,4 +705,29 @@ describe('Radium blackbox tests', () => {
 
     expect(MyStatelessComponent.defaultProps).to.equal(defaultProps);
   });
+
+  /* eslint-disable no-console */
+  it('replaces style propType with array or object', () => {
+    sinon.stub(console, 'error');
+    sinon.stub(console, 'warn');
+
+    class TestComponent extends Component {
+      render () {
+        return <div {...this.props} />;
+      }
+    }
+    TestComponent.propTypes = {style: PropTypes.object};
+    TestComponent = Radium(TestComponent);
+
+    TestUtils.renderIntoDocument(
+      <TestComponent style={[]} />
+    );
+
+    expect(console.error).not.to.have.been.called;
+    expect(console.warn).not.to.have.been.called;
+
+    console.error.restore();
+    console.warn.restore();
+  });
+  /* eslint-enable no-console */
 });

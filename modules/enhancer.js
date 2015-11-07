@@ -1,6 +1,6 @@
 /* @flow */
 
-var {Component} = require('react');
+var {Component, PropTypes} = require('react');
 
 var resolveStyles = require('./resolve-styles.js');
 var printStyles = require('./print-styles.js');
@@ -49,7 +49,6 @@ var enhanceWithRadium = function (
         return component(this.props, this.context);
       }
     };
-    ComposedComponent.displayName = component.displayName || component.name;
   }
 
   class RadiumEnhancer extends ComposedComponent {
@@ -109,9 +108,19 @@ var enhanceWithRadium = function (
     copyProperties(ComposedComponent.prototype, RadiumEnhancer.prototype);
   }
 
+  if (RadiumEnhancer.propTypes && RadiumEnhancer.propTypes.style) {
+    RadiumEnhancer.propTypes = {
+      ...RadiumEnhancer.propTypes,
+      style: PropTypes.oneOfType([
+        PropTypes.array,
+        PropTypes.object
+      ])
+    };
+  }
+
   RadiumEnhancer.displayName =
-    ComposedComponent.displayName ||
-    ComposedComponent.name ||
+    component.displayName ||
+    component.name ||
     'Component';
 
   RadiumEnhancer.printStyleClass = printStyles.addPrintStyles(RadiumEnhancer);
