@@ -50,7 +50,6 @@ var enhanceWithRadium = function (
       }
     };
     ComposedComponent.displayName = component.displayName || component.name;
-    ComposedComponent.contextTypes = component.contextTypes;
   }
 
   class RadiumEnhancer extends ComposedComponent {
@@ -101,7 +100,7 @@ var enhanceWithRadium = function (
   // with IE <10 any static properties of the superclass aren't inherited and
   // so need to be manually populated.
   // See http://babeljs.io/docs/advanced/caveats/#classes-10-and-below-
-  copyProperties(ComposedComponent, RadiumEnhancer);
+  copyProperties(component, RadiumEnhancer);
 
   if (process.env.NODE_ENV !== 'production') {
     // This also fixes React Hot Loader by exposing the original components top

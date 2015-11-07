@@ -695,4 +695,14 @@ describe('Radium blackbox tests', () => {
 
     expect(div.style.color).to.equal('green');
   });
+
+  it('transfers defaultProps for stateless components', () => {
+    const defaultProps = {foo: PropTypes.string};
+
+    let MyStatelessComponent = () => <div />;
+    MyStatelessComponent.defaultProps = defaultProps;
+    MyStatelessComponent = Radium(MyStatelessComponent);
+
+    expect(MyStatelessComponent.defaultProps).to.equal(defaultProps);
+  });
 });
