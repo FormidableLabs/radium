@@ -665,12 +665,12 @@ describe('Radium blackbox tests', () => {
     MyStatelessComponent = Radium(MyStatelessComponent);
 
     class ContextGivingWrapper extends Component {
-      getChildContext () {
+      getChildContext() {
         return {
           hoverColor: 'green'
         };
       }
-      render () {
+      render() {
         return this.props.children;
       }
     }
@@ -678,12 +678,12 @@ describe('Radium blackbox tests', () => {
       hoverColor: PropTypes.string
     };
 
-    var output = TestUtils.renderIntoDocument(
+    const output = TestUtils.renderIntoDocument(
       <ContextGivingWrapper>
         <MyStatelessComponent>hello world</MyStatelessComponent>
       </ContextGivingWrapper>
     );
-    var div = getElement(output, 'div');
+    const div = getElement(output, 'div');
 
     expect(div.style.color).to.equal('blue');
     expect(div.innerText).to.equal('hello world');
@@ -709,7 +709,7 @@ describe('Radium blackbox tests', () => {
     sinon.stub(console, 'warn');
 
     class TestComponent extends Component {
-      render () {
+      render() {
         return <div {...this.props} />;
       }
     }

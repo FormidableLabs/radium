@@ -14,4 +14,4 @@
 .*/node_modules/webpack/.*
 
 [include]
-modules
+src
