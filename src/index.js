@@ -6,7 +6,7 @@ import getState from './get-state';
 import keyframes from './keyframes';
 import {__clearStateForTests} from './resolve-styles';
 
-export default function Radium(ComposedComponent: constructor) {
+function Radium(ComposedComponent: constructor) {
   return Enhancer(ComposedComponent);
 }
 
@@ -16,3 +16,5 @@ Radium.Style = Style;
 Radium.getState = getState;
 Radium.keyframes = keyframes;
 Radium.__clearStateForTests = __clearStateForTests;
+
+export default Radium;
