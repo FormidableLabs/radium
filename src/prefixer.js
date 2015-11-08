@@ -19,5 +19,5 @@ const getPrefixedStyle = function(
 };
 
 module.exports = {
-  getPrefixedStyle,
+  getPrefixedStyle
 };
