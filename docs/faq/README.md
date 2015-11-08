@@ -7,7 +7,7 @@
 - [Can I use Radium with Bootstrap?](#can-i-use-radium-with-bootstrap)
 - [Why doesn't Radium work on SomeComponent?](#why-doesnt-radium-work-on-somecomponent)
 
-## How do I use pseudo-selectors like `:checked` or `:last`?
+## How do I use pseudo-selectors like `:checked`, `:last`, `:before`, or `:after`?
 
 Radium only provides the interactivity pseudo-selectors `:hover`, `:active`, and `:focus`. You need to use JavaScript logic to implement the others. To implement `:checked` for example:
 
@@ -75,6 +75,8 @@ class DroidList extends React.Component {
   }
 }
 ```
+
+Instead of `:before` and `:after`, add extra elements when rendering your HTML.
 
 ## How can I use `ReactCSSTransitionGroup` without any classes?
 
