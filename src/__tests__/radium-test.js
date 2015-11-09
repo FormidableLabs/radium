@@ -346,6 +346,25 @@ describe('Radium blackbox tests', () => {
     );
   });
 
+  it('transforms fallback values', () => {
+    @Radium()
+    class TestComponent extends Component {
+      render() {
+        return (
+          <div style={{
+            height: ['100%', '100vh'],
+          }} />
+        );
+      }
+    }
+
+    const output = getRenderOutput(<TestComponent />);
+
+    expect(output.props.style).to.deep.equal(
+      {height: '100%;height:100vh'}
+    );
+  });
+
   it('adds active styles on space', () => {
     @Radium
     class TestComponent extends Component {

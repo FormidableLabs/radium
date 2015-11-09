@@ -2,7 +2,7 @@
 
 import camelCasePropsToDashCase from '../camel-case-props-to-dash-case';
 import createMarkupForStyles from '../create-markup-for-styles';
-import Prefixer from '../prefixer';
+import {getPrefixedStyle} from '../prefixer';
 
 import React from 'react';
 
@@ -15,7 +15,7 @@ const buildCssString = function(
     return '';
   }
 
-  const prefixedRules = Prefixer.getPrefixedStyle(rules, 'Style', userAgent);
+  const prefixedRules = getPrefixedStyle(rules, 'Style', userAgent);
   const cssPrefixedRules = camelCasePropsToDashCase(prefixedRules);
   const serializedRules = createMarkupForStyles(cssPrefixedRules);
 
@@ -34,7 +34,7 @@ const Style = React.createClass({
 
   getDefaultProps(): {scopeSelector: string} {
     return {
-      prefix: Prefixer.getPrefixedStyle,
+      prefix: getPrefixedStyle,
       scopeSelector: ''
     };
   },

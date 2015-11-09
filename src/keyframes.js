@@ -2,7 +2,7 @@
 
 import camelCasePropsToDashCase from './camel-case-props-to-dash-case';
 import createMarkupForStyles from './create-markup-for-styles';
-import Prefixer from './prefixer';
+import {getPrefixedStyle} from './prefixer';
 
 import ExecutionEnvironment from 'exenv';
 
@@ -42,7 +42,7 @@ if (isAnimationSupported) {
 export default function keyframes(
   keyframeRules: {[percentage: string]: {[key: string]: string|number}},
   componentName?: string,
-  prefix: (style: Object, componentName: ?string) => Object = Prefixer.getPrefixedStyle
+  prefix: (style: Object, componentName: ?string) => Object = getPrefixedStyle
 ): string {
   const name = 'Animation' + animationIndex;
   animationIndex += 1;

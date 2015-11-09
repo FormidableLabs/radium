@@ -2,12 +2,12 @@
 
 import type {PluginConfig, PluginResult} from '.';
 
-import Prefixer from '../prefixer';
+import {getPrefixedStyle} from '../prefixer';
 
 export default function prefixPlugin(
   {componentName, config, style}: PluginConfig
 ): PluginResult {
-  const newStyle = Prefixer.getPrefixedStyle(
+  const newStyle = getPrefixedStyle(
     style,
     componentName,
     config.userAgent,
