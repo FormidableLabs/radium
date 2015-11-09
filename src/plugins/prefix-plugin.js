@@ -4,7 +4,7 @@ import type {PluginConfig, PluginResult} from '.';
 
 import Prefixer from '../prefixer';
 
-const prefixPlugin = function (
+export default function prefixPlugin(
   {componentName, config, style}: PluginConfig
 ): PluginResult {
   const newStyle = Prefixer.getPrefixedStyle(
@@ -13,6 +13,4 @@ const prefixPlugin = function (
     config.userAgent,
   );
   return {style: newStyle};
-};
-
-module.exports = prefixPlugin;
+}

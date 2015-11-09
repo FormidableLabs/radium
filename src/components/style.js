@@ -29,7 +29,7 @@ const Style = React.createClass({
   },
 
   contextTypes: {
-    radiumConfig: React.PropTypes.object,
+    radiumConfig: React.PropTypes.object
   },
 
   getDefaultProps(): {scopeSelector: string} {

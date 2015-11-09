@@ -729,18 +729,18 @@ describe('Radium blackbox tests', () => {
   });
   /* eslint-enable no-console */
 
-  describe.only('config', () => {
+  describe('config', () => {
     it('receives config from radiumConfig prop', () => {
-      var plugin = sinon.spy();
+      const plugin = sinon.spy();
 
       @Radium
       class TestComponent extends Component {
-        render () {
+        render() {
           return <div style={{}} />;
         }
       }
 
-      var output = TestUtils.renderIntoDocument(
+      TestUtils.renderIntoDocument(
         <TestComponent radiumConfig={{plugins: [plugin]}} />
       );
 
@@ -748,23 +748,23 @@ describe('Radium blackbox tests', () => {
     });
 
     it('receives config from context', () => {
-      var plugin = sinon.spy();
+      const plugin = sinon.spy();
 
       @Radium
       class ParentComponent extends Component {
-        render () {
+        render() {
           return <div style={{}}><ChildComponent /></div>;
         }
       }
 
       @Radium
       class ChildComponent extends Component {
-        render () {
+        render() {
           return <div style={{}} />;
         }
       }
 
-      var output = TestUtils.renderIntoDocument(
+      TestUtils.renderIntoDocument(
         <ParentComponent radiumConfig={{plugins: [plugin]}} />
       );
 

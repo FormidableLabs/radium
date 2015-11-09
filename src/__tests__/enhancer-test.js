@@ -56,7 +56,7 @@ describe('Enhancer', () => {
     }
     const Enhanced = Enhancer(Composed);
 
-    const instance = new Enhanced();
+    const instance = new Enhanced({}, {});
     instance.render();
 
     expect(renderMock).to.have.been.called;

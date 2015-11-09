@@ -48,8 +48,7 @@ export default function enhanceWithRadium(
         return component(this.props, this.context);
       }
     };
-    ComposedComponent.displayName = composedComponent.displayName ||
-      composedComponent.name;
+    ComposedComponent.displayName = component.displayName || component.name;
   }
 
   class RadiumEnhancer extends ComposedComponent {
@@ -101,17 +100,23 @@ export default function enhanceWithRadium(
 
       return {
         ...superChildContext,
-        radiumConfig: this.props.radiumConfig,
+        radiumConfig: this.props.radiumConfig
       };
     }
 
-    render () {
-      var renderedElement = super.render();
-      return resolveStyles(
-        this,
-        renderedElement,
-        this.props.radiumConfig || this.context.radiumConfig,
-      );
+    render() {
+      const renderedElement = super.render();
+      let currentConfig = this.props.radiumConfig ||
+        this.context.radiumConfig || config;
+
+      if (config && currentConfig !== config) {
+        currentConfig = {
+          ...config,
+          ...currentConfig
+        };
+      }
+
+      return resolveStyles(this, renderedElement, currentConfig);
     }
   }
 
@@ -147,12 +152,12 @@ export default function enhanceWithRadium(
 
   RadiumEnhancer.contextTypes = {
     ...RadiumEnhancer.contextTypes,
-    radiumConfig: React.PropTypes.object,
+    radiumConfig: React.PropTypes.object
   };
 
   RadiumEnhancer.childContextTypes = {
     ...RadiumEnhancer.childContextTypes,
-    radiumConfig: React.PropTypes.object,
+    radiumConfig: React.PropTypes.object
   };
 
   return RadiumEnhancer;
