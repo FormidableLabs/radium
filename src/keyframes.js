@@ -39,7 +39,7 @@ if (isAnimationSupported) {
 
 // Simple animation helper that injects CSS into a style object containing the
 // keyframes, and returns a string with the generated animation name.
-const keyframes = function(
+export default function keyframes(
   keyframeRules: {[percentage: string]: {[key: string]: string|number}},
   componentName?: string,
   prefix: (style: Object, componentName: ?string) => Object = Prefixer.getPrefixedStyle
@@ -72,6 +72,4 @@ const keyframes = function(
     animationStyleSheet.sheet.cssRules.length
   );
   return name;
-};
-
-export default keyframes;
+}

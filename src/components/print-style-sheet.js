@@ -4,29 +4,29 @@ import Style from './style.js';
 import printStyles from '../print-styles.js';
 
 const PrintStyle = React.createClass({
-  getInitialState: function() {
+  getInitialState() {
     return this._getStylesState();
   },
 
-  componentDidMount: function() {
+  componentDidMount() {
     this.subscription = printStyles.subscribe(this._onChange);
   },
 
-  componentWillUnmount: function() {
+  componentWillUnmount() {
     this.subscription.remove();
   },
 
-  _onChange: function() {
+  _onChange() {
     this.setState(this._getStylesState());
   },
 
-  _getStylesState: function() {
+  _getStylesState() {
     return {
       styles: printStyles.getPrintStyles()
     };
   },
 
-  render: function() {
+  render() {
     return (
       <Style rules={
         {
