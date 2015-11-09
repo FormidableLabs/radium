@@ -10,7 +10,6 @@
   - [Known issues with media queries](#known-issues-with-media-queries)
 - [Styling Multiple Elements in a Single Component](#styling-multiple-elements-in-a-single-component)
 - [Styling one element depending on another's state](#styling-one-element-depending-on-anothers-state)
-- [Fallback Values](#fallback-values)
 - [Style Component](#style-component)
 
 Radium is a toolset for easily writing React component styles. It resolves browser states and media queries to apply the correct styles to your components, all without selectors, specificity, or source order dependence.
@@ -291,27 +290,6 @@ var styles = {
     ':hover': {}
   }
 };
-```
-
-## Fallback values
-
-Sometimes you need to provide an additional value for a single CSS property in case the first one isn't applied successfully. Simply pass an array of values, and Radium will test them and apply the first one that works:
-
-```as
-var styles = {
-  button: {
-    background: ['rgba(255, 255, 255, .5)', '#fff']
-  }
-};
-```
-
-Is equivalent to the following CSS (note that the order is reversed):
-
-```css
-.button {
-  background: #fff;
-  background: rgba(255, 255, 255, .5);
-}
 ```
 
 ## `<Style>` component

@@ -6,6 +6,7 @@
   - [Sample Style Object](#sample-style-object)
   - [config.matchMedia](#configmatchmedia)
   - [config.plugins](#configplugins)
+  - [config.userAgent](#configuseragent)
 - [getState](#getstate)
 - [keyframes](#keyframes)
 - [Plugins](#plugins)
@@ -39,7 +40,7 @@ module.exports = Radium(MyComponent);
 
 You can also pass a configuration object to `@Radium`:
 
-```a
+```as
 @Radium({matchMedia: mockMatchMedia})
 class MyComponent extends React.Component { ... }
 
@@ -71,9 +72,18 @@ override settings on a per-component basis:
 class MySpecialComponent extends React.Component { ... }
 ```
 
+Alternatively, if the config value can change every time the component is rendered (userAgent, for example), you can pass configuration to any component wrapped in `Radium` using the `radiumConfig` prop:
+
+```as
+<App radiumConfig={{userAgent: req.headers['user-agent']}} />
+```
+
+The config will be passed down via [context](https://facebook.github.io/react/docs/context.html) to all child components.
+
 Possible configuration values:
 - [`matchMedia`](#configmatchmedia)
 - [`plugins`](#configplugins)
+- [`userAgent`](#configuseragent)
 
 ### Sample Style Object
 
@@ -225,6 +235,17 @@ class MyComponent extends React.Component { ... }
 You will typically want to put plugins before the final `checkProps` so that you can still benefit from the checks it provides. If your plugin might produce other pseudo-style blocks, like `@media` consumed by `resolveMediaQueries` or `:hover` consumed by `resolveInteractionStyles`, you would want to have your plugin run before those plugins.
 
 You can of course omit any or all of the built-in plugins, and replace them with your own version. For example, you may want to omit `Radium.Plugins.prefix` entirely if you aren't using vendor prefixes or are using a [compile-time solution](https://github.com/UXtemple/babel-plugin-react-autoprefix) instead.
+
+### config.userAgent
+**string**
+
+Set the user agent passed to [inline-style-prefixer](https://github.com/rofrischmann/inline-style-prefixer) to perform prefixing on style objects. Mainly used during server rendering, passed in via the `radiumConfig` prop. Using express:
+
+```js
+<App radiumConfig={{userAgent: req.headers['user-agent']}} />
+```
+
+For a complete example, see [examples/server.js](https://github.com/FormidableLabs/radium/blob/master/examples/server.js).
 
 ## getState
 
