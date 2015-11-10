@@ -317,6 +317,24 @@ describe('Radium blackbox tests', () => {
     expect(div.style.background).to.equal('red');
   });
 
+  it('calls toString on object values', () => {
+    @Radium
+    class TestComponent extends Component {
+      render() {
+        return (
+          <div style={{
+            background: {toString: () => 'red'}
+          }} />
+        );
+      }
+    }
+
+    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    const div = getElement(output, 'div');
+
+    expect(div.style.background).to.equal('red');
+  });
+
   it('accepts a config', () => {
     const truthyMatchMedia = function() {
       return {

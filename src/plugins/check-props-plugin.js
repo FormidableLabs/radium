@@ -104,7 +104,7 @@ if (process.env.NODE_ENV !== 'production') {
     const styleKeys = Object.keys(style);
     styleKeys.forEach(styleKey => {
       if (
-        shorthandPropertyExpansions[styleKey] &&
+        Array.isArray(shorthandPropertyExpansions[styleKey]) &&
         shorthandPropertyExpansions[styleKey].some(sp => styleKeys.indexOf(sp) !== -1)
       ) {
         if (process.env.NODE_ENV !== 'production') {
