@@ -352,7 +352,7 @@ describe('Radium blackbox tests', () => {
       render() {
         return (
           <div style={{
-            height: ['100%', '100vh'],
+            height: ['100%', '100vh']
           }} />
         );
       }

@@ -29,4 +29,4 @@ export function getPrefixedStyle(
   const prefixedStyle = prefixer.prefix(style);
   const prefixedStyleWithFallbacks = transformValues(prefixedStyle);
   return prefixedStyleWithFallbacks;
-};
+}
