@@ -1,5 +1,5 @@
 {
-  "name": "radium",
+  "name": "flint-radium",
   "version": "0.14.3",
   "description": "A set of tools to manage inline styles on React elements",
   "main": "lib/index.js",

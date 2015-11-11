@@ -50,6 +50,13 @@ const resolveInteractionStyles = function(config: PluginConfig): PluginResult {
       setState(':active', 'viamousedown');
     };
 
+    const existingOnMouseUp = props.onMouseUp;
+    newProps.onMouseUp = function(e) {
+      existingOnMouseUp && existingOnMouseUp(e);
+      newComponentFields._lastMouseUp = Date.now();
+      setState(':active', false);
+    };
+
     const existingOnKeyDown = props.onKeyDown;
     newProps.onKeyDown = function(e) {
       existingOnKeyDown && existingOnKeyDown(e);
