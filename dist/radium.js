@@ -2027,7 +2027,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (style[':active'] && !getComponentField('_radiumMouseUpListener') && ExecutionEnvironment.canUseEventListeners) {
 	    newComponentFields._radiumMouseUpListener = _mouseUpListener2['default'].subscribe(function () {
 	      Object.keys(getComponentField('state')._radiumStyleState).forEach(function (key) {
-	        if (getState(':active') === 'viamousedown') {
+	        if (getState(':active', key) === 'viamousedown') {
 	          setState(':active', false, key);
 	        }
 	      });
@@ -2073,11 +2073,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _callbacks = [];
 	var _mouseUpListenerIsActive = false;
 
-	var _handleMouseUp = function _handleMouseUp(ev) {
+	function _handleMouseUp() {
 	  _callbacks.forEach(function (callback) {
-	    callback(ev);
+	    callback();
 	  });
-	};
+	}
 
 	var subscribe = function subscribe(callback /*: () => void*/) /*: {remove: () => void}*/ {
 	  if (_callbacks.indexOf(callback) === -1) {
@@ -2103,7 +2103,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	exports['default'] = {
-	  subscribe: subscribe
+	  subscribe: subscribe,
+	  __triggerForTests: _handleMouseUp
 	};
 	module.exports = exports['default'];
 

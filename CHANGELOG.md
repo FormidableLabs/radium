@@ -1,5 +1,11 @@
 # Radium Changelog
 
+## 0.15.1 (November 11, 2015)
+
+### Bug Fixes
+
+- Fix bug where active styles on multiple elements in the same component were not being removed on mouse up, fixes #410
+
 ## 0.15.0 (November 11, 2015)
 
 ### New Features
