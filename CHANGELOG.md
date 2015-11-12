@@ -1,5 +1,27 @@
 # Radium Changelog
 
+## 0.15.0 (November 11, 2015)
+
+### New Features
+
+- Radium now uses [inline-style-prefixer](https://github.com/rofrischmann/inline-style-prefixer) to do all prefixing. Because `inline-style-prefixer` relies on the userAgent (similar to autoprefixer), it produces the same prefixes on both the client and the server. This is a huge step in making Radium truly universal (see [example](https://github.com/FormidableLabs/radium/blob/master/examples/server.js)). Thanks much to @rofrischmann for putting up with my API suggestions and requests!
+- Any Radium component can also be configured at render time via a [`radiumConfig`](https://github.com/FormidableLabs/radium/blob/master/docs/api/README.md#radium). This was mainly required for passing the `userAgent` during a server-side render.
+
+### Breaking Changes
+
+- Style component no longer supports the `prefix` prop. It automatically gets the correct userAgent to pass to the prefixer from `radiumConfig` context
+
+### Bug Fixes
+
+- Radium wrapper now replaces the `style` propType, if defined, with array or object, fixing #396
+- Stateless components now support context, thanks @ThomWright
+- Static fields on stateless components are now transferred to the Radium wrapper (`defualtProps`, `propTypes`, etc)
+
+### Improvements
+
+- Code has been ES2015-ified: const and let, import/export, fat arrows,
+- Code has moved from `modules` to `src`
+
 ## 0.14.3 (October 19, 2015)
 
 ### Bug Fixes
