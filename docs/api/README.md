@@ -72,7 +72,7 @@ var styles = {
     }
   }
 };
-``
+```
 
 ## Radium
 
@@ -139,12 +139,12 @@ Alternatively, if the config value can change every time the component is render
 <App radiumConfig={{userAgent: req.headers['user-agent']}} />
 ```
 
-The config will be passed down via [context](https://facebook.github.io/react/docs/context.html) to all child components.
+The config will be passed down via [context](https://facebook.github.io/react/docs/context.html) to all child components. Fields in the `radiumConfig` prop or context will override those passed into the `Radium()` function.
 
 Possible configuration values:
 - [`matchMedia`](#configmatchmedia)
 - [`plugins`](#configplugins)
-- [`userAgent`](#configuseragent)`
+- [`userAgent`](#configuseragent)
 
 ### config.matchMedia
 
