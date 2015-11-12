@@ -72,7 +72,7 @@ var styles = {
     }
   }
 };
-``
+```
 
 ## Radium
 
@@ -144,7 +144,7 @@ The config will be passed down via [context](https://facebook.github.io/react/do
 Possible configuration values:
 - [`matchMedia`](#configmatchmedia)
 - [`plugins`](#configplugins)
-- [`userAgent`](#configuseragent)`
+- [`userAgent`](#configuseragent)
 
 ### config.matchMedia
 
