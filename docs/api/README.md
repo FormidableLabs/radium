@@ -2,8 +2,8 @@
 
 **Table of Contents**
 
+- [Sample Style Object](#sample-style-object)
 - [Radium](#radium)
-  - [Sample Style Object](#sample-style-object)
   - [config.matchMedia](#configmatchmedia)
   - [config.plugins](#configplugins)
   - [config.userAgent](#configuseragent)
@@ -12,6 +12,67 @@
 - [Plugins](#plugins)
 - [Style Component](#style-component)
 - [PrintStyleSheet Component](#printstylesheet-component)
+
+
+## Sample Style Object
+
+```as
+var styles = {
+  base: {
+    backgroundColor: '#0074d9',
+    border: 0,
+    borderRadius: '0.3em',
+    color: '#fff',
+    cursor: 'pointer',
+    fontSize: 16,
+    outline: 'none',
+    padding: '0.4em 1em',
+
+    ':hover': {
+      backgroundColor: '#0088FF'
+    },
+
+    ':focus': {
+      backgroundColor: '#0088FF'
+    },
+
+    ':active': {
+      backgroundColor: '#005299',
+      transform: 'translateY(2px)',
+    },
+
+    // Media queries must start with @media, and follow the same syntax as CSS
+    '@media (min-width: 992px)': {
+      padding: '0.6em 1.2em'
+    },
+
+    '@media (min-width: 1200px)': {
+      padding: '0.8em 1.5em',
+
+      // Media queries can also have nested :hover, :focus, or :active states
+      ':hover': {
+        backgroundColor: '#329FFF'
+      }
+    }
+  },
+
+  red: {
+    backgroundColor: '#d90000',
+
+    ':hover': {
+      backgroundColor: '#FF0000'
+    },
+
+    ':focus': {
+      backgroundColor: '#FF0000'
+    },
+
+    ':active': {
+      backgroundColor: '#990000'
+    }
+  }
+};
+``
 
 ## Radium
 
@@ -83,67 +144,7 @@ The config will be passed down via [context](https://facebook.github.io/react/do
 Possible configuration values:
 - [`matchMedia`](#configmatchmedia)
 - [`plugins`](#configplugins)
-- [`userAgent`](#configuseragent)
-
-### Sample Style Object
-
-```as
-var styles = {
-  base: {
-    backgroundColor: '#0074d9',
-    border: 0,
-    borderRadius: '0.3em',
-    color: '#fff',
-    cursor: 'pointer',
-    fontSize: 16,
-    outline: 'none',
-    padding: '0.4em 1em',
-
-    ':hover': {
-      backgroundColor: '#0088FF'
-    },
-
-    ':focus': {
-      backgroundColor: '#0088FF'
-    },
-
-    ':active': {
-      backgroundColor: '#005299',
-      transform: 'translateY(2px)',
-    },
-
-    // Media queries must start with @media, and follow the same syntax as CSS
-    '@media (min-width: 992px)': {
-      padding: '0.6em 1.2em'
-    },
-
-    '@media (min-width: 1200px)': {
-      padding: '0.8em 1.5em',
-
-      // Media queries can also have nested :hover, :focus, or :active states
-      ':hover': {
-        backgroundColor: '#329FFF'
-      }
-    }
-  },
-
-  red: {
-    backgroundColor: '#d90000',
-
-    ':hover': {
-      backgroundColor: '#FF0000'
-    },
-
-    ':focus': {
-      backgroundColor: '#FF0000'
-    },
-
-    ':active': {
-      backgroundColor: '#990000'
-    }
-  }
-};
-```
+- [`userAgent`](#configuseragent)`
 
 ### config.matchMedia
 
@@ -279,7 +280,7 @@ Create a keyframes animation for use in any inline style. `keyframes` is a helpe
 `Radium.keyframes` takes an optional third parameter, `prefixFunction`. `prefixFunction` replaces the built-in prefixer with a function of your own. `prefixFunction` is called with two arguments, the `styles` object, and the `componentName`, e.g. `prefixFunction(styles, componentName)`.
 
 ```as
-@Radium
+@Radiump
 class Spinner extends React.Component {
   render () {
     return (
@@ -457,10 +458,6 @@ A string that any included selectors in `rules` will be appended to. Use to scop
   />
 </div>
 ```
-
-#### prefix
-
-Optional prop to replace the built-in prefixer with a function of your own. `prefix` is called with two arguments, the `styles` object, and the `componentName`, e.g. `prefix(styles, componentName)`.
 
 ## PrintStyleSheet component
 
