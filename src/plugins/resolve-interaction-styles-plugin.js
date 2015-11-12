@@ -89,7 +89,7 @@ const resolveInteractionStyles = function(config: PluginConfig): PluginResult {
     newComponentFields._radiumMouseUpListener = MouseUpListener.subscribe(
       () => {
         Object.keys(getComponentField('state')._radiumStyleState).forEach(key => {
-          if (getState(':active') === 'viamousedown') {
+          if (getState(':active', key) === 'viamousedown') {
             setState(':active', false, key);
           }
         });

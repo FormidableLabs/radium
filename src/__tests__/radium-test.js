@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import Radium, {PrintStyleSheet} from 'index.js';
+import MouseUpListener from 'plugins/mouse-up-listener.js';
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
@@ -202,6 +203,58 @@ describe('Radium blackbox tests', () => {
     TestUtils.Simulate.mouseDown(div);
 
     expect(div.style.color).to.equal('green');
+  });
+
+  it('removes active styles on mouseup', () => {
+    @Radium
+    class TestComponent extends Component {
+      render() {
+        return (
+          <div>
+            <span key="a" style={{
+              background: 'red',
+              color: 'blue',
+              ':active': {color: 'green'}
+            }} />
+            <button key="b" style={{
+              background: 'red',
+              color: 'blue',
+              ':active': {color: 'green'}
+            }} />
+            <nav key="c" style={{
+              background: 'red',
+              color: 'blue',
+              ':active': {color: 'green'}
+            }} />
+          </div>
+        );
+      }
+    }
+
+    const output = TestUtils.renderIntoDocument(<TestComponent />);
+
+    const span = getElement(output, 'span');
+    const button = getElement(output, 'button');
+    const nav = getElement(output, 'nav');
+
+    expect(span.style.color).to.equal('blue');
+    expect(button.style.color).to.equal('blue');
+    expect(nav.style.color).to.equal('blue');
+
+    TestUtils.Simulate.mouseDown(span);
+    expect(span.style.color).to.equal('green');
+    MouseUpListener.__triggerForTests();
+    expect(span.style.color).to.equal('blue');
+
+    TestUtils.Simulate.mouseDown(button);
+    expect(button.style.color).to.equal('green');
+    MouseUpListener.__triggerForTests();
+    expect(button.style.color).to.equal('blue');
+
+    TestUtils.Simulate.mouseDown(nav);
+    expect(nav.style.color).to.equal('green');
+    MouseUpListener.__triggerForTests();
+    expect(nav.style.color).to.equal('blue');
   });
 
   it('resolves styles on multiple elements nested far down, Issue #307', () => {

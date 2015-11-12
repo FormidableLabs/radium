@@ -3,11 +3,11 @@
 const _callbacks = [];
 let _mouseUpListenerIsActive = false;
 
-const _handleMouseUp = function(ev) {
+function _handleMouseUp(ev) {
   _callbacks.forEach(callback => {
     callback(ev);
   });
-};
+}
 
 const subscribe = function(callback: () => void): {remove: () => void} {
   if (_callbacks.indexOf(callback) === -1) {
@@ -33,5 +33,6 @@ const subscribe = function(callback: () => void): {remove: () => void} {
 };
 
 export default {
-  subscribe: subscribe
+  subscribe: subscribe,
+  __triggerForTests: _handleMouseUp
 };
