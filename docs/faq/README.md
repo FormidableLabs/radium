@@ -103,6 +103,8 @@ The example from the main Readme (using regular CSS syntax)
 ```
 
 ```as
+import styler from 'react-styling/flat'
+
 @Radium
 class Button extends React.Component {
   static propTypes = {
@@ -111,7 +113,7 @@ class Button extends React.Component {
 
   render() {
     return (
-      <button style={style.button[this.props.kind]}>
+      <button style={style[`button_${this.props.kind}`]}>
         {this.props.children}
       </button>
     )
