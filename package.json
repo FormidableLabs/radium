@@ -3,6 +3,7 @@
   "version": "0.15.1",
   "description": "A set of tools to manage inline styles on React elements",
   "main": "lib/index.js",
+  "files": "lib",
   "repository": {
     "type": "git",
     "url": "https://github.com/formidablelabs/radium.git"
