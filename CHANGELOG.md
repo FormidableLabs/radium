@@ -1,5 +1,11 @@
 # Radium Changelog
 
+## 0.15.3 (November 16, 2015)
+
+### Bug Fixes
+
+- Fix `"files"` section in `package.json`, should fix `npm install issues`
+
 ## 0.15.2 (November 15, 2015)
 
 ### Bug Fixes
