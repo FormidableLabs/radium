@@ -18,6 +18,7 @@ function transformValues(style) {
   }, {});
 }
 
+let hasWarnedAboutUserAgent = false;
 let lastUserAgent;
 let prefixer;
 
@@ -31,12 +32,17 @@ export function getPrefixedStyle(
   const actualUserAgent = userAgent ||
     (global && global.navigator && global.navigator.userAgent);
 
-  if (!actualUserAgent) {
-    throw new Error(
-      'Radium: userAgent must be supplied for server-side rendering. See ' +
-      'https://github.com/FormidableLabs/radium/tree/master/docs/api#radium ' +
-      'for more information.'
-    );
+  if (process.env.NODE_ENV !== 'production') {
+    if (!actualUserAgent && !hasWarnedAboutUserAgent) {
+      /* eslint-disable no-console */
+      console.warn(
+        'Radium: userAgent should be supplied for server-side rendering. See ' +
+        'https://github.com/FormidableLabs/radium/tree/master/docs/api#radium ' +
+        'for more information.'
+      );
+      /* eslint-enable no-console */
+      hasWarnedAboutUserAgent = true;
+    }
   }
 
   if (!prefixer || actualUserAgent !== lastUserAgent) {
