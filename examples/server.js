@@ -14,6 +14,7 @@
 import express from 'express';
 import proxy from 'express-http-proxy';
 import React from 'react';
+import ReactDOMServer from 'react-dom/server';
 import App from './app.jsx';
 import fs from 'fs';
 
@@ -25,9 +26,10 @@ const port = 8000;
 app.use('/app.js', proxy('localhost:8080', {forwardPath: () => '/app.js'}));
 
 app.get('/', (req, res) => {
-  res.write(indexHTML.replace('<!-- {{app}} -->', React.renderToString(
+  const appHtml = ReactDOMServer.renderToString(
     <App radiumConfig={{userAgent: req.headers['user-agent']}} />
-  )));
+  );
+  res.write(indexHTML.replace('<!-- {{app}} -->', appHtml));
   res.end();
 });
 
