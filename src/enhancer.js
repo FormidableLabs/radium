@@ -91,7 +91,7 @@ export default function enhanceWithRadium(
 
     getChildContext() {
       const superChildContext = super.getChildContext ?
-        super.getChildContext :
+        super.getChildContext() :
         {};
 
       if (!this.props.radiumConfig) {
