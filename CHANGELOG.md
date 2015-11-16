@@ -1,5 +1,13 @@
 # Radium Changelog
 
+## 0.15.2 (November 15, 2015)
+
+### Bug Fixes
+
+- IE vender prefix (ms) is now converted to dash-case correctly (-ms), thanks @PallasKatze, fixes #413
+- Super getChildContext is no longer ignored, thanks @richardfickling, fixes #412
+- Update to inline-style-prefixer v0.5.1 and changed the userAgent error to a console.warning
+
 ## 0.15.1 (November 11, 2015)
 
 ### Bug Fixes
