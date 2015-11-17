@@ -4,6 +4,8 @@ import React, {Component, PropTypes} from 'react';
 
 import resolveStyles from './resolve-styles.js';
 import printStyles from './print-styles.js';
+import StyleKeeper from './style-keeper.js';
+import StyleSheet from './components/style-sheet.js';
 
 const KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
   'arguments',
@@ -15,7 +17,7 @@ const KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
   'type'
 ];
 
-const copyProperties = function(source, target) {
+function copyProperties(source, target) {
   Object.getOwnPropertyNames(source).forEach(key => {
     if (
       KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES.indexOf(key) < 0 &&
@@ -25,7 +27,20 @@ const copyProperties = function(source, target) {
       Object.defineProperty(target, key, descriptor);
     }
   });
-};
+}
+
+function _getStyleKeeper(instance): StyleKeeper {
+  if (!instance._radiumStyleKeeper) {
+    const userAgent = (
+      instance.props.radiumConfig && instance.props.radiumConfig.userAgent
+    ) || (
+      instance.context._radiumConfig && instance.context._radiumConfig.userAgent
+    );
+    instance._radiumStyleKeeper = new StyleKeeper(userAgent);
+  }
+
+  return instance._radiumStyleKeeper;
+}
 
 export default function enhanceWithRadium(
   configOrComposedComponent: constructor | Function | Object,
@@ -94,14 +109,21 @@ export default function enhanceWithRadium(
         super.getChildContext() :
         {};
 
-      if (!this.props.radiumConfig) {
+      if (!this.props.radiumConfig && !config.isRoot) {
         return superChildContext;
       }
 
-      return {
-        ...superChildContext,
-        _radiumConfig: this.props._radiumConfig
-      };
+      const newContext = {...superChildContext};
+
+      if (this.props.radiumConfig) {
+        newContext._radiumConfig = this.props.radiumConfig;
+      }
+
+      if (config.isRoot) {
+        newContext._radiumStyleKeeper = _getStyleKeeper(this);
+      }
+
+      return newContext;
     }
 
     render() {
@@ -116,7 +138,18 @@ export default function enhanceWithRadium(
         };
       }
 
-      return resolveStyles(this, renderedElement, currentConfig);
+      const element = resolveStyles(this, renderedElement, currentConfig);
+
+      if (config.isRoot) {
+        return (
+          <div>
+            {element}
+            <StyleSheet />
+          </div>
+        );
+      }
+
+      return element;
     }
   }
 
@@ -152,12 +185,14 @@ export default function enhanceWithRadium(
 
   RadiumEnhancer.contextTypes = {
     ...RadiumEnhancer.contextTypes,
-    _radiumConfig: React.PropTypes.object
+    _radiumConfig: React.PropTypes.object,
+    _radiumStyleKeeper: React.PropTypes.instanceOf(StyleKeeper)
   };
 
   RadiumEnhancer.childContextTypes = {
     ...RadiumEnhancer.childContextTypes,
-    _radiumConfig: React.PropTypes.object
+    _radiumConfig: React.PropTypes.object,
+    _radiumStyleKeeper: React.PropTypes.instanceOf(StyleKeeper)
   };
 
   return RadiumEnhancer;

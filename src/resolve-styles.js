@@ -205,10 +205,23 @@ const _runPlugins = function({
   const setState = (stateKey, value, elementKey) =>
     _setStyleState(component, elementKey || getKey(), stateKey, value);
 
+  const addCSS = css => {
+    if (!component.context._radiumStyleKeeper) {
+      throw new Error(
+        'To use keyframes, please add `isRoot: true` to your root ' +
+          'component\'s Radium config.',
+      );
+    }
+
+    return component.context._radiumStyleKeeper.addCSS(css);
+  };
+
   let newStyle = props.style;
+
   plugins.forEach(plugin => {
     const result = plugin({
       ExecutionEnvironment,
+      addCSS,
       componentName,
       config,
       getComponentField,

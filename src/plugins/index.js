@@ -10,6 +10,9 @@ import resolveInteractionStylesPlugin from './resolve-interaction-styles-plugin'
 import resolveMediaQueriesPlugin from './resolve-media-queries-plugin';
 
 export type PluginConfig = {
+  // Adds a chunk of css to the root style sheet
+  addCSS: (css: string) => {remove: () => void},
+
   // May not be readable if code has been minified
   componentName: string,
 
