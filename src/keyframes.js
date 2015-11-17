@@ -42,7 +42,7 @@ if (isAnimationSupported) {
 export default function keyframes(
   keyframeRules: {[percentage: string]: {[key: string]: string|number}},
   componentName?: string,
-  prefix: (style: Object, componentName: ?string) => Object = getPrefixedStyle
+  prefix: (style: Object) => Object = getPrefixedStyle
 ): string {
   const name = 'Animation' + animationIndex;
   animationIndex += 1;
@@ -54,7 +54,7 @@ export default function keyframes(
   const rule = '@' + keyframesPrefixed + ' ' + name + ' {\n' +
     Object.keys(keyframeRules).map(percentage => {
       const props = keyframeRules[percentage];
-      const prefixedProps = prefix(props, componentName);
+      const prefixedProps = prefix(props);
       const cssPrefixedProps = camelCasePropsToDashCase(prefixedProps);
       const serializedProps = createMarkupForStyles(cssPrefixedProps, '  ');
       return '  ' + percentage + ' {\n  ' + serializedProps + '\n  }';

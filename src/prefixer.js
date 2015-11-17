@@ -26,7 +26,6 @@ let prefixer;
 // and values.
 export function getPrefixedStyle(
   style: Object,
-  componentName: ?string,
   userAgent?: ?string,
 ): Object {
   const actualUserAgent = userAgent ||

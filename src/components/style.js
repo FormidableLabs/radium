@@ -15,7 +15,7 @@ const buildCssString = function(
     return '';
   }
 
-  const prefixedRules = getPrefixedStyle(rules, 'Style', userAgent);
+  const prefixedRules = getPrefixedStyle(rules, userAgent);
   const cssPrefixedRules = camelCasePropsToDashCase(prefixedRules);
   const serializedRules = createMarkupForStyles(cssPrefixedRules);
 
@@ -34,7 +34,6 @@ const Style = React.createClass({
 
   getDefaultProps(): {scopeSelector: string} {
     return {
-      prefix: getPrefixedStyle,
       scopeSelector: ''
     };
   },
