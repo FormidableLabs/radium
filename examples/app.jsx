@@ -166,7 +166,7 @@ var App = React.createClass({
     );
   }
 });
-App = Radium(App);
+App = Radium({isRoot: true})(App);
 
 var squareStyles = {
   both: {
@@ -203,15 +203,16 @@ var tileStyle = {
   }
 };
 
-var pulseKeyframes = Radium.keyframes({
+var pulseAnimation = Radium.keyframes({
   '0%': {width: '10%'},
   '50%': {width: '50%'},
   '100%': {width: '10%'},
-}, Spinner);
+}, 'pulse');
 
 var spinnerStyles = {
   inner: {
-    animation: pulseKeyframes + ' 3s ease 0s infinite',
+    animation: 'x 3s ease 0s infinite',
+    animationName: pulseAnimation,
     background: 'blue',
     height: '4px',
     margin: '0 auto',

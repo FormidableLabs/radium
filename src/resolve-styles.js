@@ -16,6 +16,7 @@ const DEFAULT_CONFIG = {
     Plugins.checkProps,
     Plugins.resolveMediaQueries,
     Plugins.resolveInteractionStyles,
+    Plugins.keyframes,
     Plugins.prefix,
     Plugins.checkProps
   ]

@@ -4,6 +4,7 @@
 import type {Config} from '../config';
 
 import checkPropsPlugin from './check-props-plugin';
+import keyframesPlugin from './keyframes-plugin';
 import mergeStyleArrayPlugin from './merge-style-array-plugin';
 import prefixPlugin from './prefix-plugin';
 import resolveInteractionStylesPlugin from './resolve-interaction-styles-plugin';
@@ -73,6 +74,7 @@ export type PluginResult = ?{
 
 export default {
   checkProps: checkPropsPlugin,
+  keyframes: keyframesPlugin,
   mergeStyleArray: mergeStyleArrayPlugin,
   prefix: prefixPlugin,
   resolveInteractionStyles: resolveInteractionStylesPlugin,
