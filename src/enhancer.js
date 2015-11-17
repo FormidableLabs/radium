@@ -100,14 +100,14 @@ export default function enhanceWithRadium(
 
       return {
         ...superChildContext,
-        radiumConfig: this.props.radiumConfig
+        _radiumConfig: this.props._radiumConfig
       };
     }
 
     render() {
       const renderedElement = super.render();
       let currentConfig = this.props.radiumConfig ||
-        this.context.radiumConfig || config;
+        this.context._radiumConfig || config;
 
       if (config && currentConfig !== config) {
         currentConfig = {
@@ -152,12 +152,12 @@ export default function enhanceWithRadium(
 
   RadiumEnhancer.contextTypes = {
     ...RadiumEnhancer.contextTypes,
-    radiumConfig: React.PropTypes.object
+    _radiumConfig: React.PropTypes.object
   };
 
   RadiumEnhancer.childContextTypes = {
     ...RadiumEnhancer.childContextTypes,
-    radiumConfig: React.PropTypes.object
+    _radiumConfig: React.PropTypes.object
   };
 
   return RadiumEnhancer;

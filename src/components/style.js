@@ -29,7 +29,7 @@ const Style = React.createClass({
   },
 
   contextTypes: {
-    radiumConfig: React.PropTypes.object
+    _radiumConfig: React.PropTypes.object
   },
 
   getDefaultProps(): {scopeSelector: string} {
@@ -53,8 +53,8 @@ const Style = React.createClass({
         accumulator += buildCssString(
           completeSelector,
           rules,
-          this.context && this.context.radiumConfig &&
-            this.context.radiumConfig.userAgent
+          this.context && this.context._radiumConfig &&
+            this.context._radiumConfig.userAgent
         );
       }
 
