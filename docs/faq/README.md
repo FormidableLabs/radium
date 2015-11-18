@@ -6,6 +6,7 @@
 - [Can I use my favourite CSS/LESS/SASS syntax?](#can-i-use-my-favourite-csslesssass-syntax)
 - [Can I use Radium with Bootstrap?](#can-i-use-radium-with-bootstrap)
 - [Why doesn't Radium work on SomeComponent?](#why-doesnt-radium-work-on-somecomponent)
+- [How can I get rid of `userAgent` warnings in tests?](#how-can-i-get-rid-of-useragent-warnings-in-tests)
 
 ## How do I use pseudo-selectors like `:checked`, `:last`, `:before`, or `:after`?
 
@@ -157,3 +158,22 @@ Link = Radium(Link);
 Huge thanks to @mairh for coming up with this idea in https://github.com/FormidableLabs/radium/issues/324.
 
 We are also exploring adding a mechanism to bypass Radium's check, see https://github.com/FormidableLabs/radium/issues/258.
+
+## How can I get rid of `userAgent` warnings in tests?
+
+You might see warnings like this when testing React components that use Radium:
+
+```
+Radium: userAgent should be supplied for server-side rendering. See https://github.com/FormidableLabs/radium/tree/master
+/docs/api#radium for more information.
+Either the global navigator was undefined or an invalid userAgent was provided. Using a valid userAgent? Please let us k
+now and create an issue at https://github.com/rofrischmann/inline-style-prefixer/issues
+```
+
+This isn't an issue if you run your tests in a browser-like environment such as jsdom or PhantomJS, but if you just run them in Node, there will be no userAgent defined. In your test setup, you can define one:
+
+```
+global.navigator = {userAgent: 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2454.85 Safari/537.36'};
+```
+
+Make sure it is a real user agent that `inline-style-prefixer` recognizes, or you'll still get the second error. The above UA is [Chrome 49 from the `inline-style-prefixer` tests](https://github.com/rofrischmann/inline-style-prefixer/blob/master/test/prefixer-test.js).
