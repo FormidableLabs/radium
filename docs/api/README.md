@@ -280,7 +280,7 @@ Create a keyframes animation for use in any inline style. `keyframes` is a helpe
 `Radium.keyframes` takes an optional third parameter, `prefixFunction`. `prefixFunction` replaces the built-in prefixer with a function of your own. `prefixFunction` is called with two arguments, the `styles` object, and the `componentName`, e.g. `prefixFunction(styles, componentName)`.
 
 ```as
-@Radiump
+@Radium
 class Spinner extends React.Component {
   render () {
     return (
