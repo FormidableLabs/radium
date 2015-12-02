@@ -29,6 +29,7 @@ if (ExecutionEnvironment.canUseDOM) {
   }
 }
 
+const animationNameSeed = document.head.querySelectorAll('style').length;
 let animationIndex = 1;
 let animationStyleSheet = null;
 
@@ -44,7 +45,7 @@ export default function keyframes(
   componentName?: string,
   prefix: (style: Object) => Object = getPrefixedStyle
 ): string {
-  const name = 'Animation' + animationIndex;
+  const name = `-radium-animation-${animationNameSeed}-${animationIndex}`;
   animationIndex += 1;
 
   if (!isAnimationSupported) {

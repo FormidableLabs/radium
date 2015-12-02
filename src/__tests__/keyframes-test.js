@@ -1,9 +1,11 @@
 let styleElement;
 let exenv;
+let sandbox;
 
 describe('keyframes', () => {
 
   beforeEach(() => {
+    sandbox = sinon.sandbox.create();
     styleElement = {
       textContent: '',
       sheet: {
@@ -13,12 +15,9 @@ describe('keyframes', () => {
       style: {WebkitAnimationName: ''}
     };
 
-    sinon.stub(document, 'createElement', () => {
-      return styleElement;
+    [].slice.call(document.head.querySelectorAll('style')).forEach(node => {
+      document.head.removeChild(node);
     });
-
-    sinon.stub(document.head, 'appendChild');
-
 
     exenv = {
       canUseDOM: true,
@@ -28,11 +27,16 @@ describe('keyframes', () => {
   });
 
   afterEach(() => {
-    document.createElement.restore();
-    document.head.appendChild.restore();
+    sandbox.restore();
   });
 
   it('doesn\'t touch the DOM if DOM not available', () => {
+    sandbox.stub(document, 'createElement', () => {
+      return styleElement;
+    });
+
+    sandbox.stub(document.head, 'appendChild');
+
     exenv = {
       canUseDOM: false,
       canUseEventListeners: false
@@ -52,10 +56,9 @@ describe('keyframes', () => {
   });
 
   it('doesn\'t touch the DOM if animation not supported (IE9)', () => {
-    document.createElement.restore();
-    sinon.stub(document, 'createElement', () => {
-      return {style: {}};
-    });
+    sandbox.stub(document, 'createElement', () => ({style: {}}));
+
+    sandbox.stub(document.head, 'appendChild');
 
     const keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
       'exenv': exenv,
@@ -69,13 +72,55 @@ describe('keyframes', () => {
     expect(name.length).to.be.greaterThan(0);
   });
 
-  it('returns a name for the keyframes', () => {
+  it('returns the expected name for the keyframes on first call', () => {
     const keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
     });
+
     const name = keyframes({}, 'MyComponent');
-    expect(name.length).to.be.greaterThan(0);
+
+    expect(name).to.equal('-radium-animation-0-1');
+  });
+
+  it('returns the expected name for the keyframes on second call', () => {
+    const keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+      'exenv': exenv,
+      './prefixer': require('__mocks__/prefixer.js')
+    });
+
+    keyframes({}, 'MyComponent');
+    const name2 = keyframes({}, 'MyComponent');
+
+    expect(name2).to.equal('-radium-animation-0-2');
+  });
+
+  it('returns the expected name for the keyframes on first call if a style sheet exists', () => {
+    document.head.appendChild(document.createElement('style'));
+
+    const keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+      'exenv': exenv,
+      './prefixer': require('__mocks__/prefixer.js')
+    });
+
+    const name = keyframes({}, 'MyComponent');
+
+    expect(name).to.equal('-radium-animation-1-1');
+  });
+
+  it('returns the expected name for the keyframes on second call if two style sheets exist', () => {
+    document.head.appendChild(document.createElement('style'));
+    document.head.appendChild(document.createElement('style'));
+
+    const keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
+      'exenv': exenv,
+      './prefixer': require('__mocks__/prefixer.js')
+    });
+
+    keyframes({}, 'MyComponent');
+    const name2 = keyframes({}, 'MyComponent');
+
+    expect(name2).to.equal('-radium-animation-2-2');
   });
 
   it('does not always require a component', () => {
@@ -88,6 +133,12 @@ describe('keyframes', () => {
   });
 
   it('prefixes @keyframes if needed', () => {
+    sandbox.stub(document, 'createElement', () => {
+      return styleElement;
+    });
+
+    sandbox.stub(document.head, 'appendChild');
+
     const keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
@@ -101,10 +152,11 @@ describe('keyframes', () => {
   });
 
   it('doesn\'t prefix @keyframes if not needed', () => {
-    document.createElement.restore();
-    sinon.stub(document, 'createElement', () => {
-      return {...styleElement, style: {animationName: ''}};
-    });
+    sandbox.restore();
+    sandbox.stub(document, 'createElement', () => ({...styleElement, style: {animationName: ''}}));
+
+    sandbox.stub(document.head, 'appendChild');
+
     const keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
@@ -117,6 +169,12 @@ describe('keyframes', () => {
   });
 
   it('serializes keyframes', () => {
+    sandbox.stub(document, 'createElement', () => {
+      return styleElement;
+    });
+
+    sandbox.stub(document.head, 'appendChild');
+
     const keyframes = require('inject?-./create-markup-for-styles!keyframes.js')({
       'exenv': exenv,
       './prefixer': require('__mocks__/prefixer.js')
