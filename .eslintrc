@@ -254,7 +254,7 @@ rules:
     react/no-did-update-set-state: 1
     react/no-multi-comp: 0
     react/no-unknown-property: 1
-    react/prop-types: 1
+    react/prop-types: 0 # disabled until fixed https://github.com/yannickcr/eslint-plugin-react/issues/345
     react/react-in-jsx-scope: 1
     react/self-closing-comp: 1
     react/sort-comp: 1
