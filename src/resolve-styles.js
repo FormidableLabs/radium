@@ -131,12 +131,14 @@ const _buildGetKey = function({
     alreadyGotKey = true;
 
     if (existingKeyMap[key]) {
-      const elementName = typeof renderedElement.type === 'string' ?
-        renderedElement.type :
-        renderedElement.type.constructor ?
-          renderedElement.type.constructor.displayName ||
-            renderedElement.type.constructor.name :
-          null;
+      let elementName;
+      if (typeof renderedElement.type === 'string') {
+        elementName = renderedElement.type;
+      } else if (renderedElement.type.constructor) {
+        elementName = renderedElement.type.constructor.displayName ||
+          renderedElement.type.constructor.name;
+      }
+
       throw new Error(
         'Radium requires each element with interactive styles to have a unique ' +
         'key, set using either the ref or key prop. ' +
