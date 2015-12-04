@@ -37,7 +37,7 @@
     "babel": "^5.8.23",
     "babel-plugin-flow-comments": "^1.0.9",
     "exenv": "^1.2.0",
-    "inline-style-prefixer": "^0.5.1",
+    "inline-style-prefixer": "^0.5.3",
     "is-plain-object": "^2.0.1",
     "rimraf": "^2.4.0"
   },
