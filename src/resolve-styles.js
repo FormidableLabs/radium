@@ -109,7 +109,11 @@ const _resolveProps = function({
   return newProps;
 };
 
-const _buildGetKey = function(renderedElement, existingKeyMap) {
+const _buildGetKey = function({
+  componentName,
+  existingKeyMap,
+  renderedElement
+}) {
   // We need a unique key to correlate state changes due to user interaction
   // with the rendered element, so we know to apply the proper interactive
   // styles.
@@ -127,12 +131,20 @@ const _buildGetKey = function(renderedElement, existingKeyMap) {
     alreadyGotKey = true;
 
     if (existingKeyMap[key]) {
+      const elementName = typeof renderedElement.type === 'string' ?
+        renderedElement.type :
+        renderedElement.type.constructor ?
+          renderedElement.type.constructor.displayName ||
+            renderedElement.type.constructor.name :
+          null;
       throw new Error(
         'Radium requires each element with interactive styles to have a unique ' +
         'key, set using either the ref or key prop. ' +
         (originalKey ?
           'Key "' + originalKey + '" is a duplicate.' :
-          'Multiple elements have no key specified.')
+          'Multiple elements have no key specified.') + ' ' +
+        'Component: "' + componentName + '". ' +
+        (elementName ? 'Element: "' + elementName + '".' : '')
       );
     }
 
@@ -181,23 +193,28 @@ const _runPlugins = function({
 
   const plugins = config.plugins || DEFAULT_CONFIG.plugins;
 
-  const getKey = _buildGetKey(renderedElement, existingKeyMap);
+  const componentName = component.constructor.displayName ||
+    component.constructor.name;
+  const getKey = _buildGetKey({renderedElement, existingKeyMap, componentName});
+  const getComponentField = key => component[key];
+  const getGlobalState = key => globalState[key];
+  const componentGetState = (stateKey, elementKey) =>
+    getState(component.state, elementKey || getKey(), stateKey);
+  const setState = (stateKey, value, elementKey) =>
+    _setStyleState(component, elementKey || getKey(), stateKey, value);
 
   let newStyle = props.style;
   plugins.forEach(plugin => {
     const result = plugin({
       ExecutionEnvironment,
-      componentName: component.constructor.displayName ||
-        component.constructor.name,
+      componentName,
       config,
-      getComponentField: key => component[key],
-      getGlobalState: key => globalState[key],
-      getState: (stateKey, elementKey) =>
-        getState(component.state, elementKey || getKey(), stateKey),
+      getComponentField,
+      getGlobalState,
+      getState: componentGetState,
       mergeStyles,
       props: newProps,
-      setState: (stateKey, value, elementKey) =>
-        _setStyleState(component, elementKey || getKey(), stateKey, value),
+      setState,
       style: newStyle
     }) || {};
 
