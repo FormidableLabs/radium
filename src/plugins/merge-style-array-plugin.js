@@ -7,7 +7,7 @@ import type {PluginConfig, PluginResult} from '.';
 const mergeStyleArrayPlugin = function({
   style,
   mergeStyles
-}: PluginConfig): PluginResult {
+}: PluginConfig): PluginResult { // eslint-disable-line no-shadow
   const newStyle = Array.isArray(style) ? mergeStyles(style) : style;
   return {style: newStyle};
 };

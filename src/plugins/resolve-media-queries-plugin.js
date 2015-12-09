@@ -23,7 +23,7 @@ export default function resolveMediaQueries({
   mergeStyles,
   setState,
   style
-}: PluginConfig): PluginResult {
+}: PluginConfig): PluginResult { // eslint-disable-line no-shadow
   const newComponentFields = {};
   let newStyle = style;
   const matchMedia: ?MatchMediaType = config.matchMedia ||
