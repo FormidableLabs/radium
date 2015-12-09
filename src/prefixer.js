@@ -13,7 +13,8 @@ function transformValues(style) {
     if (Array.isArray(value)) {
       value = value.join(';' + key + ':');
     }
-    newStyle[key] = value;
+    if (!key.match(/^@media/))
+      newStyle[key] = value;
     return newStyle;
   }, {});
 }
