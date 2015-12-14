@@ -5,7 +5,7 @@ import type {PluginConfig, PluginResult} from '.';
 import {getPrefixedStyle} from '../prefixer';
 
 export default function prefixPlugin(
-  {config, style}: PluginConfig
+  {config, style}: PluginConfig // eslint-disable-line no-shadow
 ): PluginResult {
   const newStyle = getPrefixedStyle(
     style,

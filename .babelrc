@@ -1,6 +1,12 @@
 {
-  "stage": 0,
-  "plugins": ["flow-comments"],
-  "blacklist": ["flow"],
-  "loose": "all"
+  "plugins": [
+    "add-module-exports",
+    "transform-es2015-modules-commonjs",
+    "transform-decorators-legacy"
+  ],
+  "presets": [
+    "es2015-loose",
+    "stage-1",
+    "react"
+  ]
 }
