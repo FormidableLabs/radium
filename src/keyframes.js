@@ -29,7 +29,9 @@ if (ExecutionEnvironment.canUseDOM) {
   }
 }
 
-const animationNameSeed = document.head.querySelectorAll('style').length;
+const animationNameSeed = ExecutionEnvironment.canUseDOM
+  ? document.head.querySelectorAll('style').length
+  : 0;
 let animationIndex = 1;
 let animationStyleSheet = null;
 
