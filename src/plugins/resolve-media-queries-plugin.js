@@ -24,14 +24,25 @@ export default function resolveMediaQueries({
   setState,
   style
 }: PluginConfig): PluginResult { // eslint-disable-line no-shadow
-  const newComponentFields = {};
-  let newStyle = style;
+  // Remove media queries
+  let newStyle = Object.keys(style).reduce(
+    (styleWithoutMedia, key) => {
+      if (key.indexOf('@media') !== 0) {
+        styleWithoutMedia[key] = style[key];
+      }
+      return styleWithoutMedia;
+    },
+    {}
+  );
+
   const matchMedia: ?MatchMediaType = config.matchMedia ||
     _getWindowMatchMedia(ExecutionEnvironment);
+
   if (!matchMedia) {
     return newStyle;
   }
 
+  const newComponentFields = {};
   const mediaQueryListByQueryString =
     getGlobalState('mediaQueryListByQueryString') || {};
 
