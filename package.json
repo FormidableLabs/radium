@@ -33,17 +33,16 @@
   },
   "license": "MIT",
   "dependencies": {
-    "array-find": "^1.0.0",
-    "babel": "^5.8.23",
-    "babel-plugin-flow-comments": "^1.0.9",
     "exenv": "^1.2.0",
     "inline-style-prefixer": "^0.5.3",
-    "is-plain-object": "^2.0.1",
-    "rimraf": "^2.4.0"
+    "is-plain-object": "^2.0.1"
   },
   "devDependencies": {
+    "array-find": "^1.0.0",
+    "babel": "^5.8.23",
     "babel-eslint": "^4.1.1",
     "babel-loader": "^5.3.2",
+    "babel-plugin-flow-comments": "^1.0.9",
     "chai": "^3.0.0",
     "concurrently": "^0.1.1",
     "coveralls": "^2.11.2",
@@ -73,6 +72,7 @@
     "react": "^0.14.0",
     "react-addons-test-utils": "^0.14.0",
     "react-dom": "^0.14.0",
+    "rimraf": "^2.4.0",
     "sinon": "^1.15.3",
     "sinon-chai": "^2.8.0",
     "webpack": "^1.9.11",
