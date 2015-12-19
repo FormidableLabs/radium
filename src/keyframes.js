@@ -20,7 +20,8 @@ export default function keyframes(
   keyframeRules: {[percentage: string]: {[key: string]: string|number}},
   name?: string,
 ): Keyframes {
-  const animationName = (name ? name + '-' : '') + '-radium-animation-' + animationNameSeed + '-' + animationIndex;
+  const animationName = (name ? name + '-' : '') +
+    '-radium-animation-' + animationNameSeed + '-' + animationIndex;
   animationIndex += 1;
 
   return {

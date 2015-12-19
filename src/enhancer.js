@@ -81,6 +81,10 @@ export default function enhanceWithRadium(
       if (RadiumEnhancer.printStyleClass) {
         this.printStyleClass = RadiumEnhancer.printStyleClass;
       }
+
+      if (config.isRoot) {
+        _getStyleKeeper(this);
+      }
     }
 
     componentWillUnmount() {

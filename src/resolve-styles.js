@@ -207,14 +207,17 @@ const _runPlugins = function({
     _setStyleState(component, elementKey || getKey(), stateKey, value);
 
   const addCSS = css => {
-    if (!component.context._radiumStyleKeeper) {
+    const styleKeeper = component._radiumStyleKeeper ||
+      component.context._radiumStyleKeeper;
+    if (!styleKeeper) {
+      console.log(Object.keys(component));
       throw new Error(
         'To use plugins requiring `addCSS` (e.g. keyframes), please add ' +
           '`isRoot: true` to your root component\'s Radium config.',
       );
     }
 
-    return component.context._radiumStyleKeeper.addCSS(css);
+    return styleKeeper.addCSS(css);
   };
 
   let newStyle = props.style;
