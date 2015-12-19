@@ -5,18 +5,7 @@ import MouseUpListener from 'plugins/mouse-up-listener.js';
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
-
-const getRenderOutput = function(element) {
-  const renderer = TestUtils.createRenderer();
-  renderer.render(element);
-  return renderer.getRenderOutput();
-};
-
-const getElement = function(output, tagName) {
-  return ReactDOM.findDOMNode(
-    TestUtils.findRenderedDOMComponentWithTag(output, tagName)
-  );
-};
+import {getRenderOutput, getElement} from 'test-helpers';
 
 describe('Radium blackbox tests', () => {
   beforeEach(() => {
