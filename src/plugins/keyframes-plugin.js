@@ -10,9 +10,9 @@ export default function keyframesPlugin(
     let value = style[key];
     if (key === 'animationName' && value && value.__radiumKeyframes) {
       const keyframesValue = (value: Keyframes);
-      const css = keyframesValue.__getCSS(config.userAgent);
+      const {animationName, css} = keyframesValue.__process(config.userAgent);
       addCSS(css);
-      value = keyframesValue.__name;
+      value = animationName;
     }
 
     newStyle[key] = value;

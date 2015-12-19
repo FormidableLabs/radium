@@ -25,7 +25,7 @@ describe('keyframes', () => {
     const style = getElement(output, 'style');
 
     expect(style.innerText).to.equal(
-`@-webkit-keyframes SlideFromLeft--radium-animation-0-1 {
+`@-webkit-keyframes SlideFromLeft-radium-animation-e32ae4d0 {
 from{
   left: -1000px;
 }
@@ -66,7 +66,7 @@ to{
     const style = getElement(output, 'style');
 
     expect(style.innerText).to.equal(
-`@-webkit-keyframes SlideFromLeft--radium-animation-0-2 {
+`@-webkit-keyframes SlideFromLeft-radium-animation-e32ae4d0 {
 from{
   left: -1000px;
 }
