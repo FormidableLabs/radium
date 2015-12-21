@@ -5,7 +5,7 @@ import MouseUpListener from 'plugins/mouse-up-listener.js';
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
-import {getRenderOutput, getElement} from 'test-helpers';
+import {expectCSS, getRenderOutput, getElement} from 'test-helpers';
 
 describe('Radium blackbox tests', () => {
   beforeEach(() => {
@@ -318,19 +318,19 @@ describe('Radium blackbox tests', () => {
 
     const style = getElement(output, 'style');
 
-    expect(style.innerText).to.equal(
-      '@media print{' +
-      '.Radium-TestComponent-foo{\n' +
-      '  color: blue !important;\n' +
-      '}' +
-      '.Radium-TestComponent-bar{\n' +
-      '  background: red !important;\n' +
-      '}' +
-      '.Radium-TestComponent2-main{\n' +
-      '  color: black !important;\n' +
-      '}' +
-      '}'
-    );
+    expectCSS(style, `
+      @media print {
+        .Radium-TestComponent-foo {
+          color: blue !important;
+        }
+        .Radium-TestComponent-bar {
+          background: red !important;
+        }
+        .Radium-TestComponent2-main {
+          color: black !important;
+        }
+      }
+    `);
   });
 
   it('resolves styles if an element has element children and spreads props', () => {

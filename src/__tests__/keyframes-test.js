@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import Radium, {keyframes} from 'index';
-import {getElement} from 'test-helpers';
+import {expectCSS, getElement} from 'test-helpers';
 import React, {Component} from 'react';
 import TestUtils from 'react-addons-test-utils';
 
@@ -24,17 +24,16 @@ describe('keyframes', () => {
 
     const style = getElement(output, 'style');
 
-    expect(style.innerText).to.equal(
-`@-webkit-keyframes SlideFromLeft-radium-animation-e32ae4d0 {
-from{
-  left: -1000px;
-}
-to{
-  left: 0;
-}
-}
-`
-    );
+    expectCSS(style, `
+      @-webkit-keyframes SlideFromLeft-radium-animation-1b668a10 {
+        from{
+          left: -1000px;
+        }
+        to{
+          left: 0;
+        }
+      }
+    `);
   });
 
   it('renders keyframes from child component', () => {
@@ -65,17 +64,16 @@ to{
 
     const style = getElement(output, 'style');
 
-    expect(style.innerText).to.equal(
-`@-webkit-keyframes SlideFromLeft-radium-animation-e32ae4d0 {
-from{
-  left: -1000px;
-}
-to{
-  left: 0;
-}
-}
-`
-    );
+    expectCSS(style, `
+      @-webkit-keyframes SlideFromLeft-radium-animation-1b668a10 {
+        from{
+          left: -1000px;
+        }
+        to{
+          left: 0;
+        }
+      }
+    `);
   });
 
 });

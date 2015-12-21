@@ -12,3 +12,15 @@ export function getElement(output, tagName) {
     TestUtils.findRenderedDOMComponentWithTag(output, tagName)
   );
 }
+
+function cleanCSS(css) {
+  return css.replace(/\s*\n\s*/g, '').replace(/\s*([{};:])\s*/g, '$1');
+}
+
+export function expectCSS(styleElement, css) {
+  // strip newlines and excess whitespace from both to normalize browsers.
+  // IE9, for instance, does not include new lines in innerText.
+  // Also allows us to write our expected CSS cleanly, without worring about the
+  // format of the actual output.
+  expect(cleanCSS(styleElement.innerText)).to.equal(cleanCSS(css));
+}
