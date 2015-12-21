@@ -336,7 +336,7 @@ describe('Radium blackbox tests', () => {
   it('resolves styles if an element has element children and spreads props', () => {
     @Radium
     class Inner extends Component {
-      propTypes = { children: PropTypes.node }
+      static propTypes = { children: PropTypes.node }
       render() {
         return (
           <div {...this.props} style={[{color: 'blue'}, {background: 'red'}]}>
