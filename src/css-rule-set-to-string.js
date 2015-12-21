@@ -18,4 +18,4 @@ export default function cssRuleSetToString(
   const serializedRules = createMarkupForStyles(cssPrefixedRules, '  ');
 
   return selector + '{\n' + serializedRules + '\n}';
-};
+}

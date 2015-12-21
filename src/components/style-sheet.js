@@ -2,12 +2,9 @@
 
 import React, {Component} from 'react';
 
-import Style from './style.js';
 import StyleKeeper from '../style-keeper';
 
 export default class StyleSheet extends Component {
-  _subscription: {remove: () => void};
-
   // $FlowStaticPropertyWarning
   static contextTypes = {
     _radiumStyleKeeper: React.PropTypes.instanceOf(StyleKeeper)

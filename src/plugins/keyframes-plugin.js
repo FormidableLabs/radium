@@ -4,9 +4,9 @@ import type {PluginConfig, PluginResult} from './index';
 import type {Keyframes} from '../keyframes';
 
 export default function keyframesPlugin(
-  {addCSS, config, getComponentField, style}: PluginConfig
+  {addCSS, config, style}: PluginConfig // eslint-disable-line no-shadow
 ): PluginResult {
-  const newStyle = Object.keys(style).reduce((newStyle, key) => {
+  const newStyle = Object.keys(style).reduce((newStyleInProgress, key) => {
     let value = style[key];
     if (key === 'animationName' && value && value.__radiumKeyframes) {
       const keyframesValue = (value: Keyframes);
@@ -15,8 +15,8 @@ export default function keyframesPlugin(
       value = animationName;
     }
 
-    newStyle[key] = value;
-    return newStyle;
+    newStyleInProgress[key] = value;
+    return newStyleInProgress;
   }, {});
   return {style: newStyle};
 }

@@ -10,15 +10,15 @@ export type Keyframes = {
 // a simple djb2 hash based on hash-string:
 // https://github.com/MatthewBarker/hash-string/blob/master/source/hash-string.js
 function hash(text) {
-  let hash = 5381;
+  let hashValue = 5381;
   let index = text.length - 1;
 
   while (index) {
-    hash = (hash * 33) ^ text.charCodeAt(index);
+    hashValue = (hashValue * 33) ^ text.charCodeAt(index);
     index -= 1;
   }
 
-  return (hash >>> 0).toString(16);
+  return (hashValue >>> 0).toString(16);
 }
 
 export default function keyframes(

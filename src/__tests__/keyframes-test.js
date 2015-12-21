@@ -2,7 +2,7 @@
 
 import Radium, {keyframes} from 'index';
 import {getElement} from 'test-helpers';
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import TestUtils from 'react-addons-test-utils';
 
 describe('keyframes', () => {
@@ -10,7 +10,7 @@ describe('keyframes', () => {
   it('renders keyframes in root style component', () => {
     const animation = keyframes({
       from: {left: '-1000px'},
-      to: {left: 0},
+      to: {left: 0}
     }, 'SlideFromLeft');
 
     @Radium({isRoot: true})
@@ -40,7 +40,7 @@ to{
   it('renders keyframes from child component', () => {
     const animation = keyframes({
       from: {left: '-1000px'},
-      to: {left: 0},
+      to: {left: 0}
     }, 'SlideFromLeft');
 
     @Radium()

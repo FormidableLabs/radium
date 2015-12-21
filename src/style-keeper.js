@@ -1,7 +1,5 @@
 /* @flow */
 
-import cssRuleSetToString from './css-rule-set-to-string';
-
 export default class StyleKeeper {
   _userAgent: string;
   _listeners: Array<() => void>;
