@@ -11,7 +11,7 @@ export default class StyleSheet extends Component {
   };
 
   constructor() {
-    super();
+    super(...arguments);
 
     this.state = this._getCSSState();
   }
