@@ -16,6 +16,7 @@ const DEFAULT_CONFIG = {
     Plugins.checkProps,
     Plugins.resolveMediaQueries,
     Plugins.resolveInteractionStyles,
+    Plugins.keyframes,
     Plugins.prefix,
     Plugins.checkProps
   ]
@@ -205,10 +206,25 @@ const _runPlugins = function({
   const setState = (stateKey, value, elementKey) =>
     _setStyleState(component, elementKey || getKey(), stateKey, value);
 
+  const addCSS = css => {
+    const styleKeeper = component._radiumStyleKeeper ||
+      component.context._radiumStyleKeeper;
+    if (!styleKeeper) {
+      throw new Error(
+        'To use plugins requiring `addCSS` (e.g. keyframes), please add ' +
+          '`isRoot: true` to your root component\'s Radium config.',
+      );
+    }
+
+    return styleKeeper.addCSS(css);
+  };
+
   let newStyle = props.style;
+
   plugins.forEach(plugin => {
     const result = plugin({
       ExecutionEnvironment,
+      addCSS,
       componentName,
       config,
       getComponentField,

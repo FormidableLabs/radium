@@ -1,7 +1,7 @@
 /** @flow */
 
 import type {MatchMediaType} from '../config';
-import type {PluginConfig, PluginResult} from '.';
+import type {PluginConfig, PluginResult} from './index';
 
 let _windowMatchMedia;
 const _getWindowMatchMedia = function(ExecutionEnvironment) {

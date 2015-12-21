@@ -4,6 +4,7 @@
 
 - [Sample Style Object](#sample-style-object)
 - [Radium](#radium)
+  - [config.isRoot](#configisroot)
   - [config.matchMedia](#configmatchmedia)
   - [config.plugins](#configplugins)
   - [config.userAgent](#configuseragent)
@@ -142,9 +143,15 @@ Alternatively, if the config value can change every time the component is render
 The config will be passed down via [context](https://facebook.github.io/react/docs/context.html) to all child components. Fields in the `radiumConfig` prop or context will override those passed into the `Radium()` function.
 
 Possible configuration values:
+- [config.isRoot](#configisroot)
 - [`matchMedia`](#configmatchmedia)
 - [`plugins`](#configplugins)
 - [`userAgent`](#configuseragent)
+
+### config.isRoot
+**boolean**
+
+Marks the component as the Radium root. Usually used on your top-level App component. `isRoot` will wrap the element returned in your root component's render function in a plain `div` in order to render a second element, the root style sheet. Radium plugins, like keyframes, use this style sheet to inject CSS at runtime. Because the style sheet appears after your rendered elements, it is populated correctly during a server render.
 
 ### config.matchMedia
 
@@ -271,13 +278,11 @@ Usage:
 
 ## keyframes
 
-**Radium.keyframes(keyframes, [componentName], [prefixFunction])**
+**Radium.keyframes(keyframes, [name])**
 
-Create a keyframes animation for use in any inline style. `keyframes` is a helper that translates the keyframes object you pass in to CSS and injects the `@keyframes` (prefixed properly) definition into a style sheet. Automatically generates and returns a name for the keyframes, that you can then use in the value for `animation`. Radium will automatically apply vendor prefixing to keyframe styles.
+Create a keyframes animation for use in an inline style. `keyframes` returns an opaque object you must assign to the `animationName` property. `Plugins.keyframes` detects the object and adds CSS to the Radium root's style sheet. Radium will automatically apply vendor prefixing to keyframe styles. In order to use `keyframes`, you must wrap your top level element in Radium and provide the `isRoot: true` config value.
 
-`Radium.keyframes` takes an optional second parameter, `componentName`. This is optional as you may not always have a component name to pass. If you do have a `componentName` however, it is a good idea to pass that as a parameter for better warning & error reporting.
-
-`Radium.keyframes` takes an optional third parameter, `prefixFunction`. `prefixFunction` replaces the built-in prefixer with a function of your own. `prefixFunction` is called with two arguments, the `styles` object, and the `componentName`, e.g. `prefixFunction(styles, componentName)`.
+`keyframes` takes an optional second parameter, a `name` to prepend to the animation's name to aid in debugging.
 
 ```as
 @Radium
@@ -295,11 +300,14 @@ var pulseKeyframes = Radium.keyframes({
   '0%': {width: '10%'},
   '50%': {width: '50%'},
   '100%': {width: '10%'},
-}, 'Spinner');
+}, 'pulse');
 
 var styles = {
   inner: {
-    animation: `${pulseKeyframes} 3s ease 0s infinite`,
+    // Use a placeholder animation name in `animation`
+    animation: 'x 3s ease 0s infinite',
+    // Assign the result of `keyframes` to `animationName`
+    animationName: pulseKeyframes,
     background: 'blue',
     height: '4px',
     margin: '0 auto',
@@ -327,6 +335,9 @@ All plugins are functions accept a PluginConfig, and return a PluginResult. The 
 **PluginConfig**
 ```js
 type PluginConfig = {
+  // Adds a chunk of css to the root style sheet
+  addCSS: (css: string) => {remove: () => void},
+
   // May not be readable if code has been minified
   componentName: string,
 

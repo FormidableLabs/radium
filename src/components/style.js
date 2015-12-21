@@ -1,26 +1,8 @@
 /* @flow */
 
-import camelCasePropsToDashCase from '../camel-case-props-to-dash-case';
-import createMarkupForStyles from '../create-markup-for-styles';
-import {getPrefixedStyle} from '../prefixer';
+import cssRuleSetToString from '../css-rule-set-to-string';
 
 import React from 'react';
-
-const buildCssString = function(
-  selector: string,
-  rules: Object,
-  userAgent: ?string,
-): string {
-  if (!selector || !rules) {
-    return '';
-  }
-
-  const prefixedRules = getPrefixedStyle(rules, userAgent);
-  const cssPrefixedRules = camelCasePropsToDashCase(prefixedRules);
-  const serializedRules = createMarkupForStyles(cssPrefixedRules);
-
-  return selector + '{' + serializedRules + '}';
-};
 
 const Style = React.createClass({
   propTypes: {
@@ -29,7 +11,7 @@ const Style = React.createClass({
   },
 
   contextTypes: {
-    radiumConfig: React.PropTypes.object
+    _radiumConfig: React.PropTypes.object
   },
 
   getDefaultProps(): {scopeSelector: string} {
@@ -50,11 +32,11 @@ const Style = React.createClass({
             this.props.scopeSelector + ' ' :
             ''
           ) + selector;
-        accumulator += buildCssString(
+        accumulator += cssRuleSetToString(
           completeSelector,
           rules,
-          this.context && this.context.radiumConfig &&
-            this.context.radiumConfig.userAgent
+          this.context && this.context._radiumConfig &&
+            this.context._radiumConfig.userAgent
         );
       }
 

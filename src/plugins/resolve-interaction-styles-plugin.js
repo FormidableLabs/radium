@@ -1,6 +1,6 @@
 /** @flow */
 
-import type {PluginConfig, PluginResult} from '.';
+import type {PluginConfig, PluginResult} from './index';
 
 import MouseUpListener from './mouse-up-listener';
 

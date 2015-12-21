@@ -5,18 +5,7 @@ import MouseUpListener from 'plugins/mouse-up-listener.js';
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
-
-const getRenderOutput = function(element) {
-  const renderer = TestUtils.createRenderer();
-  renderer.render(element);
-  return renderer.getRenderOutput();
-};
-
-const getElement = function(output, tagName) {
-  return ReactDOM.findDOMNode(
-    TestUtils.findRenderedDOMComponentWithTag(output, tagName)
-  );
-};
+import {expectCSS, getRenderOutput, getElement} from 'test-helpers';
 
 describe('Radium blackbox tests', () => {
   beforeEach(() => {
@@ -329,19 +318,25 @@ describe('Radium blackbox tests', () => {
 
     const style = getElement(output, 'style');
 
-    expect(style.innerText).to.equal(
-      '@media print{' +
-      '.Radium-TestComponent-foo{color: blue !important;}' +
-      '.Radium-TestComponent-bar{background: red !important;}' +
-      '.Radium-TestComponent2-main{color: black !important;}' +
-      '}'
-    );
+    expectCSS(style, `
+      @media print {
+        .Radium-TestComponent-foo {
+          color: blue !important;
+        }
+        .Radium-TestComponent-bar {
+          background: red !important;
+        }
+        .Radium-TestComponent2-main {
+          color: black !important;
+        }
+      }
+    `);
   });
 
   it('resolves styles if an element has element children and spreads props', () => {
     @Radium
     class Inner extends Component {
-      propTypes = { children: PropTypes.node }
+      static propTypes = { children: PropTypes.node }
       render() {
         return (
           <div {...this.props} style={[{color: 'blue'}, {background: 'red'}]}>

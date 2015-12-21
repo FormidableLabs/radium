@@ -4,12 +4,16 @@
 import type {Config} from '../config';
 
 import checkPropsPlugin from './check-props-plugin';
+import keyframesPlugin from './keyframes-plugin';
 import mergeStyleArrayPlugin from './merge-style-array-plugin';
 import prefixPlugin from './prefix-plugin';
 import resolveInteractionStylesPlugin from './resolve-interaction-styles-plugin';
 import resolveMediaQueriesPlugin from './resolve-media-queries-plugin';
 
 export type PluginConfig = {
+  // Adds a chunk of css to the root style sheet
+  addCSS: (css: string) => {remove: () => void},
+
   // May not be readable if code has been minified
   componentName: string,
 
@@ -70,6 +74,7 @@ export type PluginResult = ?{
 
 export default {
   checkProps: checkPropsPlugin,
+  keyframes: keyframesPlugin,
   mergeStyleArray: mergeStyleArrayPlugin,
   prefix: prefixPlugin,
   resolveInteractionStyles: resolveInteractionStylesPlugin,
