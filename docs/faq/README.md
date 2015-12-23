@@ -57,10 +57,14 @@ class DroidList extends React.Component {
         {droids.map((droid, index, arr) =>
           <li key={index} style={{
             borderColor: 'black',
-            borderRadius: index === 0 ? '12px 12px 0 0' :
-              index === (arr.length - 1) ? '0 0 12px 12px' : '',
-            borderStyle: 'solid',
+            borderRadius: 
+              index === 0 
+              ? '12px 12px 0 0'
+              : index === (arr.length - 1) 
+              ? '0 0 12px 12px' 
+              : '',
             borderWidth: index === (arr.length - 1) ? '1px' : '1px 1px 0 1px',
+            borderStyle: 'solid',
             cursor: 'pointer',
             listStyle: 'none',
             padding: 12,
