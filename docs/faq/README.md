@@ -12,7 +12,7 @@
 
 Radium only provides the interactivity pseudo-selectors `:hover`, `:active`, and `:focus`. You need to use JavaScript logic to implement the others. To implement `:checked` for example:
 
-```as
+```jsx
 class CheckForBold extends React.Component {
   constructor() {
     super();
@@ -38,9 +38,9 @@ class CheckForBold extends React.Component {
 }
 ```
 
-Instead of `:first` and `:last`, change behavior during array iteration. Note that the border property is broken down into parts to avoid complications as in issue #95.
+Instead of `:first` and `:last`, change behavior during array iteration. Note that the border property is broken down into parts to avoid complications as in issue [#95](https://github.com/FormidableLabs/radium/issues/95).
 
-```as
+```jsx
 var droids = [
   'R2-D2',
   'C-3PO',
@@ -99,11 +99,11 @@ Yes, with the help of the [react-styling](https://github.com/halt-hammerzeit/rea
 
 The example from the main Readme (using regular CSS syntax)
 
-```as
+```jsx
 <Button kind="primary">Radium Button</Button>
 ```
 
-```as
+```jsx
 import styler from 'react-styling/flat'
 
 @Radium
@@ -144,20 +144,22 @@ You can find a more advanced example in the [react-styling readme](https://githu
 
 ## Can I use Radium with Bootstrap?
 
-See https://github.com/FormidableLabs/radium/issues/323 for discussion.
+See issue [#323](https://github.com/FormidableLabs/radium/issues/323) for discussion.
 
 ## Why doesn't Radium work on SomeComponent?
 
-Radium doesn't mess with the `style` prop of non-DOM elements. This includes thin wrappers like `react-router`'s `Link` component. We can't assume that a custom component will use `style` the same way DOM elements do. For instance, it could be a string enum to select a specific style. In order for resolving `style` on a custom element to work, that element needs to actually pass that `style` prop to the DOM element underneath, in addition to passing down all the event handlers (`onMouseEnter`, etc). Since Radium has no control over the implementation of other components, resolving styles on them is not safe. 
+Radium doesn't mess with the `style` prop of non-DOM elements. This includes thin wrappers like `react-router`'s `Link` component. We can't assume that a custom component will use `style` the same way DOM elements do. For instance, it could be a string enum to select a specific style. In order for resolving `style` on a custom element to work, that element needs to actually pass that `style` prop to the DOM element underneath, in addition to passing down all the event handlers (`onMouseEnter`, etc). Since Radium has no control over the implementation of other components, resolving styles on them is not safe.
 
 A workaround is to wrap your custom component in Radium, even if you do not have the source, like this:
-```as
+
+```jsx
 var Link = require('react-router').Link;
 Link = Radium(Link);
 ```
-Huge thanks to @mairh for coming up with this idea in https://github.com/FormidableLabs/radium/issues/324.
 
-We are also exploring adding a mechanism to bypass Radium's check, see https://github.com/FormidableLabs/radium/issues/258.
+Huge thanks to [@mairh](https://github.com/mairh) for coming up with this idea in issue [#324](https://github.com/FormidableLabs/radium/issues/324).
+
+We are also exploring adding a mechanism to bypass Radium's check, see issue [#258](https://github.com/FormidableLabs/radium/issues/258).
 
 ## How can I get rid of `userAgent` warnings in tests?
 
@@ -172,7 +174,7 @@ now and create an issue at https://github.com/rofrischmann/inline-style-prefixer
 
 This isn't an issue if you run your tests in a browser-like environment such as jsdom or PhantomJS, but if you just run them in Node, there will be no userAgent defined. In your test setup, you can define one:
 
-```
+```jsx
 global.navigator = {userAgent: 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2454.85 Safari/537.36'};
 ```
 
