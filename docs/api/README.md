@@ -17,7 +17,7 @@
 
 ## Sample Style Object
 
-```as
+```jsx
 var styles = {
   base: {
     backgroundColor: '#0074d9',
@@ -84,25 +84,25 @@ var styles = {
 
 Usage with `class` and ES7 decorators:
 
-```as
+```jsx
 @Radium
 class MyComponent extends React.Component { ... }
 ```
 
 Usage with `createClass`:
 
-```as
+```jsx
 var MyComponent = React.createClass({ ... });
 module.exports = Radium(MyComponent);
 ```
 
-`Radium`s primary job is to apply interactive or media query styles, but even if you are not using any special styles, the higher order component will still:
+`Radium`'s primary job is to apply interactive or media query styles, but even if you are not using any special styles, the higher order component will still:
 - Merge arrays of styles passed as the `style` attribute
 - Automatically vendor prefix the `style` object
 
 You can also pass a configuration object to `@Radium`:
 
-```as
+```jsx
 @Radium({matchMedia: mockMatchMedia})
 class MyComponent extends React.Component { ... }
 
@@ -115,7 +115,7 @@ module.exports = Radium({matchMedia: mockMatchMedia})(MyComponent);
 You may want to have project-wide Radium settings. Simply create a function that
 wraps Radium, and use it instead of `@Radium`:
 
-```as
+```jsx
 function ConfiguredRadium(component) {
   return Radium(config)(component);
 }
@@ -129,14 +129,14 @@ Radium can be called any number of times with a config object, and later configs
 will be merged with and overwrite previous configs. That way, you can still
 override settings on a per-component basis:
 
-```as
+```jsx
 @ConfiguredRadium(config)
 class MySpecialComponent extends React.Component { ... }
 ```
 
 Alternatively, if the config value can change every time the component is rendered (userAgent, for example), you can pass configuration to any component wrapped in `Radium` using the `radiumConfig` prop:
 
-```as
+```jsx
 <App radiumConfig={{userAgent: req.headers['user-agent']}} />
 ```
 
@@ -159,7 +159,7 @@ Allows you to replace the `matchMedia` function that Radium uses. The default is
 
 **Server**
 
-```as
+```jsx
 var ConfiguredRadium = require('./configured-radium');
 var matchMediaMock = require('match-media-mock').create();
 ConfiguredRadium.setMatchMedia(matchMediaMock);
@@ -180,7 +180,7 @@ app.get('/app/:width/:height', function(req, res) {
 
 **ConfiguredRadium.js**
 
-```as
+```jsx
 var Radium = require('radium');
 
 var _matchMedia = null;
@@ -200,7 +200,7 @@ module.exports = ConfiguredRadium;
 
 **MyComponent.js**
 
-```as
+```jsx
 var ConfiguredRadium = require('./configured-radium');
 
 @ConfiguredRadium
@@ -216,7 +216,7 @@ Replaces all plugins with the provided set. See [Plugins](#plugins) for more inf
 
 Because the `plugins` config replaces all plugins, you have to provide the built-ins if you want to keep the default Radium functionality. A simple example of creating and adding a `styleLogger` plugin:
 
-```js
+```jsx
 function styleLogger({componentName, style}) {
   console.log('Name: ' + componentName, style);
 }
@@ -249,7 +249,7 @@ You can of course omit any or all of the built-in plugins, and replace them with
 
 Set the user agent passed to [inline-style-prefixer](https://github.com/rofrischmann/inline-style-prefixer) to perform prefixing on style objects. Mainly used during server rendering, passed in via the `radiumConfig` prop. Using express:
 
-```js
+```jsx
 <App radiumConfig={{userAgent: req.headers['user-agent']}} />
 ```
 
@@ -272,8 +272,8 @@ Parameters:
 
 Usage:
 
-```as
-    Radium.getState(this.state, 'button', ':hover')
+```jsx
+Radium.getState(this.state, 'button', ':hover')
 ```
 
 ## keyframes
@@ -284,7 +284,7 @@ Create a keyframes animation for use in an inline style. `keyframes` returns an 
 
 `keyframes` takes an optional second parameter, a `name` to prepend to the animation's name to aid in debugging.
 
-```as
+```jsx
 @Radium
 class Spinner extends React.Component {
   render () {
@@ -333,7 +333,7 @@ Almost everything that Radium does, except iteration, is implemented as a plugin
 All plugins are functions accept a PluginConfig, and return a PluginResult. The annotated flow types follow. A plugin is called once for every *rendered element* that has a `style` attribute, for example the `div` and `span` in `return <div style={...}><span style={...} /></div>;`.
 
 **PluginConfig**
-```js
+```jsx
 type PluginConfig = {
   // Adds a chunk of css to the root style sheet
   addCSS: (css: string) => {remove: () => void},
@@ -383,7 +383,7 @@ type PluginConfig = {
 
 **PluginResult**
 
-```js
+```jsx
 type PluginResult = ?{
   // Merged into the component directly. Useful for storing things for which you
   // don't need to re-render, event subscriptions, for instance.
@@ -403,7 +403,7 @@ type PluginResult = ?{
 
 If your plugin consumes custom style blocks, it should merge any applicable style blocks and strip any others out of the style object before returning to avoid errors farther down. For example, a hypothetical `enumPropResolver` might know how to resolve keys of the form `'propName=value'`, such that if `this.props.propName === 'value'`, it will merge in that style object. `enumPropResolver` should then also strip any other keys that will not be merged. Thus, if this style object is passed to `enumPropResolver`, and `this.props.type === 'error'`:
 
-```js
+```jsx
 {
   'type=success': {color: 'blue'},
   'type=error': {color: 'red'},
@@ -413,7 +413,7 @@ If your plugin consumes custom style blocks, it should merge any applicable styl
 
 `enumPropResolver` should then return an object with the style property equal to:
 
-```js
+```jsx
 {
   color: 'red'
 }
@@ -431,7 +431,7 @@ Without the `<Style>` component, it is prohibitively difficult to write a `<styl
 
 An object of CSS rules to render. Each key of the rules object is a CSS selector and the value is an object of styles. If rules is empty, the component will render nothing.
 
-```as
+```jsx
 var Radium = require('radium');
 var Style = Radium.Style;
 
@@ -470,7 +470,7 @@ import Radium, { Style } from 'radium'
 
 A string that any included selectors in `rules` will be appended to. Use to scope styles in the component to a particular element. A good use case might be to generate a unique ID for a component to scope any styles to the particular component that owns the `<Style>` component instance.
 
-```as
+```jsx
 <div className="TestClass">
   <Style
   scopeSelector=".TestClass"
@@ -489,7 +489,7 @@ In order to fully support print styling it is necessary to use CSS because of br
 
 With ES7 decorators and static class properties:
 
-```as
+```jsx
 @Radium
 class MyComponent extends React.Component {
   static printStyles = {
@@ -509,7 +509,7 @@ class MyComponent extends React.Component {
 
 With `createClass`:
 
-```as
+```jsx
 Radium(React.createClass({
   displayName: 'MyComponent',
 
@@ -533,7 +533,8 @@ Radium(React.createClass({
 In your root component render `<PrintStyleSheet />` and it will render a style tag containing all the CSS needed for printing, wrapped in a `@media print` query. You should only render `<PrintStyleSheet />` once. It will contain all the print styles for every component.
 
 **App.js**
-```as
+
+```jsx
 import {PrintStyleSheet} from 'radium';
 
 class App extends React.Component {

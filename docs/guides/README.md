@@ -19,7 +19,7 @@ Radium is a toolset for easily writing React component styles. It resolves brows
 
 First, require or import Radium at the top of component file:
 
-```as
+```jsx
 var Radium = require('radium');
 
 // or
@@ -31,7 +31,7 @@ import Radium, { Style } from 'radium'
 
 Let's create a fictional `<Button>` component. It will have a set of default styles, will adjust its appearance based on modifiers, and will include hover, focus, and active states.
 
-```as
+```jsx
 class Button extends React.Component {
   render() {
     return (
@@ -45,7 +45,7 @@ class Button extends React.Component {
 
 Radium is activated by using a decorator or wrapping your component:
 
-```as
+```jsx
 // For ES6 and ES7
 @Radium
 class Button extends React.Component {
@@ -67,7 +67,7 @@ Button = Radium(Button);
 
 Radium resolves nested style objects into a flat object that can be applied directly to a React element. If you're not familiar with handling inline styles in React, see the React guide to the subject [here](http://facebook.github.io/react/tips/inline-styles.html). A basic style object looks like this:
 
-```as
+```jsx
 var baseStyles = {
   background: 'blue',
   border: 0,
@@ -79,7 +79,7 @@ var baseStyles = {
 
 We usually nest styles inside a shared `styles` object for easy access:
 
-```as
+```jsx
 var styles = {
   base: {
     background: 'blue',
@@ -93,7 +93,7 @@ var styles = {
 
 Next, simply pass your styles to the `style` attribute of an element:
 
-```as
+```jsx
 // Inside render
 return (
   <button style={styles.base}>
@@ -108,7 +108,7 @@ From there, React will apply our styles to the `button` element. This is not ver
 
 Radium provides one shorthand for dealing with styles that are modified by your props or state. You can pass an array of style objects to the `style` attribute, and they will be merged together intelligently (`:hover` states, for instance, will merge instead of overwrite). This works the same way as it does in [React Native](https://facebook.github.io/react-native/docs/style.html#using-styles).
 
-```as
+```jsx
 <Button
   size="large"
   block={true}>
@@ -118,7 +118,7 @@ Radium provides one shorthand for dealing with styles that are modified by your 
 
 Start by adding another style to your `styles` object:
 
-```as
+```jsx
 var styles = {
   base: {
     background: 'blue',
@@ -136,7 +136,7 @@ var styles = {
 
 Then, include that style object in the array passed to the `style` attribute if the conditions match:
 
-```as
+```jsx
 // Inside render
 return (
   <button
@@ -157,7 +157,7 @@ Radium supports styling for three browser states that are targeted with pseudo-s
 
 To add styles for these states, add a special key to your style object with the additional rules:
 
-```as
+```jsx
 var styles = {
   base: {
     background: 'blue',
@@ -195,7 +195,7 @@ Radium will merge styles for any active states when your component is rendered.
 
 Add media queries to your style objects the same way as you would add browser state modifiers like  `:hover`. The key must start with `@media`, and the [syntax](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Media_queries) is identical to CSS:
 
-```as
+```jsx
 var style = {
   width: '25%',
 
@@ -211,7 +211,7 @@ Radium will apply the correct styles for the currently active media queries.
 
 Media query styles can also contain nested browser states:
 
-```as
+```jsx
 var style = {
   width: '25%',
 
@@ -239,7 +239,7 @@ IE9 supports CSS media queries, but doesn't support the `matchMedia` API. You'll
 
 Radium allows you to style multiple elements in the same component. You just have to give each element that has browser state modifiers like :hover or media queries a unique `key` or `ref` attribute:
 
-```as
+```jsx
 // Inside render
 return (
   <div>
@@ -272,7 +272,7 @@ var styles = {
 
 You can query Radium's state using `Radium.getState`. This allows you to style or render one element based on the state of another, e.g. showing a message when a button is hovered.
 
-```as
+```jsx
 // Inside render
 return (
   <div>
@@ -297,7 +297,7 @@ var styles = {
 
 Sometimes you need to provide an additional value for a single CSS property in case the first one isn't applied successfully. Simply pass an array of values, and Radium will test them and apply the first one that works:
 
-```as
+```jsx
 var styles = {
   button: {
     background: ['rgba(255, 255, 255, .5)', '#fff']
