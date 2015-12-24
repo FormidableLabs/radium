@@ -2,9 +2,10 @@
 
 import type {Config} from './config';
 
+import cssRuleSetToString from './css-rule-set-to-string';
 import getState from './get-state';
 import getStateKey from './get-state-key';
-import mergeStyles from './merge-styles';
+import {isNestedStyle, mergeStyles} from './merge-styles';
 import Plugins from './plugins/';
 
 import ExecutionEnvironment from 'exenv';
@@ -227,12 +228,14 @@ const _runPlugins = function({
       addCSS,
       componentName,
       config,
+      cssRuleSetToString,
       getComponentField,
       getGlobalState,
       getState: componentGetState,
       mergeStyles,
       props: newProps,
       setState,
+      isNestedStyle,
       style: newStyle
     }) || {};
 

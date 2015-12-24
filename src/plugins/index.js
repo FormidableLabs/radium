@@ -20,6 +20,13 @@ export type PluginConfig = {
   // The Radium configuration
   config: Config,
 
+  // Converts an object of CSS rules to a string, for use with addCSS
+  cssRuleSetToString: (
+    selector: string,
+    rules: Object,
+    userAgent: ?string,
+  ) => string,
+
   // Retrieve the value of a field on the component
   getComponentField: (key: string) => any,
 
@@ -31,6 +38,9 @@ export type PluginConfig = {
   // Requires the element to have a unique key or ref or for an element key
   // to be passed in.
   getState: (stateKey: string, elementKey?: string) => any,
+
+  // Returns true if the value is a nested style object
+  isNestedStyle: (value: any) => bool,
 
   // Access to the mergeStyles utility
   mergeStyles: (styles: Array<Object>) => Object,
