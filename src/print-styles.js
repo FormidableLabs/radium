@@ -1,5 +1,7 @@
 /* @flow */
 
+import appendImportantToEachValue from './append-important-to-each-value';
+
 const allPrintStyles = {};
 const listeners = [];
 
@@ -23,21 +25,6 @@ function _emitChange() {
   listeners.forEach(listener => listener());
 }
 
-function _appendImportantToEachValue(styleObj) {
-  const importantStyleObj = {};
-
-  Object.keys(styleObj).forEach(key => {
-    let value = styleObj[key];
-
-    // This breaks unitless values but they'll be deprecated soon anyway
-    // https://github.com/facebook/react/issues/1873
-    value = `${value} !important`;
-    importantStyleObj[key] = value;
-  });
-
-  return importantStyleObj;
-}
-
 function addPrintStyles(Component: constructor) {
   if (!Component.printStyles) {
     return;
@@ -48,7 +35,7 @@ function addPrintStyles(Component: constructor) {
   Object.keys(Component.printStyles).forEach(key => {
     const styles = Component.printStyles[key];
     const className = `Radium-${Component.displayName}-${key}`;
-    allPrintStyles[`.${className}`] = _appendImportantToEachValue(styles);
+    allPrintStyles[`.${className}`] = appendImportantToEachValue(styles);
     printStyleClass[key] = className;
   });
 
