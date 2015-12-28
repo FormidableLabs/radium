@@ -42,7 +42,12 @@ export default function resolveMediaQueries({
     return newStyle;
   }
 
-  const newComponentFields = {};
+  const listenersByQuery = {
+    ...getComponentField('_radiumMediaQueryListenersByQuery')
+  };
+  const newComponentFields = {
+    _radiumMediaQueryListenersByQuery: listenersByQuery
+  };
   const mediaQueryListByQueryString =
     getGlobalState('mediaQueryListByQueryString') || {};
 
@@ -58,17 +63,14 @@ export default function resolveMediaQueries({
       mediaQueryListByQueryString[query] = mql = matchMedia(query);
     }
 
-    const listenersByQuery =
-      getComponentField('_radiumMediaQueryListenersByQuery');
-
     if (!listenersByQuery || !listenersByQuery[query]) {
       const listener = () => setState(query, mql.matches, '_all');
       mql.addListener(listener);
-      newComponentFields._radiumMediaQueryListenersByQuery = {
-        ...listenersByQuery
-      };
-      newComponentFields._radiumMediaQueryListenersByQuery[query] = {
-        remove() { mql.removeListener(listener); }
+
+      listenersByQuery[query] = {
+        remove() {
+          mql.removeListener(listener);
+        }
       };
     }
 
