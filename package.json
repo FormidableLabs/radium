@@ -38,7 +38,6 @@
     "babel-cli": "^6.3.15",
     "babel-core": "^6.3.15",
     "babel-plugin-add-module-exports": "^0.1.1",
-    "babel-plugin-flow-comments": "^1.0.9",
     "babel-plugin-transform-decorators-legacy": "^1.2.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.3.16",
     "babel-preset-es2015-loose": "^6.1.3",
