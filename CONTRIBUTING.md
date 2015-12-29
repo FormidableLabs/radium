@@ -38,15 +38,10 @@ Thanks for taking the time to help us make Radium even better! Before you go ahe
 - Run lint using `npm run lint`
 - Run flow using `flow`
 
-## Dist
-
-Please do not commit changes to files in `dist`. These files are only committed when we tag releases.
-
 ## Releasing a new version to NPM (only for project administrators):
 
 1. Update `CHANGELOG.md`, following format for previous versions
-2. Run `npm run dist` to generate the dist builds
-3. Commit as "Prepare for version 0.XX.Y"
-4. Run `npm version patch` to update `package.json` and add a tag
-5. Run `npm publish` to run tests and lint, build the `lib` directory, and publish to NPM if all is well
-6. Run `git push && git push --tags`
+2. Commit as "Changelog for version 0.XX.Y"
+3. Run `npm version patch` (or `minor`, `major` as appropriate) to update `package.json` and add a tag
+4. Run `npm publish` to run tests and lint, build the `lib` ands `dist` directories, and publish to NPM if all is well
+5. Run `git push && git push --tags`

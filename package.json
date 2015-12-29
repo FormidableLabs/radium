@@ -24,7 +24,7 @@
     "lib": "npm run babel && rimraf lib/__tests__ lib/__mocks__",
     "lint": "eslint src && npm run flow",
     "postinstall": "cd lib || npm run lib",
-    "prepublish": "npm test && npm run lint && npm run lib",
+    "prepublish": "npm test && npm run lint && npm run lib && npm run dist",
     "start": "./node_modules/.bin/babel-node examples/server.js",
     "test": "karma start",
     "test-coverage": "karma start karma.conf.coverage.js",
