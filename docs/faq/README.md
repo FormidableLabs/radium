@@ -7,6 +7,7 @@
 - [Can I use Radium with Bootstrap?](#can-i-use-radium-with-bootstrap)
 - [Why doesn't Radium work on SomeComponent?](#why-doesnt-radium-work-on-somecomponent)
 - [How can I get rid of `userAgent` warnings in tests?](#how-can-i-get-rid-of-useragent-warnings-in-tests)
+- [Why do React warnings have the wrong component name?](#why-do-react-warnings-have-the-wrong-component-name)
 
 ## How do I use pseudo-selectors like `:checked`, `:last`, `:before`, or `:after`?
 
@@ -179,3 +180,7 @@ global.navigator = {userAgent: 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/
 ```
 
 Make sure it is a real user agent that `inline-style-prefixer` recognizes, or you'll still get the second error. The above UA is [Chrome 49 from the `inline-style-prefixer` tests](https://github.com/rofrischmann/inline-style-prefixer/blob/master/test/prefixer-test.js).
+
+## Why do React warnings have the wrong component name?
+
+You may see the name "Constructor" instead of your component name, for example: "Warning: Failed propType: Invalid prop `onClick` of type `function` supplied to `Constructor`, expected `string`." or "Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of `Constructor`." Your transpiler is probalby not able to set the `displayName` property of the component correctly, which can happen if you wrap `React.createClass` immediately with `Radium`, e.g. `var Button = Radium(React.createClass({ ... }));`. Instead, wrap your component afterward, ex. `Button = Radium(Button);` or when exporting, ex. `module.exports = Radium(Button);`, or set `displayName` manually.
