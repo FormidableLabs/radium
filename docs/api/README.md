@@ -259,6 +259,8 @@ For a complete example, see [examples/server.js](https://github.com/FormidableLa
 
 **Radium.getState(state, elementKey, value)**
 
+_Note: `getState` will not work in a stateless component, because even though Radium maintains the state internally, the stateless component does not have access to it, by definition_
+
 Query Radium's knowledge of the browser state for a given element key. This is particularly useful if you would like to set styles for one element when another element is in a particular state, e.g. show a message when a button is hovered.
 
 Note that the target element specified by `elementKey` must have the state you'd like to check defined in its style object so that Radium knows to add the handlers. It can be empty, e.g. `':hover': {}`.
