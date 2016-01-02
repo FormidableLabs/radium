@@ -212,8 +212,8 @@ const _runPlugins = function({
       component.context._radiumStyleKeeper;
     if (!styleKeeper) {
       throw new Error(
-        'To use plugins requiring `addCSS` (e.g. keyframes), please add ' +
-          '`isRoot: true` to your root component\'s Radium config.',
+        'To use plugins requiring `addCSS` (e.g. keyframes, media queries), ' +
+          'please add `isRoot: true` to your root component\'s Radium config.',
       );
     }
 
