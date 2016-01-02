@@ -399,17 +399,17 @@ describe('Radium blackbox tests', () => {
       render() {
         return (
           <div style={{
-            '@media (min-width: 600px)': {color: 'blue'}
+            '@media (min-width: 600px)': {':hover': {color: 'blue'}}
           }} />
         );
       }
     }
 
-    const output = getRenderOutput(<TestComponent />);
+    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    const div = getElement(output, 'div');
+    TestUtils.SimulateNative.mouseOver(div);
 
-    expect(output.props.style).to.deep.equal(
-      {color: 'blue'}
-    );
+    expect(div.style.color).to.equal('blue');
   });
 
   it('transforms fallback values', () => {
@@ -693,7 +693,7 @@ describe('Radium blackbox tests', () => {
       render() {
         return (
           <div style={{
-            '@media (min-width: 600px)': {color: 'blue'}
+            '@media (min-width: 600px)': {':hover': {color: 'blue'}}
           }} />
         );
       }
