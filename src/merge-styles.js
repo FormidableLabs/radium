@@ -4,7 +4,7 @@ export function isNestedStyle(value) {
   // Don't merge objects overriding toString, since they should be converted
   // to string values.
   return isPlainObject(value) && value.toString === Object.prototype.toString;
-};
+}
 
 // Merge style objects. Deep merge plain object values.
 export function mergeStyles(styles) {
@@ -29,4 +29,4 @@ export function mergeStyles(styles) {
   });
 
   return result;
-};
+}
