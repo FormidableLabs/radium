@@ -4,7 +4,7 @@ import Radium from 'index.js';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
-import {getRenderOutput, getElement} from 'test-helpers';
+import {expectCSS, getRenderOutput, getElement} from 'test-helpers';
 
 describe('Media query tests', () => {
   beforeEach(() => {
@@ -191,5 +191,38 @@ describe('Media query tests', () => {
 
     expect(mql.addListener).to.have.been.calledOnce;
     expect(mql.removeListener).to.have.been.calledOnce;
+  });
+
+  it('renders top level style rules as CSS instead of inline', () => {
+    const matchMedia = sinon.spy(() => ({
+      addListener: () => {},
+      matches: true
+    }));
+
+    @Radium({isRoot: true, matchMedia})
+    class TestComponent extends Component {
+      render() {
+        return (
+          <span style={{
+            '@media (min-width: 600px)': {background: 'red', color: 'blue'}
+          }} />
+        );
+      }
+    }
+
+    const output = TestUtils.renderIntoDocument(<TestComponent />);
+
+    const span = getElement(output, 'span');
+    expect(span.className.trim()).to.equal('4e3582ec');
+
+    const style = getElement(output, 'style');
+    expectCSS(style, `
+      @media (min-width:600px){
+        .4e3582ec{
+          background:red !important;
+          color:blue !important;
+        }
+      }
+    `);
   });
 });
