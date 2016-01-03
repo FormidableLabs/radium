@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import Radium from 'index.js';
+import Radium, {StyleRoot} from 'index';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
@@ -199,8 +199,9 @@ describe('Media query tests', () => {
       matches: true
     }));
 
-    @Radium({isRoot: true, matchMedia})
-    class TestComponent extends Component {
+
+    @Radium
+    class ChildComponent extends Component {
       render() {
         return (
           <span style={{
@@ -210,15 +211,27 @@ describe('Media query tests', () => {
       }
     }
 
+    @Radium({matchMedia})
+    class TestComponent extends Component {
+      render() {
+        return (
+          <StyleRoot>
+            <ChildComponent />
+          </StyleRoot>
+        );
+      }
+    }
+
     const output = TestUtils.renderIntoDocument(<TestComponent />);
 
     const span = getElement(output, 'span');
-    expect(span.className.trim()).to.equal('4e3582ec');
+    const className = span.className.trim();
+    expect(className).to.not.be.empty;
 
     const style = getElement(output, 'style');
     expectCSS(style, `
       @media (min-width:600px){
-        .4e3582ec{
+        .${className}{
           background:red !important;
           color:blue !important;
         }

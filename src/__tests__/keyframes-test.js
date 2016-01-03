@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import Radium, {keyframes} from 'index';
+import Radium, {StyleRoot, keyframes} from 'index';
 import {expectCSS, getElement} from 'test-helpers';
 import React, {Component} from 'react';
 import TestUtils from 'react-addons-test-utils';
@@ -13,10 +13,9 @@ describe('keyframes', () => {
       to: {left: 0}
     }, 'SlideFromLeft');
 
-    @Radium({isRoot: true})
     class TestComponent extends Component {
       render() {
-        return <div style={{animationName: animation}} />;
+        return <StyleRoot style={{animationName: animation}} />;
       }
     }
 
@@ -42,20 +41,20 @@ describe('keyframes', () => {
       to: {left: 0}
     }, 'SlideFromLeft');
 
-    @Radium()
+    @Radium
     class ChildComponent extends Component {
       render() {
         return <div style={{animationName: animation}} />;
       }
     }
 
-    @Radium({isRoot: true})
+    @Radium
     class TestComponent extends Component {
       render() {
         return (
-          <div>
+          <StyleRoot>
             <ChildComponent />
-          </div>
+          </StyleRoot>
         );
       }
     }
