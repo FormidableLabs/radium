@@ -19,17 +19,7 @@ function _getStyleKeeper(instance): StyleKeeper {
   return instance._radiumStyleKeeper;
 }
 
-@Enhancer
 class StyleRoot extends Component {
-  static contextTypes = {
-    _radiumConfig: PropTypes.object,
-    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
-  };
-
-  static childContextTypes = {
-    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
-  };
-
   constructor() {
     super(...arguments);
 
@@ -49,5 +39,16 @@ class StyleRoot extends Component {
     );
   }
 }
+
+StyleRoot.contextTypes = {
+  _radiumConfig: PropTypes.object,
+  _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
+};
+
+StyleRoot.childContextTypes = {
+  _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
+};
+
+StyleRoot = Enhancer(StyleRoot);
 
 export default StyleRoot;

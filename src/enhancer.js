@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, {Component, PropTypes} from 'react';
+import {Component, PropTypes} from 'react';
 
 import StyleKeeper from './style-keeper';
 import resolveStyles from './resolve-styles.js';
@@ -29,7 +29,7 @@ function copyProperties(source, target) {
 }
 
 export default function enhanceWithRadium(
-  configOrComposedComponent: constructor | Function | Object,
+  configOrComposedComponent: Class<any> | constructor | Function | Object,
   config?: Object = {},
 ): constructor {
   if (typeof configOrComposedComponent !== 'function') {
