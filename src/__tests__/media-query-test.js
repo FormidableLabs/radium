@@ -213,12 +213,13 @@ describe('Media query tests', () => {
     const output = TestUtils.renderIntoDocument(<TestComponent />);
 
     const span = getElement(output, 'span');
-    expect(span.className.trim()).to.equal('4e3582ec');
+    const className = span.className.trim();
+    expect(className).to.not.be.empty;
 
     const style = getElement(output, 'style');
     expectCSS(style, `
       @media (min-width:600px){
-        .4e3582ec{
+        .${className}{
           background:red !important;
           color:blue !important;
         }
