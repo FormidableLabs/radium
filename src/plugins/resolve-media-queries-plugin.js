@@ -73,7 +73,8 @@ function _topLevelRulesToCSS({
       userAgent
     );
 
-    const mediaQueryClassName = hash(ruleCSS);
+    // CSS classes cannot start with a number
+    const mediaQueryClassName = 'rmq-' + hash(ruleCSS);
     const css = query + '{ .' + mediaQueryClassName + ruleCSS + '}';
 
     addCSS(css);
