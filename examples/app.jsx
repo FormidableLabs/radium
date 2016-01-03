@@ -15,9 +15,9 @@ var React = require('react');
 
 var Button = require('./components/button.jsx');
 var ComputedWell = require('./components/computed-well.jsx');
-var Style = require('../src/components/style.js');
-var PrintStyleSheet = require('../src/components/print-style-sheet.js');
 var Radium = require('../src');
+
+var {Style, StyleRoot, PrintStyleSheet} = Radium;
 
 //
 // Radium with ES6 class syntax
@@ -53,7 +53,6 @@ class TwoSquares extends React.Component {
 }
 
 var Spinner = React.createClass({
-
   statics: {
     printStyles: {
       main: {
@@ -78,7 +77,6 @@ Spinner = Radium(Spinner);
 
 
 var App = React.createClass({
-
   _remount: function() {
     this.setState({shouldRenderNull: true});
 
@@ -93,7 +91,7 @@ var App = React.createClass({
     }
 
     return (
-      <div>
+      <StyleRoot>
         <p /><HoverMessage />
 
         <p /><TwoSquares />
@@ -162,11 +160,11 @@ var App = React.createClass({
         </div>
 
         <PrintStyleSheet />
-      </div>
+      </StyleRoot>
     );
   }
 });
-App = Radium({isRoot: true})(App);
+App = Radium(App);
 
 var squareStyles = {
   both: {
