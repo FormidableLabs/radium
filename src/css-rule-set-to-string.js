@@ -14,7 +14,7 @@ export default function cssRuleSetToString(
   rules: Object,
   userAgent: ?string,
 ): string {
-  if (!selector || !rules) {
+  if (!rules) {
     return '';
   }
 
