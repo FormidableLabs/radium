@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
 
-import Radium, {PrintStyleSheet} from 'index.js';
+import Radium from 'index.js';
 import MouseUpListener from 'plugins/mouse-up-listener.js';
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
-import {expectCSS, getRenderOutput, getElement} from 'test-helpers';
+import {getRenderOutput, getElement} from 'test-helpers';
 
 describe('Radium blackbox tests', () => {
   beforeEach(() => {
@@ -282,55 +282,6 @@ describe('Radium blackbox tests', () => {
 
     expect(header.style.color).to.equal('blue');
     expect(footer.style.color).to.equal('red');
-  });
-
-  it('applies print styles through the PrintStyle component', () => {
-    Radium(React.createClass({
-      displayName: 'TestComponent',
-
-      statics: {
-        printStyles: {
-          foo: {color: 'blue'},
-          bar: {background: 'red'}
-        }
-      },
-
-      render() {
-        return (
-          <div />
-        );
-      }
-    }));
-
-    class TestComponent2 extends Component {
-      render() {
-        return <div />;
-      }
-    }
-
-    TestComponent2.displayName = 'TestComponent2';
-    TestComponent2.printStyles = {
-      main: {color: 'black'}
-    };
-    Radium(TestComponent2);
-
-    const output = TestUtils.renderIntoDocument(<PrintStyleSheet />);
-
-    const style = getElement(output, 'style');
-
-    expectCSS(style, `
-      @media print {
-        .Radium-TestComponent-foo {
-          color: blue !important;
-        }
-        .Radium-TestComponent-bar {
-          background: red !important;
-        }
-        .Radium-TestComponent2-main {
-          color: black !important;
-        }
-      }
-    `);
   });
 
   it('resolves styles if an element has element children and spreads props', () => {

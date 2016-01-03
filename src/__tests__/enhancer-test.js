@@ -88,23 +88,6 @@ describe('Enhancer', () => {
     expect(Enhanced.displayName).to.equal(Composed.displayName);
   });
 
-  it('sets up classNames on for printStyles have a copy', () => {
-    class Composed extends Component {
-      render() {}
-    }
-    Composed.displayName = 'PrintStyleTest';
-    Composed.printStyles = {
-      foo: { display: 'none' },
-      bar: { display: 'block' }
-    };
-
-    const Enhanced = Enhancer(Composed);
-
-    const enhanced = new Enhanced();
-    expect(enhanced.printStyleClass.foo).to.equal('Radium-PrintStyleTest-foo');
-    expect(enhanced.printStyleClass.bar).to.equal('Radium-PrintStyleTest-bar');
-  });
-
   it('calls existing componentWillUnmount function', () => {
     const existingComponentWillUnmount = sinon.spy();
     class Composed extends Component {

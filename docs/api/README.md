@@ -12,7 +12,6 @@
 - [Plugins](#plugins)
 - [Style Component](#style-component)
 - [StyleRoot Component](#styleroot-component)
-- [PrintStyleSheet Component](#printstylesheet-component)
 
 
 ## Sample Style Object
@@ -526,71 +525,4 @@ class App extends React.Component {
     );
   }
 }  
-```
-
-
-## PrintStyleSheet component
-
-In order to fully support print styling it is necessary to use CSS because of browser differences, as described in [#132](https://github.com/FormidableLabs/radium/issues/132#issuecomment-99805511). Radium allows you to do this easily by specifying print styles as static properties of your components.
-
-With ES7 decorators and static class properties:
-
-```jsx
-@Radium
-class MyComponent extends React.Component {
-  static printStyles = {
-    wrapper: { background: 'black' },
-    text: { color: 'red' }
-  };
-
-  render() {
-    return (
-      <div className={this.printStyleClass.wrapper}>
-        <p className={this.printStyleClass.text}>I'm red on print</p>
-      </div>
-    );
-  }
-}
-```
-
-With `createClass`:
-
-```jsx
-Radium(React.createClass({
-  displayName: 'MyComponent',
-
-  statics: {
-    printStyles = {
-      wrapper: { background: 'black' },
-      text: { color: 'red' }
-    }
-  },
-
-  render() {
-    return (
-      <div className={this.printStyleClass.wrapper}>
-        <p className={this.printStyleClass.text}>I'm red on print</p>
-      </div>
-    );
-  }
-}));
-```
-
-In your root component render `<PrintStyleSheet />` and it will render a style tag containing all the CSS needed for printing, wrapped in a `@media print` query. You should only render `<PrintStyleSheet />` once. It will contain all the print styles for every component.
-
-**App.js**
-
-```jsx
-import {PrintStyleSheet} from 'radium';
-
-class App extends React.Component {
-  render() {
-    return (
-      <div>
-        <PrintStyleSheet />
-        ... rest of your app ...
-      </div>
-    );
-  }
-}
 ```

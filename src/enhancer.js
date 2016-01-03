@@ -2,9 +2,8 @@
 
 import {Component, PropTypes} from 'react';
 
-import StyleKeeper from './style-keeper';
+import StyleKeeper from './style-keeper.js';
 import resolveStyles from './resolve-styles.js';
-import printStyles from './print-styles.js';
 
 const KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
   'arguments',
@@ -63,10 +62,6 @@ export default function enhanceWithRadium(
       this.state = this.state || {};
       this.state._radiumStyleState = {};
       this._radiumIsMounted = true;
-
-      if (RadiumEnhancer.printStyleClass) {
-        this.printStyleClass = RadiumEnhancer.printStyleClass;
-      }
     }
 
     componentWillUnmount() {
@@ -151,8 +146,6 @@ export default function enhanceWithRadium(
     component.displayName ||
     component.name ||
     'Component';
-
-  RadiumEnhancer.printStyleClass = printStyles.addPrintStyles(RadiumEnhancer);
 
   RadiumEnhancer.contextTypes = {
     ...RadiumEnhancer.contextTypes,
