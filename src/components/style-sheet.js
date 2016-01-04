@@ -5,7 +5,6 @@ import React, {Component} from 'react';
 import StyleKeeper from '../style-keeper';
 
 export default class StyleSheet extends Component {
-  // $FlowStaticPropertyWarning
   static contextTypes = {
     _radiumStyleKeeper: React.PropTypes.instanceOf(StyleKeeper)
   };
