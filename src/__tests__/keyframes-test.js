@@ -35,6 +35,34 @@ describe('keyframes', () => {
     `);
   });
 
+  it('adds px suffix when property is not unitless', () => {
+    const animation = keyframes({
+      from: {left: -1000},
+      to: {left: 10}
+    }, 'SlideFromLeft');
+
+    class TestComponent extends Component {
+      render() {
+        return <StyleRoot style={{animationName: animation}} />;
+      }
+    }
+
+    const output = TestUtils.renderIntoDocument(<TestComponent />);
+
+    const style = getElement(output, 'style');
+
+    expectCSS(style, `
+      @-webkit-keyframes SlideFromLeft-radium-animation-ab5ed129 {
+        from{
+          left: -1000px;
+        }
+        to{
+          left: 10px;
+        }
+      }
+    `);
+  });
+
   it('renders keyframes from child component', () => {
     const animation = keyframes({
       from: {left: '-1000px'},

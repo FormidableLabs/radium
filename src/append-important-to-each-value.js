@@ -1,8 +1,11 @@
-export default function appendImportantToEachValue(style) {
-  return Object.keys(style).reduce((result, key) => {
-    // This breaks unitless values but they'll be deprecated soon anyway
-    // https://github.com/facebook/react/issues/1873
-    result[key] = style[key] + ' !important';
-    return result;
-  }, {});
+/* @flow */
+
+import appendPxIfNeeded from './append-px-if-needed';
+import mapObject from './map-object';
+
+export default function appendImportantToEachValue(style: Object): Object {
+  return mapObject(
+    style,
+    (result, key) => appendPxIfNeeded(key, style[key]) + ' !important'
+  );
 }
