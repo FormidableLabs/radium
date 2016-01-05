@@ -481,7 +481,7 @@ A string that any included selectors in `rules` will be appended to. Use to scop
 
 ## StyleRoot Component
 
-Usually wrapped around your top-level App component. StyleRoot wraps its children in a plain div followed by the root style sheet. Radium plugins, like keyframes, use this style sheet to inject CSS at runtime. Because the style sheet appears after your rendered elements, it is populated correctly during a server render.
+Usually wrapped around your top-level App component. StyleRoot wraps its children in a plain div followed by the root style sheet. Radium plugins, like keyframes and media queries, use this style sheet to inject CSS at runtime. Because the style sheet appears after your rendered elements, it is populated correctly during a server render.
 
 StyleRoot transfers all of its props to the rendered `div`, and is itself wrapped in Radium, so you can pass it inline styles.
 
@@ -491,8 +491,37 @@ import {StyleRoot} from 'radium';
 class App extends React.Component {
   render() {
     return (
-      <StyleRoot>
+      <StyleRoot style={{...}}>
         ... rest of your app ...
+      </StyleRoot>
+    );
+  }
+}  
+```
+
+**Note:** StyleRoot passes the style-keeper (the object where styles are collected) down to other Radium components via context. Because of this, you cannot use keyframes or media queries in *direct children* of the `<StyleRoot>`, e.g.
+
+```jsx
+// COUNTEREXAMPLE, DOES NOT WORK
+<StyleRoot>
+  <div style={{'@media print': {color: black}}} />
+</StyleRoot>
+```
+
+You'll have to break out that piece into a proper component:
+
+```jsx
+class BodyText extends React.Component {
+  render() {
+    return <div style={{'@media print': {color: black}}} />;
+  }
+}
+
+class App extends React.Component {
+  render() {
+    return (
+      <StyleRoot>
+        <BodyText>...</BodyText>
       </StyleRoot>
     );
   }
