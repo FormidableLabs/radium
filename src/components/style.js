@@ -2,16 +2,17 @@
 
 import cssRuleSetToString from '../css-rule-set-to-string';
 
-import React from 'react';
+import React, {PropTypes} from 'react';
 
 const Style = React.createClass({
   propTypes: {
-    rules: React.PropTypes.object,
-    scopeSelector: React.PropTypes.string
+    radiumConfig: PropTypes.object,
+    rules: PropTypes.object,
+    scopeSelector: PropTypes.string
   },
 
   contextTypes: {
-    _radiumConfig: React.PropTypes.object
+    _radiumConfig: PropTypes.object
   },
 
   getDefaultProps(): {scopeSelector: string} {
@@ -21,6 +22,14 @@ const Style = React.createClass({
   },
 
   _buildStyles(styles: Object): string {
+    const userAgent = (
+      this.props.radiumConfig && this.props.radiumConfig.userAgent
+    ) || (
+      this.context &&
+      this.context._radiumConfig &&
+      this.context._radiumConfig.userAgent
+    );
+
     return Object.keys(styles).reduce((accumulator, selector) => {
       const rules = styles[selector];
 
@@ -32,12 +41,8 @@ const Style = React.createClass({
             this.props.scopeSelector + ' ' :
             ''
           ) + selector;
-        accumulator += cssRuleSetToString(
-          completeSelector,
-          rules,
-          this.context && this.context._radiumConfig &&
-            this.context._radiumConfig.userAgent
-        );
+
+        accumulator += cssRuleSetToString(completeSelector, rules, userAgent);
       }
 
       return accumulator;
