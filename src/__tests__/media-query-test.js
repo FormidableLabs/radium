@@ -193,34 +193,21 @@ describe('Media query tests', () => {
     expect(mql.removeListener).to.have.been.calledOnce;
   });
 
-  it('renders top level style rules as CSS instead of inline', () => {
+  it('renders top level print styles as CSS', () => {
     const matchMedia = sinon.spy(() => ({
       addListener: () => {},
       matches: true
     }));
 
+    const ChildComponent = Radium(() =>
+      <span style={{'@media print': {color: 'black'}}} />
+    );
 
-    @Radium
-    class ChildComponent extends Component {
-      render() {
-        return (
-          <span style={{
-            '@media (min-width: 600px)': {background: 'red', color: 'blue'}
-          }} />
-        );
-      }
-    }
-
-    @Radium({matchMedia})
-    class TestComponent extends Component {
-      render() {
-        return (
-          <StyleRoot>
-            <ChildComponent />
-          </StyleRoot>
-        );
-      }
-    }
+    const TestComponent = Radium({matchMedia})(() =>
+      <StyleRoot>
+        <ChildComponent />
+      </StyleRoot>
+    );
 
     const output = TestUtils.renderIntoDocument(<TestComponent />);
 
@@ -230,10 +217,9 @@ describe('Media query tests', () => {
 
     const style = getElement(output, 'style');
     expectCSS(style, `
-      @media (min-width:600px){
+      @media print{
         .${className}{
-          background:red !important;
-          color:blue !important;
+          color:black !important;
         }
       }
     `);

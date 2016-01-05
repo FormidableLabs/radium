@@ -205,7 +205,7 @@ var style = {
 };
 ```
 
-Radium will apply the correct styles for the currently active media queries.
+Radium will apply the correct styles for the currently active media queries. Top level CSS rules in your media queries will be converted to CSS and rendered in an actual `<style>` element with `!important` appended instead of being applied inline so they will work with server-side rendering. Note that you must add the `isRoot: true` config to your App component, e.g. `@Radium({isRoot: true})` to render the Radium stylesheet. Print styles will also work as normal, since they are rendered to CSS.
 
 ### Nested browser states
 
@@ -226,10 +226,6 @@ var style = {
 ```
 
 ### Known issues with media queries
-
-#### @media print
-
-If you use the query `@media print`, your print styles will not show up on Firefox at all, or in Chrome when triggering `window.print` from JavaScript. See [Issue 132](https://github.com/FormidableLabs/radium/issues/132#issuecomment-99805511) for more details.
 
 #### IE9 Support
 

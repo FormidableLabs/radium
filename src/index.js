@@ -1,6 +1,5 @@
 import Enhancer from './enhancer';
 import Plugins from './plugins';
-import PrintStyleSheet from './components/print-style-sheet';
 import Style from './components/style';
 import StyleRoot from './components/style-root';
 import getState from './get-state';
@@ -12,7 +11,6 @@ function Radium(ComposedComponent: constructor) {
 }
 
 Radium.Plugins = Plugins;
-Radium.PrintStyleSheet = PrintStyleSheet;
 Radium.Style = Style;
 Radium.StyleRoot = StyleRoot;
 Radium.getState = getState;

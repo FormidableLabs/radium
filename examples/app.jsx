@@ -53,6 +53,7 @@ class TwoSquares extends React.Component {
 }
 
 var Spinner = React.createClass({
+<<<<<<< HEAD
   statics: {
     printStyles: {
       main: {
@@ -66,9 +67,15 @@ var Spinner = React.createClass({
   },
 
   render: function () {
+=======
+  render() {
+>>>>>>> Remove printStyles feature
     return (
-      <div className={this.printStyleClass.main}>
-        <div className={this.printStyleClass.inner} style={spinnerStyles.inner} />
+      <div>
+        <div style={[
+          spinnerStyles.inner,
+          {'@media print': {height: '10px'}}
+        ]} />
       </div>
     );
   }
@@ -158,9 +165,13 @@ var App = React.createClass({
           />
           <span>This content has scoped styles</span>
         </div>
+<<<<<<< HEAD
 
         <PrintStyleSheet />
       </StyleRoot>
+=======
+      </div>
+>>>>>>> Remove printStyles feature
     );
   }
 });
