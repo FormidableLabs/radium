@@ -192,4 +192,36 @@ describe('Media query tests', () => {
     expect(mql.addListener).to.have.been.calledOnce;
     expect(mql.removeListener).to.have.been.calledOnce;
   });
+
+  it('renders top level print styles as CSS', () => {
+    const matchMedia = sinon.spy(() => ({
+      addListener: () => {},
+      matches: true
+    }));
+
+    const ChildComponent = Radium(() =>
+      <span style={{'@media print': {color: 'black'}}} />
+    );
+
+    const TestComponent = Radium({matchMedia})(() =>
+      <StyleRoot>
+        <ChildComponent />
+      </StyleRoot>
+    );
+
+    const output = TestUtils.renderIntoDocument(<TestComponent />);
+
+    const span = getElement(output, 'span');
+    const className = span.className.trim();
+    expect(className).to.not.be.empty;
+
+    const style = getElement(output, 'style');
+    expectCSS(style, `
+      @media print{
+        .${className}{
+          color:black !important;
+        }
+      }
+    `);
+  });
 });
