@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import Radium from 'index.js';
+import Radium, {StyleRoot} from 'index';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
@@ -199,13 +199,25 @@ describe('Media query tests', () => {
       matches: true
     }));
 
-    @Radium({isRoot: true, matchMedia})
-    class TestComponent extends Component {
+
+    @Radium
+    class ChildComponent extends Component {
       render() {
         return (
           <span style={{
             '@media (min-width: 600px)': {background: 'red', color: 'blue'}
           }} />
+        );
+      }
+    }
+
+    @Radium({matchMedia})
+    class TestComponent extends Component {
+      render() {
+        return (
+          <StyleRoot>
+            <ChildComponent />
+          </StyleRoot>
         );
       }
     }

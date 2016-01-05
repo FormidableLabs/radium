@@ -1,11 +1,10 @@
 /* @flow */
 
-import React, {Component, PropTypes} from 'react';
+import {Component, PropTypes} from 'react';
 
+import StyleKeeper from './style-keeper';
 import resolveStyles from './resolve-styles.js';
 import printStyles from './print-styles.js';
-import StyleKeeper from './style-keeper.js';
-import StyleSheet from './components/style-sheet.js';
 
 const KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
   'arguments',
@@ -29,21 +28,8 @@ function copyProperties(source, target) {
   });
 }
 
-function _getStyleKeeper(instance): StyleKeeper {
-  if (!instance._radiumStyleKeeper) {
-    const userAgent = (
-      instance.props.radiumConfig && instance.props.radiumConfig.userAgent
-    ) || (
-      instance.context._radiumConfig && instance.context._radiumConfig.userAgent
-    );
-    instance._radiumStyleKeeper = new StyleKeeper(userAgent);
-  }
-
-  return instance._radiumStyleKeeper;
-}
-
 export default function enhanceWithRadium(
-  configOrComposedComponent: constructor | Function | Object,
+  configOrComposedComponent: Class<any> | constructor | Function | Object,
   config?: Object = {},
 ): constructor {
   if (typeof configOrComposedComponent !== 'function') {
@@ -81,10 +67,6 @@ export default function enhanceWithRadium(
       if (RadiumEnhancer.printStyleClass) {
         this.printStyleClass = RadiumEnhancer.printStyleClass;
       }
-
-      if (config.isRoot) {
-        _getStyleKeeper(this);
-      }
     }
 
     componentWillUnmount() {
@@ -113,7 +95,7 @@ export default function enhanceWithRadium(
         super.getChildContext() :
         {};
 
-      if (!this.props.radiumConfig && !config.isRoot) {
+      if (!this.props.radiumConfig) {
         return superChildContext;
       }
 
@@ -121,10 +103,6 @@ export default function enhanceWithRadium(
 
       if (this.props.radiumConfig) {
         newContext._radiumConfig = this.props.radiumConfig;
-      }
-
-      if (config.isRoot) {
-        newContext._radiumStyleKeeper = _getStyleKeeper(this);
       }
 
       return newContext;
@@ -142,18 +120,7 @@ export default function enhanceWithRadium(
         };
       }
 
-      const element = resolveStyles(this, renderedElement, currentConfig);
-
-      if (config.isRoot) {
-        return (
-          <div>
-            {element}
-            <StyleSheet />
-          </div>
-        );
-      }
-
-      return element;
+      return resolveStyles(this, renderedElement, currentConfig);
     }
   }
 
@@ -189,14 +156,14 @@ export default function enhanceWithRadium(
 
   RadiumEnhancer.contextTypes = {
     ...RadiumEnhancer.contextTypes,
-    _radiumConfig: React.PropTypes.object,
-    _radiumStyleKeeper: React.PropTypes.instanceOf(StyleKeeper)
+    _radiumConfig: PropTypes.object,
+    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
   };
 
   RadiumEnhancer.childContextTypes = {
     ...RadiumEnhancer.childContextTypes,
-    _radiumConfig: React.PropTypes.object,
-    _radiumStyleKeeper: React.PropTypes.instanceOf(StyleKeeper)
+    _radiumConfig: PropTypes.object,
+    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
   };
 
   return RadiumEnhancer;
