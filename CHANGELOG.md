@@ -1,5 +1,26 @@
 # Radium Changelog
 
+## 0.16.0 (January 5, 2016)
+
+### New Features
+- Server-side rendering for media queries and keyframes!
+
+### Breaking Changes
+- To use keyframes and media queries, you must wrap your components in the `<StyleRoot>` component, typically in `<App>`: https://github.com/FormidableLabs/radium/tree/master/docs/api#styleroot-component
+- The result of Radium.keyframes is the animation name, and should be assigned to the `animationName` prop: https://github.com/FormidableLabs/radium/tree/master/docs/api#keyframes
+- printStyles have been removed, in favor of '@media print' media queries, which are now rendered as CSS so they work correctly: https://github.com/FormidableLabs/radium/tree/master/docs/guides#media-queries
+
+### Bug Fixes
+- Don't add extra media query listeners
+- Append px to numeric values on properties that don't accept unitless values
+
+### Improvements
+- Upgrade `inline-style-prefixer` to version 0.6.2 (Edge support)
+- Better error on duplicate keys
+- Upgrade to Babel 6
+- `<Style>` adds the `scopeSelector` to comma separated selectors
+- `<Style>` now accepts `radiumConfig` directly with the `userAgent` field
+
 ## 0.15.3 (November 16, 2015)
 
 ### Bug Fixes
