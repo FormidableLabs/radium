@@ -31,16 +31,18 @@ const Style = React.createClass({
     );
 
     return Object.keys(styles).reduce((accumulator, selector) => {
+      const {scopeSelector} = this.props;
       const rules = styles[selector];
 
       if (selector === 'mediaQueries') {
         accumulator += this._buildMediaQueryString(rules);
       } else {
-        const completeSelector = (
-          this.props.scopeSelector ?
-            this.props.scopeSelector + ' ' :
-            ''
-          ) + selector;
+        const completeSelector = scopeSelector
+          ? selector
+            .split(',')
+            .map(part => scopeSelector + ' ' + part.trim())
+            .join(',')
+          : selector;
 
         accumulator += cssRuleSetToString(completeSelector, rules, userAgent);
       }

@@ -14,7 +14,7 @@ export function getElement(output, tagName) {
 }
 
 function cleanCSS(css) {
-  return css.replace(/\s*\n\s*/g, '').replace(/\s*([{};:])\s*/g, '$1');
+  return css.replace(/\s*\n\s*/g, '').replace(/\s*([{};:,])\s*/g, '$1');
 }
 
 export function expectCSS(styleElement, css) {
