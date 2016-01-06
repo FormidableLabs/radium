@@ -1,5 +1,10 @@
 declare class InlineStylePrefixer {
-  constructor(userAgent?: ?string): void;
+  static prefixAll(style: Object): Object;
+
+  constructor(config: {
+    keepUnprefixed?: bool,
+    userAgent?: ?string
+  }): void;
 
   prefix(style: Object): Object;
 }

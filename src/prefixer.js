@@ -45,7 +45,7 @@ export function getPrefixedStyle(
   }
 
   if (!prefixer || actualUserAgent !== lastUserAgent) {
-    prefixer = new InlineStylePrefixer(actualUserAgent);
+    prefixer = new InlineStylePrefixer({userAgent: actualUserAgent});
     lastUserAgent = actualUserAgent;
   }
 

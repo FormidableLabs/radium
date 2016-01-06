@@ -53,10 +53,9 @@ describe('<Style> component', () => {
   it('adds scopeSelector to each selector', () => {
     const output = TestUtils.renderIntoDocument(
       <Style
-        radiumConfig={{userAgent: MSIE9_USER_AGENT}}
         rules={{
-          div: {transform: 'rotate(90)'},
-          span: {transform: 'rotate(90)'}
+          div: {color: 'red'},
+          span: {color: 'blue'}
         }}
         scopeSelector=".scope"
       />
@@ -65,10 +64,10 @@ describe('<Style> component', () => {
     const style = getElement(output, 'style');
     expectCSS(style, `
       .scope div {
-        -ms-transform: rotate(90);
+        color: red;
       }
       .scope span {
-        -ms-transform: rotate(90);
+        color: blue;
       }
     `);
   });
@@ -76,8 +75,7 @@ describe('<Style> component', () => {
   it('adds scopeSelector to multiple selectors in a single ruleset', () => {
     const output = TestUtils.renderIntoDocument(
       <Style
-        radiumConfig={{userAgent: MSIE9_USER_AGENT}}
-        rules={{'div, span': {transform: 'rotate(90)'}}}
+        rules={{'div, span': {color: 'red'}}}
         scopeSelector=".scope"
       />
     );
@@ -85,7 +83,7 @@ describe('<Style> component', () => {
     const style = getElement(output, 'style');
     expectCSS(style, `
       .scope div, .scope span {
-        -ms-transform: rotate(90);
+        color: red;
       }
     `);
   });
