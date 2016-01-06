@@ -1,5 +1,10 @@
 # Radium Changelog
 
+## 0.16.1 (January 5, 2016)
+
+### Bug Fixes
+- `<StyleRoot>` no longer throws an error on unmount
+
 ## 0.16.0 (January 5, 2016)
 
 ### New Features
