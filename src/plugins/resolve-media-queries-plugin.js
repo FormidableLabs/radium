@@ -79,7 +79,6 @@ function _topLevelRulesToCSS({
 
     addCSS(css);
 
-
     className += ' ' + mediaQueryClassName;
   });
   return className;

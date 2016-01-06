@@ -224,4 +224,24 @@ describe('Media query tests', () => {
       }
     `);
   });
+
+  it('doesn\'t error on unmount', () => {
+    const matchMedia = sinon.spy(() => ({
+      addListener: () => {},
+      matches: true
+    }));
+
+    const ChildComponent = Radium(() =>
+      <span style={{'@media print': {color: 'black'}}} />
+    );
+
+    const TestComponent = Radium({matchMedia})(() =>
+      <StyleRoot>
+        <ChildComponent />
+      </StyleRoot>
+    );
+
+    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(output).parentNode);
+  });
 });

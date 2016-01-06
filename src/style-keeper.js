@@ -17,7 +17,8 @@ export default class StyleKeeper {
     }
 
     return {
-      remove() {
+      // Must be fat arrow to capture `this`
+      remove: () => {
         const listenerIndex = this._listeners.indexOf(listener);
         if (listenerIndex > -1) {
           this._listeners.splice(listenerIndex, 1);
@@ -33,7 +34,8 @@ export default class StyleKeeper {
     }
 
     return {
-      remove() {
+      // Must be fat arrow to capture `this`
+      remove: () => {
         delete this._cssSet[css];
         this._emitChange();
       }
