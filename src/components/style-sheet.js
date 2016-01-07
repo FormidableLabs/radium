@@ -18,6 +18,7 @@ export default class StyleSheet extends Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
     this._subscription = this.context._radiumStyleKeeper.subscribe(
       this._onChange
     );
@@ -25,6 +26,7 @@ export default class StyleSheet extends Component {
   }
 
   componentWillUnmount() {
+    this._isMounted = false;
     if (this._subscription) {
       this._subscription.remove();
     }
@@ -35,7 +37,9 @@ export default class StyleSheet extends Component {
   }
 
   _onChange() {
-    this.setState(this._getCSSState());
+    setTimeout(() => {
+      this._isMounted && this.setState(this._getCSSState());
+    }, 0);
   }
 
   render(): ReactElement {
