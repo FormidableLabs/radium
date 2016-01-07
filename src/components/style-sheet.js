@@ -18,6 +18,7 @@ export default class StyleSheet extends Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
     this._subscription = this.context._radiumStyleKeeper.subscribe(
       this._onChange
     );
@@ -25,14 +26,10 @@ export default class StyleSheet extends Component {
   }
 
   componentWillUnmount() {
-    this._isMounted = true;
+    this._isMounted = false;
     if (this._subscription) {
       this._subscription.remove();
     }
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
   }
 
   _getCSSState(): {css: string} {
