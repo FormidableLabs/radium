@@ -13,6 +13,8 @@ export default class StyleSheet extends Component {
     super(...arguments);
 
     this.state = this._getCSSState();
+
+    this._onChange = this._onChange.bind(this);
   }
 
   componentDidMount() {
