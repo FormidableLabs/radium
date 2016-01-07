@@ -1,6 +1,8 @@
 declare class InlineStylePrefixer {
   static prefixAll(style: Object): Object;
 
+  prefixedKeyframes: string;
+
   constructor(config: {
     keepUnprefixed?: bool,
     userAgent?: ?string

@@ -2,6 +2,7 @@
 
 import cssRuleSetToString from './css-rule-set-to-string';
 import hash from './hash';
+import {getPrefixedKeyframes} from './prefixer';
 
 export type Keyframes = {
   __radiumKeyframes: bool,
@@ -15,7 +16,7 @@ export default function keyframes(
   return {
     __radiumKeyframes: true,
     __process(userAgent) {
-      const keyframesPrefixed = '-webkit-keyframes';
+      const keyframesPrefixed = getPrefixedKeyframes(userAgent);
       const rules = Object.keys(keyframeRules).map(percentage =>
         cssRuleSetToString(
           percentage,

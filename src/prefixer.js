@@ -22,12 +22,7 @@ let hasWarnedAboutUserAgent = false;
 let lastUserAgent;
 let prefixer;
 
-// Returns a new style object with vendor prefixes added to property names
-// and values.
-export function getPrefixedStyle(
-  style: Object,
-  userAgent?: ?string,
-): Object {
+function getPrefixer(userAgent: ?string): InlineStylePrefixer {
   const actualUserAgent = userAgent ||
     (global && global.navigator && global.navigator.userAgent);
 
@@ -48,7 +43,20 @@ export function getPrefixedStyle(
     prefixer = new InlineStylePrefixer({userAgent: actualUserAgent});
     lastUserAgent = actualUserAgent;
   }
+  return prefixer;
+}
 
+export function getPrefixedKeyframes(userAgent?: ?string): string {
+  return getPrefixer(userAgent).prefixedKeyframes;
+}
+
+// Returns a new style object with vendor prefixes added to property names
+// and values.
+export function getPrefixedStyle(
+  style: Object,
+  userAgent?: ?string,
+): Object {
+  const prefixer = getPrefixer(userAgent);
   const prefixedStyle = prefixer.prefix(style);
   const prefixedStyleWithFallbacks = transformValues(prefixedStyle);
   return prefixedStyleWithFallbacks;

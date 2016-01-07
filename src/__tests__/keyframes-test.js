@@ -5,7 +5,33 @@ import {expectCSS, getElement} from 'test-helpers';
 import React, {Component} from 'react';
 import TestUtils from 'react-addons-test-utils';
 
+const CHROME_14_USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.1 ' +
+  '(KHTML, like Gecko) Chrome/14.0.812.0 Safari/535.1';
+
 describe('keyframes', () => {
+  it('adds prefix to keyframes when needed', () => {
+    const anim = keyframes({from: {left: 0}, to: {left: 100}}, 'slide');
+    class TestComponent extends Component {
+      render() {
+        return (
+          <StyleRoot
+            radiumConfig={{userAgent: CHROME_14_USER_AGENT}}
+            style={{animationName: anim}}
+          />
+        );
+      }
+    }
+
+    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    const style = getElement(output, 'style');
+
+    expectCSS(style, `
+      @-webkit-keyframes slide-radium-animation-1bdcc98d {
+        from {left: 0;}
+        to {left: 100px;}
+      }
+    `);
+  });
 
   it('renders keyframes in root style component', () => {
     const animation = keyframes({
@@ -24,7 +50,7 @@ describe('keyframes', () => {
     const style = getElement(output, 'style');
 
     expectCSS(style, `
-      @-webkit-keyframes SlideFromLeft-radium-animation-1b668a10 {
+      @keyframes SlideFromLeft-radium-animation-1b668a10 {
         from{
           left: -1000px;
         }
@@ -52,7 +78,7 @@ describe('keyframes', () => {
     const style = getElement(output, 'style');
 
     expectCSS(style, `
-      @-webkit-keyframes SlideFromLeft-radium-animation-ab5ed129 {
+      @keyframes SlideFromLeft-radium-animation-ab5ed129 {
         from{
           left: -1000px;
         }
@@ -92,7 +118,7 @@ describe('keyframes', () => {
     const style = getElement(output, 'style');
 
     expectCSS(style, `
-      @-webkit-keyframes SlideFromLeft-radium-animation-1b668a10 {
+      @keyframes SlideFromLeft-radium-animation-1b668a10 {
         from{
           left: -1000px;
         }
