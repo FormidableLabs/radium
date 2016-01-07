@@ -480,9 +480,11 @@ A string that any included selectors in `rules` will be appended to. Use to scop
 
 ## StyleRoot Component
 
+_Props: Accepts all props valid on `div` and optional `radiumConfig`_
+
 Usually wrapped around your top-level App component. StyleRoot wraps its children in a plain div followed by the root style sheet. Radium plugins, like keyframes and media queries, use this style sheet to inject CSS at runtime. Because the style sheet appears after your rendered elements, it is populated correctly during a server render.
 
-StyleRoot transfers all of its props to the rendered `div`, and is itself wrapped in Radium, so you can pass it inline styles.
+StyleRoot transfers all of its props to the rendered `div`, and is itself wrapped in Radium, so you can pass it inline styles or `radiumConfig`.
 
 ```jsx
 import {StyleRoot} from 'radium';
@@ -490,7 +492,7 @@ import {StyleRoot} from 'radium';
 class App extends React.Component {
   render() {
     return (
-      <StyleRoot style={{...}}>
+      <StyleRoot>
         ... rest of your app ...
       </StyleRoot>
     );
