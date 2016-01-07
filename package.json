@@ -78,7 +78,7 @@
     "nodemon": "^1.4.1",
     "object-assign": "^4.0.1",
     "phantomjs": "^1.9.17",
-    "react": "^0.14.0",
+    "react": "^0.14.6",
     "react-addons-test-utils": "^0.14.0",
     "react-dom": "^0.14.0",
     "sinon": "^1.15.3",
