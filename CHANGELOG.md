@@ -1,5 +1,16 @@
 # Radium Changelog
 
+## 0.16.2 (January 8, 2016)
+
+### Bug Fixes
+- `<StyleSheet/> Component:`
+  - Bind the private method _onChange to the class instance
+  - Wrap setState in setTimeout and keep track of isMounted, #500
+  - Remove duplicate declaration of componentWillUnmount and move `this._isMounted = true` inside `componentDidMount`
+- Clear up docs around StyleRoot props, clear up issues in #496
+- Properly prefix keyframes: Use `inline-style-prefixer`’s `prefixedKeyframes`, #488
+- Ensure unique classname is generated for media query rules (hash on query _and_ ruleCSS string)
+
 ## 0.16.1 (January 5, 2016)
 
 ### Bug Fixes
