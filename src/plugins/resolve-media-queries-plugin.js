@@ -74,7 +74,7 @@ function _topLevelRulesToCSS({
     );
 
     // CSS classes cannot start with a number
-    const mediaQueryClassName = 'rmq-' + hash(ruleCSS);
+    const mediaQueryClassName = 'rmq-' + hash(query + ruleCSS);
     const css = query + '{ .' + mediaQueryClassName + ruleCSS + '}';
 
     addCSS(css);
