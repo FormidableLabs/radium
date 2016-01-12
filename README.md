@@ -147,7 +147,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md)
 [npm_site]: https://www.npmjs.org/package/radium
 [david_img]: https://img.shields.io/david/FormidableLabs/radium.svg
 [david_site]: https://david-dm.org/FormidableLabs/radium
-[size_img]: https://badge-size.herokuapp.com/FormidableLabs/radium/master/dist/radium.min.js.svg?compression=gzip&label=gzipped
+[size_img]: https://badges.herokuapp.com/size/npm/radium/dist/radium.min.js?gzip=true&label=gzipped
 [docs_comparison]: https://github.com/FormidableLabs/radium/tree/master/docs/comparison
 [docs_guides]: https://github.com/FormidableLabs/radium/tree/master/docs/guides
 [docs_api]: https://github.com/FormidableLabs/radium/tree/master/docs/api
