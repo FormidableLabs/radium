@@ -70,7 +70,7 @@
     "karma-mocha-reporter": "^1.1.4",
     "karma-phantomjs-launcher": "^0.2.0",
     "karma-phantomjs-shim": "^1.0.0",
-    "karma-sinon-chai": "^1.0.0",
+    "karma-sinon-chai": "^1.1.0",
     "karma-webpack": "^1.7.0",
     "lodash": "^3.9.3",
     "mocha": "^2.2.5",
