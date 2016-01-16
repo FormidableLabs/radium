@@ -62,17 +62,26 @@ const _resolveChildren = function({
     };
   }
 
+  const shouldResolveStyles = function(element) {
+    return (element.type && !element.type.__isRadiumEnhanced);
+  };
+
   if (React.Children.count(children) === 1 && children.type) {
     // If a React Element is an only child, don't wrap it in an array for
     // React.Children.map() for React.Children.only() compatibility.
     const onlyChild = React.Children.only(children);
-    return resolveStyles(component, onlyChild, config, existingKeyMap);
+
+    if (shouldResolveStyles(onlyChild)) {
+      return resolveStyles(component, onlyChild, config, existingKeyMap);
+    } else {
+      return onlyChild;
+    }
   }
 
   return React.Children.map(
     children,
     function(child) {
-      if (React.isValidElement(child)) {
+      if (React.isValidElement(child) && shouldResolveStyles(child)) {
         return resolveStyles(component, child, config, existingKeyMap);
       }
 
