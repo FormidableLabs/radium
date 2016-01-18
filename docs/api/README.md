@@ -505,7 +505,7 @@ class App extends React.Component {
 ```jsx
 // COUNTEREXAMPLE, DOES NOT WORK
 <StyleRoot>
-  <div style={{'@media print': {color: black}}} />
+  <div style={{'@media print': {color: 'black'}}} />
 </StyleRoot>
 ```
 
@@ -514,7 +514,7 @@ You'll have to break out that piece into a proper component:
 ```jsx
 class BodyText extends React.Component {
   render() {
-    return <div style={{'@media print': {color: black}}} />;
+    return <div style={{'@media print': {color: 'black'}}} />;
   }
 }
 
