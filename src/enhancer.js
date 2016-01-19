@@ -56,7 +56,7 @@ export default function enhanceWithRadium(
     _radiumMouseUpListener: {remove: () => void};
     _radiumIsMounted: bool;
 
-    static __isRadiumEnhanced = true;
+    static _isRadiumEnhanced = true;
 
     constructor() {
       super(...arguments);

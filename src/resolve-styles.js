@@ -31,8 +31,13 @@ let resolveStyles = ((null: any): (
   component: any, // ReactComponent, flow+eslint complaining
   renderedElement: any,
   config: Config,
-  existingKeyMap?: {[key: string]: bool}
+  existingKeyMap?: {[key: string]: bool},
+  shouldResolveCheck: true
 ) => any);
+
+const _shouldResolveStyles = function(component) {
+  return (component.type && !component.type._isRadiumEnhanced);
+};
 
 const _resolveChildren = function({
   children,
@@ -56,33 +61,24 @@ const _resolveChildren = function({
     return function() {
       const result = children.apply(this, arguments);
       if (React.isValidElement(result)) {
-        return resolveStyles(component, result, config, existingKeyMap);
+        return resolveStyles(component, result, config, existingKeyMap, true);
       }
       return result;
     };
   }
 
-  const shouldResolveStyles = function(element) {
-    return (element.type && !element.type.__isRadiumEnhanced);
-  };
-
   if (React.Children.count(children) === 1 && children.type) {
     // If a React Element is an only child, don't wrap it in an array for
     // React.Children.map() for React.Children.only() compatibility.
     const onlyChild = React.Children.only(children);
-
-    if (shouldResolveStyles(onlyChild)) {
-      return resolveStyles(component, onlyChild, config, existingKeyMap);
-    } else {
-      return onlyChild;
-    }
+    return resolveStyles(component, onlyChild, config, existingKeyMap, true);
   }
 
   return React.Children.map(
     children,
     function(child) {
-      if (React.isValidElement(child) && shouldResolveStyles(child)) {
-        return resolveStyles(component, child, config, existingKeyMap);
+      if (React.isValidElement(child)) {
+        return resolveStyles(component, child, config, existingKeyMap, true);
       }
 
       return child;
@@ -112,7 +108,8 @@ const _resolveProps = function({
         component,
         propValue,
         config,
-        existingKeyMap
+        existingKeyMap,
+        true
       );
     }
   });
@@ -296,17 +293,21 @@ resolveStyles = function(
   component: any, // ReactComponent, flow+eslint complaining
   renderedElement: any, // ReactElement
   config: Config = DEFAULT_CONFIG,
-  existingKeyMap?: {[key: string]: boolean}
+  existingKeyMap?: {[key: string]: boolean},
+  shouldResolveCheck: boolean = false,
 ): any { // ReactElement
   existingKeyMap = existingKeyMap || {};
-
   if (
     !renderedElement ||
     // Bail if we've already processed this element. This ensures that only the
     // owner of an element processes that element, since the owner's render
     // function will be called first (which will always be the case, since you
     // can't know what else to render until you render the parent component).
-    (renderedElement.props && renderedElement.props._radiumDidResolveStyles)
+    (renderedElement.props && renderedElement.props._radiumDidResolveStyles) ||
+
+    // Bail if this element is a radium enhanced element, because if it is,
+    // then it will take care of resolving its own styles.
+    (shouldResolveCheck && !_shouldResolveStyles(renderedElement))
   ) {
     return renderedElement;
   }
