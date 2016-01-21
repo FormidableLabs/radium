@@ -5,7 +5,7 @@
 - [How can I use Radium with jsbin?](#how-can-i-use-radium-with-jsbin)
 - [Can I use my favourite CSS/LESS/SASS syntax?](#can-i-use-my-favourite-csslesssass-syntax)
 - [Can I use Radium with Bootstrap?](#can-i-use-radium-with-bootstrap)
-- [Why doesn't Radium work on SomeComponent?](#why-doesnt-radium-work-on-somecomponent)
+- [Why doesn't Radium work on react-router's Link, or react-bootstrap's Button, or SomeOtherComponent?](#why-doesnt-radium-work-on-react-routers-link-or-react-bootstraps-button-or-someothercomponent)
 - [How can I get rid of `userAgent` warnings in tests?](#how-can-i-get-rid-of-useragent-warnings-in-tests)
 - [Why do React warnings have the wrong component name?](#why-do-react-warnings-have-the-wrong-component-name)
 
@@ -147,7 +147,7 @@ You can find a more advanced example in the [react-styling readme](https://githu
 
 See issue [#323](https://github.com/FormidableLabs/radium/issues/323) for discussion.
 
-## Why doesn't Radium work on SomeComponent?
+## Why doesn't Radium work on react-router's Link, or react-bootstrap's Button, or SomeOtherComponent?
 
 Radium doesn't mess with the `style` prop of non-DOM elements. This includes thin wrappers like `react-router`'s `Link` component. We can't assume that a custom component will use `style` the same way DOM elements do. For instance, it could be a string enum to select a specific style. In order for resolving `style` on a custom element to work, that element needs to actually pass that `style` prop to the DOM element underneath, in addition to passing down all the event handlers (`onMouseEnter`, etc). Since Radium has no control over the implementation of other components, resolving styles on them is not safe.
 
