@@ -1,6 +1,6 @@
 # Frequently Asked Questions
 
-- [How do I use pseudo-selectors like `:checked` or `:last`?](#how-do-i-use-pseudo-selectors-like-checked-or-last)
+- [How do I use pseudo-selectors like `:checked`, `:last`, `:before`, or `:after`?](#how-do-i-use-pseudo-selectors-like-checked-last-before-or-after)
 - [How can I use `ReactCSSTransitionGroup` without any classes?](#how-can-i-use-reactcsstransitiongroup-without-any-classes)
 - [How can I use Radium with jsbin?](#how-can-i-use-radium-with-jsbin)
 - [Can I use my favourite CSS/LESS/SASS syntax?](#can-i-use-my-favourite-csslesssass-syntax)
