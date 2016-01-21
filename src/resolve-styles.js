@@ -32,7 +32,7 @@ let resolveStyles = ((null: any): (
   renderedElement: any,
   config: Config,
   existingKeyMap?: {[key: string]: bool},
-  shouldResolveCheck: true
+  shouldCheckBeforeResolve: true
 ) => any);
 
 const _shouldResolveStyles = function(component) {
@@ -294,7 +294,7 @@ resolveStyles = function(
   renderedElement: any, // ReactElement
   config: Config = DEFAULT_CONFIG,
   existingKeyMap?: {[key: string]: boolean},
-  shouldResolveCheck: boolean = false,
+  shouldCheckBeforeResolve: boolean = false,
 ): any { // ReactElement
   existingKeyMap = existingKeyMap || {};
   if (
@@ -307,7 +307,7 @@ resolveStyles = function(
 
     // Bail if this element is a radium enhanced element, because if it is,
     // then it will take care of resolving its own styles.
-    (shouldResolveCheck && !_shouldResolveStyles(renderedElement))
+    (shouldCheckBeforeResolve && !_shouldResolveStyles(renderedElement))
   ) {
     return renderedElement;
   }

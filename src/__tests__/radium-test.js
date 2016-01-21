@@ -691,10 +691,10 @@ describe('Radium blackbox tests', () => {
   });
 
   it('works fine if passing null, undefined, or false in style', () => {
-    const Component = Radium(props => (
+    const TestComponent = Radium(() => (
       <div style={{background: undefined, border: false, color: null}} />
     ));
-    const output = TestUtils.renderIntoDocument(<Component />);
+    const output = TestUtils.renderIntoDocument(<TestComponent />);
     const div = getElement(output, 'div');
 
     expect(div.style.background).to.equal('');

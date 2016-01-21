@@ -25,16 +25,16 @@ function transformValues(style) {
   }, {});
 }
 
-let hasWarnedAboutUserAgent = false;
-let lastUserAgent;
-let prefixer;
+let _hasWarnedAboutUserAgent = false;
+let _lastUserAgent;
+let _cachedPrefixer;
 
 function getPrefixer(userAgent: ?string): InlineStylePrefixer {
   const actualUserAgent = userAgent ||
     (global && global.navigator && global.navigator.userAgent);
 
   if (process.env.NODE_ENV !== 'production') {
-    if (!actualUserAgent && !hasWarnedAboutUserAgent) {
+    if (!actualUserAgent && !_hasWarnedAboutUserAgent) {
       /* eslint-disable no-console */
       console.warn(
         'Radium: userAgent should be supplied for server-side rendering. See ' +
@@ -42,15 +42,15 @@ function getPrefixer(userAgent: ?string): InlineStylePrefixer {
         'for more information.'
       );
       /* eslint-enable no-console */
-      hasWarnedAboutUserAgent = true;
+      _hasWarnedAboutUserAgent = true;
     }
   }
 
-  if (!prefixer || actualUserAgent !== lastUserAgent) {
-    prefixer = new InlineStylePrefixer({userAgent: actualUserAgent});
-    lastUserAgent = actualUserAgent;
+  if (!_cachedPrefixer || actualUserAgent !== _lastUserAgent) {
+    _cachedPrefixer = new InlineStylePrefixer({userAgent: actualUserAgent});
+    _lastUserAgent = actualUserAgent;
   }
-  return prefixer;
+  return _cachedPrefixer;
 }
 
 export function getPrefixedKeyframes(userAgent?: ?string): string {
