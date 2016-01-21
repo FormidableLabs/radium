@@ -3,6 +3,7 @@
 [![NPM Package][npm_img]][npm_site]
 [![Dependency Status][david_img]][david_site]
 ![gzipped size][size_img]
+[![AppVeyor Status][appveyor_img]][appveyor_site]
 
 # Radium
 
@@ -152,3 +153,5 @@ Please see [CONTRIBUTING](CONTRIBUTING.md)
 [docs_guides]: https://github.com/FormidableLabs/radium/tree/master/docs/guides
 [docs_api]: https://github.com/FormidableLabs/radium/tree/master/docs/api
 [docs_faq]: https://github.com/FormidableLabs/radium/tree/master/docs/faq
+[appveyor_img]: https://ci.appveyor.com/api/projects/status/github/formidablelabs/radium?branch=master&svg=true
+[appveyor_site]: https://ci.appveyor.com/project/ryan-roemer/radium
