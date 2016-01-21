@@ -690,6 +690,18 @@ describe('Radium blackbox tests', () => {
     expect(div.style.color).to.equal('red');
   });
 
+  it('works fine if passing null, undefined, or false in style', () => {
+    const Component = Radium(props => (
+      <div style={{background: undefined, border: false, color: null}} />
+    ));
+    const output = TestUtils.renderIntoDocument(<Component />);
+    const div = getElement(output, 'div');
+
+    expect(div.style.background).to.equal('');
+    expect(div.style.border).to.equal('');
+    expect(div.style.color).to.equal('');
+  });
+
   it('works with stateless components with context', () => {
     let MyStatelessComponent = (props, context) => (
       <div style={{color: 'blue', ':hover': {color: context.hoverColor}}}>
