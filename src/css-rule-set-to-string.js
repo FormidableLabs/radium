@@ -20,12 +20,12 @@ export default function cssRuleSetToString(
     return '';
   }
 
-  const prefixedRules = getPrefixedStyle(rules, userAgent);
   const rulesWithPx = mapObject(
-    prefixedRules,
+    rules,
     (value, key) => appendPxIfNeeded(key, value)
   );
-  const cssPrefixedRules = camelCasePropsToDashCase(rulesWithPx);
+  const prefixedRules = getPrefixedStyle(rulesWithPx, userAgent);
+  const cssPrefixedRules = camelCasePropsToDashCase(prefixedRules);
   const serializedRules = createMarkupForStyles(cssPrefixedRules);
 
   return selector + '{' + serializedRules + '}';
