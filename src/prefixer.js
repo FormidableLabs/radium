@@ -12,7 +12,14 @@ function transformValues(style) {
     let value = style[key];
     if (Array.isArray(value)) {
       value = value.join(';' + key + ':');
+    } else if (
+      value &&
+      typeof value === 'object' &&
+      typeof value.toString === 'function'
+    ) {
+      value = value.toString();
     }
+
     newStyle[key] = value;
     return newStyle;
   }, {});
@@ -56,8 +63,8 @@ export function getPrefixedStyle(
   style: Object,
   userAgent?: ?string,
 ): Object {
+  const styleWithFallbacks = transformValues(style);
   const prefixer = getPrefixer(userAgent);
-  const prefixedStyle = prefixer.prefix(style);
-  const prefixedStyleWithFallbacks = transformValues(prefixedStyle);
-  return prefixedStyleWithFallbacks;
+  const prefixedStyle = prefixer.prefix(styleWithFallbacks);
+  return prefixedStyle;
 }
