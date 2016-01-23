@@ -1,5 +1,20 @@
 # Radium Changelog
 
+## 0.16.4 (January 23, 2016)
+
+### Bug Fixes
+- Add `px` suffix if needed *before* prefixing, since the list in `appendPxIfNeeded` does not include prefixed variants
+- Radium now calls `toString` on values itself, instead of relying on `inline-style-prefixer` or React to do so (they don't)
+
+### Improvements
+- Much lighter `npm install radium` by removing `babel` & co from `dependencies` before publishing
+- Radium now ignores children or props that are themselves Radium enhanced components, for a nice perf gain. Thanks @spacenick
+
+## 0.16.3 (January 21, 2016)
+- Published under the `test` tag, so not installable via npm latest
+- Forgot to add `-test` to the version
+- See changelog for 0.16.4 instead
+
 ## 0.16.2 (January 8, 2016)
 
 ### Bug Fixes
