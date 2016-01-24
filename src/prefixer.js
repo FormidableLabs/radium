@@ -47,7 +47,14 @@ function getPrefixer(userAgent: ?string): InlineStylePrefixer {
   }
 
   if (!_cachedPrefixer || actualUserAgent !== _lastUserAgent) {
-    _cachedPrefixer = new InlineStylePrefixer({userAgent: actualUserAgent});
+    if (actualUserAgent === 'all') {
+      _cachedPrefixer = {
+        prefix: InlineStylePrefixer.prefixAll,
+        prefixedKeyframes: 'keyframes'
+      };
+    } else {
+      _cachedPrefixer = new InlineStylePrefixer({userAgent: actualUserAgent});
+    }
     _lastUserAgent = actualUserAgent;
   }
   return _cachedPrefixer;
