@@ -4,7 +4,7 @@ import Radium, {StyleRoot} from 'index';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
-import {expectCSS, getRenderOutput, getElement} from 'test-helpers';
+import {expectColor, expectCSS, getRenderOutput, getElement} from 'test-helpers';
 
 describe('Media query tests', () => {
   beforeEach(() => {
@@ -226,10 +226,10 @@ describe('Media query tests', () => {
   });
 
   it('doesn\'t error on unmount', () => {
-    const matchMedia = sinon.spy(() => ({
+    const matchMedia = () => ({
       addListener: () => {},
       matches: true
-    }));
+    });
 
     const ChildComponent = Radium(() =>
       <span style={{'@media print': {color: 'black'}}} />
@@ -243,5 +243,40 @@ describe('Media query tests', () => {
 
     const output = TestUtils.renderIntoDocument(<TestComponent />);
     ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(output).parentNode);
+  });
+
+  it('respects ordering', () => {
+    const matchMedia = () => ({
+      addListener: () => {},
+      matches: true,
+    });
+
+    const styles =
+
+    // Use small values for media queries so they all pass.
+    const ChildComponent = Radium(() =>
+      <div>
+        <span style={[{
+      		'@media (min-width: 10px)': {background: 'green'},
+      		'@media (min-width: 20px)': {color: 'blue'},
+        }, {
+          '@media (min-width: 10px)': {color: 'white'},
+        }]} />
+      </div>
+    );
+
+    const TestComponent = Radium({matchMedia})(() =>
+      <StyleRoot>
+        <ChildComponent />
+      </StyleRoot>
+    );
+
+    const root = document.createElement('div');
+    document.body.appendChild(root);
+    ReactDOM.render(<TestComponent />, root);
+    const span = document.getElementsByTagName('span')[0];
+    console.log(span.className, document.getElementsByTagName('style')[0].innerText);
+    const computedStyle = window.getComputedStyle(span);
+    expectColor(computedStyle.getPropertyValue('color'), 'white');
   });
 });

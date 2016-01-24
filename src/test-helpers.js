@@ -1,3 +1,4 @@
+import Color from 'color';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
 
@@ -23,4 +24,8 @@ export function expectCSS(styleElement, css) {
   // Also allows us to write our expected CSS cleanly, without worring about the
   // format of the actual output.
   expect(cleanCSS(styleElement.innerText)).to.equal(cleanCSS(css));
+}
+
+export function expectColor(actual, expected) {
+  expect(Color(actual).hexString()).to.equal(Color(expected).hexString());
 }
