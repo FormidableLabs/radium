@@ -32,7 +32,7 @@ export function mergeStyles(styles) {
       // earlier.
       if (key.indexOf('@media') === 0) {
         let newKey = key;
-        while (true) {
+        while (true) { // eslint-disable-line no-constant-condition
           newKey += ' ';
           if (!result[newKey]) {
             result[newKey] = style[key];

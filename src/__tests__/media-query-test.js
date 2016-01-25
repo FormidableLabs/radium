@@ -248,19 +248,17 @@ describe('Media query tests', () => {
   it('respects ordering', () => {
     const matchMedia = () => ({
       addListener: () => {},
-      matches: true,
+      matches: true
     });
-
-    const styles =
 
     // Use small values for media queries so they all pass.
     const ChildComponent = Radium(() =>
       <div>
         <span style={[{
-      		'@media (min-width: 10px)': {background: 'green'},
-      		'@media (min-width: 20px)': {color: 'blue'},
+          '@media (min-width: 10px)': {background: 'green'},
+          '@media (min-width: 20px)': {color: 'blue'}
         }, {
-          '@media (min-width: 10px)': {color: 'white'},
+          '@media (min-width: 10px)': {color: 'white'}
         }]} />
       </div>
     );
@@ -275,8 +273,8 @@ describe('Media query tests', () => {
     document.body.appendChild(root);
     ReactDOM.render(<TestComponent />, root);
     const span = document.getElementsByTagName('span')[0];
-    console.log(span.className, document.getElementsByTagName('style')[0].innerText);
     const computedStyle = window.getComputedStyle(span);
+
     expectColor(computedStyle.getPropertyValue('color'), 'white');
   });
 });
