@@ -78,7 +78,7 @@
     "karma-sinon-chai": "^1.0.0",
     "karma-webpack": "^1.7.0",
     "lodash": "^3.9.3",
-    "mocha": "^2.2.5",
+    "mocha": "^2.4.1",
     "node-libs-browser": "^0.5.2",
     "nodemon": "^1.4.1",
     "object-assign": "^4.0.1",
