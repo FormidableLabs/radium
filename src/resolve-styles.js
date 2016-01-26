@@ -220,6 +220,10 @@ const _runPlugins = function({
     const styleKeeper = component._radiumStyleKeeper ||
       component.context._radiumStyleKeeper;
     if (!styleKeeper) {
+      if (__isTestModeEnabled) {
+        return {remove() {}};
+      }
+
       throw new Error(
         'To use plugins requiring `addCSS` (e.g. keyframes, media queries), ' +
           'please wrap your application in the StyleRoot component. Component ' +
@@ -357,8 +361,14 @@ resolveStyles = function(
 };
 
 // Only for use by tests
-resolveStyles.__clearStateForTests = function() {
-  globalState = {};
-};
+let __isTestModeEnabled = false;
+if (process.env.NODE_ENV !== 'production') {
+  resolveStyles.__clearStateForTests = function() {
+    globalState = {};
+  };
+  resolveStyles.__setTestMode = function(isEnabled) {
+    __isTestModeEnabled = isEnabled;
+  };
+}
 
 export default resolveStyles;
