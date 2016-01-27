@@ -86,7 +86,7 @@
     "react": "^0.14.0",
     "react-addons-test-utils": "^0.14.0",
     "react-dom": "^0.14.0",
-    "sinon": "^1.15.3",
+    "sinon": "^1.17.3",
     "sinon-chai": "^2.8.0",
     "webpack": "^1.9.11",
     "webpack-dev-server": "^1.9.0"
