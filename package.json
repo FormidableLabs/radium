@@ -48,7 +48,6 @@
     "babel-preset-stage-1": "^6.3.13",
     "exenv": "^1.2.0",
     "inline-style-prefixer": "^0.6.2",
-    "is-plain-object": "^2.0.1",
     "rimraf": "^2.4.0"
   },
   "devDependencies": {

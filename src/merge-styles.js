@@ -1,9 +1,8 @@
-import isPlainObject from 'is-plain-object';
-
 export function isNestedStyle(value) {
   // Don't merge objects overriding toString, since they should be converted
   // to string values.
-  return isPlainObject(value) && value.toString === Object.prototype.toString;
+  return value && value.constructor === Object &&
+    value.toString === Object.prototype.toString;
 }
 
 // Merge style objects. Deep merge plain object values.
