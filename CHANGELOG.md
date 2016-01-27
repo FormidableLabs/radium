@@ -1,5 +1,21 @@
 # Radium Changelog
 
+## 0.16.5 (January 27, 2016)
+
+### Bug Fixes
+- Don't merge media query styles, fixes #550
+- Don't add className if empty, fixes #539
+
+### Improvements
+- Passing `'all'` as the `userAgent` will add all prefixes, useful for caching server-rendered pages, thanks @oliviertassinari (this applies to inline styles and style rendered as CSS, but does not yet include adding all the prefixed versions of `keyframes`)
+- Add support for `:visited` styles:
+```jsx
+const url = 'https://github.com/formidablelabs/radium';
+const VisitedLink = Radium(() =>
+  <a href={url} style={{color: 'gray', ':visited': {color: 'black'}}}>{url}</a>
+);
+```
+
 ## 0.16.4 (January 23, 2016)
 
 ### Bug Fixes
