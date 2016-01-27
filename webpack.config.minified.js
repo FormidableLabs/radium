@@ -1,7 +1,7 @@
 var webpack = require('webpack');
-var _ = require('lodash');
+var merge = require('lodash.merge');
 
-module.exports = _.merge({}, require('./webpack.config.js'), {
+module.exports = merge({}, require('./webpack.config.js'), {
   output: {
     filename: 'radium.min.js'
   },
