@@ -221,6 +221,8 @@ function ConfiguredRadium(component) {
       Radium.Plugins.checkProps,
       Radium.Plugins.resolveMediaQueries,
       Radium.Plugins.resolveInteractionStyles,
+      Radium.Plugins.keyframes,
+      Radium.Plugins.visited,
       Radium.Plugins.prefix,
       styleLogger,
       Radium.Plugins.checkProps,

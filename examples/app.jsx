@@ -66,6 +66,13 @@ var Spinner = React.createClass({
 });
 Spinner = Radium(Spinner);
 
+const VisitedLink = Radium(() =>
+  <a
+    href="https://github.com/formidablelabs/radium"
+    style={{color: 'gray', ':visited': {color: 'black'}}}>
+    https://github.com/formidablelabs/radium
+  </a>
+);
 
 var App = React.createClass({
   _remount: function() {
@@ -83,6 +90,8 @@ var App = React.createClass({
 
     return (
       <StyleRoot>
+        <VisitedLink />
+
         <p /><HoverMessage />
 
         <p /><TwoSquares />

@@ -293,4 +293,21 @@ describe('Media query tests', () => {
     const span = getElement(output, 'span');
     expect(span.className).to.be.empty;
   });
+
+  it('retain original className', () => {
+    const ChildComponent = Radium(() =>
+      <span className="original" style={{'@media print': {color: 'black'}}} />
+    );
+
+    const TestComponent = Radium(() =>
+      <StyleRoot>
+        <ChildComponent />
+      </StyleRoot>
+    );
+
+    const output = TestUtils.renderIntoDocument(<TestComponent />);
+
+    const span = getElement(output, 'span');
+    expect(span.className).to.contain(' original');
+  });
 });

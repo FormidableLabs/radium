@@ -9,6 +9,7 @@ import mergeStyleArrayPlugin from './merge-style-array-plugin';
 import prefixPlugin from './prefix-plugin';
 import resolveInteractionStylesPlugin from './resolve-interaction-styles-plugin';
 import resolveMediaQueriesPlugin from './resolve-media-queries-plugin';
+import visitedPlugin from './visited-plugin';
 
 export type PluginConfig = {
   // Adds a chunk of css to the root style sheet
@@ -94,5 +95,6 @@ export default {
   mergeStyleArray: mergeStyleArrayPlugin,
   prefix: prefixPlugin,
   resolveInteractionStyles: resolveInteractionStylesPlugin,
-  resolveMediaQueries: resolveMediaQueriesPlugin
+  resolveMediaQueries: resolveMediaQueriesPlugin,
+  visited: visitedPlugin
 };
