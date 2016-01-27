@@ -3,9 +3,6 @@
 import type {MatchMediaType} from '../config';
 import type {PluginConfig, PluginResult} from './index';
 
-import appendImportantToEachValue from '../append-important-to-each-value';
-import hash from '../hash';
-
 let _windowMatchMedia;
 function _getWindowMatchMedia(ExecutionEnvironment) {
   if (_windowMatchMedia === undefined) {
@@ -47,7 +44,9 @@ function _removeMediaQueries(style) {
 
 function _topLevelRulesToCSS({
   addCSS,
+  appendImportantToEachValue,
   cssRuleSetToString,
+  hash,
   isNestedStyle,
   style,
   userAgent
@@ -113,10 +112,12 @@ function _subscribeToMediaQuery({
 export default function resolveMediaQueries({
   ExecutionEnvironment,
   addCSS,
+  appendImportantToEachValue,
   config,
   cssRuleSetToString,
   getComponentField,
   getGlobalState,
+  hash,
   isNestedStyle,
   mergeStyles,
   props,
@@ -126,7 +127,9 @@ export default function resolveMediaQueries({
   let newStyle = _removeMediaQueries(style);
   const mediaQueryClassNames = _topLevelRulesToCSS({
     addCSS,
+    appendImportantToEachValue,
     cssRuleSetToString,
+    hash,
     isNestedStyle,
     style,
     userAgent: config.userAgent

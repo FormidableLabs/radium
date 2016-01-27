@@ -333,11 +333,21 @@ type PluginConfig = {
   // Adds a chunk of css to the root style sheet
   addCSS: (css: string) => {remove: () => void},
 
+  // Helper function when adding CSS
+  appendImportantToEachValue: (style: Object) => Object;
+
   // May not be readable if code has been minified
   componentName: string,
 
   // The Radium configuration
   config: Config,
+
+  // Converts an object of CSS rules to a string, for use with addCSS
+  cssRuleSetToString: (
+    selector: string,
+    rules: Object,
+    userAgent: ?string,
+  ) => string,
 
   // Retrieve the value of a field on the component
   getComponentField: (key: string) => any,
@@ -350,6 +360,12 @@ type PluginConfig = {
   // Requires the element to have a unique key or ref or for an element key
   // to be passed in.
   getState: (stateKey: string, elementKey?: string) => any,
+
+  // Helper function when adding CSS
+  hash: (data: string) => string,
+
+  // Returns true if the value is a nested style object
+  isNestedStyle: (value: any) => bool,
 
   // Access to the mergeStyles utility
   mergeStyles: (styles: Array<Object>) => Object,

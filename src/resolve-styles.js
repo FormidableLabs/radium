@@ -2,9 +2,11 @@
 
 import type {Config} from './config';
 
+import appendImportantToEachValue from './append-important-to-each-value';
 import cssRuleSetToString from './css-rule-set-to-string';
 import getState from './get-state';
 import getStateKey from './get-state-key';
+import hash from './hash';
 import {isNestedStyle, mergeStyles} from './merge-styles';
 import Plugins from './plugins/';
 
@@ -233,12 +235,14 @@ const _runPlugins = function({
     const result = plugin({
       ExecutionEnvironment,
       addCSS,
+      appendImportantToEachValue,
       componentName,
       config,
       cssRuleSetToString,
       getComponentField,
       getGlobalState,
       getState: componentGetState,
+      hash,
       mergeStyles,
       props: newProps,
       setState,
