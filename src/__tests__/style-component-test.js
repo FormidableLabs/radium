@@ -50,6 +50,25 @@ describe('<Style> component', () => {
     `);
   });
 
+  it('add all the prefixes when we ask for', () => {
+    const output = TestUtils.renderIntoDocument(
+      <Style
+        radiumConfig={{userAgent: 'all'}}
+        rules={{div: {transform: 'rotate(90)'}}}
+      />
+    );
+
+    const style = getElement(output, 'style');
+    expectCSS(style, `
+      div{
+        transform:rotate(90);
+        -webkit-transform:rotate(90);
+        -moz-transform:rotate(90);
+        -ms-transform:rotate(90);
+      }
+    `);
+  });
+
   it('adds scopeSelector to each selector', () => {
     const output = TestUtils.renderIntoDocument(
       <Style
