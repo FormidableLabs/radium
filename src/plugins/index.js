@@ -69,17 +69,17 @@ export type PluginConfig = {
 export type PluginResult = ?{
   // Merged into the component directly. Useful for storing things for which you
   // don't need to re-render, event subscriptions, for instance.
-  componentFields?: Object,
+  componentFields?: ?Object,
 
   // Merged into a Radium controlled global state object. Use this instead of
   // module level state for ease of clearing state between tests.
-  globalState?: Object,
+  globalState?: ?Object,
 
   // Merged into the rendered element's props.
-  props?: Object,
+  props?: ?Object,
 
   // Replaces (not merged into) the rendered element's style property.
-  style?: Object,
+  style?: ?Object,
 };
 
 export default {

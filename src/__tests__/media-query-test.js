@@ -212,13 +212,12 @@ describe('Media query tests', () => {
     const output = TestUtils.renderIntoDocument(<TestComponent />);
 
     const span = getElement(output, 'span');
-    const className = span.className.trim();
-    expect(className).to.not.be.empty;
+    expect(span.className).to.not.be.empty;
 
     const style = getElement(output, 'style');
     expectCSS(style, `
       @media print{
-        .${className}{
+        .${span.className}{
           color:black !important;
         }
       }
@@ -276,5 +275,22 @@ describe('Media query tests', () => {
     const computedStyle = window.getComputedStyle(span);
 
     expectColor(computedStyle.getPropertyValue('color'), 'white');
+  });
+
+  it('doesn\'t add className if no media styles', () => {
+    const ChildComponent = Radium(() =>
+      <span style={{color: 'black'}} />
+    );
+
+    const TestComponent = Radium(() =>
+      <StyleRoot>
+        <ChildComponent />
+      </StyleRoot>
+    );
+
+    const output = TestUtils.renderIntoDocument(<TestComponent />);
+
+    const span = getElement(output, 'span');
+    expect(span.className).to.be.empty;
   });
 });

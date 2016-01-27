@@ -79,7 +79,7 @@ function _topLevelRulesToCSS({
 
     addCSS(css);
 
-    className += ' ' + mediaQueryClassName;
+    className += (className ? ' ' : '') + mediaQueryClassName;
   });
   return className;
 }
@@ -110,7 +110,6 @@ function _subscribeToMediaQuery({
   return mql;
 }
 
-
 export default function resolveMediaQueries({
   ExecutionEnvironment,
   addCSS,
@@ -133,9 +132,10 @@ export default function resolveMediaQueries({
     userAgent: config.userAgent
   });
 
-  const newProps = {
-    className: mediaQueryClassNames + ' ' + (props.className || '')
-  };
+  const newProps = mediaQueryClassNames ? {
+    className: mediaQueryClassNames +
+      (props.className ? ' ' + props.className : '')
+  } : null;
 
   const matchMedia: ?MatchMediaType = config.matchMedia ||
     _getWindowMatchMedia(ExecutionEnvironment);
