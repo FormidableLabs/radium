@@ -13,11 +13,14 @@
 
 var React = require('react');
 
+var CommonStyles = require('./common.styles');
 var Button = require('./components/button.jsx');
 var ComputedWell = require('./components/computed-well.jsx');
 var Radium = require('../src');
 
 var {Style, StyleRoot, PrintStyleSheet} = Radium;
+
+var {resetListStyle, resetBoxModel} = CommonStyles;
 
 //
 // Radium with ES6 class syntax
@@ -121,6 +124,10 @@ var App = React.createClass({
           <div style={{clear:'both'}} />
         </div>
 
+        <ul style={listStyle}>
+          <li>Create and use reusable rules with the help of spread operators.</li>
+        </ul>
+
         <Style
           rules={{
               body: {
@@ -213,6 +220,12 @@ var spinnerStyles = {
     height: '4px',
     margin: '0 auto',
   }
+};
+
+var listStyle = {
+  ...resetListStyle,
+  ...resetBoxModel,
+  margin: 15
 };
 
 module.exports = App;
