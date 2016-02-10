@@ -48,7 +48,8 @@
     "babel-preset-stage-1": "^6.3.13",
     "exenv": "^1.2.0",
     "inline-style-prefixer": "^0.6.2",
-    "rimraf": "^2.4.0"
+    "rimraf": "^2.4.0",
+    "sort-media-queries": "^0.2.2"
   },
   "devDependencies": {
     "babel-eslint": "^4.1.6",

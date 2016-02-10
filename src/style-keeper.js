@@ -1,5 +1,7 @@
 /* @flow */
 
+import smq from 'sort-media-queries';
+
 export default class StyleKeeper {
   _userAgent: string;
   _listeners: Array<() => void>;
@@ -43,7 +45,7 @@ export default class StyleKeeper {
   }
 
   getCSS(): string {
-    return Object.keys(this._cssSet).join('\n');
+    return smq(Object.keys(this._cssSet)).join('\n');
   }
 
   _emitChange() {

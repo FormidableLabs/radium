@@ -274,7 +274,7 @@ describe('Media query tests', () => {
     const span = document.getElementsByTagName('span')[0];
     const computedStyle = window.getComputedStyle(span);
 
-    expectColor(computedStyle.getPropertyValue('color'), 'white');
+    expectColor(computedStyle.getPropertyValue('color'), 'blue');
   });
 
   it('doesn\'t add className if no media styles', () => {
