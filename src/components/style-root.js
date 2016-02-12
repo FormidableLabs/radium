@@ -13,7 +13,11 @@ function _getStyleKeeper(instance): StyleKeeper {
     ) || (
       instance.context._radiumConfig && instance.context._radiumConfig.userAgent
     );
-    instance._radiumStyleKeeper = new StyleKeeper(userAgent);
+
+    // Use a custom StyleKeeper if provided in props
+    instance._radiumStyleKeeper = instance.props.styleKeeper
+      ? new instance.props.styleKeeper(userAgent)
+      : new StyleKeeper(userAgent);
   }
 
   return instance._radiumStyleKeeper;
@@ -47,6 +51,10 @@ StyleRoot.contextTypes = {
 
 StyleRoot.childContextTypes = {
   _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
+};
+
+StyleRoot.propTypes = {
+  styleKeeper: PropTypes.func
 };
 
 StyleRoot = Enhancer(StyleRoot);

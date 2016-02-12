@@ -6,6 +6,8 @@ import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
 import {getRenderOutput, getElement} from 'test-helpers';
+import StyleRoot from 'components/style-root';
+import StyleKeeper from 'style-keeper';
 
 describe('Radium blackbox tests', () => {
   beforeEach(() => {
@@ -817,6 +819,54 @@ describe('Radium blackbox tests', () => {
       );
 
       expect(plugin).to.have.callCount(2);
+    });
+  });
+
+  describe('StyleRoot', () => {
+    it('accepts a custom StyleKeeper class as a prop, ' +
+      'correctly calling overridden methods', () => {
+      class CustomStyleKeeper extends StyleKeeper {
+        /* eslint-disable no-unused-vars */
+        addCSS(css: string, options: ?Object): {remove: () => void} {
+          this._cssSet.rubbish = true;
+          this._emitChange();
+          return {
+            remove: () => {}
+          };
+        }
+        /* eslint-enable no-unused-vars */
+      }
+
+      @Radium
+      class TestComponent extends Component {
+        render() {
+          return (
+            <div style={[
+              {
+                '@media (min-width: 10px)': {
+                  color: 'blue'
+                }
+              },
+              {
+                '@media (min-width: 20px)': {
+                  backgroudn: 'red'
+                }
+              }
+            ]} />
+          );
+        }
+      }
+
+      const grid = (
+        <StyleRoot styleKeeper={CustomStyleKeeper}>
+          <TestComponent />
+        </StyleRoot>
+      );
+      const root = document.createElement('div');
+      document.body.appendChild(root);
+      ReactDOM.render(grid, root);
+      const style = root.getElementsByTagName('style')[0];
+      expect(style).to.have.deep.property('innerHTML', 'rubbish');
     });
   });
 });

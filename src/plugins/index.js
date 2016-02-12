@@ -13,7 +13,7 @@ import visitedPlugin from './visited-plugin';
 
 export type PluginConfig = {
   // Adds a chunk of css to the root style sheet
-  addCSS: (css: string) => {remove: () => void},
+  addCSS: (css: string, options: ?Object) => {remove: () => void},
 
   // Helper function when adding CSS
   appendImportantToEachValue: (style: Object) => Object;

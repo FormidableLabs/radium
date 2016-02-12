@@ -216,7 +216,7 @@ const _runPlugins = function({
   const setState = (stateKey, value, elementKey) =>
     _setStyleState(component, elementKey || getKey(), stateKey, value);
 
-  const addCSS = css => {
+  const addCSS = (css, options) => {
     const styleKeeper = component._radiumStyleKeeper ||
       component.context._radiumStyleKeeper;
     if (!styleKeeper) {
@@ -227,7 +227,7 @@ const _runPlugins = function({
       );
     }
 
-    return styleKeeper.addCSS(css);
+    return styleKeeper.addCSS(css, options);
   };
 
   let newStyle = props.style;
