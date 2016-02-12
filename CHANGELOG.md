@@ -1,5 +1,10 @@
 # Radium Changelog
 
+## 0.16.6 (February 9, 2016)
+
+### Bug Fixes
+- The `lib/` directory did not get built property in 0.16.6. `lib/` now contains all changes from 0.16.5.
+
 ## 0.16.5 (January 27, 2016)
 
 ### Bug Fixes
