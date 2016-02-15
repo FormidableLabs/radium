@@ -81,7 +81,7 @@
     "node-libs-browser": "^0.5.2",
     "nodemon": "^1.4.1",
     "object-assign": "^4.0.1",
-    "phantomjs": "^1.9.17",
+    "phantomjs": "^2.1.2",
     "react": "^0.14.0",
     "react-addons-test-utils": "^0.14.0",
     "react-dom": "^0.14.0",
