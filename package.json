@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^4.1.6",
-    "babel-loader": "^6.2.0",
+    "babel-loader": "^6.2.3",
     "chai": "^3.0.0",
     "color": "^0.11.1",
     "concurrently": "^1.0.0",
