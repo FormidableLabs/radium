@@ -8,10 +8,6 @@ import TestUtils from 'react-addons-test-utils';
 import {getRenderOutput, getElement} from 'test-helpers';
 
 describe('Radium blackbox tests', () => {
-  beforeEach(() => {
-    Radium.__clearStateForTests();
-  });
-
   it('merges styles', () => {
     @Radium
     class TestComponent extends Component {
@@ -630,36 +626,23 @@ describe('Radium blackbox tests', () => {
     sinon.stub(console, 'error');
     sinon.stub(console, 'warn');
 
-    const addListener = sinon.spy();
-    const mockMatchMedia = function() {
-      return {
-        matches: true,
-        addListener: addListener,
-        removeListener() {}
-      };
+    let setStateCaptured;
+    const plugin = function({setState}) {
+      setStateCaptured = setState;
     };
 
-    @Radium({matchMedia: mockMatchMedia})
+    @Radium({plugins: [plugin]})
     class TestComponent extends Component {
       render() {
-        return (
-          <div style={{
-            '@media (min-width: 600px)': {':hover': {color: 'blue'}}
-          }} />
-        );
+        return <div style={{color: 'blue'}} />;
       }
     }
 
-    const output = TestUtils.renderIntoDocument(
-      <TestComponent/>
-    );
-
-    expect(addListener).to.have.been.called;
+    const output = TestUtils.renderIntoDocument(<TestComponent/>);
 
     ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(output).parentNode);
 
-    const listener = addListener.lastCall.args[0];
-    listener(mockMatchMedia);
+    setStateCaptured('whatever');
 
     expect(console.error).not.to.have.been.called;
     expect(console.warn).not.to.have.been.called;

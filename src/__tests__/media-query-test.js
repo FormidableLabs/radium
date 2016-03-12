@@ -8,7 +8,11 @@ import {expectColor, expectCSS, getRenderOutput, getElement} from 'test-helpers'
 
 describe('Media query tests', () => {
   beforeEach(() => {
-    Radium.__clearStateForTests();
+    Radium.TestMode.clearState();
+  });
+
+  afterEach(() => {
+    Radium.TestMode.disable();
   });
 
   it('listens for media queries', () => {
@@ -245,24 +249,17 @@ describe('Media query tests', () => {
   });
 
   it('respects ordering', () => {
-    const matchMedia = () => ({
-      addListener: () => {},
-      matches: true
-    });
-
     // Use small values for media queries so they all pass.
     const ChildComponent = Radium(() =>
-      <div>
-        <span style={[{
-          '@media (min-width: 10px)': {background: 'green'},
-          '@media (min-width: 20px)': {color: 'blue'}
-        }, {
-          '@media (min-width: 10px)': {color: 'white'}
-        }]} />
-      </div>
+      <span style={[{
+        '@media (min-width: 10px)': {background: 'green'},
+        '@media (min-width: 20px)': {color: 'blue'}
+      }, {
+        '@media (min-width: 10px)': {color: 'white'}
+      }]} />
     );
 
-    const TestComponent = Radium({matchMedia})(() =>
+    const TestComponent = Radium(() =>
       <StyleRoot>
         <ChildComponent />
       </StyleRoot>
@@ -294,7 +291,7 @@ describe('Media query tests', () => {
     expect(span.className).to.be.empty;
   });
 
-  it('retain original className', () => {
+  it('retains original className', () => {
     const ChildComponent = Radium(() =>
       <span className="original" style={{'@media print': {color: 'black'}}} />
     );
@@ -310,4 +307,65 @@ describe('Media query tests', () => {
     const span = getElement(output, 'span');
     expect(span.className).to.contain(' original');
   });
+
+  it('throws without StyleRoot', () => {
+    const TestComponent = Radium(() =>
+      <span style={{'@media (min-width: 10px)': {background: 'green'}}} />
+    );
+    expect(() => TestUtils.renderIntoDocument(<TestComponent />)).to.throw();
+  });
+
+  it('doesn\'t throw without StyleRoot when in test mode', () => {
+    Radium.TestMode.enable();
+    const TestComponent = Radium(() =>
+      <div>
+        <span style={{'@media (min-width: 10px)': {background: 'green'}}} />
+      </div>
+    );
+    expect(() => TestUtils.renderIntoDocument(<TestComponent/>)).not.to.throw();
+  });
+
+  /* eslint-disable no-console */
+  it('doesn\'t try to setState if not mounted', () => {
+    sinon.stub(console, 'error');
+    sinon.stub(console, 'warn');
+
+    const addListener = sinon.spy();
+    const mockMatchMedia = function() {
+      return {
+        matches: true,
+        addListener: addListener,
+        removeListener() {}
+      };
+    };
+
+    @Radium({matchMedia: mockMatchMedia})
+    class TestComponent extends Component {
+      render() {
+        return (
+          <div style={{
+            '@media (min-width: 600px)': {':hover': {color: 'blue'}}
+          }} />
+        );
+      }
+    }
+
+    const output = TestUtils.renderIntoDocument(
+      <TestComponent/>
+    );
+
+    expect(addListener).to.have.been.called;
+
+    ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(output).parentNode);
+
+    const listener = addListener.lastCall.args[0];
+    listener(mockMatchMedia);
+
+    expect(console.error).not.to.have.been.called;
+    expect(console.warn).not.to.have.been.called;
+
+    console.error.restore();
+    console.warn.restore();
+  });
+  /* eslint-enable no-console */
 });

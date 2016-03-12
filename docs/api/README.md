@@ -12,6 +12,7 @@
 - [Plugins](#plugins)
 - [Style Component](#style-component)
 - [StyleRoot Component](#styleroot-component)
+- [TestMode](#testmode)
 
 
 ## Sample Style Object
@@ -546,3 +547,11 @@ class App extends React.Component {
   }
 }  
 ```
+
+## TestMode
+
+Directly off the main Radium object you can access `TestMode`, used to control internal Radium state and behavior during tests. It is only available in non-production builds.
+
+- `Radium.TestMode.clearState()` - clears the global Radium state, currently only the cache of media query listeners.
+- `Radium.TestMode.enable()` - enables "test mode", which doesn’t throw or warn as much. Currently it just doesn’t throw when using addCSS without StyleRoot.
+- `Radium.TestMode.disable()` - disables "test mode"
