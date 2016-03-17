@@ -43,12 +43,23 @@ const resolveInteractionStyles = function(config: PluginConfig): PluginResult {
   }
 
   if (style[':active']) {
-    const existingOnMouseDown = props.onMouseDown;
-    newProps.onMouseDown = function(e) {
-      existingOnMouseDown && existingOnMouseDown(e);
-      newComponentFields._lastMouseDown = Date.now();
-      setState(':active', 'viamousedown');
-    };
+    // On mobile listen to touch events to determine whether or not to apply the active styles.
+    if (MouseUpListener.useTouchEvents) {
+      const existingOnTouchStart = props.onTouchStart;
+      newProps.onTouchStart = function(e) {
+        existingOnTouchStart && existingOnTouchStart(e);
+        newComponentFields._lastTouchStart = Date.now();
+        setState(':active', 'viatouchstart');
+      };
+    } else {
+      // Otherwise, listen to mouse down.
+      const existingOnMouseDown = props.onMouseDown;
+      newProps.onMouseDown = function(e) {
+        existingOnMouseDown && existingOnMouseDown(e);
+        newComponentFields._lastMouseDown = Date.now();
+        setState(':active', 'viamousedown');
+      };
+    }
 
     const existingOnKeyDown = props.onKeyDown;
     newProps.onKeyDown = function(e) {
@@ -89,7 +100,8 @@ const resolveInteractionStyles = function(config: PluginConfig): PluginResult {
     newComponentFields._radiumMouseUpListener = MouseUpListener.subscribe(
       () => {
         Object.keys(getComponentField('state')._radiumStyleState).forEach(key => {
-          if (getState(':active', key) === 'viamousedown') {
+          if (getState(':active', key) === 'viamousedown' ||
+            getState(':active', key) === 'viatouchstart') {
             setState(':active', false, key);
           }
         });
