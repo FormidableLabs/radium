@@ -1,5 +1,9 @@
 /* @flow */
 
+import MobileDetect from 'mobile-detect';
+
+const isMobile = !!(new MobileDetect(window.navigator.userAgent)).mobile();
+
 const _callbacks = [];
 let _mouseUpListenerIsActive = false;
 
@@ -15,7 +19,8 @@ const subscribe = function(callback: () => void): {remove: () => void} {
   }
 
   if (!_mouseUpListenerIsActive) {
-    window.addEventListener('mouseup', _handleMouseUp);
+    // On mobile listen to touch end instead of mouse up.
+    window.addEventListener(isMobile ? 'touchend' : 'mouseup', _handleMouseUp);
     _mouseUpListenerIsActive = true;
   }
 
@@ -25,7 +30,7 @@ const subscribe = function(callback: () => void): {remove: () => void} {
       _callbacks.splice(index, 1);
 
       if (_callbacks.length === 0 && _mouseUpListenerIsActive) {
-        window.removeEventListener('mouseup', _handleMouseUp);
+        window.removeEventListener(isMobile ? 'touchend' : 'mouseup', _handleMouseUp);
         _mouseUpListenerIsActive = false;
       }
     }
@@ -33,6 +38,7 @@ const subscribe = function(callback: () => void): {remove: () => void} {
 };
 
 export default {
+  useTouchEvents: isMobile,
   subscribe: subscribe,
   __triggerForTests: _handleMouseUp
 };
