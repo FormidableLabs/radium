@@ -16,6 +16,7 @@ import React from 'react';
 const DEFAULT_CONFIG = {
   plugins: [
     Plugins.mergeStyleArray,
+    Plugins.styleID,
     Plugins.checkProps,
     Plugins.resolveMediaQueries,
     Plugins.resolveInteractionStyles,

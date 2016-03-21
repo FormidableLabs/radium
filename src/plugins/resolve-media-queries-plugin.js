@@ -48,6 +48,7 @@ function _topLevelRulesToCSS({
   cssRuleSetToString,
   hash,
   isNestedStyle,
+  props,
   style,
   userAgent
 }) {
@@ -73,7 +74,7 @@ function _topLevelRulesToCSS({
     );
 
     // CSS classes cannot start with a number
-    const mediaQueryClassName = 'rmq-' + hash(query + ruleCSS);
+    const mediaQueryClassName = 'rmq-' + props.styleID + '-' + hash(query + ruleCSS);
     const css = query + '{ .' + mediaQueryClassName + ruleCSS + '}';
 
     addCSS(css);
@@ -131,6 +132,7 @@ export default function resolveMediaQueries({
     cssRuleSetToString,
     hash,
     isNestedStyle,
+    props,
     style,
     userAgent: config.userAgent
   });

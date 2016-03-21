@@ -9,6 +9,7 @@ import mergeStyleArrayPlugin from './merge-style-array-plugin';
 import prefixPlugin from './prefix-plugin';
 import resolveInteractionStylesPlugin from './resolve-interaction-styles-plugin';
 import resolveMediaQueriesPlugin from './resolve-media-queries-plugin';
+import styleIDPlugin from './style-id-plugin';
 import visitedPlugin from './visited-plugin';
 
 export type PluginConfig = {
@@ -96,5 +97,6 @@ export default {
   prefix: prefixPlugin,
   resolveInteractionStyles: resolveInteractionStylesPlugin,
   resolveMediaQueries: resolveMediaQueriesPlugin,
+  styleID: styleIDPlugin,
   visited: visitedPlugin
 };
