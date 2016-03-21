@@ -216,19 +216,34 @@ const _runPlugins = function({
   const setState = (stateKey, value, elementKey) =>
     _setStyleState(component, elementKey || getKey(), stateKey, value);
 
+  const styleRootError = 'To use plugins requiring `addCSS` (e.g. keyframes, media queries), ' +
+    'please wrap your application in the StyleRoot component. Component ' +
+    'name: `' + componentName + '`.';
+
+  const styleId = () => {
+    const styleKeeper = component._radiumStyleKeeper ||
+      component.context._radiumStyleKeeper;
+
+    if (!styleKeeper) {
+      if (__isTestModeEnabled) {
+        return 0;
+      }
+      throw new Error(styleRootError);
+    }
+
+    return styleKeeper._counter;
+  };
+
   const addCSS = css => {
     const styleKeeper = component._radiumStyleKeeper ||
       component.context._radiumStyleKeeper;
+
     if (!styleKeeper) {
       if (__isTestModeEnabled) {
         return {remove() {}};
       }
 
-      throw new Error(
-        'To use plugins requiring `addCSS` (e.g. keyframes, media queries), ' +
-          'please wrap your application in the StyleRoot component. Component ' +
-          'name: `' + componentName + '`.',
-      );
+      throw new Error(styleRootError);
     }
 
     return styleKeeper.addCSS(css);
@@ -252,7 +267,8 @@ const _runPlugins = function({
       props: newProps,
       setState,
       isNestedStyle,
-      style: newStyle
+      style: newStyle,
+      styleId
     }) || {};
 
     newStyle = result.style || newStyle;

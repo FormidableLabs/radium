@@ -66,6 +66,9 @@ export type PluginConfig = {
   // separate from `props` for ease of use.
   style: Object,
 
+  // The StyleKeeper counter for unique style IDs.
+  styleId: () => number;
+
   // uses the exenv npm module
   ExecutionEnvironment: {
     canUseEventListeners: bool,

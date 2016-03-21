@@ -4,11 +4,13 @@ export default class StyleKeeper {
   _userAgent: string;
   _listeners: Array<() => void>;
   _cssSet: {[id: string]: bool};
+  _counter: number;
 
   constructor(userAgent: string) {
     this._userAgent = userAgent;
     this._listeners = [];
     this._cssSet = {};
+    this._counter = 0;
   }
 
   subscribe(listener: () => void): {remove: () => void} {
@@ -30,6 +32,7 @@ export default class StyleKeeper {
   addCSS(css: string): {remove: () => void} {
     if (!this._cssSet[css]) {
       this._cssSet[css] = true;
+      this._counter++;
       this._emitChange();
     }
 
