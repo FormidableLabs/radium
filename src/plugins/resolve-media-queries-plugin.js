@@ -45,7 +45,6 @@ function _removeMediaQueries(style) {
 function _topLevelRulesToCSS({
   addCSS,
   appendImportantToEachValue,
-  styleId,
   cssRuleSetToString,
   hash,
   isNestedStyle,
@@ -74,7 +73,7 @@ function _topLevelRulesToCSS({
     );
 
     // CSS classes cannot start with a number
-    const mediaQueryClassName = `rmq-${styleId()}-${hash(query + ruleCSS)}`;
+    const mediaQueryClassName = 'rmq-' + hash(query + ruleCSS);
     const css = query + '{ .' + mediaQueryClassName + ruleCSS + '}';
 
     addCSS(css);
@@ -115,7 +114,6 @@ export default function resolveMediaQueries({
   addCSS,
   appendImportantToEachValue,
   config,
-  styleId,
   cssRuleSetToString,
   getComponentField,
   getGlobalState,
@@ -130,7 +128,6 @@ export default function resolveMediaQueries({
   const mediaQueryClassNames = _topLevelRulesToCSS({
     addCSS,
     appendImportantToEachValue,
-    styleId,
     cssRuleSetToString,
     hash,
     isNestedStyle,
