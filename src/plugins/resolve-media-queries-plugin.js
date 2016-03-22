@@ -48,8 +48,8 @@ function _topLevelRulesToCSS({
   cssRuleSetToString,
   hash,
   isNestedStyle,
-  props,
   style,
+  styleID,
   userAgent
 }) {
   let className = '';
@@ -74,7 +74,7 @@ function _topLevelRulesToCSS({
     );
 
     // CSS classes cannot start with a number
-    const mediaQueryClassName = 'rmq-' + props.styleID + '-' + hash(query + ruleCSS);
+    const mediaQueryClassName = 'rmq-' + styleID + '-' + hash(query + ruleCSS);
     const css = query + '{ .' + mediaQueryClassName + ruleCSS + '}';
 
     addCSS(css);
@@ -123,7 +123,8 @@ export default function resolveMediaQueries({
   mergeStyles,
   props,
   setState,
-  style
+  style,
+  styleID
 }: PluginConfig): PluginResult { // eslint-disable-line no-shadow
   let newStyle = _removeMediaQueries(style);
   const mediaQueryClassNames = _topLevelRulesToCSS({
@@ -132,8 +133,8 @@ export default function resolveMediaQueries({
     cssRuleSetToString,
     hash,
     isNestedStyle,
-    props,
     style,
+    styleID,
     userAgent: config.userAgent
   });
 

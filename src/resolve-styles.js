@@ -16,7 +16,6 @@ import React from 'react';
 const DEFAULT_CONFIG = {
   plugins: [
     Plugins.mergeStyleArray,
-    Plugins.styleID,
     Plugins.checkProps,
     Plugins.resolveMediaQueries,
     Plugins.resolveInteractionStyles,
@@ -235,6 +234,8 @@ const _runPlugins = function({
     return styleKeeper.addCSS(css);
   };
 
+  const styleID = component.state._styleID;
+
   let newStyle = props.style;
 
   plugins.forEach(plugin => {
@@ -253,7 +254,8 @@ const _runPlugins = function({
       props: newProps,
       setState,
       isNestedStyle,
-      style: newStyle
+      style: newStyle,
+      styleID
     }) || {};
 
     newStyle = result.style || newStyle;

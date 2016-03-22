@@ -12,7 +12,10 @@ describe('Enhancer', () => {
 
     const instance = new Enhanced();
 
-    expect(instance.state).to.deep.equal({_radiumStyleState: {}});
+    expect(instance.state).to.have.property('_radiumStyleState')
+      .that.is.an('object')
+      .that.deep.equals({});
+    expect(instance.state).to.have.property('_styleID');
   });
 
   it('merges with existing state', () => {
@@ -27,9 +30,11 @@ describe('Enhancer', () => {
 
     const instance = new Enhanced();
 
-    expect(instance.state).to.deep.equal(
-      {foo: 'bar', _radiumStyleState: {}}
-    );
+    expect(instance.state).to.have.property('foo', 'bar');
+    expect(instance.state).to.have.property('_radiumStyleState')
+      .that.is.an('object')
+      .that.deep.equals({});
+    expect(instance.state).to.have.property('_styleID');
   });
 
   it('receives the given props', () => {

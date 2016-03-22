@@ -2,6 +2,7 @@
 
 import {Component, PropTypes} from 'react';
 
+import uuid from 'node-uuid';
 import StyleKeeper from './style-keeper.js';
 import resolveStyles from './resolve-styles.js';
 
@@ -63,6 +64,7 @@ export default function enhanceWithRadium(
 
       this.state = this.state || {};
       this.state._radiumStyleState = {};
+      this.state._styleID = uuid.v4();
       this._radiumIsMounted = true;
     }
 
