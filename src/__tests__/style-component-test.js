@@ -63,7 +63,6 @@ describe('<Style> component', () => {
       div{
         transform:rotate(90);
         -webkit-transform:rotate(90);
-        -moz-transform:rotate(90);
         -ms-transform:rotate(90);
       }
     `);

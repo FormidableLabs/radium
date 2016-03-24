@@ -47,7 +47,7 @@
     "babel-preset-react": "^6.3.13",
     "babel-preset-stage-1": "^6.3.13",
     "exenv": "^1.2.0",
-    "inline-style-prefixer": "^0.6.2",
+    "inline-style-prefixer": "^1.0.3",
     "rimraf": "^2.4.0"
   },
   "devDependencies": {
@@ -77,6 +77,7 @@
     "karma-sinon-chai": "^1.0.0",
     "karma-webpack": "^1.7.0",
     "lodash.merge": "^4.0.2",
+    "lolex": "^1.4.0",
     "mocha": "^2.2.5",
     "node-libs-browser": "^0.5.2",
     "nodemon": "^1.4.1",
