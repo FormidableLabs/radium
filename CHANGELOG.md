@@ -1,5 +1,16 @@
 # Radium Changelog
 
+## 0.17.0 (March 24, 2016)
+
+### Bug Fixes
+- Upgrade `inline-style-prefixer` to version `1.0.3` with a fix for `display` values being removed in IE10.
+
+### Improvements
+- Add `TestMode` for controlling internal Radium state and behavior during tests.
+
+### Breaking Changes
+- `inline-style-prefixer` has updated vendor prefixes, removing some outdated prefixes like `-moz-transform`.
+
 ## 0.16.6 (February 9, 2016)
 
 ### Bug Fixes
