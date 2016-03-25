@@ -54,30 +54,15 @@ const Style = React.createClass({
   _buildMediaQueryString(
     stylesByMediaQuery: {[mediaQuery: string]: Object}
   ): string {
-    const contextMediaQueries = this._getContextMediaQueries();
     let mediaQueryString = '';
 
     Object.keys(stylesByMediaQuery).forEach(query => {
-      const completeQuery = contextMediaQueries[query] ?
-        contextMediaQueries[query] :
-        query;
-      mediaQueryString += '@media ' + completeQuery + '{' +
+      mediaQueryString += '@media ' + query + '{' +
         this._buildStyles(stylesByMediaQuery[query]) +
         '}';
     });
 
     return mediaQueryString;
-  },
-
-  _getContextMediaQueries(): {[mediaQuery: string]: string} {
-    const contextMediaQueries = {};
-    if (this.context && this.context.mediaQueries) {
-      Object.keys(this.context.mediaQueries).forEach(query => {
-        contextMediaQueries[query] = this.context.mediaQueries[query].media;
-      });
-    }
-
-    return contextMediaQueries;
   },
 
   render(): ?ReactElement {
