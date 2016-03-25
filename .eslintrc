@@ -52,7 +52,6 @@ rules:
     no-obj-calls: 2            # disallow the use of object properties of the global object (Math
                                #    and JSON) as functions
     no-regex-spaces: 1         # disallow multiple spaces in a regular expression literal
-    quote-props: 1        # disallow reserved words being used as object literal keys
     no-sparse-arrays: 2        # disallow sparse arrays
     no-unreachable: 2          # disallow unreachable statements after a return, throw, continue,
                                #    or break statement
@@ -246,7 +245,6 @@ rules:
     jsx-quotes: 1
     react/jsx-boolean-value: 1
     react/jsx-no-undef: 1
-    react/jsx-sort-prop-types: 1
     react/jsx-sort-props: 1
     react/jsx-uses-react: 1
     react/jsx-uses-vars: 1
@@ -254,10 +252,11 @@ rules:
     react/no-did-update-set-state: 1
     react/no-multi-comp: 0
     react/no-unknown-property: 1
-    react/prop-types: 0 # disabled until fixed https://github.com/yannickcr/eslint-plugin-react/issues/345
+    react/prop-types: 0
     react/react-in-jsx-scope: 1
     react/self-closing-comp: 1
     react/sort-comp: 1
+    react/sort-prop-types: 1
     react/wrap-multilines: 1
 
     ###########################################################################
