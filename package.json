@@ -56,7 +56,7 @@
     "chai": "^3.0.0",
     "color": "^0.11.1",
     "concurrently": "^1.0.0",
-    "coveralls": "^2.11.2",
+    "coveralls": "^2.11.9",
     "eslint": "^1.10.3",
     "eslint-plugin-flow-vars": "^0.1.1",
     "eslint-plugin-react": "^3.13.1",
