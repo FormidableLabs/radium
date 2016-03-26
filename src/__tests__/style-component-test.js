@@ -105,4 +105,32 @@ describe('<Style> component', () => {
       }
     `);
   });
+
+  it('adds scopeSelector if no selectors are present', () => {
+    const output = TestUtils.renderIntoDocument(
+      <Style
+        rules={{
+          color: 'red',
+          backgroundColor: 'white',
+          div: {
+            color: 'blue',
+            backgroundColor: 'black'
+          }
+        }}
+        scopeSelector=".scope"
+      />
+    );
+
+    const style = getElement(output, 'style');
+    expectCSS(style, `
+      .scope {
+        color: red;
+        background-color: white;
+      }
+      .scope div {
+        color: blue;
+        background-color: black;
+      }
+    `);
+  });
 });

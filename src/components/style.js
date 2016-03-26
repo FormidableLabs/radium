@@ -30,13 +30,24 @@ const Style = React.createClass({
       this.context._radiumConfig.userAgent
     );
 
-    return Object.keys(styles).reduce((accumulator, selector) => {
-      const {scopeSelector} = this.props;
+    const {scopeSelector} = this.props;
+    const rootRules = Object.keys(styles).reduce((accumulator, selector) => {
+      if (typeof styles[selector] !== 'object') {
+        accumulator[selector] = styles[selector];
+      }
+
+      return accumulator;
+    }, {});
+    const rootStyles = Object.keys(rootRules).length ?
+      cssRuleSetToString(scopeSelector || '', rootRules, userAgent) :
+      '';
+
+    return rootStyles + Object.keys(styles).reduce((accumulator, selector) => {
       const rules = styles[selector];
 
       if (selector === 'mediaQueries') {
         accumulator += this._buildMediaQueryString(rules);
-      } else {
+      } else if (typeof styles[selector] === 'object') {
         const completeSelector = scopeSelector
           ? selector
             .split(',')
