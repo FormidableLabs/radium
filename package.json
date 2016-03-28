@@ -58,7 +58,7 @@
     "concurrently": "^1.0.0",
     "coveralls": "^2.11.2",
     "eslint": "^2.5.2",
-    "eslint-plugin-flow-vars": "^0.1.1",
+    "eslint-plugin-flow-vars": "^0.2.1",
     "eslint-plugin-react": "^4.2.3",
     "express": "^4.13.3",
     "express-http-proxy": "^0.6.0",
