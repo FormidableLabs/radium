@@ -439,6 +439,33 @@ The `<Style>` component renders an HTML `<style>` tag containing a set of CSS ru
 
 Without the `<Style>` component, it is prohibitively difficult to write a `<style>` element in React. To write a normal `<style>` element, you need to write your CSS as a multiline string inside of the element. `<Style>` simplifies this process, and adds prefixing and the ability to scope selectors.
 
+If you include a `scopeSelector`, you can include CSS rules that should apply to that selector as well as any nested selectors. For example, the following
+
+```
+<Style
+  scopeSelector=".scoping-class"
+  rules={{
+    color: 'blue',
+    span: {
+      fontFamily: 'Lucida Console, Monaco, monospace'
+    }
+  }}
+/>
+```
+
+will return:
+
+```
+<style>
+.scoping-class {
+  color: 'blue';
+}
+.scoping-class span {
+  font-family: 'Lucida Console, Monaco, monospace'
+}
+</style>
+```
+
 ### Props
 
 #### rules

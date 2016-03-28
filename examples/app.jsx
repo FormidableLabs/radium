@@ -160,7 +160,8 @@ var App = React.createClass({
             rules={{
               span: {
                 fontFamily: 'Lucida Console, Monaco, monospace'
-              }
+              },
+              color: 'blue'
             }}
           />
           <span>This content has scoped styles</span>
