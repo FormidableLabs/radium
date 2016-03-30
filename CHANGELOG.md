@@ -1,5 +1,13 @@
 # Radium Changelog
 
+## 0.17.1 (March 30, 2016)
+
+### Bug Fixes
+- Remove babel modules accidentally published as dependencies.
+
+### Improvements
+- Add support for `scopeSelector` without nested selectors in `Style` component.
+
 ## 0.17.0 (March 24, 2016)
 
 ### Bug Fixes
