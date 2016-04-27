@@ -621,6 +621,59 @@ describe('resolveStyles', function() {
       });
     });
   });
+  
+  describe('disabled', function() {
+    it('discards interaction styles if element is disabled', function() {
+      const component = genComponent();
+      const style = {background: 'blue'};
+      style[':hover'] = {background: 'red'};
+
+      const renderedElement = (
+        <div>
+          <div ref="foo" />
+          <div ref="bar" disabled style={style} />
+        </div>
+      );
+
+      let result = resolveStyles(component, renderedElement);
+      let children = getChildrenArray(result.props.children);
+      expect(children[0].props.style).to.be.undefined;
+      expect(children[1].props.style.background).to.equal('blue');
+
+      children[1].props.onMouseEnter();
+
+      result = resolveStyles(component, renderedElement);
+      children = getChildrenArray(result.props.children);
+      expect(children[0].props.style).to.be.undefined;
+      expect(children[1].props.style.background).to.equal('blue');
+    });
+    
+    it('styles according to :disabled style if element is disabled', function() {
+      const component = genComponent();
+      const style = {background: 'blue'};
+      style[':hover'] = {background: 'red'};
+      style[':disabled'] = {background: 'yellow'};
+
+      const renderedElement = (
+        <div>
+          <div ref="foo" />
+          <div ref="bar" disabled style={style} />
+        </div>
+      );
+
+      let result = resolveStyles(component, renderedElement);
+      let children = getChildrenArray(result.props.children);
+      expect(children[0].props.style).to.be.undefined;
+      expect(children[1].props.style.background).to.equal('yellow');
+
+      children[1].props.onMouseEnter();
+
+      result = resolveStyles(component, renderedElement);
+      children = getChildrenArray(result.props.children);
+      expect(children[0].props.style).to.be.undefined;
+      expect(children[1].props.style.background).to.equal('yellow');
+    });
+  });
 
   /* eslint-disable no-console */
   describe('warnings', function() {

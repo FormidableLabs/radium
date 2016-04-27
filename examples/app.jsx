@@ -49,6 +49,7 @@ class TwoSquares extends React.Component {
       <div>
         <div key="one" style={[squareStyles.both, squareStyles.one]} />
         <div key="two" style={[squareStyles.both, squareStyles.two]} />
+        <div key="three" disabled style={[squareStyles.both, squareStyles.three]} />
         <div style={{clear: 'both'}} />
       </div>
     )
@@ -188,6 +189,14 @@ var squareStyles = {
   two: {
     ':hover': {
       background: 'red',
+    }
+  },
+  three: {
+    ':hover': {
+      background: 'yellow'
+    }
+    , ':disabled': {
+      background: 'red'
     }
   }
 };
