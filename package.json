@@ -62,7 +62,7 @@
     "eslint-plugin-react": "^5.0.1",
     "express": "^4.13.3",
     "express-http-proxy": "^0.6.0",
-    "flow-bin": "^0.20.1",
+    "flow-bin": "^0.23.1",
     "in-publish": "^2.0.0",
     "inject-loader": "^2.0.0",
     "isparta-loader": "^2.0.0",
