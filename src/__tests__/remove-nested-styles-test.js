@@ -5,7 +5,7 @@ import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 import {expectCSS, getElement} from 'test-helpers';
 
-describe('removeObjectStyles plugin tests', () => {
+describe('removeNestedStyles plugin tests', () => {
   it('removes nested style objects', () => {
     const ChildComponent = Radium(() =>
       <span style={{ color: 'red', foo: { color: 'blue' }}} />
@@ -20,5 +20,23 @@ describe('removeObjectStyles plugin tests', () => {
     const output = TestUtils.renderIntoDocument(<TestComponent />);
     const span = getElement(output, 'span');
     expect(span.style.foo).to.not.exist;
+  });
+
+  it('should not remove style objects that have a toString function defined', () => {
+    const styleObject = { color: 'blue' }
+    styleObject.toString = () => 'bar'
+    const ChildComponent = Radium(() =>
+      <span style={{ color: 'red', foo: styleObject }} />
+    );
+
+    const TestComponent = Radium(() =>
+      <StyleRoot>
+        <ChildComponent />
+      </StyleRoot>
+    );
+
+    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    const span = getElement(output, 'span');
+    expect(span.style.foo).to.equal('bar');
   });
 });
