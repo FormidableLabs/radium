@@ -3,7 +3,7 @@
 import Radium, {StyleRoot} from 'index';
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
-import {expectCSS, getElement} from 'test-helpers';
+import {getElement} from 'test-helpers';
 
 describe('removeNestedStyles plugin tests', () => {
   it('removes nested style objects', () => {
@@ -23,8 +23,8 @@ describe('removeNestedStyles plugin tests', () => {
   });
 
   it('should not remove style objects that have a toString function defined', () => {
-    const styleObject = { color: 'blue' }
-    styleObject.toString = () => 'bar'
+    const styleObject = { color: 'blue' };
+    styleObject.toString = () => 'bar';
     const ChildComponent = Radium(() =>
       <span style={{ color: 'red', foo: styleObject }} />
     );
