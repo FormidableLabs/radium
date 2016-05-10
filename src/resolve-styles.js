@@ -21,6 +21,7 @@ const DEFAULT_CONFIG = {
     Plugins.resolveInteractionStyles,
     Plugins.keyframes,
     Plugins.visited,
+    Plugins.removeNestedStyles,
     Plugins.prefix,
     Plugins.checkProps
   ]
