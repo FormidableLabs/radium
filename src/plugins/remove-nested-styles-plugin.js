@@ -7,7 +7,7 @@ export default function removeNestedStyles({
   style
 }: PluginConfig): PluginResult { // eslint-disable-line no-shadow
   const newStyle = Object.keys(style).reduce((newStyleInProgress, key) => {
-    let value = style[key];
+    const value = style[key];
     if (!isNestedStyle(value)) {
       newStyleInProgress[key] = value;
     }
