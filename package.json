@@ -55,7 +55,7 @@
     "babel-loader": "^6.2.0",
     "chai": "^3.0.0",
     "color": "^0.11.1",
-    "concurrently": "^1.0.0",
+    "concurrently": "^2.1.0",
     "coveralls": "^2.11.2",
     "eslint": "^2.5.3",
     "eslint-plugin-flow-vars": "^0.4.0",
