@@ -34,6 +34,19 @@ describe('<Style> component', () => {
     `);
   });
 
+  it('quotes properties that need it', () => {
+    const output = TestUtils.renderIntoDocument(
+      <Style rules={{'div::before': {content: '*'}}} />
+    );
+
+    const style = getElement(output, 'style');
+    expectCSS(style, `
+      div::before {
+        content: "*";
+      }
+    `);
+  });
+
   it('can be configured standalone', () => {
     const output = TestUtils.renderIntoDocument(
       <Style
