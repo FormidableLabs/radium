@@ -5,9 +5,14 @@ import camelCasePropsToDashCase from './camel-case-props-to-dash-case';
 import mapObject from './map-object';
 import {getPrefixedStyle} from './prefixer';
 
+function quoteValueIfNeeded(property, value) {
+  const quotedProperties = ['content'];
+  return (quotedProperties.indexOf(property) >= 0) ? `"${value}"` : value;
+}
+
 function createMarkupForStyles(style: Object): string {
   return Object.keys(style).map(property => {
-    return property + ': ' + style[property] + ';';
+    return `${property}: ${quoteValueIfNeeded(property, style[property])};`;
   }).join('\n');
 }
 
