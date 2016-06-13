@@ -136,6 +136,10 @@ Following is a short technical explanation of Radium's inner workings:
   - If any of the handlers are triggered, e.g. by hovering, Radium calls `setState` to update a Radium-specific field on the components state object
   - On re-render, resolve any interactive styles that apply, e.g. `:hover`, by looking up the element's key or ref in the Radium-specific state
 
+## More with Radium
+
+You can find a list of other tools, components, and frameworks to help you build with Radium on our [wiki](https://github.com/FormidableLabs/radium/wiki). Contributions welcome!
+
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md)
