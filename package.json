@@ -46,6 +46,7 @@
     "babel-preset-es2015-loose": "^6.1.3",
     "babel-preset-react": "^6.3.13",
     "babel-preset-stage-1": "^6.3.13",
+    "babylon": "6.8.0",
     "exenv": "^1.2.0",
     "inline-style-prefixer": "^1.0.3",
     "rimraf": "^2.4.0"
