@@ -205,7 +205,7 @@ var style = {
 };
 ```
 
-Radium will apply the correct styles for the currently active media queries. Top level CSS rules in your media queries will be converted to CSS and rendered in an actual `<style>` element with `!important` appended instead of being applied inline so they will work with server-side rendering. Note that you must add the `isRoot: true` config to your App component, e.g. `@Radium({isRoot: true})` to render the Radium stylesheet. Print styles will also work as normal, since they are rendered to CSS.
+Radium will apply the correct styles for the currently active media queries. Top level CSS rules in your media queries will be converted to CSS and rendered in an actual `<style>` element with `!important` appended instead of being applied inline so they will work with server-side rendering. Note that you must wrap your top-level component in the `<StyleRoot>` component to render the Radium stylesheet. Print styles will also work as normal, since they are rendered to CSS.
 
 ### Nested browser states
 
