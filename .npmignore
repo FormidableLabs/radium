@@ -1,4 +1,6 @@
 /*
-!/lib
 !/dist
+!/lib
+!/src
+!/.babelrc
 
