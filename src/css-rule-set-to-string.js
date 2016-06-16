@@ -1,14 +1,10 @@
 /* @flow */
 
 import appendPxIfNeeded from './append-px-if-needed';
+import quoteValueIfNeeded from './quote-value-if-needed';
 import camelCasePropsToDashCase from './camel-case-props-to-dash-case';
 import mapObject from './map-object';
 import {getPrefixedStyle} from './prefixer';
-
-function quoteValueIfNeeded(property, value) {
-  const quotedProperties = ['content'];
-  return (quotedProperties.indexOf(property) >= 0) ? `"${value}"` : value;
-}
 
 function createMarkupForStyles(style: Object): string {
   return Object.keys(style).map(property => {
