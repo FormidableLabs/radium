@@ -621,7 +621,7 @@ describe('resolveStyles', function() {
       });
     });
   });
-  
+
   describe('disabled', function() {
     it('discards interaction styles if element is disabled', function() {
       const component = genComponent();
@@ -647,7 +647,7 @@ describe('resolveStyles', function() {
       expect(children[0].props.style).to.be.undefined;
       expect(children[1].props.style.background).to.equal('blue');
     });
-    
+
     it('styles according to :disabled style if element is disabled', function() {
       const component = genComponent();
       const style = {background: 'blue'};

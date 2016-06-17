@@ -47,9 +47,9 @@ class TwoSquares extends React.Component {
   render () {
     return (
       <div>
-        <div key="one" style={[squareStyles.both, squareStyles.one]} />
-        <div key="two" style={[squareStyles.both, squareStyles.two]} />
-        <div key="three" disabled style={[squareStyles.both, squareStyles.three]} />
+        <div key="one" style={[squareStyles.all, squareStyles.one]} />
+        <div key="two" style={[squareStyles.all, squareStyles.two]} />
+        <div key="three" disabled style={[squareStyles.all, squareStyles.three]} />
         <div style={{clear: 'both'}} />
       </div>
     )
@@ -174,7 +174,7 @@ var App = React.createClass({
 App = Radium(App);
 
 var squareStyles = {
-  both: {
+  all: {
     background: 'black',
     border: 'solid 1px white',
     float: 'left',
@@ -194,8 +194,8 @@ var squareStyles = {
   three: {
     ':hover': {
       background: 'yellow'
-    }
-    , ':disabled': {
+    },
+    ':disabled': {
       background: 'red'
     }
   }
