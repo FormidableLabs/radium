@@ -44,14 +44,14 @@ rules:
                                # NOTE: Allow for `return (/* JSX STUFF*/);` situations
     no-extra-semi: 2           # disallow unnecessary semicolons
     no-func-assign: 2          # disallow overwriting functions written as function declarations
-    no-inner-declarations: 1   # disallow function or variable declarations in nested blocks
+    no-inner-declarations: 2   # disallow function or variable declarations in nested blocks
     no-invalid-regexp: 2       # disallow invalid regular expression strings in the RegExp
                                #    constructor
     no-irregular-whitespace: 2 # disallow irregular whitespace outside of strings and comments
     no-negated-in-lhs: 2       # disallow negation of the left operand of an in expression
     no-obj-calls: 2            # disallow the use of object properties of the global object (Math
                                #    and JSON) as functions
-    no-regex-spaces: 1         # disallow multiple spaces in a regular expression literal
+    no-regex-spaces: 2         # disallow multiple spaces in a regular expression literal
     no-sparse-arrays: 2        # disallow sparse arrays
     no-unreachable: 2          # disallow unreachable statements after a return, throw, continue,
                                #    or break statement
@@ -70,19 +70,19 @@ rules:
     #                                                                         #
     ###########################################################################
 
-    block-scoped-var: 1       # treat var statements as if they were block scoped
-    complexity: [1, 250]      # specify the maximum cyclomatic complexity allowed in a program
+    block-scoped-var: 2       # treat var statements as if they were block scoped
+    complexity: [2, 250]      # specify the maximum cyclomatic complexity allowed in a program
     consistent-return: 0      # require return statements to either always or never specify values
     curly: 2                  # specify curly brace conventions for all control statements
     default-case: 2           # require default case in switch statements
-    dot-notation: 1           # encourages use of dot notation whenever possible
+    dot-notation: 2           # encourages use of dot notation whenever possible
     eqeqeq: 2                 # require the use of === and !==
-    guard-for-in: 1           # make sure for-in loops have an if statement
+    guard-for-in: 2           # make sure for-in loops have an if statement
     no-alert: 2               # disallow the use of alert, confirm, and prompt
     no-caller: 2              # disallow use of arguments.caller or arguments.callee
-    no-div-regex: 1           # disallow division operators explicitly at beginning of regular
+    no-div-regex: 2           # disallow division operators explicitly at beginning of regular
                               #    expression
-    no-else-return: 1         # disallow else after a return in an if
+    no-else-return: 2         # disallow else after a return in an if
     no-eq-null: 2             # disallow comparisons to null without a type-checking operator
     no-eval: 2                # disallow use of eval()
     no-extend-native: 2       # disallow adding to native types
@@ -107,7 +107,7 @@ rules:
                               #    `var foo = "Copyright \251"`
     no-process-env: 0         # disallow use of process.env
     no-proto: 2               # disallow usage of __proto__ property
-    no-redeclare: 1           # disallow declaring the same variable more then once
+    no-redeclare: 2           # disallow declaring the same variable more then once
     no-return-assign: 0       # disallow use of assignment in return statement
     no-script-url: 2          # disallow use of javascript urls.
     no-self-compare: 2        # disallow comparisons where both sides are exactly the same
@@ -140,7 +140,7 @@ rules:
                                    #    variable in the outer scope
     no-delete-var: 2               # disallow deletion of variables
     no-label-var: 2                # disallow labels that share a name with a variable
-    no-shadow: 1                   # disallow declaration of variables already declared in the
+    no-shadow: 2                   # disallow declaration of variables already declared in the
                                    #    outer scope
     no-shadow-restricted-names: 2  # disallow shadowing of names such as arguments
     no-undef: 2                    # disallow use of undeclared variables unless mentioned in a
@@ -150,7 +150,7 @@ rules:
     no-unused-vars: 2              # disallow declaration of variables that are not used in
                                    #    the code
     no-use-before-define: 2        # disallow use of variables before they are defined
-    no-var: 1
+    no-var: 2
 
     ###########################################################################
     #                                                                         #
@@ -159,7 +159,7 @@ rules:
     ###########################################################################
 
     handle-callback-err: 0        # enforces error handling in callbacks
-    no-mixed-requires: [1, true]  # disallow mixing regular variable and require declarations
+    no-mixed-requires: [2, true]  # disallow mixing regular variable and require declarations
     no-new-require: 2             # disallow use of new operator with the require function
     no-path-concat: 2             # disallow string concatenation with __dirname and __filename
     no-process-exit: 0            # disallow process.exit()
@@ -192,18 +192,18 @@ rules:
     no-lonely-if: 0                # disallow if as the only statement in an else block
     no-mixed-spaces-and-tabs: 2    # disallow mixed spaces and tabs for indentation
     no-nested-ternary: 2           # disallow nested ternary expressions
-    no-new-object: 1               # disallow use of the Object constructor
+    no-new-object: 2               # disallow use of the Object constructor
     semi-spacing: 2        # disallow space before semicolon
     no-spaced-func: 2              # disallow space between function identifier and application
     no-ternary: 0                  # disallow the use of ternary operators
 
-    no-trailing-spaces: 1          # disallow trailing whitespace at the end of lines
+    no-trailing-spaces: 2          # disallow trailing whitespace at the end of lines
     no-multiple-empty-lines: 2     # disallow multiple empty lines
     no-underscore-dangle: 0        # disallow dangling underscores in identifiers
     one-var: 0                     # allow just one var statement per function
     padded-blocks: 0               # enforce padding within blocks
     quotes:                        # specify whether double or single quotes should be used
-        [1, "single", "avoid-escape"]
+        [2, "single", "avoid-escape"]
     quote-props: 0                 # require quotes around object literal property names
     semi: [2, "always"]            # require or disallow use of semicolons instead of ASI
     sort-vars: 0                   # sort variables within the same declaration block
@@ -228,7 +228,7 @@ rules:
 
     max-depth: 0              # specify the maximum depth that blocks can be nested
     max-len: [2, 100, 4]      # specify the maximum length of a line in your program
-    max-params: [1, 5]        # limits the number of parameters that can be used in the function
+    max-params: [2, 5]        # limits the number of parameters that can be used in the function
                               #    declaration
     max-statements: 0         # specify the maximum number of statement allowed in a function
     no-bitwise: 0             # disallow use of bitwise operators
@@ -241,27 +241,27 @@ rules:
     #                                                                         #
     ###########################################################################
 
-    jsx-quotes: 1
-    react/jsx-boolean-value: 1
-    react/jsx-no-undef: 1
-    react/jsx-sort-props: 1
-    react/jsx-uses-react: 1
-    react/jsx-uses-vars: 1
-    react/no-did-mount-set-state: 1
-    react/no-did-update-set-state: 1
+    jsx-quotes: 2
+    react/jsx-boolean-value: 2
+    react/jsx-no-undef: 2
+    react/jsx-sort-props: 2
+    react/jsx-uses-react: 2
+    react/jsx-uses-vars: 2
+    react/no-did-mount-set-state: 2
+    react/no-did-update-set-state: 2
     react/no-multi-comp: 0
-    react/no-unknown-property: 1
+    react/no-unknown-property: 2
     react/prop-types: 0
-    react/react-in-jsx-scope: 1
-    react/self-closing-comp: 1
-    react/sort-comp: 1
-    react/sort-prop-types: 1
-    react/wrap-multilines: 1
+    react/react-in-jsx-scope: 2
+    react/self-closing-comp: 2
+    react/sort-comp: 2
+    react/sort-prop-types: 2
+    react/wrap-multilines: 2
 
     ###########################################################################
     #                                                                         #
     #   Flow vars                                                             #
     #                                                                         #
     ###########################################################################
-    flow-vars/define-flow-type: 1
-    flow-vars/use-flow-type: 1
+    flow-vars/define-flow-type: 2
+    flow-vars/use-flow-type: 2
