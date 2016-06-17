@@ -20,7 +20,7 @@
     "deps-restore": "git checkout package.json",
     "flow": "node -e \"process.exit(process.platform === 'win32' ? 0 : 1)\" || flow check",
     "lib": "npm run babel && rimraf lib/__tests__ lib/__mocks__",
-    "lint": "eslint src && npm run flow",
+    "lint": "eslint src examples --ext .js --ext .jsx && npm run flow",
     "postinstall": "cd lib || npm run lib",
     "prepublish": "npm run lib && npm run dist && not-in-publish || (npm test && npm run lint && npm run deps-fix)",
     "postpublish": "npm run deps-restore",

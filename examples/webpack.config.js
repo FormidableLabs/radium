@@ -11,13 +11,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var path = require('path');
-var webpack = require('webpack');
+var path = require('path'); // eslint-disable-line no-var
 
 module.exports = {
   cache: true,
   entry: {
-    app: "./examples/client.js"
+    app: './examples/client.js'
   },
   output: {
     path: path.join(__dirname),
@@ -33,4 +32,4 @@ module.exports = {
       }
     ]
   }
-}
+};
