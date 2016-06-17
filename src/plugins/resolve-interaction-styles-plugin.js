@@ -98,7 +98,7 @@ const resolveInteractionStyles = function(config: PluginConfig): PluginResult {
   }
 
   // Merge the styles in the order they were defined
-  const interactionStyles = Object.keys(style)
+  const interactionStyles = props.disabled ? [style[':disabled']] : Object.keys(style)
     .filter(name => _isInteractiveStyleField(name) && getState(name))
     .map(name => style[name]);
 
@@ -107,7 +107,7 @@ const resolveInteractionStyles = function(config: PluginConfig): PluginResult {
   // Remove interactive styles
   newStyle = Object.keys(newStyle).reduce(
     (styleWithoutInteractions, name) => {
-      if (!_isInteractiveStyleField(name)) {
+      if (!_isInteractiveStyleField(name) && name !== ':disabled') {
         styleWithoutInteractions[name] = newStyle[name];
       }
       return styleWithoutInteractions;
