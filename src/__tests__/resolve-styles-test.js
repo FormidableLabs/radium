@@ -631,7 +631,7 @@ describe('resolveStyles', function() {
       const renderedElement = (
         <div>
           <div ref="foo" />
-          <div ref="bar" disabled style={style} />
+          <div disabled ref="bar" style={style} />
         </div>
       );
 
@@ -657,7 +657,7 @@ describe('resolveStyles', function() {
       const renderedElement = (
         <div>
           <div ref="foo" />
-          <div ref="bar" disabled style={style} />
+          <div disabled ref="bar" style={style} />
         </div>
       );
 
