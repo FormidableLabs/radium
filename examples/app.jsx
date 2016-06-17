@@ -11,16 +11,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var React = require('react');
+ /* eslint-disable no-use-before-define */
 
-var CommonStyles = require('./common.styles');
-var Button = require('./components/button.jsx');
-var ComputedWell = require('./components/computed-well.jsx');
-var Radium = require('../src');
+const React = require('react');
 
-var {Style, StyleRoot, PrintStyleSheet} = Radium;
+const CommonStyles = require('./common.styles');
+const Button = require('./components/button.jsx');
+const ComputedWell = require('./components/computed-well.jsx');
+const Radium = require('../src');
 
-var {resetListStyle, resetBoxModel} = CommonStyles;
+const {Style, StyleRoot} = Radium;
+
+const {resetListStyle, resetBoxModel} = CommonStyles;
 
 //
 // Radium with ES6 class syntax
@@ -34,7 +36,7 @@ class HoverMessage extends React.Component {
           <span>{' '}Hovering!</span>
         ) : null}
       </div>
-    )
+    );
   }
 }
 HoverMessage = Radium(HoverMessage);
@@ -44,19 +46,19 @@ HoverMessage = Radium(HoverMessage);
 //
 @Radium
 class TwoSquares extends React.Component {
-  render () {
+  render() {
     return (
       <div>
         <div key="one" style={[squareStyles.all, squareStyles.one]} />
         <div key="two" style={[squareStyles.all, squareStyles.two]} />
-        <div key="three" disabled style={[squareStyles.all, squareStyles.three]} />
+        <div disabled key="three" style={[squareStyles.all, squareStyles.three]} />
         <div style={{clear: 'both'}} />
       </div>
-    )
+    );
   }
 }
 
-var Spinner = React.createClass({
+let Spinner = React.createClass({
   render() {
     return (
       <div>
@@ -78,7 +80,7 @@ const VisitedLink = Radium(() =>
   </a>
 );
 
-var App = React.createClass({
+let App = React.createClass({
   _remount: function() {
     this.setState({shouldRenderNull: true});
 
@@ -87,7 +89,7 @@ var App = React.createClass({
     }.bind(this), 100);
   },
 
-  render: function () {
+  render: function() {
     if (this.state && this.state.shouldRenderNull) {
       return null;
     }
@@ -120,9 +122,9 @@ var App = React.createClass({
 
         <div style={{margin: '20px 0', width: 220}}>
           {Array.apply(null, Array(100)).map(function(_, i) {
-            return <div style={tileStyle} key={'tile' + i}/>
+            return (<div key={'tile' + i} style={tileStyle} />);
           })}
-          <div style={{clear:'both'}} />
+          <div style={{clear: 'both'}} />
         </div>
 
         <ul style={listStyle}>
@@ -131,25 +133,25 @@ var App = React.createClass({
 
         <Style
           rules={{
-              body: {
-                margin: 0,
-                fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
+            body: {
+              margin: 0,
+              fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
+            },
+            mediaQueries: {
+              '(max-width: 600px)': {
+                body: {
+                  background: 'gray'
+                }
               },
-              mediaQueries: {
-                '(max-width: 600px)': {
-                  body: {
-                    background: 'gray'
-                  }
+              '(max-width: 500px)': {
+                body: {
+                  background: 'blue'
                 },
-                '(max-width: 500px)': {
-                  body: {
-                    background: 'blue'
-                  },
-                  'p, h1': {
-                    color: 'white'
-                  }
+                'p, h1': {
+                  color: 'white'
                 }
               }
+            }
           }}
         />
 
@@ -157,13 +159,13 @@ var App = React.createClass({
 
         <div className="scoping-class">
           <Style
-            scopeSelector=".scoping-class"
             rules={{
               span: {
                 fontFamily: 'Lucida Console, Monaco, monospace'
               },
               color: 'blue'
             }}
+            scopeSelector=".scoping-class"
           />
           <span>This content has scoped styles</span>
         </div>
@@ -173,7 +175,7 @@ var App = React.createClass({
 });
 App = Radium(App);
 
-var squareStyles = {
+const squareStyles = {
   all: {
     background: 'black',
     border: 'solid 1px white',
@@ -183,12 +185,12 @@ var squareStyles = {
   },
   one: {
     ':hover': {
-      background: 'blue',
+      background: 'blue'
     }
   },
   two: {
     ':hover': {
-      background: 'red',
+      background: 'red'
     }
   },
   three: {
@@ -201,7 +203,7 @@ var squareStyles = {
   }
 };
 
-var tileStyle = {
+const tileStyle = {
   display: 'block',
   float: 'left',
   background: '#ccc',
@@ -211,28 +213,28 @@ var tileStyle = {
   border: '1px solid white',
   cursor: 'pointer',
 
-  ':hover' : {
+  ':hover': {
     background: '#999'
   }
 };
 
-var pulseAnimation = Radium.keyframes({
+const pulseAnimation = Radium.keyframes({
   '0%': {width: '10%'},
   '50%': {width: '50%'},
-  '100%': {width: '10%'},
+  '100%': {width: '10%'}
 }, 'pulse');
 
-var spinnerStyles = {
+const spinnerStyles = {
   inner: {
     animation: 'x 3s ease 0s infinite',
     animationName: pulseAnimation,
     background: 'blue',
     height: '4px',
-    margin: '0 auto',
+    margin: '0 auto'
   }
 };
 
-var listStyle = {
+const listStyle = {
   ...resetListStyle,
   ...resetBoxModel,
   margin: 15

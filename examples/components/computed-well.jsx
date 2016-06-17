@@ -11,25 +11,25 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var React = require('react');
-var Radium = require('../../src/index');
+const React = require('react');
+const Radium = require('../../src/index');
 
-var ComputedWell = React.createClass({
-  getInitialState: function () {
+const ComputedWell = React.createClass({
+  getInitialState: function() {
     return {
       dynamicBg: '#000'
-    }
+    };
   },
 
-  getStyles: function () {
+  getStyles: function() {
     return {
-      padding: "1em",
+      padding: '1em',
       borderRadius: 5,
       background: this.state.dynamicBg
     };
   },
 
-  handleSubmit: function (ev) {
+  handleSubmit: function(ev) {
     ev.preventDefault();
 
     this.setState({
@@ -37,10 +37,10 @@ var ComputedWell = React.createClass({
     });
   },
 
-  render: function () {
+  render: function() {
     return (
-      <form style={this.getStyles()} onSubmit={this.handleSubmit}>
-        <input ref='input' type='text' placeholder="black" />
+      <form onSubmit={this.handleSubmit} style={this.getStyles()}>
+        <input placeholder="black" ref="input" type="text" />
 
         <button>Change Background Color</button>
       </form>

@@ -17,8 +17,11 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import App from './app.jsx';
 import fs from 'fs';
+import path from 'path';
 
-const indexHTML = fs.readFileSync(__dirname + '/index.html').toString();
+const indexHTML = fs.readFileSync(
+  path.resolve(__dirname, 'index.html')
+).toString();
 const app = express();
 const host = 'localhost';
 const port = 8000;
@@ -34,5 +37,9 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, host, () => {
-  console.log('Access the universal app at http://%s:%d', host, port);
+  console.log( // eslint-disable-line no-console
+    'Access the universal app at http://%s:%d',
+    host,
+    port
+  );
 });
