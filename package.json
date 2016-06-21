@@ -51,7 +51,7 @@
     "babel-loader": "^6.2.0",
     "babylon": "6.8.0",
     "chai": "^3.0.0",
-    "color": "^0.11.1",
+    "color": "^0.11.2",
     "concurrently": "^1.0.0",
     "coveralls": "^2.11.2",
     "eslint": "^2.5.3",
