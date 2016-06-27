@@ -47,7 +47,7 @@
     "rimraf": "^2.4.0"
   },
   "devDependencies": {
-    "babel-eslint": "^6.0.0",
+    "babel-eslint": "^6.1.0",
     "babel-loader": "^6.2.0",
     "babylon": "6.8.0",
     "chai": "^3.0.0",
