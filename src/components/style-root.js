@@ -31,8 +31,13 @@ class StyleRoot extends Component {
   }
 
   render() {
+    /* eslint-disable no-unused-vars */
+    // Remove prop before being applied to DOM Node
+    // As of React v15.2.0 - Unknown props issue warning
+    const { _radiumDidResolveStyles, ...additionalProps } = this.props;
+    /* eslint-enable */
     return (
-      <div {...this.props}>
+      <div {...additionalProps}>
         {this.props.children}
         <StyleSheet />
       </div>
