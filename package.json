@@ -52,7 +52,7 @@
     "babylon": "6.8.0",
     "chai": "^3.0.0",
     "color": "^0.11.2",
-    "concurrently": "^1.0.0",
+    "concurrently": "^2.2.0",
     "coveralls": "^2.11.2",
     "eslint": "^2.5.3",
     "eslint-plugin-flow-vars": "^0.4.0",
