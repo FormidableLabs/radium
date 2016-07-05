@@ -71,7 +71,7 @@
     "karma-mocha-reporter": "^2.0.3",
     "karma-phantomjs-launcher": "^1.0.0",
     "karma-phantomjs-shim": "^1.0.0",
-    "karma-sinon-chai": "^1.0.0",
+    "karma-sinon-chai": "^1.1.0",
     "karma-webpack": "^1.7.0",
     "lodash.merge": "^4.0.2",
     "lolex": "^1.4.0",
