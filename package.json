@@ -67,7 +67,7 @@
     "karma-babel-preprocessor": "^6.0.1",
     "karma-coverage": "^1.0.0",
     "karma-ie-launcher": "^1.0.0",
-    "karma-mocha": "^1.0.1",
+    "karma-mocha": "^1.1.1",
     "karma-mocha-reporter": "^2.0.3",
     "karma-phantomjs-launcher": "^1.0.0",
     "karma-phantomjs-shim": "^1.0.0",
