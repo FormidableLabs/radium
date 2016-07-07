@@ -28,7 +28,7 @@ function copyProperties(source, target) {
 }
 
 function isStateless(component: Function): boolean {
-  return !!(!component.render && !(component.prototype && component.prototype.render));
+  return !component.render && !(component.prototype && component.prototype.render);
 }
 
 export default function enhanceWithRadium(
