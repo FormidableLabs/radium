@@ -658,6 +658,11 @@ describe('Radium blackbox tests', () => {
         {props.children}
       </div>
     );
+
+    // Babel is forced to use regular functions when defining arrow functions.
+    // Arrow functions should not technically have prototypes,
+    // so remove it here to make sure Radium doesn't fail with real arrow functions.
+    MyStatelessComponent.prototype = undefined;
     MyStatelessComponent = Radium(MyStatelessComponent);
 
     const output = TestUtils.renderIntoDocument(

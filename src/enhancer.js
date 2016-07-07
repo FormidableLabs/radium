@@ -27,6 +27,10 @@ function copyProperties(source, target) {
   });
 }
 
+function isStateless(component: Function): boolean {
+  return !component.render && !(component.prototype && component.prototype.render);
+}
+
 export default function enhanceWithRadium(
   configOrComposedComponent: Class<any> | constructor | Function | Object,
   config?: Object = {},
@@ -42,7 +46,7 @@ export default function enhanceWithRadium(
   let ComposedComponent: constructor = component;
 
   // Handle stateless components
-  if (!ComposedComponent.render && !ComposedComponent.prototype.render) {
+  if (isStateless(ComposedComponent)) {
     ComposedComponent = class extends Component {
       render() {
         return component(this.props, this.context);
