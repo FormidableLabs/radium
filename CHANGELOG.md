@@ -1,5 +1,15 @@
 # Radium Changelog
 
+## 0.17.2 (July 12, 2016)
+
+### Bug Fixes
+- Fix `content` values in `Style` component (#719).
+- Improve stateless component check to work with native arrow functions (#771).
+
+### Improvements
+- Add support for `:disabled` pseudo-class (#689).
+- Add plugin to remove nested style objects and prevent `[Object object]` from rendering in the DOM (#703).
+
 ## 0.17.1 (March 30, 2016)
 
 ### Bug Fixes
