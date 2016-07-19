@@ -31,8 +31,13 @@ class StyleRoot extends Component {
   }
 
   render() {
+    /* eslint-disable no-unused-vars */
+    // Pass down all props except config to the rendered div.
+    const {radiumConfig, ...otherProps} = this.props;
+    /* eslint-enable no-unused-vars */
+
     return (
-      <div {...this.props}>
+      <div {...otherProps}>
         {this.props.children}
         <StyleSheet />
       </div>
