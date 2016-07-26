@@ -75,7 +75,7 @@
     "lodash.merge": "^4.0.2",
     "lolex": "^1.4.0",
     "mocha": "^2.2.5",
-    "node-libs-browser": "^0.5.2",
+    "node-libs-browser": "^1.0.0",
     "nodemon": "^1.4.1",
     "object-assign": "^4.0.1",
     "phantomjs-prebuilt": "^2.1.7",
