@@ -74,7 +74,7 @@
     "karma-webpack": "^1.7.0",
     "lodash.merge": "^4.0.2",
     "lolex": "^1.4.0",
-    "mocha": "^2.2.5",
+    "mocha": "^3.0.2",
     "node-libs-browser": "^0.5.2",
     "nodemon": "^1.4.1",
     "object-assign": "^4.0.1",
