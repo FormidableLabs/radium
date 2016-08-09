@@ -64,7 +64,7 @@
     "isparta-loader": "^2.0.0",
     "karma": "^1.1.0",
     "karma-babel-preprocessor": "^6.0.1",
-    "karma-coverage": "^1.0.0",
+    "karma-coverage": "^1.1.1",
     "karma-ie-launcher": "^1.0.0",
     "karma-mocha": "^1.1.1",
     "karma-mocha-reporter": "^2.0.3",
