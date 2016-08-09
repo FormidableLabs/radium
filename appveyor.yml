@@ -1,7 +1,6 @@
 # Test against this version of Node.js
 environment:
   matrix:
-    - nodejs_version: 0.12
     - nodejs_version: 4.2
 
 # Install scripts. (runs after repo cloning)
