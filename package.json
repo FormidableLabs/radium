@@ -55,7 +55,7 @@
     "coveralls": "^2.11.2",
     "eslint": "^3.2.2",
     "eslint-plugin-flow-vars": "^0.5.0",
-    "eslint-plugin-react": "^5.0.1",
+    "eslint-plugin-react": "^6.0.0",
     "express": "^4.13.3",
     "express-http-proxy": "^0.9.1",
     "flow-bin": "^0.20.1",
