@@ -43,7 +43,7 @@
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-1": "^6.3.13",
     "exenv": "^1.2.0",
-    "inline-style-prefixer": "^1.0.3",
+    "inline-style-prefixer": "^2.0.1",
     "rimraf": "^2.4.0"
   },
   "devDependencies": {
