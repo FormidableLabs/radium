@@ -89,7 +89,7 @@ Try out the experimental [`ReactStyleTransitionGroup`](https://github.com/adambb
 To get the latest version, drop this into the HTML:
 
 ```html
-<script src="https://npmcdn.com/radium/dist/radium.js"></script>
+<script src="https://unpkg.com/radium/dist/radium.js"></script>
 ```
 
 We also recommend changing the JavaScript language to ES6/Babel.
