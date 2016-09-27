@@ -57,7 +57,7 @@
     "eslint-plugin-flow-vars": "^0.5.0",
     "eslint-plugin-react": "^6.0.0",
     "express": "^4.13.3",
-    "express-http-proxy": "^0.9.1",
+    "express-http-proxy": "^0.10.0",
     "flow-bin": "^0.20.1",
     "in-publish": "^2.0.0",
     "inject-loader": "^2.0.0",
