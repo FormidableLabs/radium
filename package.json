@@ -68,7 +68,7 @@
     "karma-ie-launcher": "^1.0.0",
     "karma-mocha": "^1.1.1",
     "karma-mocha-reporter": "^2.0.3",
-    "karma-phantomjs-launcher": "^1.0.1",
+    "karma-phantomjs-launcher": "^1.0.2",
     "karma-phantomjs-shim": "^1.0.0",
     "karma-sinon-chai": "^1.2.1",
     "karma-webpack": "^1.7.0",
