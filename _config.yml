@@ -1,7 +1,0 @@
-exclude: [
-  "node_modules",
-  "package.json",
-  "Gemfile",
-  "Gemfile.lock"
-]
-markdown: "redcarpet"
