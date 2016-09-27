@@ -1,6 +1,6 @@
 ### Overview
 
-The `radium-docs` [documentation site](http://formidable.com/open-source/radium-test/) source lives here in `/docs`. The `docs/**/docs.js` components are imported into `radium-docs` and deployed from there.
+The `radium-docs` [documentation site](http://formidable.com/open-source/radium/) source lives here in `/docs`. The `docs/**/docs.js` components are imported into `radium-docs` and deployed from there.
 
 ### Deployment
 
