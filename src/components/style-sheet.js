@@ -6,7 +6,7 @@ import StyleKeeper from '../style-keeper';
 
 export default class StyleSheet extends Component {
   static contextTypes = {
-    _radiumStyleKeeper: React.PropTypes.instanceOf(StyleKeeper)
+    _radiumStyleKeeper: StyleKeeper.isStyleKeeper
   };
 
   constructor() {
