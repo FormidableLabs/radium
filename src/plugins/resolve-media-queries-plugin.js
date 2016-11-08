@@ -42,6 +42,13 @@ function _removeMediaQueries(style) {
   );
 }
 
+function _toCss(query, ruleCSS, mediaQueryClassName, forceMobile) {
+  if (forceMobile) {
+    return '.' + mediaQueryClassName + ruleCSS;
+  }
+  return query + '{ .' + mediaQueryClassName + ruleCSS + '}';
+}
+
 function _topLevelRulesToCSS({
   addCSS,
   appendImportantToEachValue,
@@ -49,7 +56,8 @@ function _topLevelRulesToCSS({
   hash,
   isNestedStyle,
   style,
-  userAgent
+  userAgent,
+  props
 }) {
   let className = '';
   Object.keys(style)
@@ -74,7 +82,7 @@ function _topLevelRulesToCSS({
 
     // CSS classes cannot start with a number
     const mediaQueryClassName = 'rmq-' + hash(query + ruleCSS);
-    const css = query + '{ .' + mediaQueryClassName + ruleCSS + '}';
+    const css = _toCss(query, ruleCSS,mediaQueryClassName, props.forceMobile);
 
     addCSS(css);
 
