@@ -82,7 +82,7 @@ function _topLevelRulesToCSS({
 
     // CSS classes cannot start with a number
     const mediaQueryClassName = 'rmq-' + hash(query + ruleCSS);
-    const css = _toCss(query, ruleCSS,mediaQueryClassName, props.forceMobile);
+    const css = _toCss(query, ruleCSS, mediaQueryClassName, props.forceMobile);
 
     addCSS(css);
 
@@ -140,7 +140,8 @@ export default function resolveMediaQueries({
     hash,
     isNestedStyle,
     style,
-    userAgent: config.userAgent
+    userAgent: config.userAgent,
+    props
   });
 
   const newProps = mediaQueryClassNames ? {
