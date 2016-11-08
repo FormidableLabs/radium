@@ -286,7 +286,7 @@ const _runPlugins = function({
 const _cloneElement = function(renderedElement, newProps, newChildren) {
   // Only add flag if this is a normal DOM element
   if (typeof renderedElement.type === 'string') {
-    newProps = {...newProps, _radiumDidResolveStyles: true};
+    newProps = {...newProps, 'data-radium': true};
   }
 
   return React.cloneElement(renderedElement, newProps, newChildren);
@@ -313,7 +313,7 @@ resolveStyles = function(
     // owner of an element processes that element, since the owner's render
     // function will be called first (which will always be the case, since you
     // can't know what else to render until you render the parent component).
-    (renderedElement.props && renderedElement.props._radiumDidResolveStyles) ||
+    (renderedElement.props && renderedElement.props['data-radium']) ||
 
     // Bail if this element is a radium enhanced element, because if it is,
     // then it will take care of resolving its own styles.

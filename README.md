@@ -142,7 +142,7 @@ You can find a list of other tools, components, and frameworks to help you build
 
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md)
+Please see [CONTRIBUTING](https://github.com/FormidableLabs/radium/blob/master/CONTRIBUTING.md)
 
 [trav_img]: https://api.travis-ci.org/FormidableLabs/radium.svg
 [trav_site]: https://travis-ci.org/FormidableLabs/radium

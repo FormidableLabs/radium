@@ -525,6 +525,11 @@ A string that any included selectors in `rules` will be appended to. Use to scop
 </div>
 ```
 
+### Notes
+
+Some style properties, like [`content`](https://developer.mozilla.org/en-US/docs/Web/CSS/content), allow quoted strings or keywords as values. Because all non-numerical property values are written
+as strings in Radium style objects, you must explicitly add quotes to string value for these properties: `content: "'Hello World!'"`.
+
 ## StyleRoot Component
 
 _Props: Accepts all props valid on `div` and optional `radiumConfig`_

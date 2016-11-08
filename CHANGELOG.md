@@ -1,5 +1,18 @@
 # Radium Changelog
 
+## 0.18.1 (July 19, 2016)
+
+### Bug Fixes
+- Fix unused props warning when passing `radiumConfig` to `StyleRoot` (#787).
+
+## 0.18.0 (July 15, 2016)
+
+### Breaking Changes
+- Revert `content` auto-quoting in `Style` component (#783).
+
+### Bug Fixes
+- Silence React 15.2 unused props deprecation warning (#782).
+
 ## 0.17.2 (July 12, 2016)
 
 ### Bug Fixes
