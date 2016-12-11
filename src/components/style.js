@@ -51,7 +51,15 @@ const Style = React.createClass({
         const completeSelector = scopeSelector
           ? selector
             .split(',')
-            .map(part => scopeSelector + ' ' + part.trim())
+            .map(part => {
+            	part = part.trim();
+            	if (part.startsWith('&')) {
+            		return scopeSelector + part.slice(1);
+            	}
+            	else {
+            		return scopeSelector + ' ' + part;
+            	}
+            })
             .join(',')
           : selector;
 
