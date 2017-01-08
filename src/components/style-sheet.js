@@ -1,10 +1,10 @@
 /* @flow */
 
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 
 import StyleKeeper from '../style-keeper';
 
-export default class StyleSheet extends Component {
+export default class StyleSheet extends PureComponent {
   static contextTypes = {
     _radiumStyleKeeper: React.PropTypes.instanceOf(StyleKeeper)
   };
