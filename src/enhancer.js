@@ -156,13 +156,13 @@ export default function enhanceWithRadium(
   RadiumEnhancer.contextTypes = {
     ...RadiumEnhancer.contextTypes,
     _radiumConfig: PropTypes.object,
-    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
+    _radiumStyleKeeper: StyleKeeper.isStyleKeeper
   };
 
   RadiumEnhancer.childContextTypes = {
     ...RadiumEnhancer.childContextTypes,
     _radiumConfig: PropTypes.object,
-    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
+    _radiumStyleKeeper: StyleKeeper.isStyleKeeper
   };
 
   return RadiumEnhancer;

@@ -49,4 +49,29 @@ export default class StyleKeeper {
   _emitChange() {
     this._listeners.forEach(listener => listener());
   }
+
+  // React PropType validator function
+  static isStyleKeeper(props, propName, componentName) {
+    const msg = [
+      `Invalid prop ${propName} supplied to ${componentName}.`,
+      'Must be an instance of radium.StyleKeeper'
+    ].join(' ');
+
+    const requiredShape = {
+      subscribe: 'function',
+      addCSS: 'function',
+      getCSS: 'function',
+      _emitChange: 'function'
+    };
+
+    const shape = props[propName];
+
+    if (!Object.keys(requiredShape).every(key => {
+      // console.warn(key, typeof shape[key], requiredShape[key]);
+      return typeof shape[key] === requiredShape[key];
+    })) {
+      // console.error(shape, requiredShape)
+      throw new Error(msg);
+    }
+  }
 }
