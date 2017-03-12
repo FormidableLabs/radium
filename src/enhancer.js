@@ -2,7 +2,6 @@
 
 import {Component, PropTypes} from 'react';
 
-import StyleKeeper from './style-keeper.js';
 import resolveStyles from './resolve-styles.js';
 
 const KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
@@ -156,13 +155,21 @@ export default function enhanceWithRadium(
   RadiumEnhancer.contextTypes = {
     ...RadiumEnhancer.contextTypes,
     _radiumConfig: PropTypes.object,
-    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
+    _radiumStyleKeeper: PropTypes.shape({
+      subscribe: PropTypes.func,
+      addCSS: PropTypes.func,
+      getCSS: PropTypes.func
+    })
   };
 
   RadiumEnhancer.childContextTypes = {
     ...RadiumEnhancer.childContextTypes,
     _radiumConfig: PropTypes.object,
-    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
+    _radiumStyleKeeper: PropTypes.shape({
+      subscribe: PropTypes.func,
+      addCSS: PropTypes.func,
+      getCSS: PropTypes.func
+    })
   };
 
   return RadiumEnhancer;
