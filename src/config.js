@@ -6,9 +6,9 @@ import type {PluginConfig, PluginResult} from './plugins';
 type MediaQueryListListener = (mql: MediaQueryList) => void;
 
 type MediaQueryList = {
-  matches: bool;
-  addListener(listener: MediaQueryListListener): void;
-  removeListener(listener: MediaQueryListListener): void;
+  matches: boolean,
+  addListener(listener: MediaQueryListListener): void,
+  removeListener(listener: MediaQueryListListener): void,
 };
 
 export type Plugin = (pluginConfig: PluginConfig) => PluginResult;

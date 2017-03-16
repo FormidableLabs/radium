@@ -1,3 +1,3 @@
 export default {
-  getPrefixedStyle: style => style
+  getPrefixedStyle: style => style,
 };

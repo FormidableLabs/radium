@@ -9,64 +9,63 @@ import {getRenderOutput, getElement} from 'test-helpers';
 
 describe('Radium blackbox tests', () => {
   it('merges styles', () => {
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
-        return (
-          <div style={[
-            {color: 'blue'},
-            {background: 'red'}
-          ]} />
-        );
+        return <div style={[{color: 'blue'}, {background: 'red'}]} />;
       }
     }
 
     const output = getRenderOutput(<TestComponent />);
 
-    expect(output.props.style).to.deep.equal(
-      {color: 'blue', background: 'red'}
-    );
+    expect(output.props.style).to.deep.equal({
+      color: 'blue',
+      background: 'red',
+    });
   });
 
   it('merges nested styles', () => {
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         return (
-          <div style={[
-            [{color: 'blue'}, [{height: '2px', padding: '9px'}]],
-            {background: 'red'}
-          ]} />
+          <div
+            style={[
+              [{color: 'blue'}, [{height: '2px', padding: '9px'}]],
+              {background: 'red'},
+            ]}
+          />
         );
       }
     }
 
     const output = getRenderOutput(<TestComponent />);
 
-    expect(output.props.style).to.deep.equal(
-      {color: 'blue', background: 'red', height: '2px', padding: '9px'}
-    );
+    expect(output.props.style).to.deep.equal({
+      color: 'blue',
+      background: 'red',
+      height: '2px',
+      padding: '9px',
+    });
   });
 
   it('resolves styles on props', () => {
     class InnerComponent extends Component {}
 
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         return (
-          <InnerComponent header={
-            <div style={[{color: 'blue'}, {background: 'red'} ]}/>
-          } />
+          <InnerComponent
+            header={<div style={[{color: 'blue'}, {background: 'red'}]} />}
+          />
         );
       }
     }
 
     const output = getRenderOutput(<TestComponent />);
 
-    expect(output.props.header.props.style).to.deep.equal(
-      {color: 'blue', background: 'red'}
-    );
+    expect(output.props.header.props.style).to.deep.equal({
+      color: 'blue',
+      background: 'red',
+    });
   });
 
   it('resolves styles on props', () => {
@@ -76,16 +75,19 @@ describe('Radium blackbox tests', () => {
       }
     }
 
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         return (
-          <InnerComponent stuff={
-            <div style={[
-              {color: 'blue'},
-              {background: 'red', ':active': {color: 'green'}}
-            ]} />
-          } />
+          <InnerComponent
+            stuff={
+              <div
+                style={[
+                  {color: 'blue'},
+                  {background: 'red', ':active': {color: 'green'}},
+                ]}
+              />
+            }
+          />
         );
       }
     }
@@ -109,18 +111,21 @@ describe('Radium blackbox tests', () => {
       }
     }
 
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         return (
-          <InnerComponent>{arg =>
-            <div style={[
-              {color: 'blue'},
-              {background: 'red', ':active': {color: 'green'}}
-            ]}>
-              {arg}
-            </div>
-          }</InnerComponent>
+          <InnerComponent>
+            {arg => (
+              <div
+                style={[
+                  {color: 'blue'},
+                  {background: 'red', ':active': {color: 'green'}},
+                ]}
+              >
+                {arg}
+              </div>
+            )}
+          </InnerComponent>
         );
       }
     }
@@ -139,15 +144,16 @@ describe('Radium blackbox tests', () => {
   });
 
   it('adds hover styles', () => {
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         return (
-          <div style={{
-            background: 'red',
-            color: 'blue',
-            ':hover': {color: 'green'}
-          }} />
+          <div
+            style={{
+              background: 'red',
+              color: 'blue',
+              ':hover': {color: 'green'},
+            }}
+          />
         );
       }
     }
@@ -165,15 +171,16 @@ describe('Radium blackbox tests', () => {
   });
 
   it('adds active styles', () => {
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         return (
-          <div style={{
-            background: 'red',
-            color: 'blue',
-            ':active': {color: 'green'}
-          }} />
+          <div
+            style={{
+              background: 'red',
+              color: 'blue',
+              ':active': {color: 'green'},
+            }}
+          />
         );
       }
     }
@@ -191,26 +198,34 @@ describe('Radium blackbox tests', () => {
   });
 
   it('removes active styles on mouseup', () => {
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         return (
           <div>
-            <span key="a" style={{
-              background: 'red',
-              color: 'blue',
-              ':active': {color: 'green'}
-            }} />
-            <button key="b" style={{
-              background: 'red',
-              color: 'blue',
-              ':active': {color: 'green'}
-            }} />
-            <nav key="c" style={{
-              background: 'red',
-              color: 'blue',
-              ':active': {color: 'green'}
-            }} />
+            <span
+              key="a"
+              style={{
+                background: 'red',
+                color: 'blue',
+                ':active': {color: 'green'},
+              }}
+            />
+            <button
+              key="b"
+              style={{
+                background: 'red',
+                color: 'blue',
+                ':active': {color: 'green'},
+              }}
+            />
+            <nav
+              key="c"
+              style={{
+                background: 'red',
+                color: 'blue',
+                ':active': {color: 'green'},
+              }}
+            />
           </div>
         );
       }
@@ -243,21 +258,26 @@ describe('Radium blackbox tests', () => {
   });
 
   it('resolves styles on multiple elements nested far down, Issue #307', () => {
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         return (
           <section>
             <section>
               <section>
-                <header key="header" style={{
-                  color: 'yellow',
-                  ':hover': { color: 'blue' }
-                }} />
-                <footer key="footer" style={{
-                  color: 'green',
-                  ':hover': { color: 'red' }
-                }} />
+                <header
+                  key="header"
+                  style={{
+                    color: 'yellow',
+                    ':hover': {color: 'blue'},
+                  }}
+                />
+                <footer
+                  key="footer"
+                  style={{
+                    color: 'green',
+                    ':hover': {color: 'red'},
+                  }}
+                />
               </section>
             </section>
           </section>
@@ -281,9 +301,8 @@ describe('Radium blackbox tests', () => {
   });
 
   it('resolves styles if an element has element children and spreads props', () => {
-    @Radium
-    class Inner extends Component {
-      static propTypes = { children: PropTypes.node };
+    @Radium class Inner extends Component {
+      static propTypes = {children: PropTypes.node};
       render() {
         return (
           <div {...this.props} style={[{color: 'blue'}, {background: 'red'}]}>
@@ -293,8 +312,7 @@ describe('Radium blackbox tests', () => {
       }
     }
 
-    @Radium
-    class Outer extends Component {
+    @Radium class Outer extends Component {
       render() {
         return (
           <Inner>
@@ -313,13 +331,14 @@ describe('Radium blackbox tests', () => {
   });
 
   it('calls toString on object values', () => {
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         return (
-          <div style={{
-            background: {toString: () => 'red'}
-          }} />
+          <div
+            style={{
+              background: {toString: () => 'red'},
+            }}
+          />
         );
       }
     }
@@ -335,19 +354,21 @@ describe('Radium blackbox tests', () => {
       return {
         matches: true,
         addListener: function() {},
-        removeListener: function() {}
+        removeListener: function() {},
       };
     };
 
     @Radium({
-      matchMedia: truthyMatchMedia
+      matchMedia: truthyMatchMedia,
     })
     class TestComponent extends Component {
       render() {
         return (
-          <div style={{
-            '@media (min-width: 600px)': {':hover': {color: 'blue'}}
-          }} />
+          <div
+            style={{
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+            }}
+          />
         );
       }
     }
@@ -364,30 +385,31 @@ describe('Radium blackbox tests', () => {
     class TestComponent extends Component {
       render() {
         return (
-          <div style={{
-            height: ['100%', '100vh']
-          }} />
+          <div
+            style={{
+              height: ['100%', '100vh'],
+            }}
+          />
         );
       }
     }
 
     const output = getRenderOutput(<TestComponent />);
 
-    expect(output.props.style).to.deep.equal(
-      {height: '100%;height:100vh'}
-    );
+    expect(output.props.style).to.deep.equal({height: '100%;height:100vh'});
   });
 
   it('adds active styles on space', () => {
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         return (
-          <div style={{
-            background: 'red',
-            color: 'blue',
-            ':active': {color: 'green'}
-          }} />
+          <div
+            style={{
+              background: 'red',
+              color: 'blue',
+              ':active': {color: 'green'},
+            }}
+          />
         );
       }
     }
@@ -409,8 +431,7 @@ describe('Radium blackbox tests', () => {
   });
 
   it('works with children as keyed object ala React Router', () => {
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         return (
           <div>
@@ -425,9 +446,9 @@ describe('Radium blackbox tests', () => {
       <TestComponent>
         {{
           nav: <nav>nav</nav>,
-          main: <main>main</main>
+          main: <main>main</main>,
         }}
-      </TestComponent>
+      </TestComponent>,
     );
 
     const nav = getElement(output, 'nav');
@@ -438,8 +459,7 @@ describe('Radium blackbox tests', () => {
   });
 
   it('preserves array children as arrays', () => {
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         expect(Array.isArray(this.props.children)).to.equal(true);
         return (
@@ -452,11 +472,8 @@ describe('Radium blackbox tests', () => {
 
     const output = TestUtils.renderIntoDocument(
       <TestComponent>
-        {[
-          <nav key="nav">nav</nav>,
-          <main key="main">main</main>
-        ]}
-      </TestComponent>
+        {[<nav key="nav">nav</nav>, <main key="main">main</main>]}
+      </TestComponent>,
     );
 
     const nav = getElement(output, 'nav');
@@ -469,8 +486,7 @@ describe('Radium blackbox tests', () => {
   it('calls existing onMouseEnter handler', () => {
     const handleMouseEnter = sinon.spy();
 
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         return (
           <div
@@ -491,8 +507,7 @@ describe('Radium blackbox tests', () => {
   it('calls existing onMouseLeave handler', () => {
     const handleMouseLeave = sinon.spy();
 
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         return (
           <div
@@ -513,8 +528,7 @@ describe('Radium blackbox tests', () => {
   it('calls existing onMouseDown handler', () => {
     const handleMouseDown = sinon.spy();
 
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         return (
           <div
@@ -535,14 +549,10 @@ describe('Radium blackbox tests', () => {
   it('calls existing onFocus handler', () => {
     const handleFocus = sinon.spy();
 
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         return (
-          <input
-            onFocus={handleFocus}
-            style={{':focus': {color: 'red'}}}
-          />
+          <input onFocus={handleFocus} style={{':focus': {color: 'red'}}} />
         );
       }
     }
@@ -557,15 +567,9 @@ describe('Radium blackbox tests', () => {
   it('calls existing onBlur handler', () => {
     const handleBlur = sinon.spy();
 
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
-        return (
-          <input
-            onBlur={handleBlur}
-            style={{':focus': {color: 'red'}}}
-          />
-        );
+        return <input onBlur={handleBlur} style={{':focus': {color: 'red'}}} />;
       }
     }
 
@@ -577,8 +581,7 @@ describe('Radium blackbox tests', () => {
   });
 
   it('ignores callback refs', () => {
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         return (
           <div>
@@ -605,15 +608,14 @@ describe('Radium blackbox tests', () => {
     it('runs a custom plugin', () => {
       const makeItRedPlugin = () => ({style: {color: 'red'}});
 
-      @Radium
-      class TestComponent extends Component {
+      @Radium class TestComponent extends Component {
         render() {
           return <div style={{}} />;
         }
       }
 
       const output = TestUtils.renderIntoDocument(
-        <TestComponent radiumConfig={{plugins: [makeItRedPlugin]}} />
+        <TestComponent radiumConfig={{plugins: [makeItRedPlugin]}} />,
       );
       const div = getElement(output, 'div');
 
@@ -622,7 +624,7 @@ describe('Radium blackbox tests', () => {
   });
 
   /* eslint-disable no-console */
-  it('doesn\'t try to setState if not mounted', () => {
+  it("doesn't try to setState if not mounted", () => {
     sinon.stub(console, 'error');
     sinon.stub(console, 'warn');
 
@@ -638,7 +640,7 @@ describe('Radium blackbox tests', () => {
       }
     }
 
-    const output = TestUtils.renderIntoDocument(<TestComponent/>);
+    const output = TestUtils.renderIntoDocument(<TestComponent />);
 
     ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(output).parentNode);
 
@@ -666,7 +668,7 @@ describe('Radium blackbox tests', () => {
     MyStatelessComponent = Radium(MyStatelessComponent);
 
     const output = TestUtils.renderIntoDocument(
-      <MyStatelessComponent>hello world</MyStatelessComponent>
+      <MyStatelessComponent>hello world</MyStatelessComponent>,
     );
     const div = getElement(output, 'div');
 
@@ -697,14 +699,14 @@ describe('Radium blackbox tests', () => {
       </div>
     );
     MyStatelessComponent.contextTypes = {
-      hoverColor: PropTypes.string
+      hoverColor: PropTypes.string,
     };
     MyStatelessComponent = Radium(MyStatelessComponent);
 
     class ContextGivingWrapper extends Component {
       getChildContext() {
         return {
-          hoverColor: 'green'
+          hoverColor: 'green',
         };
       }
       render() {
@@ -712,13 +714,13 @@ describe('Radium blackbox tests', () => {
       }
     }
     ContextGivingWrapper.childContextTypes = {
-      hoverColor: PropTypes.string
+      hoverColor: PropTypes.string,
     };
 
     const output = TestUtils.renderIntoDocument(
       <ContextGivingWrapper>
         <MyStatelessComponent>hello world</MyStatelessComponent>
-      </ContextGivingWrapper>
+      </ContextGivingWrapper>,
     );
     const div = getElement(output, 'div');
 
@@ -753,9 +755,7 @@ describe('Radium blackbox tests', () => {
     TestComponent.propTypes = {style: PropTypes.object};
     TestComponent = Radium(TestComponent);
 
-    TestUtils.renderIntoDocument(
-      <TestComponent style={[]} />
-    );
+    TestUtils.renderIntoDocument(<TestComponent style={[]} />);
 
     expect(console.error).not.to.have.been.called;
     expect(console.warn).not.to.have.been.called;
@@ -769,15 +769,14 @@ describe('Radium blackbox tests', () => {
     it('receives config from radiumConfig prop', () => {
       const plugin = sinon.spy();
 
-      @Radium
-      class TestComponent extends Component {
+      @Radium class TestComponent extends Component {
         render() {
           return <div style={{}} />;
         }
       }
 
       TestUtils.renderIntoDocument(
-        <TestComponent radiumConfig={{plugins: [plugin]}} />
+        <TestComponent radiumConfig={{plugins: [plugin]}} />,
       );
 
       expect(plugin).to.have.been.called;
@@ -786,22 +785,20 @@ describe('Radium blackbox tests', () => {
     it('receives config from context', () => {
       const plugin = sinon.spy();
 
-      @Radium
-      class ParentComponent extends Component {
+      @Radium class ParentComponent extends Component {
         render() {
           return <div style={{}}><ChildComponent /></div>;
         }
       }
 
-      @Radium
-      class ChildComponent extends Component {
+      @Radium class ChildComponent extends Component {
         render() {
           return <div style={{}} />;
         }
       }
 
       TestUtils.renderIntoDocument(
-        <ParentComponent radiumConfig={{plugins: [plugin]}} />
+        <ParentComponent radiumConfig={{plugins: [plugin]}} />,
       );
 
       expect(plugin).to.have.callCount(2);

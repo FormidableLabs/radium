@@ -11,7 +11,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
- /* eslint-disable no-use-before-define */
+/* eslint-disable no-use-before-define */
 
 const React = require('react');
 
@@ -31,10 +31,12 @@ class HoverMessage extends React.Component {
   render() {
     return (
       <div>
-        <button key="button" style={{display: 'flex', ':hover': {}}}>Hover me!</button>
-        {Radium.getState(this.state, 'button', ':hover') ? (
-          <span>{' '}Hovering!</span>
-        ) : null}
+        <button key="button" style={{display: 'flex', ':hover': {}}}>
+          Hover me!
+        </button>
+        {Radium.getState(this.state, 'button', ':hover')
+          ? <span>{' '}Hovering!</span>
+          : null}
       </div>
     );
   }
@@ -44,14 +46,17 @@ HoverMessage = Radium(HoverMessage);
 //
 // Radium with ES7 decorator
 //
-@Radium
-class TwoSquares extends React.Component {
+@Radium class TwoSquares extends React.Component {
   render() {
     return (
       <div>
         <div key="one" style={[squareStyles.all, squareStyles.one]} />
         <div key="two" style={[squareStyles.all, squareStyles.two]} />
-        <div disabled key="three" style={[squareStyles.all, squareStyles.three]} />
+        <div
+          disabled
+          key="three"
+          style={[squareStyles.all, squareStyles.three]}
+        />
         <div style={{clear: 'both'}} />
       </div>
     );
@@ -62,31 +67,34 @@ let Spinner = React.createClass({
   render() {
     return (
       <div>
-        <div style={[
-          spinnerStyles.inner,
-          {'@media print': {height: '10px'}}
-        ]} />
+        <div
+          style={[spinnerStyles.inner, {'@media print': {height: '10px'}}]}
+        />
       </div>
     );
-  }
+  },
 });
 Spinner = Radium(Spinner);
 
-const VisitedLink = Radium(() =>
+const VisitedLink = Radium(() => (
   <a
     href="https://github.com/formidablelabs/radium"
-    style={{color: 'gray', ':visited': {color: 'black'}}}>
+    style={{color: 'gray', ':visited': {color: 'black'}}}
+  >
     https://github.com/formidablelabs/radium
   </a>
-);
+));
 
 let App = React.createClass({
   _remount: function() {
     this.setState({shouldRenderNull: true});
 
-    setTimeout(function() {
-      this.setState({shouldRenderNull: false});
-    }.bind(this), 100);
+    setTimeout(
+      function() {
+        this.setState({shouldRenderNull: false});
+      }.bind(this),
+      100,
+    );
   },
 
   render: function() {
@@ -114,7 +122,7 @@ let App = React.createClass({
         <Button
           style={{
             fontSize: '1.5em',
-            borderRadius: 3
+            borderRadius: 3,
           }}
         >
           Button
@@ -122,36 +130,38 @@ let App = React.createClass({
 
         <div style={{margin: '20px 0', width: 220}}>
           {Array.apply(null, Array(100)).map(function(_, i) {
-            return (<div key={'tile' + i} style={tileStyle} />);
+            return <div key={'tile' + i} style={tileStyle} />;
           })}
           <div style={{clear: 'both'}} />
         </div>
 
         <ul style={listStyle}>
-          <li>Create and use reusable rules with the help of spread operators.</li>
+          <li>
+            Create and use reusable rules with the help of spread operators.
+          </li>
         </ul>
 
         <Style
           rules={{
             body: {
               margin: 0,
-              fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
+              fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
             },
             mediaQueries: {
               '(max-width: 600px)': {
                 body: {
-                  background: 'gray'
-                }
+                  background: 'gray',
+                },
               },
               '(max-width: 500px)': {
                 body: {
-                  background: 'blue'
+                  background: 'blue',
                 },
                 'p, h1': {
-                  color: 'white'
-                }
-              }
-            }
+                  color: 'white',
+                },
+              },
+            },
           }}
         />
 
@@ -161,9 +171,9 @@ let App = React.createClass({
           <Style
             rules={{
               span: {
-                fontFamily: 'Lucida Console, Monaco, monospace'
+                fontFamily: 'Lucida Console, Monaco, monospace',
               },
-              color: 'blue'
+              color: 'blue',
             }}
             scopeSelector=".scoping-class"
           />
@@ -171,7 +181,7 @@ let App = React.createClass({
         </div>
       </StyleRoot>
     );
-  }
+  },
 });
 App = Radium(App);
 
@@ -181,26 +191,26 @@ const squareStyles = {
     border: 'solid 1px white',
     float: 'left',
     height: 100,
-    width: 100
+    width: 100,
   },
   one: {
     ':hover': {
-      background: 'blue'
-    }
+      background: 'blue',
+    },
   },
   two: {
     ':hover': {
-      background: 'red'
-    }
+      background: 'red',
+    },
   },
   three: {
     ':hover': {
-      background: 'yellow'
+      background: 'yellow',
     },
     ':disabled': {
-      background: 'red'
-    }
-  }
+      background: 'red',
+    },
+  },
 };
 
 const tileStyle = {
@@ -214,15 +224,18 @@ const tileStyle = {
   cursor: 'pointer',
 
   ':hover': {
-    background: '#999'
-  }
+    background: '#999',
+  },
 };
 
-const pulseAnimation = Radium.keyframes({
-  '0%': {width: '10%'},
-  '50%': {width: '50%'},
-  '100%': {width: '10%'}
-}, 'pulse');
+const pulseAnimation = Radium.keyframes(
+  {
+    '0%': {width: '10%'},
+    '50%': {width: '50%'},
+    '100%': {width: '10%'},
+  },
+  'pulse',
+);
 
 const spinnerStyles = {
   inner: {
@@ -230,14 +243,14 @@ const spinnerStyles = {
     animationName: pulseAnimation,
     background: 'blue',
     height: '4px',
-    margin: '0 auto'
-  }
+    margin: '0 auto',
+  },
 };
 
 const listStyle = {
   ...resetListStyle,
   ...resetBoxModel,
-  margin: 15
+  margin: 15,
 };
 
 module.exports = App;

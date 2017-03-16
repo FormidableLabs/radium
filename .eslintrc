@@ -4,7 +4,7 @@ ecmaFeatures:
   jsx: true
   modules: true
 
-plugins: ["react", "flow-vars"]
+plugins: ["react", "flow-vars", "prettier"]
 
 env:
     browser: true
@@ -29,7 +29,7 @@ rules:
     #                                                                         #
     ###########################################################################
 
-    comma-dangle: 2         # disallow trailing commas in object literals
+
     no-cond-assign: 2          # disallow assignment in conditional expressions
     no-console: 2              # disallow use of console
     no-constant-condition: 2   # disallow use of constant expressions in conditions
@@ -178,13 +178,11 @@ rules:
         [2, "1tbs", { "allowSingleLine": true }]
     camelcase: 2                   # require camel case names
     comma-spacing: 2               # enforce spacing before and after comma
-    comma-style: 2                 # enforce one true comma style
     consistent-this: [2, "self"]   # enforces consistent naming when capturing the current execution context
     eol-last: 2                    # enforce newline at the end of file, with no multiple empty lines
     func-names: 0                  # require function expressions to have a name
     func-style: [0, "expression"] # enforces use of function expressions
     key-spacing: 2                 # enforces spacing between keys and values in object literal properties
-    indent: [2, 2]
     max-nested-callbacks: [2, 4]   # specify the maximum depth callbacks can be nested
     new-cap: 0                     # require a capital letter for constructors
     new-parens: 2                  # disallow the omission of parentheses when invoking a constructor with no arguments
@@ -256,7 +254,7 @@ rules:
     react/self-closing-comp: 2
     react/sort-comp: 2
     react/sort-prop-types: 2
-    react/wrap-multilines: 2
+    react/jsx-wrap-multilines: 2
 
     ###########################################################################
     #                                                                         #
@@ -265,3 +263,18 @@ rules:
     ###########################################################################
     flow-vars/define-flow-type: 2
     flow-vars/use-flow-type: 2
+
+
+    ###########################################################################
+    #                                                                         #
+    #   Prettier                                                              #
+    #                                                                         #
+    ###########################################################################
+    prettier/prettier: [
+      "error",
+      {
+        "bracketSpacing": false,
+        "trailingComma": "all",
+        "singleQuote": true
+      }
+    ]

@@ -25,19 +25,25 @@ describe('keyframes', () => {
     const output = TestUtils.renderIntoDocument(<TestComponent />);
     const style = getElement(output, 'style');
 
-    expectCSS(style, `
+    expectCSS(
+      style,
+      `
       @-webkit-keyframes slide-radium-animation-1bdcc98d {
         from {left: 0;}
         to {left: 100px;}
       }
-    `);
+    `,
+    );
   });
 
   it('renders keyframes in root style component', () => {
-    const animation = keyframes({
-      from: {left: '-1000px'},
-      to: {left: 0}
-    }, 'SlideFromLeft');
+    const animation = keyframes(
+      {
+        from: {left: '-1000px'},
+        to: {left: 0},
+      },
+      'SlideFromLeft',
+    );
 
     class TestComponent extends Component {
       render() {
@@ -49,7 +55,9 @@ describe('keyframes', () => {
 
     const style = getElement(output, 'style');
 
-    expectCSS(style, `
+    expectCSS(
+      style,
+      `
       @keyframes SlideFromLeft-radium-animation-1b668a10 {
         from{
           left: -1000px;
@@ -58,14 +66,18 @@ describe('keyframes', () => {
           left: 0;
         }
       }
-    `);
+    `,
+    );
   });
 
   it('adds px suffix when property is not unitless', () => {
-    const animation = keyframes({
-      from: {left: -1000},
-      to: {left: 10}
-    }, 'SlideFromLeft');
+    const animation = keyframes(
+      {
+        from: {left: -1000},
+        to: {left: 10},
+      },
+      'SlideFromLeft',
+    );
 
     class TestComponent extends Component {
       render() {
@@ -77,7 +89,9 @@ describe('keyframes', () => {
 
     const style = getElement(output, 'style');
 
-    expectCSS(style, `
+    expectCSS(
+      style,
+      `
       @keyframes SlideFromLeft-radium-animation-ab5ed129 {
         from{
           left: -1000px;
@@ -86,24 +100,26 @@ describe('keyframes', () => {
           left: 10px;
         }
       }
-    `);
+    `,
+    );
   });
 
   it('renders keyframes from child component', () => {
-    const animation = keyframes({
-      from: {left: '-1000px'},
-      to: {left: 0}
-    }, 'SlideFromLeft');
+    const animation = keyframes(
+      {
+        from: {left: '-1000px'},
+        to: {left: 0},
+      },
+      'SlideFromLeft',
+    );
 
-    @Radium
-    class ChildComponent extends Component {
+    @Radium class ChildComponent extends Component {
       render() {
         return <div style={{animationName: animation}} />;
       }
     }
 
-    @Radium
-    class TestComponent extends Component {
+    @Radium class TestComponent extends Component {
       render() {
         return (
           <StyleRoot>
@@ -117,7 +133,9 @@ describe('keyframes', () => {
 
     const style = getElement(output, 'style');
 
-    expectCSS(style, `
+    expectCSS(
+      style,
+      `
       @keyframes SlideFromLeft-radium-animation-1b668a10 {
         from{
           left: -1000px;
@@ -126,7 +144,7 @@ describe('keyframes', () => {
           left: 0;
         }
       }
-    `);
+    `,
+    );
   });
-
 });

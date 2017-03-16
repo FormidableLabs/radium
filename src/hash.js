@@ -12,7 +12,7 @@ export default function hash(text: string): string {
   let index = text.length - 1;
 
   while (index) {
-    hashValue = (hashValue * 33) ^ text.charCodeAt(index);
+    hashValue = hashValue * 33 ^ text.charCodeAt(index);
     index -= 1;
   }
 

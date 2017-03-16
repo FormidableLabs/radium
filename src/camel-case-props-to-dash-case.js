@@ -13,17 +13,20 @@ const _camelCaseToDashCase = function(s) {
 const camelCasePropsToDashCase = function(prefixedStyle: Object): Object {
   // Since prefix is expected to work on inline style objects, we must
   // translate the keys to dash case for rendering to CSS.
-  return Object.keys(prefixedStyle).reduce((result, key) => {
-    let dashCaseKey = _camelCaseToDashCase(key);
+  return Object.keys(prefixedStyle).reduce(
+    (result, key) => {
+      let dashCaseKey = _camelCaseToDashCase(key);
 
-    // Fix IE vendor prefix
-    if (/^ms-/.test(dashCaseKey)) {
-      dashCaseKey = `-${dashCaseKey}`;
-    }
+      // Fix IE vendor prefix
+      if (/^ms-/.test(dashCaseKey)) {
+        dashCaseKey = `-${dashCaseKey}`;
+      }
 
-    result[dashCaseKey] = prefixedStyle[key];
-    return result;
-  }, {});
+      result[dashCaseKey] = prefixedStyle[key];
+      return result;
+    },
+    {},
+  );
 };
 
 export default camelCasePropsToDashCase;

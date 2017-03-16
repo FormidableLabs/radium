@@ -8,11 +8,10 @@ import StyleSheet from './style-sheet';
 
 function _getStyleKeeper(instance): StyleKeeper {
   if (!instance._radiumStyleKeeper) {
-    const userAgent = (
-      instance.props.radiumConfig && instance.props.radiumConfig.userAgent
-    ) || (
-      instance.context._radiumConfig && instance.context._radiumConfig.userAgent
-    );
+    const userAgent = (instance.props.radiumConfig &&
+      instance.props.radiumConfig.userAgent) ||
+      (instance.context._radiumConfig &&
+        instance.context._radiumConfig.userAgent);
     instance._radiumStyleKeeper = new StyleKeeper(userAgent);
   }
 
@@ -20,8 +19,6 @@ function _getStyleKeeper(instance): StyleKeeper {
 }
 
 class StyleRoot extends PureComponent {
-  _radiumStyleKeeper: StyleKeeper;
-
   constructor() {
     super(...arguments);
 
@@ -31,6 +28,8 @@ class StyleRoot extends PureComponent {
   getChildContext() {
     return {_radiumStyleKeeper: _getStyleKeeper(this)};
   }
+
+  _radiumStyleKeeper: StyleKeeper;
 
   render() {
     /* eslint-disable no-unused-vars */
@@ -49,11 +48,11 @@ class StyleRoot extends PureComponent {
 
 StyleRoot.contextTypes = {
   _radiumConfig: PropTypes.object,
-  _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
+  _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper),
 };
 
 StyleRoot.childContextTypes = {
-  _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
+  _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper),
 };
 
 StyleRoot = Enhancer(StyleRoot);

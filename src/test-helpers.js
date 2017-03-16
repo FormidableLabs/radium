@@ -10,7 +10,7 @@ export function getRenderOutput(element) {
 
 export function getElement(output, tagName) {
   return ReactDOM.findDOMNode(
-    TestUtils.findRenderedDOMComponentWithTag(output, tagName)
+    TestUtils.findRenderedDOMComponentWithTag(output, tagName),
   );
 }
 

@@ -10,7 +10,7 @@ if (process.env.NODE_ENV !== 'production') {
   // https://developer.mozilla.org/en-US/docs/Web/CSS/Shorthand_properties
 
   const shorthandPropertyExpansions = {
-    'background': [
+    background: [
       'backgroundAttachment',
       'backgroundBlendMode',
       'backgroundClip',
@@ -23,9 +23,9 @@ if (process.env.NODE_ENV !== 'production') {
       'backgroundRepeat',
       'backgroundRepeatX',
       'backgroundRepeatY',
-      'backgroundSize'
+      'backgroundSize',
     ],
-    'border': [
+    border: [
       'borderBottom',
       'borderBottomColor',
       'borderBottomStyle',
@@ -44,22 +44,22 @@ if (process.env.NODE_ENV !== 'production') {
       'borderTopColor',
       'borderTopStyle',
       'borderTopWidth',
-      'borderWidth'
+      'borderWidth',
     ],
-    'borderImage': [
+    borderImage: [
       'borderImageOutset',
       'borderImageRepeat',
       'borderImageSlice',
       'borderImageSource',
-      'borderImageWidth'
+      'borderImageWidth',
     ],
-    'borderRadius': [
+    borderRadius: [
       'borderBottomLeftRadius',
       'borderBottomRightRadius',
       'borderTopLeftRadius',
-      'borderTopRightRadius'
+      'borderTopRightRadius',
     ],
-    'font': [
+    font: [
       'fontFamily',
       'fontKerning',
       'fontSize',
@@ -68,31 +68,17 @@ if (process.env.NODE_ENV !== 'production') {
       'fontVariant',
       'fontVariantLigatures',
       'fontWeight',
-      'lineHeight'
+      'lineHeight',
     ],
-    'listStyle': [
-      'listStyleImage',
-      'listStylePosition',
-      'listStyleType'
-    ],
-    'margin': [
-      'marginBottom',
-      'marginLeft',
-      'marginRight',
-      'marginTop'
-    ],
-    'padding': [
-      'paddingBottom',
-      'paddingLeft',
-      'paddingRight',
-      'paddingTop'
-    ],
-    'transition': [
+    listStyle: ['listStyleImage', 'listStylePosition', 'listStyleType'],
+    margin: ['marginBottom', 'marginLeft', 'marginRight', 'marginTop'],
+    padding: ['paddingBottom', 'paddingLeft', 'paddingRight', 'paddingTop'],
+    transition: [
       'transitionDelay',
       'transitionDuration',
       'transitionProperty',
-      'transitionTimingFunction'
-    ]
+      'transitionTimingFunction',
+    ],
   };
 
   checkProps = function(config: PluginConfig): PluginResult {
@@ -105,7 +91,9 @@ if (process.env.NODE_ENV !== 'production') {
     styleKeys.forEach(styleKey => {
       if (
         Array.isArray(shorthandPropertyExpansions[styleKey]) &&
-        shorthandPropertyExpansions[styleKey].some(sp => styleKeys.indexOf(sp) !== -1)
+        shorthandPropertyExpansions[styleKey].some(
+          sp => styleKeys.indexOf(sp) !== -1,
+        )
       ) {
         if (process.env.NODE_ENV !== 'production') {
           /* eslint-disable no-console */
@@ -113,10 +101,12 @@ if (process.env.NODE_ENV !== 'production') {
             'Radium: property "' + styleKey + '" in style object',
             style,
             ': do not mix longhand and ' +
-            'shorthand properties in the same style object. Check the render ' +
-            'method of ' + componentName + '.',
+              'shorthand properties in the same style object. Check the render ' +
+              'method of ' +
+              componentName +
+              '.',
             'See https://github.com/FormidableLabs/radium/issues/95 for more ' +
-            'information.'
+              'information.',
           );
           /* eslint-enable no-console */
         }

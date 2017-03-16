@@ -12,7 +12,7 @@ const KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
   'length',
   'name',
   'prototype',
-  'type'
+  'type',
 ];
 
 function copyProperties(source, target) {
@@ -28,7 +28,8 @@ function copyProperties(source, target) {
 }
 
 function isStateless(component: Function): boolean {
-  return !component.render && !(component.prototype && component.prototype.render);
+  return !component.render &&
+    !(component.prototype && component.prototype.render);
 }
 
 export default function enhanceWithRadium(
@@ -62,10 +63,11 @@ export default function enhanceWithRadium(
 
     state: Object;
 
-    _radiumMediaQueryListenersByQuery: {[query: string]: {remove: () => void}};
+    _radiumMediaQueryListenersByQuery: {
+      [query: string]: {remove: () => void},
+    };
     _radiumMouseUpListener: {remove: () => void};
-    _radiumIsMounted: bool;
-
+    _radiumIsMounted: boolean;
 
     constructor() {
       super(...arguments);
@@ -91,15 +93,15 @@ export default function enhanceWithRadium(
           function(query) {
             this._radiumMediaQueryListenersByQuery[query].remove();
           },
-          this
+          this,
         );
       }
     }
 
     getChildContext() {
-      const superChildContext = super.getChildContext ?
-        super.getChildContext() :
-        {};
+      const superChildContext = super.getChildContext
+        ? super.getChildContext()
+        : {};
 
       if (!this.props.radiumConfig) {
         return superChildContext;
@@ -117,12 +119,13 @@ export default function enhanceWithRadium(
     render() {
       const renderedElement = super.render();
       let currentConfig = this.props.radiumConfig ||
-        this.context._radiumConfig || config;
+        this.context._radiumConfig ||
+        config;
 
       if (config && currentConfig !== config) {
         currentConfig = {
           ...config,
-          ...currentConfig
+          ...currentConfig,
         };
       }
 
@@ -146,28 +149,24 @@ export default function enhanceWithRadium(
   if (RadiumEnhancer.propTypes && RadiumEnhancer.propTypes.style) {
     RadiumEnhancer.propTypes = {
       ...RadiumEnhancer.propTypes,
-      style: PropTypes.oneOfType([
-        PropTypes.array,
-        PropTypes.object
-      ])
+      style: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
     };
   }
 
-  RadiumEnhancer.displayName =
-    component.displayName ||
+  RadiumEnhancer.displayName = component.displayName ||
     component.name ||
     'Component';
 
   RadiumEnhancer.contextTypes = {
     ...RadiumEnhancer.contextTypes,
     _radiumConfig: PropTypes.object,
-    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
+    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper),
   };
 
   RadiumEnhancer.childContextTypes = {
     ...RadiumEnhancer.childContextTypes,
     _radiumConfig: PropTypes.object,
-    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
+    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper),
   };
 
   return RadiumEnhancer;

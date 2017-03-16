@@ -1,13 +1,13 @@
 const resolveStyles = sinon.spy(require('resolve-styles.js'));
 const Enhancer = require('inject-loader!enhancer.js')({
-  './resolve-styles.js': resolveStyles
+  './resolve-styles.js': resolveStyles,
 });
 
 import React, {Component} from 'react';
 
 describe('Enhancer', () => {
   it('sets up initial state', () => {
-    class Composed extends Component { }
+    class Composed extends Component {}
     const Enhanced = Enhancer(Composed);
 
     const instance = new Enhanced();
@@ -27,9 +27,7 @@ describe('Enhancer', () => {
 
     const instance = new Enhanced();
 
-    expect(instance.state).to.deep.equal(
-      {foo: 'bar', _radiumStyleState: {}}
-    );
+    expect(instance.state).to.deep.equal({foo: 'bar', _radiumStyleState: {}});
   });
 
   it('receives the given props', () => {
@@ -109,7 +107,7 @@ describe('Enhancer', () => {
     class Composed extends Component {
       constructor() {
         super();
-        this._radiumMouseUpListener = { remove: removeMouseUpListener };
+        this._radiumMouseUpListener = {remove: removeMouseUpListener};
       }
       render() {}
     }
@@ -123,9 +121,9 @@ describe('Enhancer', () => {
 
   it('removes media query listeners on componentWillUnmount', () => {
     const mediaQueryListenersByQuery = {
-      '(min-width: 1000px)': { remove: sinon.spy() },
-      '(max-width: 600px)': { remove: sinon.spy() },
-      '(min-resolution: 2dppx)': { remove: sinon.spy() }
+      '(min-width: 1000px)': {remove: sinon.spy()},
+      '(max-width: 600px)': {remove: sinon.spy()},
+      '(min-resolution: 2dppx)': {remove: sinon.spy()},
     };
     class Composed extends Component {
       constructor() {
@@ -147,24 +145,23 @@ describe('Enhancer', () => {
   it('manually populates all static properties for IE <10', () => {
     class Composed extends Component {
       static staticMethod() {
-        return { bar: 'foo' };
+        return {bar: 'foo'};
       }
       render() {}
     }
 
-    Composed.defaultProps = { foo: 'bar' };
+    Composed.defaultProps = {foo: 'bar'};
 
     const Enhanced = Enhancer(Composed);
 
-    expect(Enhanced.defaultProps).to.deep.equal({ foo: 'bar' });
-    expect(Enhanced.staticMethod()).to.deep.equal({ bar: 'foo' });
+    expect(Enhanced.defaultProps).to.deep.equal({foo: 'bar'});
+    expect(Enhanced.staticMethod()).to.deep.equal({bar: 'foo'});
   });
 
   it('copies methods across to top level prototype', () => {
     const Composed = React.createClass({
-
       getStyles: function() {
-        return [{ color: 'black' }];
+        return [{color: 'black'}];
       },
 
       render: function() {
@@ -173,8 +170,7 @@ describe('Enhancer', () => {
             Hello World!
           </div>
         );
-      }
-
+      },
     });
 
     const Enhanced = Enhancer(Composed);
@@ -183,5 +179,4 @@ describe('Enhancer', () => {
       expect(Enhanced.prototype.hasOwnProperty(key)).to.equal(true);
     });
   });
-
 });

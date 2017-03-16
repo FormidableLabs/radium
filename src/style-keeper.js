@@ -3,7 +3,7 @@
 export default class StyleKeeper {
   _userAgent: string;
   _listeners: Array<() => void>;
-  _cssSet: {[id: string]: bool};
+  _cssSet: {[id: string]: boolean};
 
   constructor(userAgent: string) {
     this._userAgent = userAgent;
@@ -23,7 +23,7 @@ export default class StyleKeeper {
         if (listenerIndex > -1) {
           this._listeners.splice(listenerIndex, 1);
         }
-      }
+      },
     };
   }
 
@@ -38,7 +38,7 @@ export default class StyleKeeper {
       remove: () => {
         delete this._cssSet[css];
         this._emitChange();
-      }
+      },
     };
   }
 

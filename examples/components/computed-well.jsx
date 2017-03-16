@@ -17,7 +17,7 @@ const Radium = require('../../src/index');
 const ComputedWell = React.createClass({
   getInitialState: function() {
     return {
-      dynamicBg: '#000'
+      dynamicBg: '#000',
     };
   },
 
@@ -25,7 +25,7 @@ const ComputedWell = React.createClass({
     return {
       padding: '1em',
       borderRadius: 5,
-      background: this.state.dynamicBg
+      background: this.state.dynamicBg,
     };
   },
 
@@ -33,7 +33,7 @@ const ComputedWell = React.createClass({
     ev.preventDefault();
 
     this.setState({
-      dynamicBg: this.refs.input.getDOMNode().value
+      dynamicBg: this.refs.input.getDOMNode().value,
     });
   },
 
@@ -45,7 +45,7 @@ const ComputedWell = React.createClass({
         <button>Change Background Color</button>
       </form>
     );
-  }
+  },
 });
 
 module.exports = Radium(ComputedWell);

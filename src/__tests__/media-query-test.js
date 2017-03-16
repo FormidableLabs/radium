@@ -4,7 +4,12 @@ import Radium, {StyleRoot} from 'index';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
-import {expectColor, expectCSS, getRenderOutput, getElement} from 'test-helpers';
+import {
+  expectColor,
+  expectCSS,
+  getRenderOutput,
+  getElement,
+} from 'test-helpers';
 
 describe('Media query tests', () => {
   beforeEach(() => {
@@ -23,9 +28,11 @@ describe('Media query tests', () => {
     class TestComponent extends Component {
       render() {
         return (
-          <div style={{
-            '@media (min-width: 600px)': {':hover': {color: 'blue'}}
-          }} />
+          <div
+            style={{
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+            }}
+          />
         );
       }
     }
@@ -44,9 +51,11 @@ describe('Media query tests', () => {
     class TestComponent extends Component {
       render() {
         return (
-          <div style={{
-            '@media (min-width: 600px)': {':hover': {color: 'blue'}}
-          }} />
+          <div
+            style={{
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+            }}
+          />
         );
       }
     }
@@ -70,11 +79,15 @@ describe('Media query tests', () => {
           <div>
             <div
               key="first"
-              style={{'@media (max-width: 400px)': {':hover': {color: 'blue'}}}}
+              style={{
+                '@media (max-width: 400px)': {':hover': {color: 'blue'}},
+              }}
             />
             <div
               key="second"
-              style={{'@media (max-width: 400px)': {':hover': {color: 'blue'}}}}
+              style={{
+                '@media (max-width: 400px)': {':hover': {color: 'blue'}},
+              }}
             />
           </div>
         );
@@ -92,7 +105,7 @@ describe('Media query tests', () => {
       return {
         matches: true,
         addListener: () => {},
-        removeListener: () => {}
+        removeListener: () => {},
       };
     };
 
@@ -100,9 +113,11 @@ describe('Media query tests', () => {
     class TestComponent extends Component {
       render() {
         return (
-          <div style={{
-            '@media (min-width: 600px)': {':hover': {color: 'blue'}}
-          }} />
+          <div
+            style={{
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+            }}
+          />
         );
       }
     }
@@ -119,7 +134,7 @@ describe('Media query tests', () => {
       return {
         matches: true,
         addListener: () => {},
-        removeListener: () => {}
+        removeListener: () => {},
       };
     };
 
@@ -127,11 +142,17 @@ describe('Media query tests', () => {
     class TestComponent extends Component {
       render() {
         return (
-          <div style={[
-            {':hover': {background: 'green', color: 'green'}},
-            {'@media (max-width: 400px)': {':hover': {background: 'yellow'}}},
-            {'@media (max-width: 400px)': {':hover': {color: 'white'}}}
-          ]} />
+          <div
+            style={[
+              {':hover': {background: 'green', color: 'green'}},
+              {
+                '@media (max-width: 400px)': {
+                  ':hover': {background: 'yellow'},
+                },
+              },
+              {'@media (max-width: 400px)': {':hover': {color: 'white'}}},
+            ]}
+          />
         );
       }
     }
@@ -154,9 +175,11 @@ describe('Media query tests', () => {
     class TestComponent extends Component {
       render() {
         return (
-          <div style={{
-            '@media (min-width: 600px)': {':hover': {color: 'blue'}}
-          }} />
+          <div
+            style={{
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+            }}
+          />
         );
       }
     }
@@ -183,9 +206,11 @@ describe('Media query tests', () => {
     class TestComponent extends Component {
       render() {
         return (
-          <div style={{
-            '@media (min-width: 600px)': {':hover': {color: 'blue'}}
-          }} />
+          <div
+            style={{
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+            }}
+          />
         );
       }
     }
@@ -200,18 +225,18 @@ describe('Media query tests', () => {
   it('renders top level print styles as CSS', () => {
     const matchMedia = sinon.spy(() => ({
       addListener: () => {},
-      matches: true
+      matches: true,
     }));
 
-    const ChildComponent = Radium(() =>
+    const ChildComponent = Radium(() => (
       <span style={{'@media print': {color: 'black'}}} />
-    );
+    ));
 
-    const TestComponent = Radium({matchMedia})(() =>
+    const TestComponent = Radium({matchMedia})(() => (
       <StyleRoot>
         <ChildComponent />
       </StyleRoot>
-    );
+    ));
 
     const output = TestUtils.renderIntoDocument(<TestComponent />);
 
@@ -219,30 +244,33 @@ describe('Media query tests', () => {
     expect(span.className).to.not.be.empty;
 
     const style = getElement(output, 'style');
-    expectCSS(style, `
+    expectCSS(
+      style,
+      `
       @media print{
         .${span.className}{
           color:black !important;
         }
       }
-    `);
+    `,
+    );
   });
 
-  it('doesn\'t error on unmount', () => {
+  it("doesn't error on unmount", () => {
     const matchMedia = () => ({
       addListener: () => {},
-      matches: true
+      matches: true,
     });
 
-    const ChildComponent = Radium(() =>
+    const ChildComponent = Radium(() => (
       <span style={{'@media print': {color: 'black'}}} />
-    );
+    ));
 
-    const TestComponent = Radium({matchMedia})(() =>
+    const TestComponent = Radium({matchMedia})(() => (
       <StyleRoot>
         <ChildComponent />
       </StyleRoot>
-    );
+    ));
 
     const output = TestUtils.renderIntoDocument(<TestComponent />);
     ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(output).parentNode);
@@ -250,20 +278,25 @@ describe('Media query tests', () => {
 
   it('respects ordering', () => {
     // Use small values for media queries so they all pass.
-    const ChildComponent = Radium(() =>
-      <span style={[{
-        '@media (min-width: 10px)': {background: 'green'},
-        '@media (min-width: 20px)': {color: 'blue'}
-      }, {
-        '@media (min-width: 10px)': {color: 'white'}
-      }]} />
-    );
+    const ChildComponent = Radium(() => (
+      <span
+        style={[
+          {
+            '@media (min-width: 10px)': {background: 'green'},
+            '@media (min-width: 20px)': {color: 'blue'},
+          },
+          {
+            '@media (min-width: 10px)': {color: 'white'},
+          },
+        ]}
+      />
+    ));
 
-    const TestComponent = Radium(() =>
+    const TestComponent = Radium(() => (
       <StyleRoot>
         <ChildComponent />
       </StyleRoot>
-    );
+    ));
 
     const root = document.createElement('div');
     document.body.appendChild(root);
@@ -274,16 +307,14 @@ describe('Media query tests', () => {
     expectColor(computedStyle.getPropertyValue('color'), 'white');
   });
 
-  it('doesn\'t add className if no media styles', () => {
-    const ChildComponent = Radium(() =>
-      <span style={{color: 'black'}} />
-    );
+  it("doesn't add className if no media styles", () => {
+    const ChildComponent = Radium(() => <span style={{color: 'black'}} />);
 
-    const TestComponent = Radium(() =>
+    const TestComponent = Radium(() => (
       <StyleRoot>
         <ChildComponent />
       </StyleRoot>
-    );
+    ));
 
     const output = TestUtils.renderIntoDocument(<TestComponent />);
 
@@ -292,15 +323,15 @@ describe('Media query tests', () => {
   });
 
   it('retains original className', () => {
-    const ChildComponent = Radium(() =>
+    const ChildComponent = Radium(() => (
       <span className="original" style={{'@media print': {color: 'black'}}} />
-    );
+    ));
 
-    const TestComponent = Radium(() =>
+    const TestComponent = Radium(() => (
       <StyleRoot>
         <ChildComponent />
       </StyleRoot>
-    );
+    ));
 
     const output = TestUtils.renderIntoDocument(<TestComponent />);
 
@@ -309,24 +340,25 @@ describe('Media query tests', () => {
   });
 
   it('throws without StyleRoot', () => {
-    const TestComponent = Radium(() =>
+    const TestComponent = Radium(() => (
       <span style={{'@media (min-width: 10px)': {background: 'green'}}} />
-    );
+    ));
     expect(() => TestUtils.renderIntoDocument(<TestComponent />)).to.throw();
   });
 
-  it('doesn\'t throw without StyleRoot when in test mode', () => {
+  it("doesn't throw without StyleRoot when in test mode", () => {
     Radium.TestMode.enable();
-    const TestComponent = Radium(() =>
+    const TestComponent = Radium(() => (
       <div>
         <span style={{'@media (min-width: 10px)': {background: 'green'}}} />
       </div>
-    );
-    expect(() => TestUtils.renderIntoDocument(<TestComponent/>)).not.to.throw();
+    ));
+    expect(() =>
+      TestUtils.renderIntoDocument(<TestComponent />)).not.to.throw();
   });
 
   /* eslint-disable no-console */
-  it('doesn\'t try to setState if not mounted', () => {
+  it("doesn't try to setState if not mounted", () => {
     sinon.stub(console, 'error');
     sinon.stub(console, 'warn');
 
@@ -335,7 +367,7 @@ describe('Media query tests', () => {
       return {
         matches: true,
         addListener: addListener,
-        removeListener() {}
+        removeListener() {},
       };
     };
 
@@ -343,16 +375,16 @@ describe('Media query tests', () => {
     class TestComponent extends Component {
       render() {
         return (
-          <div style={{
-            '@media (min-width: 600px)': {':hover': {color: 'blue'}}
-          }} />
+          <div
+            style={{
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+            }}
+          />
         );
       }
     }
 
-    const output = TestUtils.renderIntoDocument(
-      <TestComponent/>
-    );
+    const output = TestUtils.renderIntoDocument(<TestComponent />);
 
     expect(addListener).to.have.been.called;
 

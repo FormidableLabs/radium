@@ -19,9 +19,9 @@ import App from './app.jsx';
 import fs from 'fs';
 import path from 'path';
 
-const indexHTML = fs.readFileSync(
-  path.resolve(__dirname, 'index.html')
-).toString();
+const indexHTML = fs
+  .readFileSync(path.resolve(__dirname, 'index.html'))
+  .toString();
 const app = express();
 const host = 'localhost';
 const port = 8000;
@@ -30,16 +30,13 @@ app.use('/app.js', proxy('localhost:8080', {forwardPath: () => '/app.js'}));
 
 app.get('/', (req, res) => {
   const appHtml = ReactDOMServer.renderToString(
-    <App radiumConfig={{userAgent: req.headers['user-agent']}} />
+    <App radiumConfig={{userAgent: req.headers['user-agent']}} />,
   );
   res.write(indexHTML.replace('<!-- {{app}} -->', appHtml));
   res.end();
 });
 
 app.listen(port, host, () => {
-  console.log( // eslint-disable-line no-console
-    'Access the universal app at http://%s:%d',
-    host,
-    port
-  );
+  // eslint-disable-next-line no-console
+  console.log('Access the universal app at http://%s:%d', host, port);
 });

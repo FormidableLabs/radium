@@ -23,8 +23,8 @@ const DEFAULT_CONFIG = {
     Plugins.visited,
     Plugins.removeNestedStyles,
     Plugins.prefix,
-    Plugins.checkProps
-  ]
+    Plugins.checkProps,
+  ],
 };
 
 // Gross
@@ -35,20 +35,22 @@ let resolveStyles = ((null: any): (
   component: any, // ReactComponent, flow+eslint complaining
   renderedElement: any,
   config: Config,
-  existingKeyMap?: {[key: string]: bool},
-  shouldCheckBeforeResolve: true
+  existingKeyMap?: {[key: string]: boolean},
+  shouldCheckBeforeResolve: true,
 ) => any);
 
 const _shouldResolveStyles = function(component) {
-  return (component.type && !component.type._isRadiumEnhanced);
+  return component.type && !component.type._isRadiumEnhanced;
 };
 
-const _resolveChildren = function({
-  children,
-  component,
-  config,
-  existingKeyMap
-}) {
+const _resolveChildren = function(
+  {
+    children,
+    component,
+    config,
+    existingKeyMap,
+  },
+) {
   if (!children) {
     return children;
   }
@@ -78,25 +80,24 @@ const _resolveChildren = function({
     return resolveStyles(component, onlyChild, config, existingKeyMap, true);
   }
 
-  return React.Children.map(
-    children,
-    function(child) {
-      if (React.isValidElement(child)) {
-        return resolveStyles(component, child, config, existingKeyMap, true);
-      }
-
-      return child;
+  return React.Children.map(children, function(child) {
+    if (React.isValidElement(child)) {
+      return resolveStyles(component, child, config, existingKeyMap, true);
     }
-  );
+
+    return child;
+  });
 };
 
 // Recurse over props, just like children
-const _resolveProps = function({
-  component,
-  config,
-  existingKeyMap,
-  props
-}) {
+const _resolveProps = function(
+  {
+    component,
+    config,
+    existingKeyMap,
+    props,
+  },
+) {
   let newProps = props;
 
   Object.keys(props).forEach(prop => {
@@ -113,7 +114,7 @@ const _resolveProps = function({
         propValue,
         config,
         existingKeyMap,
-        true
+        true,
       );
     }
   });
@@ -121,17 +122,19 @@ const _resolveProps = function({
   return newProps;
 };
 
-const _buildGetKey = function({
-  componentName,
-  existingKeyMap,
-  renderedElement
-}) {
+const _buildGetKey = function(
+  {
+    componentName,
+    existingKeyMap,
+    renderedElement,
+  },
+) {
   // We need a unique key to correlate state changes due to user interaction
   // with the rendered element, so we know to apply the proper interactive
   // styles.
-  const originalKey = typeof renderedElement.ref === 'string' ?
-    renderedElement.ref :
-    renderedElement.key;
+  const originalKey = typeof renderedElement.ref === 'string'
+    ? renderedElement.ref
+    : renderedElement.key;
   const key = getStateKey(originalKey);
 
   let alreadyGotKey = false;
@@ -153,12 +156,15 @@ const _buildGetKey = function({
 
       throw new Error(
         'Radium requires each element with interactive styles to have a unique ' +
-        'key, set using either the ref or key prop. ' +
-        (originalKey ?
-          'Key "' + originalKey + '" is a duplicate.' :
-          'Multiple elements have no key specified.') + ' ' +
-        'Component: "' + componentName + '". ' +
-        (elementName ? 'Element: "' + elementName + '".' : '')
+          'key, set using either the ref or key prop. ' +
+          (originalKey
+            ? 'Key "' + originalKey + '" is a duplicate.'
+            : 'Multiple elements have no key specified.') +
+          ' ' +
+          'Component: "' +
+          componentName +
+          '". ' +
+          (elementName ? 'Element: "' + elementName + '".' : ''),
       );
     }
 
@@ -176,9 +182,9 @@ const _setStyleState = function(component, key, stateKey, value) {
   }
 
   const existing = component._lastRadiumState ||
-    component.state && component.state._radiumStyleState || {};
+  (component.state && component.state._radiumStyleState) || {};
 
-  const state = { _radiumStyleState: {...existing} };
+  const state = {_radiumStyleState: {...existing}};
   state._radiumStyleState[key] = {...state._radiumStyleState[key]};
   state._radiumStyleState[key][stateKey] = value;
 
@@ -186,13 +192,15 @@ const _setStyleState = function(component, key, stateKey, value) {
   component.setState(state);
 };
 
-const _runPlugins = function({
-  component,
-  config,
-  existingKeyMap,
-  props,
-  renderedElement
-}) {
+const _runPlugins = function(
+  {
+    component,
+    config,
+    existingKeyMap,
+    props,
+    renderedElement,
+  },
+) {
   // Don't run plugins if renderedElement is not a simple ReactDOMElement or has
   // no style.
   if (
@@ -209,7 +217,11 @@ const _runPlugins = function({
 
   const componentName = component.constructor.displayName ||
     component.constructor.name;
-  const getKey = _buildGetKey({renderedElement, existingKeyMap, componentName});
+  const getKey = _buildGetKey({
+    renderedElement,
+    existingKeyMap,
+    componentName,
+  });
   const getComponentField = key => component[key];
   const getGlobalState = key => globalState[key];
   const componentGetState = (stateKey, elementKey) =>
@@ -228,7 +240,9 @@ const _runPlugins = function({
       throw new Error(
         'To use plugins requiring `addCSS` (e.g. keyframes, media queries), ' +
           'please wrap your application in the StyleRoot component. Component ' +
-          'name: `' + componentName + '`.',
+          'name: `' +
+          componentName +
+          '`.',
       );
     }
 
@@ -253,14 +267,14 @@ const _runPlugins = function({
       props: newProps,
       setState,
       isNestedStyle,
-      style: newStyle
+      style: newStyle,
     }) || {};
 
     newStyle = result.style || newStyle;
 
-    newProps = result.props && Object.keys(result.props).length ?
-      {...newProps, ...result.props} :
-      newProps;
+    newProps = result.props && Object.keys(result.props).length
+      ? {...newProps, ...result.props}
+      : newProps;
 
     const newComponentFields = result.componentFields || {};
     Object.keys(newComponentFields).forEach(fieldName => {
@@ -305,7 +319,8 @@ resolveStyles = function(
   config: Config = DEFAULT_CONFIG,
   existingKeyMap?: {[key: string]: boolean},
   shouldCheckBeforeResolve: boolean = false,
-): any { // ReactElement
+): any {
+  // ReactElement
   existingKeyMap = existingKeyMap || {};
   if (
     !renderedElement ||
@@ -314,7 +329,6 @@ resolveStyles = function(
     // function will be called first (which will always be the case, since you
     // can't know what else to render until you render the parent component).
     (renderedElement.props && renderedElement.props['data-radium']) ||
-
     // Bail if this element is a radium enhanced element, because if it is,
     // then it will take care of resolving its own styles.
     (shouldCheckBeforeResolve && !_shouldResolveStyles(renderedElement))
@@ -326,14 +340,14 @@ resolveStyles = function(
     children: renderedElement.props.children,
     component,
     config,
-    existingKeyMap
+    existingKeyMap,
   });
 
   let newProps = _resolveProps({
     component,
     config,
     existingKeyMap,
-    props: renderedElement.props
+    props: renderedElement.props,
   });
 
   newProps = _runPlugins({
@@ -341,7 +355,7 @@ resolveStyles = function(
     config,
     existingKeyMap,
     props: newProps,
-    renderedElement
+    renderedElement,
   });
 
   // If nothing changed, don't bother cloning the element. Might be a bit
@@ -357,7 +371,7 @@ resolveStyles = function(
   return _cloneElement(
     renderedElement,
     newProps !== renderedElement.props ? newProps : {},
-    newChildren
+    newChildren,
   );
 };
 

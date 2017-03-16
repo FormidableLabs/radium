@@ -1,7 +1,8 @@
 export function isNestedStyle(value) {
   // Don't merge objects overriding toString, since they should be converted
   // to string values.
-  return value && value.constructor === Object &&
+  return value &&
+    value.constructor === Object &&
     value.toString === Object.prototype.toString;
 }
 
@@ -31,7 +32,8 @@ export function mergeStyles(styles) {
       // earlier.
       if (key.indexOf('@media') === 0) {
         let newKey = key;
-        while (true) { // eslint-disable-line no-constant-condition
+        // eslint-disable-next-line no-constant-condition
+        while (true) {
           newKey += ' ';
           if (!result[newKey]) {
             result[newKey] = style[key];

@@ -18,7 +18,7 @@ If you are adding a new feature or some extra functionality, you should also mak
 
 ### Linting
 
-Before commiting any changes, be sure to do `npm run lint`; this will lint all relevant files using [ESLint](http://eslint.org/) and report on any changes that you need to make.
+Before commiting any changes, be sure to do `npm run lint`; this will lint all relevant files using [ESLint](http://eslint.org/) and report on any changes that you need to make. You can also run `npm run fixlint` to fix most common lint errors automatically.
 
 ### Flow
 

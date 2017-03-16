@@ -28,11 +28,11 @@ const subscribe = function(callback: () => void): {remove: () => void} {
         window.removeEventListener('mouseup', _handleMouseUp);
         _mouseUpListenerIsActive = false;
       }
-    }
+    },
   };
 };
 
 export default {
   subscribe: subscribe,
-  __triggerForTests: _handleMouseUp
+  __triggerForTests: _handleMouseUp,
 };

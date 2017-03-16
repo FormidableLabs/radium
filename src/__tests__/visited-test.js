@@ -7,15 +7,15 @@ import {expectCSS, getElement} from 'test-helpers';
 
 describe('visited plugin tests', () => {
   it('renders visited styles as css', () => {
-    const ChildComponent = Radium(() =>
+    const ChildComponent = Radium(() => (
       <span style={{':visited': {color: 'purple'}}} />
-    );
+    ));
 
-    const TestComponent = Radium(() =>
+    const TestComponent = Radium(() => (
       <StyleRoot>
         <ChildComponent />
       </StyleRoot>
-    );
+    ));
 
     const output = TestUtils.renderIntoDocument(<TestComponent />);
 
@@ -23,23 +23,26 @@ describe('visited plugin tests', () => {
     expect(span.className).to.not.be.empty;
 
     const style = getElement(output, 'style');
-    expectCSS(style, `
+    expectCSS(
+      style,
+      `
       .${span.className}:visited {
         color: purple !important;
       }
-    `);
+    `,
+    );
   });
 
   it('retains original className', () => {
-    const ChildComponent = Radium(() =>
+    const ChildComponent = Radium(() => (
       <span className="original" style={{':visited': {color: 'purple'}}} />
-    );
+    ));
 
-    const TestComponent = Radium(() =>
+    const TestComponent = Radium(() => (
       <StyleRoot>
         <ChildComponent />
       </StyleRoot>
-    );
+    ));
 
     const output = TestUtils.renderIntoDocument(<TestComponent />);
 

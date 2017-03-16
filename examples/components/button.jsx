@@ -16,8 +16,7 @@
 const Radium = require('../../src');
 const React = require('react');
 
-@Radium
-class Button extends React.Component {
+@Radium class Button extends React.Component {
   render() {
     return (
       <button
@@ -25,8 +24,9 @@ class Button extends React.Component {
         style={[
           styles.base,
           this.props.color === 'red' && styles.red,
-          this.props.style
-        ]}>
+          this.props.style,
+        ]}
+      >
         {this.props.children}
       </button>
     );
@@ -35,7 +35,7 @@ class Button extends React.Component {
 
 Button.propTypes = {
   color: React.PropTypes.string,
-  onClick: React.PropTypes.func
+  onClick: React.PropTypes.func,
 };
 
 const styles = {
@@ -50,40 +50,40 @@ const styles = {
     outline: 'none',
 
     '@media (min-width: 992px)': {
-      padding: '0.6em 1.2em'
+      padding: '0.6em 1.2em',
     },
 
     '@media (min-width: 1200px)': {
-      padding: '0.8em 1.5em'
+      padding: '0.8em 1.5em',
     },
 
     ':hover': {
-      backgroundColor: '#0088FF'
+      backgroundColor: '#0088FF',
     },
 
     ':focus': {
-      backgroundColor: '#0088FF'
+      backgroundColor: '#0088FF',
     },
 
     ':active': {
       backgroundColor: '#005299',
-      transform: 'translateY(2px)'
-    }
+      transform: 'translateY(2px)',
+    },
   },
 
   red: {
     backgroundColor: '#d90000',
 
     ':hover': {
-      backgroundColor: '#FF0000'
+      backgroundColor: '#FF0000',
     },
     ':focus': {
-      backgroundColor: '#FF0000'
+      backgroundColor: '#FF0000',
     },
     ':active': {
-      backgroundColor: '#990000'
-    }
-  }
+      backgroundColor: '#990000',
+    },
+  },
 };
 
 module.exports = Button;
