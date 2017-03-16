@@ -2,24 +2,22 @@
 
 import cssRuleSetToString from '../css-rule-set-to-string';
 
-import React, {PropTypes} from 'react';
+import React, {PropTypes, PureComponent} from 'react';
 
-const Style = React.createClass({
-  propTypes: {
+class Style extends PureComponent {
+  static propTypes = {
     radiumConfig: PropTypes.object,
     rules: PropTypes.object,
     scopeSelector: PropTypes.string
-  },
+  };
 
-  contextTypes: {
+  static contextTypes = {
     _radiumConfig: PropTypes.object
-  },
+  };
 
-  getDefaultProps(): {scopeSelector: string} {
-    return {
-      scopeSelector: ''
-    };
-  },
+  static defaultProps: {scopeSelector: string} = {
+    scopeSelector: ''
+  };
 
   _buildStyles(styles: Object): string {
     const userAgent = (
@@ -60,7 +58,7 @@ const Style = React.createClass({
 
       return accumulator;
     }, '');
-  },
+  }
 
   _buildMediaQueryString(
     stylesByMediaQuery: {[mediaQuery: string]: Object}
@@ -74,7 +72,7 @@ const Style = React.createClass({
     });
 
     return mediaQueryString;
-  },
+  }
 
   render(): ?ReactElement {
     if (!this.props.rules) {
@@ -87,6 +85,6 @@ const Style = React.createClass({
       <style dangerouslySetInnerHTML={{__html: styles}} />
     );
   }
-});
+}
 
 export default Style;

@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, {Component, PropTypes} from 'react';
+import React, {PureComponent, PropTypes} from 'react';
 
 import Enhancer from '../enhancer';
 import StyleKeeper from '../style-keeper';
@@ -19,7 +19,7 @@ function _getStyleKeeper(instance): StyleKeeper {
   return instance._radiumStyleKeeper;
 }
 
-class StyleRoot extends Component {
+class StyleRoot extends PureComponent {
   constructor() {
     super(...arguments);
 
