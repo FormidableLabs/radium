@@ -1,5 +1,12 @@
 # Radium Changelog
 
+## 0.18.2 (March 15, 2017)
+
+### Improvements
+- Update `inline-style-prefixer` to v2.0.5 (#880).
+- Use `React.PureComponent` to avoid unnecessary rendering (#868).
+- Update all dependencies
+
 ## 0.18.1 (July 19, 2016)
 
 ### Bug Fixes
