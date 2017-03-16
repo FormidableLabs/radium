@@ -1,5 +1,5 @@
 const resolveStyles = sinon.spy(require('resolve-styles.js'));
-const Enhancer = require('inject!enhancer.js')({
+const Enhancer = require('inject-loader!enhancer.js')({
   './resolve-styles.js': resolveStyles
 });
 

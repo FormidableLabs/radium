@@ -27,5 +27,5 @@ export function expectCSS(styleElement, css) {
 }
 
 export function expectColor(actual, expected) {
-  expect(Color(actual).hexString()).to.equal(Color(expected).hexString());
+  expect(Color(actual).hex()).to.equal(Color(expected).hex());
 }

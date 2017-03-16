@@ -12,29 +12,32 @@ module.exports = function (config) {
     webpack: {
       cache: true,
       module: {
-        preLoaders: [{
+        loaders: [{
           test: /\.jsx?$/,
+          enforce: 'pre',
           include: path.resolve('src/__tests__/'),
-          loader: 'babel'
+          loader: 'babel-loader'
         }, {
           test: /\.jsx?$/,
           include: path.resolve('src/'),
+          enforce: 'pre',
           exclude: /(__tests__|__mocks__)/,
-          loader: 'isparta?babel'
-        }],
-        loaders: [{
+          loader: 'isparta-loader?babel-loader'
+        }, {
           test: /\.jsx?$/,
           exclude: [/node_modules/],
-          loader: 'babel'
+          loader: 'babel-loader'
         }, {
           test: /\.css$/,
           loader: 'style-loader!css-loader'
         }]
       },
       resolve: {
-        root: [__dirname],
-        modulesDirectories: ['node_modules', 'src'],
-        extensions: ['', '.js', '.jsx']
+        modules: [
+          path.join(__dirname, 'node_modules'),
+          path.join(__dirname, 'src'),
+        ],
+        extensions: ['.js', '.jsx']
       }
     },
     webpackServer: {

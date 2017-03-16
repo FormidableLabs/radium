@@ -6,7 +6,6 @@ module.exports = merge({}, require('./webpack.config.js'), {
     filename: 'radium.min.js'
   },
   plugins: [
-    new webpack.optimize.DedupePlugin(),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
