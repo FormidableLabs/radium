@@ -61,9 +61,9 @@ describe('<Style> component', () => {
     const style = getElement(output, 'style');
     expectCSS(style, `
       div{
-        transform:rotate(90);
         -webkit-transform:rotate(90);
         -ms-transform:rotate(90);
+        transform:rotate(90);
       }
     `);
   });
