@@ -29,7 +29,10 @@ let _hasWarnedAboutUserAgent = false;
 let _lastUserAgent;
 let _cachedPrefixer;
 
-function getPrefixer(userAgent: ?string): InlineStylePrefixer {
+function getPrefixer(userAgent: ?string): {
+  +prefix: (style: Object) => Object,
+  prefixedKeyframes: string,
+} {
   const actualUserAgent = userAgent ||
     (global && global.navigator && global.navigator.userAgent);
 

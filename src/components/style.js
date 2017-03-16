@@ -74,7 +74,7 @@ class Style extends PureComponent {
     return mediaQueryString;
   }
 
-  render(): ?ReactElement {
+  render(): ?React.Element<any> {
     if (!this.props.rules) {
       return null;
     }

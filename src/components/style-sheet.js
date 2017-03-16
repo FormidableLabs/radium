@@ -9,12 +9,15 @@ export default class StyleSheet extends PureComponent {
     _radiumStyleKeeper: React.PropTypes.instanceOf(StyleKeeper)
   };
 
+  state: {css: string};
+
+  _isMounted: ?boolean;
+  _subscription: ?{remove: () => void};
+
   constructor() {
     super(...arguments);
 
     this.state = this._getCSSState();
-
-    this._onChange = this._onChange.bind(this);
   }
 
   componentDidMount() {
@@ -36,13 +39,13 @@ export default class StyleSheet extends PureComponent {
     return {css: this.context._radiumStyleKeeper.getCSS()};
   }
 
-  _onChange() {
+  _onChange = () => {
     setTimeout(() => {
       this._isMounted && this.setState(this._getCSSState());
     }, 0);
-  }
+  };
 
-  render(): ReactElement {
+  render(): React.Element<any> {
     return (
       <style dangerouslySetInnerHTML={{__html: this.state.css}} />
     );

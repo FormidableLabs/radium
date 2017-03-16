@@ -20,6 +20,8 @@ function _getStyleKeeper(instance): StyleKeeper {
 }
 
 class StyleRoot extends PureComponent {
+  _radiumStyleKeeper: StyleKeeper;
+
   constructor() {
     super(...arguments);
 

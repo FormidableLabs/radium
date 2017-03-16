@@ -48,6 +48,8 @@ export default function enhanceWithRadium(
   // Handle stateless components
   if (isStateless(ComposedComponent)) {
     ComposedComponent = class extends Component {
+      state: Object;
+
       render() {
         return component(this.props, this.context);
       }
@@ -56,11 +58,14 @@ export default function enhanceWithRadium(
   }
 
   class RadiumEnhancer extends ComposedComponent {
+    static _isRadiumEnhanced = true;
+
+    state: Object;
+
     _radiumMediaQueryListenersByQuery: {[query: string]: {remove: () => void}};
     _radiumMouseUpListener: {remove: () => void};
     _radiumIsMounted: bool;
 
-    static _isRadiumEnhanced = true;
 
     constructor() {
       super(...arguments);
