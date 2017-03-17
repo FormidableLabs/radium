@@ -12,6 +12,7 @@
  */
 
 const React = require('react');
+const ReactDOM = require('react-dom');
 const Radium = require('../../src/index');
 
 const ComputedWell = React.createClass({
@@ -33,7 +34,7 @@ const ComputedWell = React.createClass({
     ev.preventDefault();
 
     this.setState({
-      dynamicBg: this.refs.input.getDOMNode().value,
+      dynamicBg: ReactDOM.findDOMNode(this.refs.input).value,
     });
   },
 
