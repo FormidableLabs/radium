@@ -48,6 +48,9 @@
     "inline-style-prefixer": "^2.0.5",
     "rimraf": "^2.6.1"
   },
+  "peerDependencies": {
+    "react": "^15.3.0"
+  },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.4.0",
