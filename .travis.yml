@@ -1,8 +1,9 @@
 language: node_js
 
 node_js:
-  - "4.2"
-  - "5.0"
+  - "4"
+  - "6"
+  - "node"
 
 # Use container-based Travis infrastructure.
 sudo: false
@@ -20,6 +21,8 @@ notifications:
   email:
     on_success: change
     on_failure: always
+
+cache: yarn
 
 script:
   - npm run lint
