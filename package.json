@@ -34,7 +34,10 @@
     "universal": "concurrently --kill-others \"npm start\" \"npm run examples\""
   },
   "license": "MIT",
-  "dependencies": {
+  "peerDependencies": {
+    "react": "^15.3.0"
+  },
+  "devDependencies": {
     "array-find": "^1.0.0",
     "babel-cli": "^6.24.0",
     "babel-core": "^6.24.0",
@@ -46,12 +49,7 @@
     "babel-preset-stage-1": "^6.22.0",
     "exenv": "^1.2.1",
     "inline-style-prefixer": "^2.0.5",
-    "rimraf": "^2.6.1"
-  },
-  "peerDependencies": {
-    "react": "^15.3.0"
-  },
-  "devDependencies": {
+    "rimraf": "^2.6.1",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.4.0",
     "chai": "^3.5.0",
