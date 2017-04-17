@@ -43,11 +43,11 @@ var styles = {
     },
 
     // Media queries must start with @media, and follow the same syntax as CSS
-    '@media (min-width: 992px)': {
+    '@media (minWidth: 992px)': {
       padding: '0.6em 1.2em'
     },
 
-    '@media (min-width: 1200px)': {
+    '@media (minWidth: 1200px)': {
       padding: '0.8em 1.5em',
 
       // Media queries can also have nested :hover, :focus, or :active states
