@@ -2,7 +2,8 @@
 
 import Radium from 'index.js';
 import MouseUpListener from 'plugins/mouse-up-listener.js';
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
 import {getRenderOutput, getElement} from 'test-helpers';
