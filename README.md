@@ -65,7 +65,7 @@ var color = require('color');
 @Radium
 class Button extends React.Component {
   static propTypes = {
-    kind: React.PropTypes.oneOf(['primary', 'warning']).isRequired
+    kind: PropTypes.oneOf(['primary', 'warning']).isRequired
   };
 
   render() {
