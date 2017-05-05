@@ -57,7 +57,7 @@ const _resolveChildren = function(
 
   const childrenType = typeof children;
 
-  if (childrenType === 'string' || childrenType === 'number') {
+  if (childrenType === 'string' || childrenType === 'number' || children.subscribe) {
     // Don't do anything with a single primitive child
     return children;
   }
