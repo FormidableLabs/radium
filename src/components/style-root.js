@@ -1,6 +1,7 @@
 /* @flow */
 
-import React, {PureComponent, PropTypes} from 'react';
+import React, {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 
 import Enhancer from '../enhancer';
 import StyleKeeper from '../style-keeper';
