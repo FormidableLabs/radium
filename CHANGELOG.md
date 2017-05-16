@@ -1,5 +1,10 @@
 # Radium Changelog
 
+## 0.18.3 (May 15, 2017)
+- Update dependencies
+- Update deprecated React syntax in examples
+- Use React "prop-types" package
+
 ## 0.18.2 (March 15, 2017)
 
 ### Improvements
