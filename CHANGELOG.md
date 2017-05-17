@@ -1,14 +1,23 @@
 # Radium Changelog
 
+## UNRELEASED
+
+### Bug Fixes
+- Makes `prop-types` a `dependencies` instead of a `peerDependencies` in `package.json` per the `prop-types` [integration guide](https://github.com/facebook/prop-types#how-to-depend-on-this-package).
+
 ## 0.19.0 (May 15, 2017)
-- Unreverts PropTypes-related diff, which is now a minor version instead of a
-    patch
+
+### Improvements
+- Unreverts PropTypes-related diff, which is now a minor version instead of a patch
 
 ## 0.18.4 (May 15, 2017)
-- Reverts PropTypes-related diff, which should have been a minor version instead
-    of a patch
+
+### Bug Fixes
+- Reverts PropTypes-related diff, which should have been a minor version instead of a patch
 
 ## 0.18.3 (May 15, 2017)
+
+### Improvements
 - Update dependencies
 - Update deprecated React syntax in examples
 - Use React "prop-types" package
