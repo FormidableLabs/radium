@@ -110,7 +110,7 @@ import styler from 'react-styling/flat'
 @Radium
 class Button extends React.Component {
   static propTypes = {
-    kind: PropTypes.oneOf(['primary', 'warning']).isRequired
+    kind: React.PropTypes.oneOf(['primary', 'warning']).isRequired
   }
 
   render() {

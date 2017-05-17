@@ -15,7 +15,6 @@
 
 const Radium = require('../../src');
 const React = require('react');
-const PropTypes = require('prop-types');
 
 @Radium class Button extends React.Component {
   render() {
@@ -35,8 +34,8 @@ const PropTypes = require('prop-types');
 }
 
 Button.propTypes = {
-  color: PropTypes.string,
-  onClick: PropTypes.func,
+  color: React.PropTypes.string,
+  onClick: React.PropTypes.func,
 };
 
 const styles = {
