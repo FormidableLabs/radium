@@ -16,7 +16,7 @@
     "babel": "rimraf lib && babel src/ -d lib/",
     "dist": "webpack && webpack --config=webpack.config.minified.js",
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
-    "deps-fix": "babel-node ./npm-scripts/move-babel-to-dependencies.js",
+    "deps-fix": "babel-node npm-scripts/move-babel-to-dependencies.js",
     "deps-restore": "git checkout package.json",
     "flow": "flow check",
     "lib": "npm run babel && rimraf lib/__tests__ lib/__mocks__",
@@ -26,7 +26,7 @@
     "postinstall": "cd lib || npm run lib",
     "prepublish": "npm run lib && npm run dist && not-in-publish || (npm test && npm run lint && npm run deps-fix)",
     "postpublish": "npm run deps-restore",
-    "start": "./node_modules/.bin/babel-node examples/server.js",
+    "start": "node_modules/.bin/babel-node examples/server.js",
     "test": "karma start",
     "test-coverage": "karma start karma.conf.coverage.js",
     "test-ie": "karma start karma.conf.ie.js",
@@ -46,10 +46,10 @@
     "babel-preset-stage-1": "^6.22.0",
     "exenv": "^1.2.1",
     "inline-style-prefixer": "^2.0.5",
+    "prop-types": "^15.5.8",
     "rimraf": "^2.6.1"
   },
   "peerDependencies": {
-    "prop-types": "^15.5.8",
     "react": "^15.3.0"
   },
   "devDependencies": {
@@ -86,7 +86,6 @@
     "object-assign": "^4.1.1",
     "phantomjs-prebuilt": "^2.1.14",
     "prettier": "^0.22.0",
-    "prop-types": "^15.5.8",
     "react": "^15.4.2",
     "react-addons-test-utils": "^15.4.2",
     "react-dom": "^15.4.2",
