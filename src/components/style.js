@@ -2,7 +2,8 @@
 
 import cssRuleSetToString from '../css-rule-set-to-string';
 
-import React, {PropTypes, PureComponent} from 'react';
+import React, {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 
 class Style extends PureComponent {
   static propTypes = {
