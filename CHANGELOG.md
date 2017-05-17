@@ -1,6 +1,6 @@
 # Radium Changelog
 
-## UNRELEASED
+## 0.19.1 (May 17, 2017)
 
 ### Bug Fixes
 - Makes `prop-types` a `dependencies` instead of a `peerDependencies` in `package.json` per the `prop-types` [integration guide](https://github.com/facebook/prop-types#how-to-depend-on-this-package).
