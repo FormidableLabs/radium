@@ -1,5 +1,9 @@
 # Radium Changelog
 
+## 0.18.4 (May 15, 2017)
+- Reverts PropTypes-related diff, which should have been a minor version instead
+    of a patch
+
 ## 0.18.3 (May 15, 2017)
 - Update dependencies
 - Update deprecated React syntax in examples
