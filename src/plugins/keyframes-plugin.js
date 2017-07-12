@@ -9,11 +9,30 @@ export default function keyframesPlugin(
   const newStyle = Object.keys(style).reduce(
     (newStyleInProgress, key) => {
       let value = style[key];
-      if (key === 'animationName' && value && value.__radiumKeyframes) {
-        const keyframesValue = (value: Keyframes);
-        const {animationName, css} = keyframesValue.__process(config.userAgent);
-        addCSS(css);
-        value = animationName;
+      if (
+        key === 'animationName' &&
+        value &&
+        (value.__radiumKeyframes || Array.isArray(value))
+      ) {
+        if (Array.isArray(value)) {
+          value = value
+            .map(v => {
+              const keyframesValue = (v: Keyframes);
+              const {animationName, css} = keyframesValue.__process(
+                config.userAgent,
+              );
+              addCSS(css);
+              return animationName;
+            })
+            .join(', ');
+        } else {
+          const keyframesValue = (value: Keyframes);
+          const {animationName, css} = keyframesValue.__process(
+            config.userAgent,
+          );
+          addCSS(css);
+          value = animationName;
+        }
       }
 
       newStyleInProgress[key] = value;

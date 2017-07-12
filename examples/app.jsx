@@ -76,6 +76,19 @@ let Spinner = React.createClass({
 });
 Spinner = Radium(Spinner);
 
+let MultiSpinner = React.createClass({
+  render() {
+    return (
+      <div>
+        <div
+          style={[multiAnimationStyles.inner, {'@media print': {height: '10px'}}]}
+        />
+      </div>
+    );
+  },
+});
+MultiSpinner = Radium(MultiSpinner);
+
 const VisitedLink = Radium(() => (
   <a
     href="https://github.com/formidablelabs/radium"
@@ -111,6 +124,8 @@ let App = React.createClass({
         <p /><TwoSquares />
 
         <p /><Spinner />
+
+        <p /><MultiSpinner />
 
         <p /><Button onClick={this._remount}>Unmount and remount</Button>
 
@@ -237,11 +252,33 @@ const pulseAnimation = Radium.keyframes(
   'pulse',
 );
 
+const blendAnimation = Radium.keyframes(
+  {
+    '0%': {background: 'red'},
+    '25%': {background: 'yellow'},
+    '50%': {background: 'green'},
+    '75%': {background: 'blue'},
+    '100%': {background: 'red'},
+  },
+  'blend',
+);
+
 const spinnerStyles = {
   inner: {
     animation: 'x 3s ease 0s infinite',
     animationName: pulseAnimation,
     background: 'blue',
+    height: '4px',
+    margin: '0 auto',
+  },
+};
+
+const multiAnimationStyles = {
+  inner: {
+    animationName: [pulseAnimation, blendAnimation],
+    animationDuration: '2.5s, 8s',
+    animationIterationCount: 'infinite, infinite',
+    animationTimingFunction: 'linear, cubic-bezier(0.1, 0.7, 1.0, 0.1)',
     height: '4px',
     margin: '0 auto',
   },
