@@ -1,5 +1,8 @@
 # Radium Changelog
 
+## 0.19.3 (July 20, 2017)
+- Remove `publishr` from prod `dependencies` in npm registry package.
+
 ## 0.19.2 (July 20, 2017)
 - Switch to `publishr` workflow. (#894, #731, #900)
 - Remove `rimraf` from prod `dependencies` in npm registry package.
