@@ -13,20 +13,21 @@
     "example": "examples"
   },
   "scripts": {
-    "babel": "rimraf lib && babel src/ -d lib/",
-    "dist": "webpack && webpack --config=webpack.config.minified.js",
+    "postinstall": "npm run build",
+    "preversion": "npm test && npm run lint",
+    "version": "npm run build",
+    "postversion": "publishr postversion -V",
+    "postpublish": "publishr postpublish -V",
+    "version-dry-run": "publishr dry-run -V",
+    "build-lib": "rimraf lib && babel src/ -d lib/ && rimraf lib/__tests__ lib/__mocks__",
+    "build-dist": "rimraf dist && webpack && webpack --config=webpack.config.minified.js",
+    "build": "npm run build-lib && npm run build-dist",
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
-    "deps-fix": "babel-node npm-scripts/move-babel-to-dependencies.js",
-    "deps-restore": "git checkout package.json",
     "flow": "flow check",
-    "lib": "npm run babel && rimraf lib/__tests__ lib/__mocks__",
     "eslint": "eslint src examples --ext .js --ext .jsx",
     "fixlint": "npm run eslint -- --fix",
     "lint": "npm run eslint && npm run flow",
-    "postinstall": "cd lib || npm run lib",
-    "prepublish": "npm run lib && npm run dist && not-in-publish || (npm test && npm run lint && npm run deps-fix)",
-    "postpublish": "npm run deps-restore",
-    "start": "node_modules/.bin/babel-node examples/server.js",
+    "start": "babel-node examples/server.js",
     "test": "karma start",
     "test-coverage": "karma start karma.conf.coverage.js",
     "test-ie": "karma start karma.conf.ie.js",
@@ -47,6 +48,7 @@
     "exenv": "^1.2.1",
     "inline-style-prefixer": "^2.0.5",
     "prop-types": "^15.5.8",
+    "publishr": "^1.0.0",
     "rimraf": "^2.6.1"
   },
   "peerDependencies": {
@@ -66,7 +68,6 @@
     "express": "^4.15.2",
     "express-http-proxy": "^0.11.0",
     "flow-bin": "^0.41.0",
-    "in-publish": "^2.0.0",
     "inject-loader": "^3.0.0-beta4",
     "isparta-loader": "^2.0.0",
     "karma": "^1.5.0",
@@ -93,5 +94,17 @@
     "sinon-chai": "^2.8.0",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.2"
+  },
+  "publishr": {
+    "dependencies": [
+      "^babel-",
+      "^rimraf$"
+    ],
+    "files": {
+      ".npmignore": ".npmignore.publishr"
+    },
+    "scripts": {
+      "postinstall": ""
+    }
   }
 }

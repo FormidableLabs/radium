@@ -35,15 +35,14 @@ Please note that if you use `npm run test-dev` as above, Karma will use port `80
 
 Thanks for taking the time to help us make Radium even better! Before you go ahead and submit a PR, make sure that you have done the following:
 - Run the tests (you did add tests, right?) using `npm run test-dev`.
-- Run lint using `npm run lint`
-- Run flow using `flow`
+- Run lint and flow using `npm run lint`
 
 ## Releasing a new version to NPM (only for project administrators):
 
 1. Update `CHANGELOG.md`, following format for previous versions
 2. Commit as "Changelog for version 0.XX.Y"
-3. Run `npm version patch` (or `minor`, `major` as appropriate) to update `package.json` and add a tag
-4. Run `npm publish` to run tests and lint, build the `lib` ands `dist` directories, and publish to NPM if all is well
+3. Run `npm version patch` (or `minor`, `major` as appropriate) to run tests and lint, build the `lib` ands `dist` directories, , then update `package.json` and add a git tag.
+4. Run `npm publish` and publish to NPM if all is well.
 5. Run `git push && git push --tags`
 
 ## Contributor Covenant Code of Conduct
