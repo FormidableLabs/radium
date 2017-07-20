@@ -98,6 +98,7 @@
   "publishr": {
     "dependencies": [
       "^babel-",
+      "^publishr$",
       "^rimraf$"
     ],
     "files": {
