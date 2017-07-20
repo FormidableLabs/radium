@@ -1,5 +1,10 @@
 # Radium Changelog
 
+## 0.19.2 (July 20, 2017)
+- Switch to `publishr` workflow. (#894, #731, #900)
+- Remove `rimraf` from prod `dependencies` in npm registry package.
+- Remove `postinstall` from `scripts` in npm registry package. (#794)
+
 ## 0.19.1 (May 17, 2017)
 
 ### Bug Fixes
