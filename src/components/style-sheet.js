@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, {PureComponent} from 'react';
-import type {Node} from 'react'
+import type {Node} from 'react';
 import PropTypes from 'prop-types';
 
 import StyleKeeper from '../style-keeper';
