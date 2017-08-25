@@ -3,15 +3,15 @@
 import cssRuleSetToString from '../css-rule-set-to-string';
 
 import React, {PureComponent} from 'react';
-import type {Node} from 'react'
+import type {Node} from 'react';
 import PropTypes from 'prop-types';
-import type {Config} from '../config'
+import type {Config} from '../config';
 
 type StyleProps = {
   radiumConfig: Config,
   rules: {},
   scopeSelector: string,
-}
+};
 
 class Style extends PureComponent<StyleProps> {
   static propTypes = {

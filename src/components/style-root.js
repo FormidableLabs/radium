@@ -1,13 +1,13 @@
 /* @flow */
 
 import React, {PureComponent} from 'react';
-import type {Node} from 'react'
+import type {Node} from 'react';
 import PropTypes from 'prop-types';
 
 import Enhancer from '../enhancer';
 import StyleKeeper from '../style-keeper';
 import StyleSheet from './style-sheet';
-import type {Config} from '../config'
+import type {Config} from '../config';
 
 function _getStyleKeeper(instance): StyleKeeper {
   if (!instance._radiumStyleKeeper) {
@@ -24,7 +24,7 @@ function _getStyleKeeper(instance): StyleKeeper {
 type StyleRootProps = {
   radiumConfig: Config,
   children: Node,
-}
+};
 
 class StyleRoot extends PureComponent<StyleRootProps> {
   constructor() {
