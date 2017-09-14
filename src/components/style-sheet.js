@@ -1,11 +1,12 @@
 /* @flow */
 
 import React, {PureComponent} from 'react';
+import type {Node} from 'react';
 import PropTypes from 'prop-types';
 
 import StyleKeeper from '../style-keeper';
 
-export default class StyleSheet extends PureComponent {
+export default class StyleSheet extends PureComponent<{}, {css: string}> {
   static contextTypes = {
     _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper),
   };
@@ -15,8 +16,6 @@ export default class StyleSheet extends PureComponent {
 
     this.state = this._getCSSState();
   }
-
-  state: {css: string};
 
   componentDidMount() {
     this._isMounted = true;
@@ -49,7 +48,7 @@ export default class StyleSheet extends PureComponent {
     );
   };
 
-  render(): React.Element<any> {
+  render(): Node {
     return <style dangerouslySetInnerHTML={{__html: this.state.css}} />;
   }
 }

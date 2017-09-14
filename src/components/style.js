@@ -3,9 +3,17 @@
 import cssRuleSetToString from '../css-rule-set-to-string';
 
 import React, {PureComponent} from 'react';
+import type {Node} from 'react';
 import PropTypes from 'prop-types';
+import type {Config} from '../config';
 
-class Style extends PureComponent {
+type StyleProps = {
+  radiumConfig: Config,
+  rules: {},
+  scopeSelector: string,
+};
+
+class Style extends PureComponent<StyleProps> {
   static propTypes = {
     radiumConfig: PropTypes.object,
     rules: PropTypes.object,
@@ -86,7 +94,7 @@ class Style extends PureComponent {
     return mediaQueryString;
   }
 
-  render(): ?React.Element<any> {
+  render(): Node {
     if (!this.props.rules) {
       return null;
     }

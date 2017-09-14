@@ -49,9 +49,7 @@ export default function enhanceWithRadium(
 
   // Handle stateless components
   if (isStateless(ComposedComponent)) {
-    ComposedComponent = class extends Component {
-      state: Object;
-
+    ComposedComponent = class extends Component<any, Object> {
       render() {
         return component(this.props, this.context);
       }
