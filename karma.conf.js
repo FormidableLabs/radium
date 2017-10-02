@@ -1,44 +1,57 @@
-var path = require('path');
-module.exports = function (config) {
+const path = require('path');
+
+module.exports = function(config) {
   config.set({
     basePath: '',
     frameworks: ['mocha', 'sinon-chai', 'phantomjs-shim'],
     files: [
-      'src/__tests__/**/*.js'
+      // Polyfills for PhantomJS in React 16.
+      require.resolve('core-js/es6/map'),
+      require.resolve('core-js/es6/set'),
+      'src/__tests__/**/*.js',
     ],
     preprocessors: {
-      'src/__tests__/**/*.js': ['webpack']
+      [path.join(
+        path.dirname(require.resolve('core-js/package.json')),
+        'es6/**/*.js' // eslint-disable-line prettier/prettier
+      )]: ['webpack'],
+      'src/__tests__/**/*.js': ['webpack'],
     },
     webpack: {
       cache: true,
       module: {
-        loaders: [{
-          test: /\.jsx?$/,
-          enforce: 'pre',
-          include: path.resolve('src/__tests__/'),
-          loader: 'babel-loader'
-        }, {
-          test: /\.jsx?$/,
-          include: path.resolve('src/'),
-          enforce: 'pre',
-          exclude: /(__tests__|__mocks__)/,
-          loader: 'isparta-loader?babel-loader'
-        }, {
-          test: /\.jsx?$/,
-          exclude: [/node_modules/],
-          loader: 'babel-loader'
-        }, {
-          test: /\.css$/,
-          loader: 'style-loader!css-loader'
-        }]
+        loaders: [
+          {
+            test: /\.jsx?$/,
+            enforce: 'pre',
+            include: path.resolve('src/__tests__/'),
+            loader: 'babel-loader',
+          },
+          {
+            test: /\.jsx?$/,
+            include: path.resolve('src/'),
+            enforce: 'pre',
+            exclude: /(__tests__|__mocks__)/,
+            loader: 'isparta-loader?babel-loader',
+          },
+          {
+            test: /\.jsx?$/,
+            exclude: [/node_modules/],
+            loader: 'babel-loader',
+          },
+          {
+            test: /\.css$/,
+            loader: 'style-loader!css-loader',
+          },
+        ],
       },
       resolve: {
         modules: [
           path.join(__dirname, 'node_modules'),
           path.join(__dirname, 'src'),
         ],
-        extensions: ['.js', '.jsx']
-      }
+        extensions: ['.js', '.jsx'],
+      },
     },
     webpackServer: {
       quiet: false,
@@ -50,8 +63,8 @@ module.exports = function (config) {
         hash: false,
         timings: false,
         chunks: false,
-        chunkModules: false
-      }
+        chunkModules: false,
+      },
     },
     exclude: [],
     port: 8080,
@@ -68,12 +81,17 @@ module.exports = function (config) {
       'karma-phantomjs-launcher',
       'karma-phantomjs-shim',
       'karma-sinon-chai',
-      'karma-webpack'
+      'karma-webpack',
     ],
     coverageReporter: {
-      type: 'text'
+      type: 'text',
+    },
+    browserConsoleLogOptions: {
+      level: 'log',
+      format: '%b %T: %m',
+      terminal: true
     },
     captureTimeout: 100000,
-    singleRun: true
+    singleRun: true,
   });
 };

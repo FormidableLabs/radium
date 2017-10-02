@@ -3,7 +3,8 @@
 import Radium, {StyleRoot} from 'index';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
+import ShallowRenderer from 'react-test-renderer/shallow';
 import {
   expectColor,
   expectCSS,
@@ -12,11 +13,21 @@ import {
 } from 'test-helpers';
 
 describe('Media query tests', () => {
+  let sandbox;
+  let errorSpy;
+
   beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    errorSpy = sinon.spy();
+    window.addEventListener('error', errorSpy);
+
     Radium.TestMode.clearState();
   });
 
   afterEach(() => {
+    sandbox.restore();
+    window.removeEventListener('error', errorSpy);
+
     Radium.TestMode.disable();
   });
 
@@ -60,7 +71,7 @@ describe('Media query tests', () => {
       }
     }
 
-    const renderer = TestUtils.createRenderer();
+    const renderer = new ShallowRenderer();
     renderer.render(<TestComponent />);
     renderer.render(<TestComponent />);
 
@@ -340,10 +351,46 @@ describe('Media query tests', () => {
   });
 
   it('throws without StyleRoot', () => {
-    const TestComponent = Radium(() => (
+    const ChildComponent = Radium(() => (
       <span style={{'@media (min-width: 10px)': {background: 'green'}}} />
     ));
-    expect(() => TestUtils.renderIntoDocument(<TestComponent />)).to.throw();
+
+    class ErrorBoundary extends React.Component {
+      componentDidCatch() {}
+      render() {
+        return this.props.children;
+      }
+    }
+
+    const TestComponent = Radium(() => (
+      <ErrorBoundary>
+        <ChildComponent />
+      </ErrorBoundary>
+    ));
+
+    // React 16 - need to handle exceptions globally.
+    // In DEV (aka our tests), need to silence global error handlers and such.
+    // https://github.com/facebook/react/issues/10474#issuecomment-322909303
+    sandbox.stub(window, 'onerror');
+    sandbox.stub(console, 'error');
+    const catchSpy = sandbox.spy(ErrorBoundary.prototype, 'componentDidCatch');
+
+    TestUtils.renderIntoDocument(<TestComponent />);
+
+    expect(errorSpy).to.have.callCount(1);
+    expect(errorSpy.getCall(0).args[0]).to.have
+      .property('message')
+      .that.contains('StyleRoot');
+
+    // **Warning - Brittle Asserts**: React 16
+    //
+    // The call signature is `componentDidCatch(error, info)`, but for some reason
+    // we only get called with `(undefined, { componentStack: STUFF })` just accept
+    // it until we understand more.
+    expect(catchSpy).to.have.callCount(1);
+    expect(catchSpy.getCall(0).args[1]).to.have
+      .property('componentStack')
+      .that.contains('ErrorBoundary');
   });
 
   it("doesn't throw without StyleRoot when in test mode", () => {

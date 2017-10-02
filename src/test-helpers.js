@@ -1,9 +1,10 @@
 import Color from 'color';
 import ReactDOM from 'react-dom';
-import TestUtils from 'react-addons-test-utils';
+import ShallowRenderer from 'react-test-renderer/shallow';
+import TestUtils from 'react-dom/test-utils';
 
 export function getRenderOutput(element) {
-  const renderer = TestUtils.createRenderer();
+  const renderer = new ShallowRenderer();
   renderer.render(element);
   return renderer.getRenderOutput();
 }

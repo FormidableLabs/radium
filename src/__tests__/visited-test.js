@@ -2,7 +2,7 @@
 
 import Radium, {StyleRoot} from 'index';
 import React from 'react';
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 import {expectCSS, getElement} from 'test-helpers';
 
 describe('visited plugin tests', () => {

@@ -159,19 +159,18 @@ describe('Enhancer', () => {
   });
 
   it('copies methods across to top level prototype', () => {
-    const Composed = React.createClass({
-      getStyles: function() {
+    class Composed extends React.Component {
+      getStyles() {
         return [{color: 'black'}];
-      },
-
-      render: function() {
+      }
+      render() {
         return (
           <div style={this.getStyles()}>
             Hello World!
           </div>
         );
-      },
-    });
+      }
+    }
 
     const Enhanced = Enhancer(Composed);
 

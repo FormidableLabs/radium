@@ -1,4 +1,4 @@
-module.exports = function (config) {
+module.exports = function(config) {
   require('./karma.conf.js')(config);
   config.set({
     plugins: config.plugins.concat('karma-ie-launcher'),
@@ -6,8 +6,8 @@ module.exports = function (config) {
     customLaunchers: {
       IE9: {
         base: 'IE',
-        'x-ua-compatible': 'IE=EmulateIE9'
-      }
-    }
+        'x-ua-compatible': 'IE=EmulateIE9',
+      },
+    },
   });
 };
