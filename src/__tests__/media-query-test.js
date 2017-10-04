@@ -371,8 +371,13 @@ describe('Media query tests', () => {
     // React 16 - need to handle exceptions globally.
     // In DEV (aka our tests), need to silence global error handlers and such.
     // https://github.com/facebook/react/issues/10474#issuecomment-322909303
-    sandbox.stub(window, 'onerror');
-    sandbox.stub(console, 'error');
+    if (window.onerror) {
+      sandbox.stub(window, 'onerror');
+    }
+    // eslint-disable-next-line no-console
+    if (console.error) {
+      sandbox.stub(console, 'error');
+    }
     const catchSpy = sandbox.spy(ErrorBoundary.prototype, 'componentDidCatch');
 
     TestUtils.renderIntoDocument(<TestComponent />);
