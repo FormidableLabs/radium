@@ -1,5 +1,8 @@
 # Radium Changelog
 
+## 0.19.5 (October 5, 2017)
+- Enable React 16 in `peerDependencies` and update tests to React 16.
+
 ## 0.19.4 (July 21, 2017)
 - Remove `.babelrc` from published npm registry package.
 
