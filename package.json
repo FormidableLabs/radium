@@ -13,7 +13,7 @@
     "example": "examples"
   },
   "scripts": {
-    "postinstall": "npm run build",
+    "postinstall": "cd lib || npm run build",
     "preversion": "npm test && npm run lint",
     "version": "npm run build",
     "postversion": "publishr postversion -V",
@@ -24,7 +24,7 @@
     "build": "npm run build-lib && npm run build-dist",
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
     "flow": "flow check",
-    "eslint": "eslint src examples --ext .js --ext .jsx",
+    "eslint": "eslint src examples *.js",
     "fixlint": "npm run eslint -- --fix",
     "lint": "npm run eslint && npm run flow",
     "start": "babel-node examples/server.js",
@@ -52,7 +52,7 @@
     "rimraf": "^2.6.1"
   },
   "peerDependencies": {
-    "react": "^15.3.0"
+    "react": "^15.3.0 || ^16.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
@@ -60,6 +60,7 @@
     "chai": "^3.5.0",
     "color": "^1.0.3",
     "concurrently": "^3.4.0",
+    "core-js": "^2.5.1",
     "coveralls": "^2.12.0",
     "eslint": "^3.17.1",
     "eslint-plugin-flow-vars": "^0.5.0",
@@ -87,9 +88,9 @@
     "object-assign": "^4.1.1",
     "phantomjs-prebuilt": "^2.1.14",
     "prettier": "^0.22.0",
-    "react": "^15.4.2",
-    "react-addons-test-utils": "^15.4.2",
-    "react-dom": "^15.4.2",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-test-renderer": "^16.0.0",
     "sinon": "^1.17.7",
     "sinon-chai": "^2.8.0",
     "webpack": "^2.2.1",

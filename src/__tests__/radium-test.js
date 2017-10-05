@@ -5,10 +5,20 @@ import MouseUpListener from 'plugins/mouse-up-listener.js';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 import {getRenderOutput, getElement} from 'test-helpers';
 
 describe('Radium blackbox tests', () => {
+  let sandbox;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
   it('merges styles', () => {
     @Radium class TestComponent extends Component {
       render() {
@@ -626,8 +636,8 @@ describe('Radium blackbox tests', () => {
 
   /* eslint-disable no-console */
   it("doesn't try to setState if not mounted", () => {
-    sinon.stub(console, 'error');
-    sinon.stub(console, 'warn');
+    sandbox.stub(console, 'error');
+    sandbox.stub(console, 'warn');
 
     let setStateCaptured;
     const plugin = function({setState}) {
@@ -649,9 +659,6 @@ describe('Radium blackbox tests', () => {
 
     expect(console.error).not.to.have.been.called;
     expect(console.warn).not.to.have.been.called;
-
-    console.error.restore();
-    console.warn.restore();
   });
   /* eslint-enable no-console */
 
@@ -745,8 +752,8 @@ describe('Radium blackbox tests', () => {
 
   /* eslint-disable no-console */
   it('replaces style propType with array or object', () => {
-    sinon.stub(console, 'error');
-    sinon.stub(console, 'warn');
+    sandbox.stub(console, 'error');
+    sandbox.stub(console, 'warn');
 
     class TestComponent extends Component {
       render() {
@@ -760,9 +767,6 @@ describe('Radium blackbox tests', () => {
 
     expect(console.error).not.to.have.been.called;
     expect(console.warn).not.to.have.been.called;
-
-    console.error.restore();
-    console.warn.restore();
   });
   /* eslint-enable no-console */
 
