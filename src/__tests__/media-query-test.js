@@ -12,6 +12,10 @@ import {
   getElement,
 } from 'test-helpers';
 
+// Win on at least ie9 _can't_ sinon.stub() window.onerror like normal.
+// So, we monkeypatch directly like savages.
+const origWindowOnerror = window.onerror;
+
 describe('Media query tests', () => {
   let sandbox;
   let errorSpy;
@@ -27,6 +31,7 @@ describe('Media query tests', () => {
   afterEach(() => {
     sandbox.restore();
     window.removeEventListener('error', errorSpy);
+    window.onerror = origWindowOnerror;
 
     Radium.TestMode.disable();
   });
@@ -371,21 +376,19 @@ describe('Media query tests', () => {
     // React 16 - need to handle exceptions globally.
     // In DEV (aka our tests), need to silence global error handlers and such.
     // https://github.com/facebook/react/issues/10474#issuecomment-322909303
-    if (window.onerror) {
-      sandbox.stub(window, 'onerror');
-    }
-    // eslint-disable-next-line no-console
-    if (console.error) {
-      sandbox.stub(console, 'error');
-    }
+    window.onerror = sinon.spy();
+    sandbox.stub(console, 'error');
     const catchSpy = sandbox.spy(ErrorBoundary.prototype, 'componentDidCatch');
 
     TestUtils.renderIntoDocument(<TestComponent />);
 
+    // Check that the global error handler caught error.
+    expect(window.onerror).to.have.callCount(1);
+    const errMsg = window.onerror.getCall(0).args[0].toString();
+    expect(errMsg).to.contain('StyleRoot');
+
+    // Should also haven't hit the event listener.
     expect(errorSpy).to.have.callCount(1);
-    expect(errorSpy.getCall(0).args[0]).to.have
-      .property('message')
-      .that.contains('StyleRoot');
 
     // **Warning - Brittle Asserts**: React 16
     //
@@ -395,7 +398,7 @@ describe('Media query tests', () => {
     expect(catchSpy).to.have.callCount(1);
     expect(catchSpy.getCall(0).args[1]).to.have
       .property('componentStack')
-      .that.contains('ErrorBoundary');
+      .that.contains('Component');
   });
 
   it("doesn't throw without StyleRoot when in test mode", () => {
@@ -409,10 +412,9 @@ describe('Media query tests', () => {
       TestUtils.renderIntoDocument(<TestComponent />)).not.to.throw();
   });
 
-  /* eslint-disable no-console */
   it("doesn't try to setState if not mounted", () => {
-    sinon.stub(console, 'error');
-    sinon.stub(console, 'warn');
+    sandbox.stub(console, 'error');
+    sandbox.stub(console, 'warn');
 
     const addListener = sinon.spy();
     const mockMatchMedia = function() {
@@ -445,11 +447,7 @@ describe('Media query tests', () => {
     const listener = addListener.lastCall.args[0];
     listener(mockMatchMedia);
 
-    expect(console.error).not.to.have.been.called;
-    expect(console.warn).not.to.have.been.called;
-
-    console.error.restore();
-    console.warn.restore();
+    expect(console.error).not.to.have.been.called; // eslint-disable-line no-console
+    expect(console.warn).not.to.have.been.called; // eslint-disable-line no-console
   });
-  /* eslint-enable no-console */
 });
