@@ -3,7 +3,7 @@
 import Radium, {StyleRoot, keyframes} from 'index';
 import {expectCSS, getElement} from 'test-helpers';
 import React, {Component} from 'react';
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 
 const CHROME_14_USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.1 ' +
   '(KHTML, like Gecko) Chrome/14.0.812.0 Safari/535.1';
