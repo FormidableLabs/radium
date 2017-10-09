@@ -68,6 +68,21 @@ export default function enhanceWithRadium(
     _radiumMouseUpListener: {remove: () => void};
     _radiumIsMounted: boolean;
 
+    // TODO: HERE -- Problem. If `ComposedComponent` is a real ESM Class, then you cannot do
+    // `ComposedComponent.apply(...)`. You have to do `new`.
+    //
+    // Notes - what are the *arguments* to this instantiation?
+    //
+    // ```js
+    // const component = new ComposedComponent();
+    // ```
+    //
+    // Potential options:
+    // 1. Hack something together right here to get around it.
+    // 2. Output something like `es-node` directory that is fully node supported.
+    //
+    // For hack, see:
+    // https://github.com/gaearon/react-proxy/pull/42/files
     constructor() {
       super(...arguments);
 
