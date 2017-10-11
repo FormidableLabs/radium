@@ -12,6 +12,8 @@ describe('Enhancer', () => {
     expect(instance.state).to.deep.equal({_radiumStyleState: {}});
   });
 
+  // Regression test - `Radium wrapping not compatible with native classes?`
+  // https://github.com/FormidableLabs/radium/issues/576
   it('handles native ES classes', () => {
     class Composed extends React.Component {}
     const Enhanced = Enhancer(Composed);
