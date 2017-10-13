@@ -36,7 +36,8 @@ function isStateless(component: Function): boolean {
 // Check if value is a real ES class in Native / Node code.
 // See: https://stackoverflow.com/a/30760236
 function isNativeClass(component: Function): boolean {
-  return typeof component === 'function' && /^\s*class\s+/.test(component.toString());
+  return typeof component === 'function' &&
+    /^\s*class\s+/.test(component.toString());
 }
 
 export default function enhanceWithRadium(
@@ -53,9 +54,10 @@ export default function enhanceWithRadium(
   const component: Function = configOrComposedComponent;
   let ComposedComponent: constructor = component;
 
-  console.log("isNativeClass", isNativeClass(ComposedComponent));
-
-  //debugger;
+  // TODO: HERE -- REMOVE DBEUGGING STUFF
+  // eslint-disable-next-line no-console
+  console.log('isNativeClass', isNativeClass(ComposedComponent));
+  // debugger;
 
   // Handle stateless components
   if (isStateless(ComposedComponent)) {
