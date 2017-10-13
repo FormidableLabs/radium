@@ -47,6 +47,14 @@ export default function enhanceWithRadium(
   const component: Function = configOrComposedComponent;
   let ComposedComponent: constructor = component;
 
+  console.log(
+    ComposedComponent.prototype ?
+      ComposedComponent.prototype.constructor.name :
+      'no prototype'
+  );
+
+  //debugger;
+
   // Handle stateless components
   if (isStateless(ComposedComponent)) {
     ComposedComponent = class extends Component<any, Object> {

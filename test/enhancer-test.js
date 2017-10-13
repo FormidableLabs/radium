@@ -3,10 +3,27 @@
 const React = require('react');
 
 const Enhancer = require('../lib/enhancer');
+const createEsClass = require('../lib/test-helpers').createEsClass;
 
 describe('Enhancer', () => {
   it('sets up initial state', () => {
     const Enhanced = Enhancer(React.Component);
+    const instance = new Enhanced();
+
+    expect(instance.state).to.deep.equal({_radiumStyleState: {}});
+  });
+
+  it('handles functions', () => {
+    const Composed = () => React.createElement('div');
+    const Enhanced = Enhancer(Composed);
+    const instance = new Enhanced();
+
+    expect(instance.state).to.deep.equal({_radiumStyleState: {}});
+  });
+
+  it('handles babel-ified ES classes', () => {
+    const Composed = createEsClass();
+    const Enhanced = Enhancer(Composed);
     const instance = new Enhanced();
 
     expect(instance.state).to.deep.equal({_radiumStyleState: {}});
