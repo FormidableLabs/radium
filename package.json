@@ -19,9 +19,9 @@
     "postversion": "publishr postversion -V",
     "postpublish": "publishr postpublish -V",
     "version-dry-run": "publishr dry-run -V",
-    "build-lib": "rimraf lib && babel src/ -d lib/ && rimraf lib/__tests__ lib/__mocks__",
-    "build-dist": "rimraf dist && webpack && webpack --config=webpack.config.minified.js",
-    "build": "npm run build-lib && npm run build-dist",
+    "build-lib": "babel src/ -d lib/ --ignore '/__tests__/,/__mocks__/'",
+    "build-dist": "webpack && webpack --config=webpack.config.minified.js",
+    "build": "rimraf lib dist && npm run build-lib && npm run build-dist",
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
     "flow": "flow check",
     "eslint": "eslint src examples *.js",
@@ -38,7 +38,8 @@
     "test-coverage": "npm run test-node && npm run test-frontend-coverage",
     "test-ie": "npm run test-node && npm run test-frontend-ie",
     "test-dev": "concurrently --kill-others \"npm run test-node-dev\" \"npm run test-frontend-dev\"",
-    "universal": "concurrently --kill-others \"npm start\" \"npm run examples\""
+    "universal": "concurrently --kill-others \"npm start\" \"npm run examples\"",
+    "watch-lib": "npm run build-lib -- --watch"
   },
   "license": "MIT",
   "dependencies": {
