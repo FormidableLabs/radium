@@ -13,8 +13,16 @@ describe('Enhancer', () => {
     expect(instance.state).to.deep.equal({_radiumStyleState: {}});
   });
 
-  it('handles functions', () => {
+  it('handles arrow functions', () => {
     const Composed = () => React.createElement('div');
+    const Enhanced = Enhancer(Composed);
+    const instance = new Enhanced();
+
+    expect(instance.state).to.deep.equal({_radiumStyleState: {}});
+  });
+
+  it('handles real functions', () => {
+    const Composed = function () { return React.createElement('div'); };
     const Enhanced = Enhancer(Composed);
     const instance = new Enhanced();
 
