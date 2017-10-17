@@ -1,8 +1,9 @@
 # Test against this version of Node.js
 environment:
   matrix:
-    - nodejs_version: "6"
     - nodejs_version: "4"
+    - nodejs_version: "6"
+    - nodejs_version: "8"
 
 # Install scripts. (runs after repo cloning)
 install:
@@ -14,7 +15,8 @@ test_script:
   # Output useful info for debugging.
   - node --version
   - yarn --version
-  # run tests
+  # Run tests
+  - yarn run build
   - yarn run test-ie
 
 # Don't actually build.
