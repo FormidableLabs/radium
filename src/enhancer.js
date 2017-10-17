@@ -83,7 +83,7 @@ export default function enhanceWithRadium(
   // Handle Native ES classes.
   if (isNativeClass(ComposedComponent)) {
     // Manually approximate babel's class transpilation, but _with_ a real `new` call.
-    ComposedComponent = (function(OrigComponent) {
+    ComposedComponent = (function(OrigComponent): constructor {
       function NewComponent() {
         // Ordinarily, babel would produce something like:
         //
@@ -104,8 +104,6 @@ export default function enhanceWithRadium(
 
       return NewComponent;
     })(ComposedComponent);
-
-    ComposedComponent.displayName = component.displayName || component.name;
   }
 
   // Handle stateless components
