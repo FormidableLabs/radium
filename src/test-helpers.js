@@ -32,10 +32,10 @@ export function expectColor(actual, expected) {
   expect(Color(actual).hex()).to.equal(Color(expected).hex());
 }
 
-export function createEsClass() {
+export function createEsClass(renderFn) {
   class Composed extends Component {
     render() {
-      return <div />;
+      return renderFn() || <div />;
     }
   }
 

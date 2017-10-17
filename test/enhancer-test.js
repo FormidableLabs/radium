@@ -1,11 +1,40 @@
 "use strict";
 
 const React = require('react');
+const renderToString = require('react-dom/server').renderToString;
 
 const Enhancer = require('../lib/enhancer');
+const StyleRoot = require('../lib/components/style-root');
 const createEsClass = require('../lib/test-helpers').createEsClass;
 
+const render = (Component, props) =>
+  renderToString(React.createElement(Component, Object.assign({
+    radiumConfig: { userAgent: 'testy-mctestface' }
+  }, props)));
+
+// Full assertion wrapper
+const assertValidEnhancedComponent = (Composed) => {
+  const Enhanced = Enhancer(Composed);
+  const rendered = render(Enhanced);
+
+  expect(render(Composed)).to.not.equal(rendered);
+  expect(rendered)
+    .to.contain('data-radium="true"').and
+    .to.contain('style="background:red;color:white"');
+};
+
 describe('Enhancer', () => {
+  let testElement;
+
+  beforeEach(() => {
+    testElement = React.createElement('div', {
+      style: [
+        { background: 'red' },
+        { color: 'white' }
+      ]
+    });
+  });
+
   it('sets up initial state', () => {
     const Enhanced = Enhancer(React.Component);
     const instance = new Enhanced();
@@ -14,27 +43,23 @@ describe('Enhancer', () => {
   });
 
   it('handles arrow functions', () => {
-    const Composed = () => React.createElement('div');
-    const Enhanced = Enhancer(Composed);
-    const instance = new Enhanced();
+    const Composed = () => testElement;
 
-    expect(instance.state).to.deep.equal({_radiumStyleState: {}});
+    assertValidEnhancedComponent(Composed);
   });
 
   it('handles real functions', () => {
-    const Composed = function () { return React.createElement('div'); };
-    const Enhanced = Enhancer(Composed);
-    const instance = new Enhanced();
+    const Composed = function () {
+      return testElement;
+    };
 
-    expect(instance.state).to.deep.equal({_radiumStyleState: {}});
+    assertValidEnhancedComponent(Composed);
   });
 
   it('handles babel-ified ES classes', () => {
-    const Composed = createEsClass();
-    const Enhanced = Enhancer(Composed);
-    const instance = new Enhanced();
+    const Composed = createEsClass(() => testElement);
 
-    expect(instance.state).to.deep.equal({_radiumStyleState: {}});
+    assertValidEnhancedComponent(Composed);
   });
 
   // Regression test - `Radium wrapping not compatible with native classes?`
@@ -42,12 +67,10 @@ describe('Enhancer', () => {
   it('handles native ES classes', () => {
     class Composed extends React.Component {
       render() {
-        return React.createElement('div');
+        return testElement;
       }
     }
-    const Enhanced = Enhancer(Composed);
-    const instance = new Enhanced();
 
-    expect(instance.state).to.deep.equal({_radiumStyleState: {}});
+    assertValidEnhancedComponent(Composed);
   });
 });

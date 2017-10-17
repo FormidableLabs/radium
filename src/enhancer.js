@@ -83,7 +83,7 @@ export default function enhanceWithRadium(
   // Handle Native ES classes.
   if (isNativeClass(ComposedComponent)) {
     // Manually approximate babel's class transpilation, but _with_ a real `new` call.
-    ComposedComponent: Function  = (function(OrigComponent) {
+    ComposedComponent = (function(OrigComponent) {
       function NewComponent() {
         // Ordinarily, babel would produce something like:
         //
@@ -92,7 +92,12 @@ export default function enhanceWithRadium(
         // ```
         //
         // Instead, we just call `new` directly without the `_possibleConstructorReturn` wrapper.
-        return new OrigComponent(...arguments);
+        const source = new OrigComponent(...arguments);
+
+        // Then we manually update context with properties.
+        copyProperties(source, this);
+
+        return this;
       }
 
       inherits(NewComponent, OrigComponent);
