@@ -22,20 +22,20 @@ module.exports = function(config) {
       module: {
         loaders: [
           {
-            test: /\.jsx?$/,
+            test: /\.js$/,
             enforce: 'pre',
             include: path.resolve('src/__tests__/'),
             loader: 'babel-loader',
           },
           {
-            test: /\.jsx?$/,
+            test: /\.js$/,
             include: path.resolve('src/'),
             enforce: 'pre',
             exclude: /(__tests__|__mocks__)/,
             loader: 'isparta-loader?babel-loader',
           },
           {
-            test: /\.jsx?$/,
+            test: /\.js$/,
             exclude: [/node_modules/],
             loader: 'babel-loader',
           },

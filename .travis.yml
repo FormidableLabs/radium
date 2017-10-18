@@ -25,6 +25,8 @@ notifications:
 cache: yarn
 
 script:
+  # Make sure we can actually build the examples.
+  - yarn run build-examples
   - yarn run lint
   - yarn run test-coverage
   # Upload to coveralls, but don't _fail_ if coveralls is down.

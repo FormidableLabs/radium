@@ -16,8 +16,8 @@
 const React = require('react');
 
 const CommonStyles = require('./common.styles');
-const Button = require('./components/button.jsx');
-const ComputedWell = require('./components/computed-well.jsx');
+const Button = require('./components/button');
+const ComputedWell = require('./components/computed-well');
 const Radium = require('../src');
 
 const {Style, StyleRoot} = Radium;
@@ -63,7 +63,7 @@ HoverMessage = Radium(HoverMessage);
   }
 }
 
-let Spinner = React.createClass({
+class Spinner extends React.Component {
   render() {
     return (
       <div>
@@ -72,8 +72,9 @@ let Spinner = React.createClass({
         />
       </div>
     );
-  },
-});
+  }
+}
+
 Spinner = Radium(Spinner);
 
 const VisitedLink = Radium(() => (
@@ -85,8 +86,8 @@ const VisitedLink = Radium(() => (
   </a>
 ));
 
-let App = React.createClass({
-  _remount: function() {
+class App extends React.Component {
+  _remount() {
     this.setState({shouldRenderNull: true});
 
     setTimeout(
@@ -95,9 +96,9 @@ let App = React.createClass({
       }.bind(this),
       100,
     );
-  },
+  }
 
-  render: function() {
+  render() {
     if (this.state && this.state.shouldRenderNull) {
       return null;
     }
@@ -112,7 +113,8 @@ let App = React.createClass({
 
         <p /><Spinner />
 
-        <p /><Button onClick={this._remount}>Unmount and remount</Button>
+        <p />
+        <Button onClick={this._remount.bind(this)}>Unmount and remount</Button>
 
         <p /><Button>Button</Button>
 
@@ -181,8 +183,9 @@ let App = React.createClass({
         </div>
       </StyleRoot>
     );
-  },
-});
+  }
+}
+
 App = Radium(App);
 
 const squareStyles = {
