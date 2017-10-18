@@ -21,6 +21,7 @@
     "version-dry-run": "publishr dry-run -V",
     "build-lib": "rimraf lib && babel src/ -d lib/ && rimraf lib/__tests__ lib/__mocks__",
     "build-dist": "rimraf dist && webpack && webpack --config=webpack.config.minified.js",
+    "build-examples": "webpack --config examples/webpack.config.js",
     "build": "npm run build-lib && npm run build-dist",
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
     "flow": "flow check",
