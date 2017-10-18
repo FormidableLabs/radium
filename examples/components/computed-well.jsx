@@ -14,8 +14,8 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const Radium = require('../../src/index');
-
-const ComputedWell = React.createClass({
+const createReactClass = require('create-react-class');
+const ComputedWell = createReactClass({
   getInitialState: function() {
     return {
       dynamicBg: '#000',

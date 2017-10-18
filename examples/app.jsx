@@ -14,7 +14,7 @@
 /* eslint-disable no-use-before-define */
 
 const React = require('react');
-
+const createReactClass = require('create-react-class');
 const CommonStyles = require('./common.styles');
 const Button = require('./components/button.jsx');
 const ComputedWell = require('./components/computed-well.jsx');
@@ -63,7 +63,7 @@ HoverMessage = Radium(HoverMessage);
   }
 }
 
-let Spinner = React.createClass({
+let Spinner = createReactClass({
   render() {
     return (
       <div>
@@ -85,7 +85,7 @@ const VisitedLink = Radium(() => (
   </a>
 ));
 
-let App = React.createClass({
+let App = createReactClass({
   _remount: function() {
     this.setState({shouldRenderNull: true});
 
