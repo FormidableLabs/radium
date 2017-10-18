@@ -15,7 +15,7 @@ import express from 'express';
 import proxy from 'express-http-proxy';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import App from './app.jsx';
+import App from './app';
 import fs from 'fs';
 import path from 'path';
 
