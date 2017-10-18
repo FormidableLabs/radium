@@ -65,7 +65,7 @@ class Button extends React.Component {
 Button = Radium(Button);
 ```
 
-Radium resolves nested style objects into a flat object that can be applied directly to a React element. If you're not familiar with handling inline styles in React, see the React guide to the subject [here](http://facebook.github.io/react/tips/inline-styles.html). A basic style object looks like this:
+Radium resolves nested style objects into a flat object that can be applied directly to a React element. If you're not familiar with handling inline styles in React, see the React guide to the subject [here](https://reactjs.org/docs/dom-elements.html#style). A basic style object looks like this:
 
 ```jsx
 var baseStyles = {

@@ -28,6 +28,8 @@ script:
   # Output useful info for debugging.
   - node --version
   - yarn --version
+  # Make sure we can actually build the examples.
+  - yarn run build-examples
   # Run tests
   - yarn run lint
   - yarn run build
