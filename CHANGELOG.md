@@ -1,5 +1,8 @@
 # Radium Changelog
 
+## 0.19.6 (October 5, 2017)
+- Allow native ES classes to be used with the Radium enhancer.
+
 ## 0.19.5 (October 5, 2017)
 - Enable React 16 in `peerDependencies` and update tests to React 16.
 
