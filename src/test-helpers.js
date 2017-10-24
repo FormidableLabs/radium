@@ -1,4 +1,5 @@
 import Color from 'color';
+import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import ShallowRenderer from 'react-test-renderer/shallow';
 import TestUtils from 'react-dom/test-utils';
@@ -29,4 +30,14 @@ export function expectCSS(styleElement, css) {
 
 export function expectColor(actual, expected) {
   expect(Color(actual).hex()).to.equal(Color(expected).hex());
+}
+
+export function createEsClass(renderFn) {
+  class Composed extends Component {
+    render() {
+      return renderFn() || <div />;
+    }
+  }
+
+  return Composed;
 }
