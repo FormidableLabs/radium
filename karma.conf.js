@@ -8,14 +8,14 @@ module.exports = function(config) {
       // Polyfills for PhantomJS in React 16.
       require.resolve('core-js/es6/map'),
       require.resolve('core-js/es6/set'),
-      'src/__tests__/**/*.js',
+      'src/__tests__/**/*.js'
     ],
     preprocessors: {
       [path.join(
         path.dirname(require.resolve('core-js/package.json')),
         'es6/**/*.js' // eslint-disable-line prettier/prettier
       )]: ['webpack'],
-      'src/__tests__/**/*.js': ['webpack'],
+      'src/__tests__/**/*.js': ['webpack']
     },
     webpack: {
       cache: true,
@@ -25,33 +25,33 @@ module.exports = function(config) {
             test: /\.js$/,
             enforce: 'pre',
             include: path.resolve('src/__tests__/'),
-            loader: 'babel-loader',
+            loader: 'babel-loader'
           },
           {
             test: /\.js$/,
             include: path.resolve('src/'),
             enforce: 'pre',
             exclude: /(__tests__|__mocks__)/,
-            loader: 'isparta-loader?babel-loader',
+            loader: 'isparta-loader?babel-loader'
           },
           {
             test: /\.js$/,
             exclude: [/node_modules/],
-            loader: 'babel-loader',
+            loader: 'babel-loader'
           },
           {
             test: /\.css$/,
-            loader: 'style-loader!css-loader',
-          },
-        ],
+            loader: 'style-loader!css-loader'
+          }
+        ]
       },
       resolve: {
         modules: [
           path.join(__dirname, 'node_modules'),
-          path.join(__dirname, 'src'),
+          path.join(__dirname, 'src')
         ],
-        extensions: ['.js', '.jsx'],
-      },
+        extensions: ['.js', '.jsx']
+      }
     },
     webpackServer: {
       quiet: false,
@@ -63,8 +63,8 @@ module.exports = function(config) {
         hash: false,
         timings: false,
         chunks: false,
-        chunkModules: false,
-      },
+        chunkModules: false
+      }
     },
     exclude: [],
     port: 8080,
@@ -81,10 +81,10 @@ module.exports = function(config) {
       'karma-phantomjs-launcher',
       'karma-phantomjs-shim',
       'karma-sinon-chai',
-      'karma-webpack',
+      'karma-webpack'
     ],
     coverageReporter: {
-      type: 'text',
+      type: 'text'
     },
     browserConsoleLogOptions: {
       level: 'log',
@@ -92,6 +92,6 @@ module.exports = function(config) {
       terminal: true
     },
     captureTimeout: 100000,
-    singleRun: true,
+    singleRun: true
   });
 };

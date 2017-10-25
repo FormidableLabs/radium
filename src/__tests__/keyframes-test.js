@@ -32,7 +32,7 @@ describe('keyframes', () => {
         from {left: 0;}
         to {left: 100px;}
       }
-    `,
+    `
     );
   });
 
@@ -40,9 +40,9 @@ describe('keyframes', () => {
     const animation = keyframes(
       {
         from: {left: '-1000px'},
-        to: {left: 0},
+        to: {left: 0}
       },
-      'SlideFromLeft',
+      'SlideFromLeft'
     );
 
     class TestComponent extends Component {
@@ -66,7 +66,7 @@ describe('keyframes', () => {
           left: 0;
         }
       }
-    `,
+    `
     );
   });
 
@@ -74,9 +74,9 @@ describe('keyframes', () => {
     const animation = keyframes(
       {
         from: {left: -1000},
-        to: {left: 10},
+        to: {left: 10}
       },
-      'SlideFromLeft',
+      'SlideFromLeft'
     );
 
     class TestComponent extends Component {
@@ -100,7 +100,7 @@ describe('keyframes', () => {
           left: 10px;
         }
       }
-    `,
+    `
     );
   });
 
@@ -108,9 +108,9 @@ describe('keyframes', () => {
     const animation = keyframes(
       {
         from: {left: '-1000px'},
-        to: {left: 0},
+        to: {left: 0}
       },
-      'SlideFromLeft',
+      'SlideFromLeft'
     );
 
     @Radium class ChildComponent extends Component {
@@ -144,7 +144,7 @@ describe('keyframes', () => {
           left: 0;
         }
       }
-    `,
+    `
     );
   });
 });

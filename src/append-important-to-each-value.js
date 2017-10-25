@@ -6,6 +6,6 @@ import mapObject from './map-object';
 export default function appendImportantToEachValue(style: Object): Object {
   return mapObject(
     style,
-    (result, key) => appendPxIfNeeded(key, style[key]) + ' !important',
+    (result, key) => appendPxIfNeeded(key, style[key]) + ' !important'
   );
 }

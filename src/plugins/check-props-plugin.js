@@ -23,7 +23,7 @@ if (process.env.NODE_ENV !== 'production') {
       'backgroundRepeat',
       'backgroundRepeatX',
       'backgroundRepeatY',
-      'backgroundSize',
+      'backgroundSize'
     ],
     border: [
       'borderBottom',
@@ -44,20 +44,20 @@ if (process.env.NODE_ENV !== 'production') {
       'borderTopColor',
       'borderTopStyle',
       'borderTopWidth',
-      'borderWidth',
+      'borderWidth'
     ],
     borderImage: [
       'borderImageOutset',
       'borderImageRepeat',
       'borderImageSlice',
       'borderImageSource',
-      'borderImageWidth',
+      'borderImageWidth'
     ],
     borderRadius: [
       'borderBottomLeftRadius',
       'borderBottomRightRadius',
       'borderTopLeftRadius',
-      'borderTopRightRadius',
+      'borderTopRightRadius'
     ],
     font: [
       'fontFamily',
@@ -68,7 +68,7 @@ if (process.env.NODE_ENV !== 'production') {
       'fontVariant',
       'fontVariantLigatures',
       'fontWeight',
-      'lineHeight',
+      'lineHeight'
     ],
     listStyle: ['listStyleImage', 'listStylePosition', 'listStyleType'],
     margin: ['marginBottom', 'marginLeft', 'marginRight', 'marginTop'],
@@ -77,8 +77,8 @@ if (process.env.NODE_ENV !== 'production') {
       'transitionDelay',
       'transitionDuration',
       'transitionProperty',
-      'transitionTimingFunction',
-    ],
+      'transitionTimingFunction'
+    ]
   };
 
   checkProps = function(config: PluginConfig): PluginResult {
@@ -92,7 +92,7 @@ if (process.env.NODE_ENV !== 'production') {
       if (
         Array.isArray(shorthandPropertyExpansions[styleKey]) &&
         shorthandPropertyExpansions[styleKey].some(
-          sp => styleKeys.indexOf(sp) !== -1,
+          sp => styleKeys.indexOf(sp) !== -1
         )
       ) {
         if (process.env.NODE_ENV !== 'production') {
@@ -106,7 +106,7 @@ if (process.env.NODE_ENV !== 'production') {
               componentName +
               '.',
             'See https://github.com/FormidableLabs/radium/issues/95 for more ' +
-              'information.',
+              'information.'
           );
           /* eslint-enable no-console */
         }

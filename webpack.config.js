@@ -9,22 +9,22 @@ module.exports = {
         root: 'React',
         commonjs2: 'react',
         commonjs: 'react',
-        amd: 'react',
-      },
-    },
+        amd: 'react'
+      }
+    }
   ],
   output: {
     path: path.join(__dirname, '/dist'),
     filename: 'radium.js',
     library: 'Radium',
-    libraryTarget: 'umd',
+    libraryTarget: 'umd'
   },
   module: {
     loaders: [
       {
         test: /\.js$/,
-        loader: 'babel-loader',
-      },
-    ],
-  },
+        loader: 'babel-loader'
+      }
+    ]
+  }
 };

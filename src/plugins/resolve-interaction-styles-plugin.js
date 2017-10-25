@@ -18,7 +18,7 @@ const resolveInteractionStyles = function(config: PluginConfig): PluginResult {
     mergeStyles,
     props,
     setState,
-    style,
+    style
   } = config;
 
   const newComponentFields = {};
@@ -89,13 +89,13 @@ const resolveInteractionStyles = function(config: PluginConfig): PluginResult {
     newComponentFields._radiumMouseUpListener = MouseUpListener.subscribe(
       () => {
         Object.keys(
-          getComponentField('state')._radiumStyleState,
+          getComponentField('state')._radiumStyleState
         ).forEach(key => {
           if (getState(':active', key) === 'viamousedown') {
             setState(':active', false, key);
           }
         });
-      },
+      }
     );
   }
 
@@ -116,13 +116,13 @@ const resolveInteractionStyles = function(config: PluginConfig): PluginResult {
       }
       return styleWithoutInteractions;
     },
-    {},
+    {}
   );
 
   return {
     componentFields: newComponentFields,
     props: newProps,
-    style: newStyle,
+    style: newStyle
   };
 };
 

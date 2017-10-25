@@ -30,7 +30,7 @@ export type PluginConfig = {
   cssRuleSetToString: (
     selector: string,
     rules: Object,
-    userAgent: ?string,
+    userAgent: ?string
   ) => string,
 
   // Retrieve the value of a field on the component
@@ -71,8 +71,8 @@ export type PluginConfig = {
   // uses the exenv npm module
   ExecutionEnvironment: {
     canUseEventListeners: boolean,
-    canUseDOM: boolean,
-  },
+    canUseDOM: boolean
+  }
 };
 
 export type PluginResult = ?{
@@ -88,7 +88,7 @@ export type PluginResult = ?{
   props?: ?Object,
 
   // Replaces (not merged into) the rendered element's style property.
-  style?: ?Object,
+  style?: ?Object
 };
 
 export default {
@@ -99,5 +99,5 @@ export default {
   removeNestedStyles: removeNestedStylesPlugin,
   resolveInteractionStyles: resolveInteractionStylesPlugin,
   resolveMediaQueries: resolveMediaQueriesPlugin,
-  visited: visitedPlugin,
+  visited: visitedPlugin
 };

@@ -24,7 +24,7 @@ function transformValues(style) {
       newStyle[key] = value;
       return newStyle;
     },
-    {},
+    {}
   );
 }
 
@@ -33,10 +33,10 @@ let _lastUserAgent;
 let _cachedPrefixer;
 
 function getPrefixer(
-  userAgent: ?string,
+  userAgent: ?string
 ): {
   +prefix: (style: Object) => Object,
-  prefixedKeyframes: string,
+  prefixedKeyframes: string
 } {
   const actualUserAgent = userAgent ||
     (global && global.navigator && global.navigator.userAgent);
@@ -47,7 +47,7 @@ function getPrefixer(
       console.warn(
         'Radium: userAgent should be supplied for server-side rendering. See ' +
           'https://github.com/FormidableLabs/radium/tree/master/docs/api#radium ' +
-          'for more information.',
+          'for more information.'
       );
       /* eslint-enable no-console */
       _hasWarnedAboutUserAgent = true;
@@ -58,7 +58,7 @@ function getPrefixer(
     if (actualUserAgent === 'all') {
       _cachedPrefixer = {
         prefix: InlineStylePrefixer.prefixAll,
-        prefixedKeyframes: 'keyframes',
+        prefixedKeyframes: 'keyframes'
       };
     } else {
       _cachedPrefixer = new InlineStylePrefixer({userAgent: actualUserAgent});

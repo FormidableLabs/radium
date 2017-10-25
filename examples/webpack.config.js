@@ -16,20 +16,20 @@ var path = require('path'); // eslint-disable-line no-var
 module.exports = {
   cache: true,
   entry: {
-    app: './examples/client.js',
+    app: './examples/client.js'
   },
   output: {
     path: path.join(__dirname, '/dist'),
     publicPath: '/',
     filename: '[name].js',
-    chunkFilename: '[chunkhash].js',
+    chunkFilename: '[chunkhash].js'
   },
   module: {
     loaders: [
       {
         test: /\.js$/,
-        loader: 'babel-loader',
-      },
-    ],
-  },
+        loader: 'babel-loader'
+      }
+    ]
+  }
 };
