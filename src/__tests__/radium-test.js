@@ -30,7 +30,7 @@ describe('Radium blackbox tests', () => {
 
     expect(output.props.style).to.deep.equal({
       color: 'blue',
-      background: 'red',
+      background: 'red'
     });
   });
 
@@ -41,7 +41,7 @@ describe('Radium blackbox tests', () => {
           <div
             style={[
               [{color: 'blue'}, [{height: '2px', padding: '9px'}]],
-              {background: 'red'},
+              {background: 'red'}
             ]}
           />
         );
@@ -54,7 +54,7 @@ describe('Radium blackbox tests', () => {
       color: 'blue',
       background: 'red',
       height: '2px',
-      padding: '9px',
+      padding: '9px'
     });
   });
 
@@ -75,7 +75,7 @@ describe('Radium blackbox tests', () => {
 
     expect(output.props.header.props.style).to.deep.equal({
       color: 'blue',
-      background: 'red',
+      background: 'red'
     });
   });
 
@@ -94,7 +94,7 @@ describe('Radium blackbox tests', () => {
               <div
                 style={[
                   {color: 'blue'},
-                  {background: 'red', ':active': {color: 'green'}},
+                  {background: 'red', ':active': {color: 'green'}}
                 ]}
               />
             }
@@ -130,7 +130,7 @@ describe('Radium blackbox tests', () => {
               <div
                 style={[
                   {color: 'blue'},
-                  {background: 'red', ':active': {color: 'green'}},
+                  {background: 'red', ':active': {color: 'green'}}
                 ]}
               >
                 {arg}
@@ -162,7 +162,7 @@ describe('Radium blackbox tests', () => {
             style={{
               background: 'red',
               color: 'blue',
-              ':hover': {color: 'green'},
+              ':hover': {color: 'green'}
             }}
           />
         );
@@ -189,7 +189,7 @@ describe('Radium blackbox tests', () => {
             style={{
               background: 'red',
               color: 'blue',
-              ':active': {color: 'green'},
+              ':active': {color: 'green'}
             }}
           />
         );
@@ -218,7 +218,7 @@ describe('Radium blackbox tests', () => {
               style={{
                 background: 'red',
                 color: 'blue',
-                ':active': {color: 'green'},
+                ':active': {color: 'green'}
               }}
             />
             <button
@@ -226,7 +226,7 @@ describe('Radium blackbox tests', () => {
               style={{
                 background: 'red',
                 color: 'blue',
-                ':active': {color: 'green'},
+                ':active': {color: 'green'}
               }}
             />
             <nav
@@ -234,7 +234,7 @@ describe('Radium blackbox tests', () => {
               style={{
                 background: 'red',
                 color: 'blue',
-                ':active': {color: 'green'},
+                ':active': {color: 'green'}
               }}
             />
           </div>
@@ -279,14 +279,14 @@ describe('Radium blackbox tests', () => {
                   key="header"
                   style={{
                     color: 'yellow',
-                    ':hover': {color: 'blue'},
+                    ':hover': {color: 'blue'}
                   }}
                 />
                 <footer
                   key="footer"
                   style={{
                     color: 'green',
-                    ':hover': {color: 'red'},
+                    ':hover': {color: 'red'}
                   }}
                 />
               </section>
@@ -347,7 +347,7 @@ describe('Radium blackbox tests', () => {
         return (
           <div
             style={{
-              background: {toString: () => 'red'},
+              background: {toString: () => 'red'}
             }}
           />
         );
@@ -365,19 +365,19 @@ describe('Radium blackbox tests', () => {
       return {
         matches: true,
         addListener: function() {},
-        removeListener: function() {},
+        removeListener: function() {}
       };
     };
 
     @Radium({
-      matchMedia: truthyMatchMedia,
+      matchMedia: truthyMatchMedia
     })
     class TestComponent extends Component {
       render() {
         return (
           <div
             style={{
-              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}}
             }}
           />
         );
@@ -398,7 +398,7 @@ describe('Radium blackbox tests', () => {
         return (
           <div
             style={{
-              height: ['100%', '100vh'],
+              height: ['100%', '100vh']
             }}
           />
         );
@@ -418,7 +418,7 @@ describe('Radium blackbox tests', () => {
             style={{
               background: 'red',
               color: 'blue',
-              ':active': {color: 'green'},
+              ':active': {color: 'green'}
             }}
           />
         );
@@ -457,9 +457,9 @@ describe('Radium blackbox tests', () => {
       <TestComponent>
         {{
           nav: <nav>nav</nav>,
-          main: <main>main</main>,
+          main: <main>main</main>
         }}
-      </TestComponent>,
+      </TestComponent>
     );
 
     const nav = getElement(output, 'nav');
@@ -484,7 +484,7 @@ describe('Radium blackbox tests', () => {
     const output = TestUtils.renderIntoDocument(
       <TestComponent>
         {[<nav key="nav">nav</nav>, <main key="main">main</main>]}
-      </TestComponent>,
+      </TestComponent>
     );
 
     const nav = getElement(output, 'nav');
@@ -626,7 +626,7 @@ describe('Radium blackbox tests', () => {
       }
 
       const output = TestUtils.renderIntoDocument(
-        <TestComponent radiumConfig={{plugins: [makeItRedPlugin]}} />,
+        <TestComponent radiumConfig={{plugins: [makeItRedPlugin]}} />
       );
       const div = getElement(output, 'div');
 
@@ -676,7 +676,7 @@ describe('Radium blackbox tests', () => {
     MyStatelessComponent = Radium(MyStatelessComponent);
 
     const output = TestUtils.renderIntoDocument(
-      <MyStatelessComponent>hello world</MyStatelessComponent>,
+      <MyStatelessComponent>hello world</MyStatelessComponent>
     );
     const div = getElement(output, 'div');
 
@@ -707,14 +707,14 @@ describe('Radium blackbox tests', () => {
       </div>
     );
     MyStatelessComponent.contextTypes = {
-      hoverColor: PropTypes.string,
+      hoverColor: PropTypes.string
     };
     MyStatelessComponent = Radium(MyStatelessComponent);
 
     class ContextGivingWrapper extends Component {
       getChildContext() {
         return {
-          hoverColor: 'green',
+          hoverColor: 'green'
         };
       }
       render() {
@@ -722,13 +722,13 @@ describe('Radium blackbox tests', () => {
       }
     }
     ContextGivingWrapper.childContextTypes = {
-      hoverColor: PropTypes.string,
+      hoverColor: PropTypes.string
     };
 
     const output = TestUtils.renderIntoDocument(
       <ContextGivingWrapper>
         <MyStatelessComponent>hello world</MyStatelessComponent>
-      </ContextGivingWrapper>,
+      </ContextGivingWrapper>
     );
     const div = getElement(output, 'div');
 
@@ -781,7 +781,7 @@ describe('Radium blackbox tests', () => {
       }
 
       TestUtils.renderIntoDocument(
-        <TestComponent radiumConfig={{plugins: [plugin]}} />,
+        <TestComponent radiumConfig={{plugins: [plugin]}} />
       );
 
       expect(plugin).to.have.been.called;
@@ -803,7 +803,7 @@ describe('Radium blackbox tests', () => {
       }
 
       TestUtils.renderIntoDocument(
-        <ParentComponent radiumConfig={{plugins: [plugin]}} />,
+        <ParentComponent radiumConfig={{plugins: [plugin]}} />
       );
 
       expect(plugin).to.have.callCount(2);

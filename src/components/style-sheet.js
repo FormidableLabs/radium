@@ -8,7 +8,7 @@ import StyleKeeper from '../style-keeper';
 
 export default class StyleSheet extends PureComponent<{}, {css: string}> {
   static contextTypes = {
-    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper),
+    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
   };
 
   constructor() {
@@ -20,7 +20,7 @@ export default class StyleSheet extends PureComponent<{}, {css: string}> {
   componentDidMount() {
     this._isMounted = true;
     this._subscription = this.context._radiumStyleKeeper.subscribe(
-      this._onChange,
+      this._onChange
     );
     this._onChange();
   }
@@ -44,7 +44,7 @@ export default class StyleSheet extends PureComponent<{}, {css: string}> {
       () => {
         this._isMounted && this.setState(this._getCSSState());
       },
-      0,
+      0
     );
   };
 

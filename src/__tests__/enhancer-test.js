@@ -1,6 +1,6 @@
 const resolveStyles = sinon.spy(require('resolve-styles.js'));
 const Enhancer = require('inject-loader!enhancer.js')({
-  './resolve-styles.js': resolveStyles,
+  './resolve-styles.js': resolveStyles
 });
 
 import React, {Component} from 'react';
@@ -123,7 +123,7 @@ describe('Enhancer', () => {
     const mediaQueryListenersByQuery = {
       '(min-width: 1000px)': {remove: sinon.spy()},
       '(max-width: 600px)': {remove: sinon.spy()},
-      '(min-resolution: 2dppx)': {remove: sinon.spy()},
+      '(min-resolution: 2dppx)': {remove: sinon.spy()}
     };
     class Composed extends Component {
       constructor() {

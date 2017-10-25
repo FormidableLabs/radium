@@ -94,7 +94,7 @@ class App extends React.Component {
       function() {
         this.setState({shouldRenderNull: false});
       }.bind(this),
-      100,
+      100
     );
   }
 
@@ -124,7 +124,7 @@ class App extends React.Component {
         <Button
           style={{
             fontSize: '1.5em',
-            borderRadius: 3,
+            borderRadius: 3
           }}
         >
           Button
@@ -147,23 +147,23 @@ class App extends React.Component {
           rules={{
             body: {
               margin: 0,
-              fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
+              fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
             },
             mediaQueries: {
               '(max-width: 600px)': {
                 body: {
-                  background: 'gray',
-                },
+                  background: 'gray'
+                }
               },
               '(max-width: 500px)': {
                 body: {
-                  background: 'blue',
+                  background: 'blue'
                 },
                 'p, h1': {
-                  color: 'white',
-                },
-              },
-            },
+                  color: 'white'
+                }
+              }
+            }
           }}
         />
 
@@ -173,9 +173,9 @@ class App extends React.Component {
           <Style
             rules={{
               span: {
-                fontFamily: 'Lucida Console, Monaco, monospace',
+                fontFamily: 'Lucida Console, Monaco, monospace'
               },
-              color: 'blue',
+              color: 'blue'
             }}
             scopeSelector=".scoping-class"
           />
@@ -194,26 +194,26 @@ const squareStyles = {
     border: 'solid 1px white',
     float: 'left',
     height: 100,
-    width: 100,
+    width: 100
   },
   one: {
     ':hover': {
-      background: 'blue',
-    },
+      background: 'blue'
+    }
   },
   two: {
     ':hover': {
-      background: 'red',
-    },
+      background: 'red'
+    }
   },
   three: {
     ':hover': {
-      background: 'yellow',
+      background: 'yellow'
     },
     ':disabled': {
-      background: 'red',
-    },
-  },
+      background: 'red'
+    }
+  }
 };
 
 const tileStyle = {
@@ -227,17 +227,17 @@ const tileStyle = {
   cursor: 'pointer',
 
   ':hover': {
-    background: '#999',
-  },
+    background: '#999'
+  }
 };
 
 const pulseAnimation = Radium.keyframes(
   {
     '0%': {width: '10%'},
     '50%': {width: '50%'},
-    '100%': {width: '10%'},
+    '100%': {width: '10%'}
   },
-  'pulse',
+  'pulse'
 );
 
 const spinnerStyles = {
@@ -246,14 +246,14 @@ const spinnerStyles = {
     animationName: pulseAnimation,
     background: 'blue',
     height: '4px',
-    margin: '0 auto',
-  },
+    margin: '0 auto'
+  }
 };
 
 const listStyle = {
   ...resetListStyle,
   ...resetBoxModel,
-  margin: 15,
+  margin: 15
 };
 
 module.exports = App;

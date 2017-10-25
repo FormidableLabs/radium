@@ -2,7 +2,7 @@ import React from 'react';
 import MouseUpListener from 'plugins/mouse-up-listener.js';
 import objectAssign from 'object-assign';
 const resolveStyles = require('inject-loader!resolve-styles.js')({
-  exenv: require('__mocks__/exenv.js'),
+  exenv: require('__mocks__/exenv.js')
 });
 
 const genComponent = function() {
@@ -11,7 +11,7 @@ const genComponent = function() {
       objectAssign(this.state, newState);
     }),
     state: {},
-    _radiumIsMounted: true,
+    _radiumIsMounted: true
   };
 };
 
@@ -108,8 +108,8 @@ describe('resolveStyles', function() {
       // JSX won't let this through, so do it with a plain object instead
       const renderedElement = {
         props: {
-          children: [null],
-        },
+          children: [null]
+        }
       };
 
       const result = resolveStyles(component, renderedElement);
@@ -131,7 +131,7 @@ describe('resolveStyles', function() {
 
       expect(result.props.style).to.deep.equal({
         background: 'white',
-        color: 'blue',
+        color: 'blue'
       });
 
       expect(React.cloneElement).to.have.been.calledOnce;
@@ -151,7 +151,7 @@ describe('resolveStyles', function() {
 
       expect(result.props.style).to.deep.equal({
         background: 'white',
-        color: 'blue',
+        color: 'blue'
       });
     });
 
@@ -166,7 +166,7 @@ describe('resolveStyles', function() {
             ''.someUndefinedVar,
             '',
             [1, 2, 3],
-            {color: 'blue'},
+            {color: 'blue'}
           ]}
         />
       );
@@ -175,7 +175,7 @@ describe('resolveStyles', function() {
 
       expect(result.props.style).to.deep.equal({
         background: 'white',
-        color: 'blue',
+        color: 'blue'
       });
     });
 
@@ -188,7 +188,7 @@ describe('resolveStyles', function() {
       const result = resolveStyles(component, renderedElement);
 
       expect(result.props.style).to.deep.equal({
-        background: 'blue',
+        background: 'blue'
       });
     });
 
@@ -198,7 +198,7 @@ describe('resolveStyles', function() {
         <div
           style={[
             {':hover': {background: 'white'}},
-            {':hover': {color: 'blue'}},
+            {':hover': {color: 'blue'}}
           ]}
         />
       );
@@ -209,7 +209,7 @@ describe('resolveStyles', function() {
 
       expect(result.props.style).to.deep.equal({
         background: 'white',
-        color: 'blue',
+        color: 'blue'
       });
     });
   });
@@ -217,7 +217,7 @@ describe('resolveStyles', function() {
   const createPseduoStyleTests = function(
     pseudo,
     onHandlerName,
-    offHandlerName,
+    offHandlerName
   ) {
     it('strips special styles if not applied', function() {
       const component = genComponent();
@@ -420,7 +420,7 @@ describe('resolveStyles', function() {
       const component = genComponent();
       const style = {
         background: 'blue',
-        ':active': {background: 'red'},
+        ':active': {background: 'red'}
       };
       const renderedElement = <div style={style} />;
 
@@ -437,7 +437,7 @@ describe('resolveStyles', function() {
       const component = genComponent();
       const style = {
         background: 'blue',
-        ':active': {background: 'red'},
+        ':active': {background: 'red'}
       };
       const renderedElement = <div style={style} />;
 
@@ -459,7 +459,7 @@ describe('resolveStyles', function() {
       const component = genComponent();
       const style = {
         background: 'blue',
-        ':active': {background: 'red'},
+        ':active': {background: 'red'}
       };
       const renderedElement = <div style={style} />;
 
@@ -479,7 +479,7 @@ describe('resolveStyles', function() {
       const component = genComponent();
       const style = {
         background: 'blue',
-        ':active': {background: 'red'},
+        ':active': {background: 'red'}
       };
       const originalOnMouseDown = sinon.spy();
       const renderedElement = (
@@ -503,12 +503,12 @@ describe('resolveStyles', function() {
       const stylePermutations = permutate([
         {name: ':active', style: {background: 'red'}},
         {name: ':focus', style: {background: 'yellow'}},
-        {name: ':hover', style: {background: 'blue'}},
+        {name: ':hover', style: {background: 'blue'}}
       ]);
       const onHandlerPermutations = permutate([
         'onFocus',
         'onMouseDown',
-        'onMouseEnter',
+        'onMouseEnter'
       ]);
 
       const createMultiPseudoTest = function(pseudoStyles, onHandlers) {
@@ -532,7 +532,7 @@ describe('resolveStyles', function() {
           result = resolveStyles(component, renderedElement);
 
           expect(result.props.style.background).to.equal(
-            pseudoStyles[pseudoStyles.length - 1].style.background,
+            pseudoStyles[pseudoStyles.length - 1].style.background
           );
         });
       };
@@ -594,7 +594,7 @@ describe('resolveStyles', function() {
       const result = resolveStyles(component, renderedElement);
       expect(result.props.style).to.deep.equal({
         background: 'white',
-        color: 'blue',
+        color: 'blue'
       });
 
       const children = getChildrenArray(result.props.children);
@@ -603,7 +603,7 @@ describe('resolveStyles', function() {
       const componentChildren = getChildrenArray(children[0].props.children);
       expect(componentChildren[0].props.style).to.deep.equal({
         background: 'white',
-        color: 'blue',
+        color: 'blue'
       });
     });
   });
@@ -678,7 +678,7 @@ describe('resolveStyles', function() {
         <div
           style={{
             border: '1px solid black',
-            borderWidth: '0 1px 1px 1px',
+            borderWidth: '0 1px 1px 1px'
           }}
         />
       );
@@ -687,7 +687,7 @@ describe('resolveStyles', function() {
 
       expect(console.warn).to.have.been.called;
       expect(
-        console.warn.firstCall.args[0].indexOf('border'),
+        console.warn.firstCall.args[0].indexOf('border')
       ).to.be.greaterThan(0);
     });
 
@@ -698,8 +698,8 @@ describe('resolveStyles', function() {
           style={{
             ':hover': {
               border: '1px solid black',
-              borderWidth: '0 1px 1px 1px',
-            },
+              borderWidth: '0 1px 1px 1px'
+            }
           }}
         />
       );
@@ -708,7 +708,7 @@ describe('resolveStyles', function() {
 
       expect(console.warn).to.have.been.called;
       expect(
-        console.warn.firstCall.args[0].indexOf('border'),
+        console.warn.firstCall.args[0].indexOf('border')
       ).to.be.greaterThan(0);
     });
 
@@ -718,7 +718,7 @@ describe('resolveStyles', function() {
         <div
           style={{
             border: '1px solid black',
-            borderRadius: '5px',
+            borderRadius: '5px'
           }}
         />
       );

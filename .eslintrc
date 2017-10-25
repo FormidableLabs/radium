@@ -274,7 +274,6 @@ rules:
       "error",
       {
         "bracketSpacing": false,
-        "trailingComma": "all",
         "singleQuote": true
       }
     ]

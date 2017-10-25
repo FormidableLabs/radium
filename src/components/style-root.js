@@ -23,7 +23,7 @@ function _getStyleKeeper(instance): StyleKeeper {
 
 type StyleRootProps = {
   radiumConfig: Config,
-  children: Node,
+  children: Node
 };
 
 class StyleRoot extends PureComponent<StyleRootProps> {
@@ -56,11 +56,11 @@ class StyleRoot extends PureComponent<StyleRootProps> {
 
 StyleRoot.contextTypes = {
   _radiumConfig: PropTypes.object,
-  _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper),
+  _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
 };
 
 StyleRoot.childContextTypes = {
-  _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper),
+  _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
 };
 
 StyleRoot = Enhancer(StyleRoot);

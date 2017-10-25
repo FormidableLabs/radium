@@ -4,7 +4,7 @@ import type {PluginConfig, PluginResult} from './index';
 import type {Keyframes} from '../keyframes';
 
 export default function keyframesPlugin(
-  {addCSS, config, style}: PluginConfig, // eslint-disable-line no-shadow
+  {addCSS, config, style}: PluginConfig // eslint-disable-line no-shadow
 ): PluginResult {
   const processKeyframeStyle = (value) => {
     const keyframesValue = (value: Keyframes);
@@ -33,7 +33,7 @@ export default function keyframesPlugin(
       newStyleInProgress[key] = value;
       return newStyleInProgress;
     },
-    {},
+    {}
   );
   return {style: newStyle};
 }

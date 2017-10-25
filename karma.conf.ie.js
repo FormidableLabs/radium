@@ -6,8 +6,8 @@ module.exports = function(config) {
     customLaunchers: {
       IE9: {
         base: 'IE',
-        'x-ua-compatible': 'IE=EmulateIE9',
-      },
-    },
+        'x-ua-compatible': 'IE=EmulateIE9'
+      }
+    }
   });
 };

@@ -6,12 +6,12 @@ import {getPrefixedKeyframes} from './prefixer';
 
 export type Keyframes = {
   __radiumKeyframes: boolean,
-  __process(userAgent?: string): {animationName: string, css: string},
+  __process(userAgent?: string): {animationName: string, css: string}
 };
 
 export default function keyframes(
   keyframeRules: {[percentage: string]: {[key: string]: string | number}},
-  name?: string,
+  name?: string
 ): Keyframes {
   return {
     __radiumKeyframes: true,
@@ -32,6 +32,6 @@ export default function keyframes(
         rules +
         '\n}\n';
       return {css, animationName};
-    },
+    }
   };
 }

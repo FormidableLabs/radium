@@ -5,7 +5,7 @@ describe('getState', function() {
     const result = getState(
       {_radiumStyleState: {'0': {':hover': true}}},
       0,
-      ':hover',
+      ':hover'
     );
     expect(result).to.equal(true);
   });
