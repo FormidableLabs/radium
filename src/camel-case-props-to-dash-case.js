@@ -25,7 +25,7 @@ const camelCasePropsToDashCase = function(prefixedStyle: Object): Object {
       result[dashCaseKey] = prefixedStyle[key];
       return result;
     },
-    {},
+    {}
   );
 };
 

@@ -23,8 +23,8 @@ const DEFAULT_CONFIG = {
     Plugins.visited,
     Plugins.removeNestedStyles,
     Plugins.prefix,
-    Plugins.checkProps,
-  ],
+    Plugins.checkProps
+  ]
 };
 
 // Gross
@@ -36,7 +36,7 @@ let resolveStyles = ((null: any): (
   renderedElement: any,
   config: Config,
   existingKeyMap?: {[key: string]: boolean},
-  shouldCheckBeforeResolve: true,
+  shouldCheckBeforeResolve: true
 ) => any);
 
 const _shouldResolveStyles = function(component) {
@@ -48,8 +48,8 @@ const _resolveChildren = function(
     children,
     component,
     config,
-    existingKeyMap,
-  },
+    existingKeyMap
+  }
 ) {
   if (!children) {
     return children;
@@ -95,8 +95,8 @@ const _resolveProps = function(
     component,
     config,
     existingKeyMap,
-    props,
-  },
+    props
+  }
 ) {
   let newProps = props;
 
@@ -114,7 +114,7 @@ const _resolveProps = function(
         propValue,
         config,
         existingKeyMap,
-        true,
+        true
       );
     }
   });
@@ -126,8 +126,8 @@ const _buildGetKey = function(
   {
     componentName,
     existingKeyMap,
-    renderedElement,
-  },
+    renderedElement
+  }
 ) {
   // We need a unique key to correlate state changes due to user interaction
   // with the rendered element, so we know to apply the proper interactive
@@ -164,7 +164,7 @@ const _buildGetKey = function(
           'Component: "' +
           componentName +
           '". ' +
-          (elementName ? 'Element: "' + elementName + '".' : ''),
+          (elementName ? 'Element: "' + elementName + '".' : '')
       );
     }
 
@@ -198,8 +198,8 @@ const _runPlugins = function(
     config,
     existingKeyMap,
     props,
-    renderedElement,
-  },
+    renderedElement
+  }
 ) {
   // Don't run plugins if renderedElement is not a simple ReactDOMElement or has
   // no style.
@@ -220,7 +220,7 @@ const _runPlugins = function(
   const getKey = _buildGetKey({
     renderedElement,
     existingKeyMap,
-    componentName,
+    componentName
   });
   const getComponentField = key => component[key];
   const getGlobalState = key => globalState[key];
@@ -242,7 +242,7 @@ const _runPlugins = function(
           'please wrap your application in the StyleRoot component. Component ' +
           'name: `' +
           componentName +
-          '`.',
+          '`.'
       );
     }
 
@@ -267,7 +267,7 @@ const _runPlugins = function(
       props: newProps,
       setState,
       isNestedStyle,
-      style: newStyle,
+      style: newStyle
     }) || {};
 
     newStyle = result.style || newStyle;
@@ -318,7 +318,7 @@ resolveStyles = function(
   renderedElement: any, // ReactElement
   config: Config = DEFAULT_CONFIG,
   existingKeyMap?: {[key: string]: boolean},
-  shouldCheckBeforeResolve: boolean = false,
+  shouldCheckBeforeResolve: boolean = false
 ): any {
   // ReactElement
   existingKeyMap = existingKeyMap || {};
@@ -340,14 +340,14 @@ resolveStyles = function(
     children: renderedElement.props.children,
     component,
     config,
-    existingKeyMap,
+    existingKeyMap
   });
 
   let newProps = _resolveProps({
     component,
     config,
     existingKeyMap,
-    props: renderedElement.props,
+    props: renderedElement.props
   });
 
   newProps = _runPlugins({
@@ -355,7 +355,7 @@ resolveStyles = function(
     config,
     existingKeyMap,
     props: newProps,
-    renderedElement,
+    renderedElement
   });
 
   // If nothing changed, don't bother cloning the element. Might be a bit
@@ -371,7 +371,7 @@ resolveStyles = function(
   return _cloneElement(
     renderedElement,
     newProps !== renderedElement.props ? newProps : {},
-    newChildren,
+    newChildren
   );
 };
 

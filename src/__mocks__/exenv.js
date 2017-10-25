@@ -1,4 +1,4 @@
 export default {
   canUseDOM: true,
-  canUseEventListeners: true,
+  canUseEventListeners: true
 };

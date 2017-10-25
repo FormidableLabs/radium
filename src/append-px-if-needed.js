@@ -33,12 +33,12 @@ const isUnitlessNumber = {
   stopOpacity: true,
   strokeDashoffset: true,
   strokeOpacity: true,
-  strokeWidth: true,
+  strokeWidth: true
 };
 
 export default function appendPxIfNeeded(
   propertyName: string,
-  value: any,
+  value: any
 ): string {
   const needsPxSuffix = !isUnitlessNumber[propertyName] &&
     typeof value === 'number' &&

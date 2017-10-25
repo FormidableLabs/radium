@@ -16,7 +16,7 @@ function createMarkupForStyles(style: Object): string {
 export default function cssRuleSetToString(
   selector: string,
   rules: Object,
-  userAgent: ?string,
+  userAgent: ?string
 ): string {
   if (!rules) {
     return '';

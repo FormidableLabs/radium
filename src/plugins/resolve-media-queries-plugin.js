@@ -17,11 +17,11 @@ function _getWindowMatchMedia(ExecutionEnvironment) {
 
 function _filterObject(
   obj: Object,
-  predicate: (value: any, key: string) => boolean,
+  predicate: (value: any, key: string) => boolean
 ): Object {
   return Object.keys(obj).filter(key => predicate(obj[key], key)).reduce((
     result,
-    key,
+    key
   ) => {
     result[key] = obj[key];
     return result;
@@ -36,7 +36,7 @@ function _removeMediaQueries(style) {
       }
       return styleWithoutMedia;
     },
-    {},
+    {}
   );
 }
 
@@ -48,13 +48,13 @@ function _topLevelRulesToCSS(
     hash,
     isNestedStyle,
     style,
-    userAgent,
-  },
+    userAgent
+  }
 ) {
   let className = '';
   Object.keys(style).filter(name => name.indexOf('@media') === 0).map(query => {
     const topLevelRules = appendImportantToEachValue(
-      _filterObject(style[query], value => !isNestedStyle(value)),
+      _filterObject(style[query], value => !isNestedStyle(value))
     );
 
     if (!Object.keys(topLevelRules).length) {
@@ -80,8 +80,8 @@ function _subscribeToMediaQuery(
     listenersByQuery,
     matchMedia,
     mediaQueryListsByQuery,
-    query,
-  },
+    query
+  }
 ) {
   query = query.replace('@media ', '');
 
@@ -96,7 +96,7 @@ function _subscribeToMediaQuery(
     listenersByQuery[query] = {
       remove() {
         mql.removeListener(listener);
-      },
+      }
     };
   }
   return mql;
@@ -116,8 +116,8 @@ export default function resolveMediaQueries(
     mergeStyles,
     props,
     setState,
-    style,
-  }: PluginConfig,
+    style
+  }: PluginConfig
 ): PluginResult {
   // eslint-disable-line no-shadow
   let newStyle = _removeMediaQueries(style);
@@ -128,13 +128,13 @@ export default function resolveMediaQueries(
     hash,
     isNestedStyle,
     style,
-    userAgent: config.userAgent,
+    userAgent: config.userAgent
   });
 
   const newProps = mediaQueryClassNames
     ? {
         className: mediaQueryClassNames +
-          (props.className ? ' ' + props.className : ''),
+          (props.className ? ' ' + props.className : '')
       }
     : null;
 
@@ -144,12 +144,12 @@ export default function resolveMediaQueries(
   if (!matchMedia) {
     return {
       props: newProps,
-      style: newStyle,
+      style: newStyle
     };
   }
 
   const listenersByQuery = {
-    ...getComponentField('_radiumMediaQueryListenersByQuery'),
+    ...getComponentField('_radiumMediaQueryListenersByQuery')
   };
   const mediaQueryListsByQuery = getGlobalState('mediaQueryListsByQuery') || {};
 
@@ -165,7 +165,7 @@ export default function resolveMediaQueries(
       listenersByQuery,
       matchMedia,
       mediaQueryListsByQuery,
-      query,
+      query
     });
 
     // Apply media query states
@@ -176,10 +176,10 @@ export default function resolveMediaQueries(
 
   return {
     componentFields: {
-      _radiumMediaQueryListenersByQuery: listenersByQuery,
+      _radiumMediaQueryListenersByQuery: listenersByQuery
     },
     globalState: {mediaQueryListsByQuery},
     props: newProps,
-    style: newStyle,
+    style: newStyle
   };
 }

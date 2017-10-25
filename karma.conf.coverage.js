@@ -4,13 +4,13 @@ module.exports = function(config) {
     coverageReporter: {
       reporters: [
         {
-          type: 'text',
+          type: 'text'
         },
         {
           type: 'lcovonly',
-          subdir: '.',
-        },
-      ],
-    },
+          subdir: '.'
+        }
+      ]
+    }
   });
 };

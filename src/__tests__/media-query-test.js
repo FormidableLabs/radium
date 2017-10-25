@@ -9,7 +9,7 @@ import {
   expectColor,
   expectCSS,
   getRenderOutput,
-  getElement,
+  getElement
 } from 'test-helpers';
 
 // Win on at least ie9 _can't_ sinon.stub() window.onerror like normal.
@@ -46,7 +46,7 @@ describe('Media query tests', () => {
         return (
           <div
             style={{
-              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}}
             }}
           />
         );
@@ -69,7 +69,7 @@ describe('Media query tests', () => {
         return (
           <div
             style={{
-              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}}
             }}
           />
         );
@@ -96,13 +96,13 @@ describe('Media query tests', () => {
             <div
               key="first"
               style={{
-                '@media (max-width: 400px)': {':hover': {color: 'blue'}},
+                '@media (max-width: 400px)': {':hover': {color: 'blue'}}
               }}
             />
             <div
               key="second"
               style={{
-                '@media (max-width: 400px)': {':hover': {color: 'blue'}},
+                '@media (max-width: 400px)': {':hover': {color: 'blue'}}
               }}
             />
           </div>
@@ -121,7 +121,7 @@ describe('Media query tests', () => {
       return {
         matches: true,
         addListener: () => {},
-        removeListener: () => {},
+        removeListener: () => {}
       };
     };
 
@@ -131,7 +131,7 @@ describe('Media query tests', () => {
         return (
           <div
             style={{
-              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}}
             }}
           />
         );
@@ -150,7 +150,7 @@ describe('Media query tests', () => {
       return {
         matches: true,
         addListener: () => {},
-        removeListener: () => {},
+        removeListener: () => {}
       };
     };
 
@@ -163,10 +163,10 @@ describe('Media query tests', () => {
               {':hover': {background: 'green', color: 'green'}},
               {
                 '@media (max-width: 400px)': {
-                  ':hover': {background: 'yellow'},
-                },
+                  ':hover': {background: 'yellow'}
+                }
               },
-              {'@media (max-width: 400px)': {':hover': {color: 'white'}}},
+              {'@media (max-width: 400px)': {':hover': {color: 'white'}}}
             ]}
           />
         );
@@ -193,7 +193,7 @@ describe('Media query tests', () => {
         return (
           <div
             style={{
-              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}}
             }}
           />
         );
@@ -224,7 +224,7 @@ describe('Media query tests', () => {
         return (
           <div
             style={{
-              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}}
             }}
           />
         );
@@ -241,7 +241,7 @@ describe('Media query tests', () => {
   it('renders top level print styles as CSS', () => {
     const matchMedia = sinon.spy(() => ({
       addListener: () => {},
-      matches: true,
+      matches: true
     }));
 
     const ChildComponent = Radium(() => (
@@ -268,14 +268,14 @@ describe('Media query tests', () => {
           color:black !important;
         }
       }
-    `,
+    `
     );
   });
 
   it("doesn't error on unmount", () => {
     const matchMedia = () => ({
       addListener: () => {},
-      matches: true,
+      matches: true
     });
 
     const ChildComponent = Radium(() => (
@@ -299,11 +299,11 @@ describe('Media query tests', () => {
         style={[
           {
             '@media (min-width: 10px)': {background: 'green'},
-            '@media (min-width: 20px)': {color: 'blue'},
+            '@media (min-width: 20px)': {color: 'blue'}
           },
           {
-            '@media (min-width: 10px)': {color: 'white'},
-          },
+            '@media (min-width: 10px)': {color: 'white'}
+          }
         ]}
       />
     ));
@@ -421,7 +421,7 @@ describe('Media query tests', () => {
       return {
         matches: true,
         addListener: addListener,
-        removeListener() {},
+        removeListener() {}
       };
     };
 
@@ -431,7 +431,7 @@ describe('Media query tests', () => {
         return (
           <div
             style={{
-              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}}
             }}
           />
         );

@@ -18,7 +18,7 @@ const Radium = require('../../src/index');
 class ComputedWell extends React.Component {
   getInitialState() {
     return {
-      dynamicBg: '#000',
+      dynamicBg: '#000'
     };
   }
 
@@ -26,7 +26,7 @@ class ComputedWell extends React.Component {
     return {
       padding: '1em',
       borderRadius: 5,
-      background: this.state.dynamicBg,
+      background: this.state.dynamicBg
     };
   }
 
@@ -34,7 +34,7 @@ class ComputedWell extends React.Component {
     ev.preventDefault();
 
     this.setState({
-      dynamicBg: ReactDOM.findDOMNode(this.refs.input).value,
+      dynamicBg: ReactDOM.findDOMNode(this.refs.input).value
     });
   }
 

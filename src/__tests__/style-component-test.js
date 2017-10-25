@@ -9,7 +9,7 @@ const MSIE9_USER_AGENT = 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 7.1; Tri
 describe('<Style> component', () => {
   it("adds px suffix to properties that don't accept unitless values", () => {
     const output = TestUtils.renderIntoDocument(
-      <Style rules={{div: {height: 10}}} />,
+      <Style rules={{div: {height: 10}}} />
     );
 
     const style = getElement(output, 'style');
@@ -19,13 +19,13 @@ describe('<Style> component', () => {
       div {
         height: 10px;
       }
-    `,
+    `
     );
   });
 
   it("doesn't add px suffix to properties that accept unitless values", () => {
     const output = TestUtils.renderIntoDocument(
-      <Style rules={{div: {zIndex: 10}}} />,
+      <Style rules={{div: {zIndex: 10}}} />
     );
 
     const style = getElement(output, 'style');
@@ -35,7 +35,7 @@ describe('<Style> component', () => {
       div {
         z-index: 10;
       }
-    `,
+    `
     );
   });
 
@@ -44,7 +44,7 @@ describe('<Style> component', () => {
       <Style
         radiumConfig={{userAgent: MSIE9_USER_AGENT}}
         rules={{div: {transform: 'rotate(90)'}}}
-      />,
+      />
     );
 
     const style = getElement(output, 'style');
@@ -54,7 +54,7 @@ describe('<Style> component', () => {
       div {
         -ms-transform: rotate(90);
       }
-    `,
+    `
     );
   });
 
@@ -63,7 +63,7 @@ describe('<Style> component', () => {
       <Style
         radiumConfig={{userAgent: 'all'}}
         rules={{div: {transform: 'rotate(90)'}}}
-      />,
+      />
     );
 
     const style = getElement(output, 'style');
@@ -75,7 +75,7 @@ describe('<Style> component', () => {
         -ms-transform:rotate(90);
         transform:rotate(90);
       }
-    `,
+    `
     );
   });
 
@@ -84,10 +84,10 @@ describe('<Style> component', () => {
       <Style
         rules={{
           div: {color: 'red'},
-          span: {color: 'blue'},
+          span: {color: 'blue'}
         }}
         scopeSelector=".scope"
-      />,
+      />
     );
 
     const style = getElement(output, 'style');
@@ -100,13 +100,13 @@ describe('<Style> component', () => {
       .scope span {
         color: blue;
       }
-    `,
+    `
     );
   });
 
   it('adds scopeSelector to multiple selectors in a single ruleset', () => {
     const output = TestUtils.renderIntoDocument(
-      <Style rules={{'div, span': {color: 'red'}}} scopeSelector=".scope" />,
+      <Style rules={{'div, span': {color: 'red'}}} scopeSelector=".scope" />
     );
 
     const style = getElement(output, 'style');
@@ -116,7 +116,7 @@ describe('<Style> component', () => {
       .scope div, .scope span {
         color: red;
       }
-    `,
+    `
     );
   });
 
@@ -128,11 +128,11 @@ describe('<Style> component', () => {
           backgroundColor: 'white',
           div: {
             color: 'blue',
-            backgroundColor: 'black',
-          },
+            backgroundColor: 'black'
+          }
         }}
         scopeSelector=".scope"
-      />,
+      />
     );
 
     const style = getElement(output, 'style');
@@ -147,7 +147,7 @@ describe('<Style> component', () => {
         color: blue;
         background-color: black;
       }
-    `,
+    `
     );
   });
 });

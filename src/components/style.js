@@ -10,22 +10,22 @@ import type {Config} from '../config';
 type StyleProps = {
   radiumConfig: Config,
   rules: {},
-  scopeSelector: string,
+  scopeSelector: string
 };
 
 class Style extends PureComponent<StyleProps> {
   static propTypes = {
     radiumConfig: PropTypes.object,
     rules: PropTypes.object,
-    scopeSelector: PropTypes.string,
+    scopeSelector: PropTypes.string
   };
 
   static contextTypes = {
-    _radiumConfig: PropTypes.object,
+    _radiumConfig: PropTypes.object
   };
 
   static defaultProps: {scopeSelector: string} = {
-    scopeSelector: '',
+    scopeSelector: ''
   };
 
   _buildStyles(styles: Object): string {
@@ -44,7 +44,7 @@ class Style extends PureComponent<StyleProps> {
 
         return accumulator;
       },
-      {},
+      {}
     );
     const rootStyles = Object.keys(rootRules).length
       ? cssRuleSetToString(scopeSelector || '', rootRules, userAgent)
@@ -68,18 +68,18 @@ class Style extends PureComponent<StyleProps> {
             accumulator += cssRuleSetToString(
               completeSelector,
               rules,
-              userAgent,
+              userAgent
             );
           }
 
           return accumulator;
         },
-        '',
+        ''
       );
   }
 
   _buildMediaQueryString(
-    stylesByMediaQuery: {[mediaQuery: string]: Object},
+    stylesByMediaQuery: {[mediaQuery: string]: Object}
   ): string {
     let mediaQueryString = '';
 

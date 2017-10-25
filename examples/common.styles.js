@@ -1,6 +1,6 @@
 module.exports = {
   resetListStyle: {
-    listStyle: 'none',
+    listStyle: 'none'
   },
   resetBoxModel: {
     marginTop: 0,
@@ -10,6 +10,6 @@ module.exports = {
     paddingTop: 0,
     paddingRight: 0,
     paddingBottom: 0,
-    paddingLeft: 0,
-  },
+    paddingLeft: 0
+  }
 };

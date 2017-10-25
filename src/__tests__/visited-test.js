@@ -29,7 +29,7 @@ describe('visited plugin tests', () => {
       .${span.className}:visited {
         color: purple !important;
       }
-    `,
+    `
     );
   });
 

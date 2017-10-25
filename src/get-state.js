@@ -5,7 +5,7 @@ import getStateKey from './get-state-key';
 const getState = function(
   state: {_radiumStyleState: {[key: string]: {[value: string]: boolean}}},
   elementKey: string,
-  value: string,
+  value: string
 ): any {
   const key = getStateKey(elementKey);
 

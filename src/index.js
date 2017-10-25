@@ -20,7 +20,7 @@ if (process.env.NODE_ENV !== 'production') {
   Radium.TestMode = {
     clearState: __clearStateForTests,
     disable: __setTestMode.bind(null, false),
-    enable: __setTestMode.bind(null, true),
+    enable: __setTestMode.bind(null, true)
   };
 }
 
