@@ -25,7 +25,7 @@
     "build": "rimraf lib dist && npm run build-lib && npm run build-dist",
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
     "flow": "flow check",
-    "eslint": "eslint src examples *.js",
+    "eslint": "eslint src examples interfaces *.js",
     "fixlint": "npm run eslint -- --fix",
     "lint": "npm run eslint && npm run flow",
     "start": "babel-node examples/server.js",
@@ -40,6 +40,7 @@
     "test-ie": "npm run test-node && npm run test-frontend-ie",
     "test-dev": "concurrently --kill-others \"npm run test-node-dev\" \"npm run test-frontend-dev\"",
     "universal": "concurrently --kill-others \"npm start\" \"npm run examples\"",
+    "update-prefix-data": "babel-node scripts/update-prefix-data.js && eslint --fix src/prefix-data",
     "watch-lib": "npm run build-lib -- --watch"
   },
   "license": "MIT",
@@ -54,7 +55,7 @@
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-1": "^6.22.0",
     "exenv": "^1.2.1",
-    "inline-style-prefixer": "^2.0.5",
+    "inline-style-prefixer": "^3.0.8",
     "prop-types": "^15.5.8",
     "publishr": "^1.0.0",
     "rimraf": "^2.6.1"
@@ -65,6 +66,7 @@
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.4.0",
+    "caniuse-api": "^2.0.0",
     "chai": "^3.5.0",
     "color": "^1.0.3",
     "concurrently": "^3.4.0",
