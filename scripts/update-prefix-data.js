@@ -3,8 +3,8 @@
  * this if browser support changes or `inline-style-prefixer` gets fixes for the
  * supported browsers.
  */
-import path from 'path'
-import generateData from 'inline-style-prefixer/generator'
+import path from 'path';
+import generateData from 'inline-style-prefixer/generator';
 
 const browserList = {
   chrome: 30,
@@ -19,9 +19,9 @@ const browserList = {
   op_mini: 5,
   and_uc: 9,
   and_chr: 30
-}
+};
 
 generateData(browserList, {
   staticPath: path.join(__dirname, '../src/prefix-data/static.js'),
   dynamicPath: path.join(__dirname, '../src/prefix-data/dynamic.js')
-})
+});

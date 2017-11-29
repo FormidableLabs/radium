@@ -25,7 +25,7 @@
     "build": "rimraf lib dist && npm run build-lib && npm run build-dist",
     "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
     "flow": "flow check",
-    "eslint": "eslint src examples interfaces *.js",
+    "eslint": "eslint .",
     "fixlint": "npm run eslint -- --fix",
     "lint": "npm run eslint && npm run flow",
     "start": "babel-node examples/server.js",
