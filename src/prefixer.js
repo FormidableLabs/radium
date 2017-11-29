@@ -5,7 +5,14 @@
  * @flow
  */
 
-import InlineStylePrefixer from 'inline-style-prefixer';
+import createStaticPrefixer from 'inline-style-prefixer/static/createPrefixer';
+import createDynamicPrefixer
+  from 'inline-style-prefixer/dynamic/createPrefixer';
+import staticData from './prefix-data/static';
+import dynamicData from './prefix-data/dynamic';
+
+const prefixAll: (style: Object) => Object = createStaticPrefixer(staticData);
+const InlineStylePrefixer = createDynamicPrefixer(dynamicData, prefixAll);
 
 function transformValues(style) {
   return Object.keys(style).reduce(
@@ -57,7 +64,7 @@ function getPrefixer(
   if (!_cachedPrefixer || actualUserAgent !== _lastUserAgent) {
     if (actualUserAgent === 'all') {
       _cachedPrefixer = {
-        prefix: InlineStylePrefixer.prefixAll,
+        prefix: prefixAll,
         prefixedKeyframes: 'keyframes'
       };
     } else {
