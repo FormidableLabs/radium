@@ -43,16 +43,9 @@ class Button extends React.Component {
 }
 ```
 
-Radium is activated by using a decorator or wrapping your component:
+Radium is activated by wrapping your component:
 
 ```jsx
-// For ES6 and ES7
-@Radium
-class Button extends React.Component {
-  // ...
-}
-
-// or
 class Button extends React.Component {
   // ...
 }

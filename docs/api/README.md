@@ -82,11 +82,12 @@ var styles = {
 - Process the `style` attribute after `render()`
 - Clean up any resources when the component unmounts
 
-Usage with `class` and ES7 decorators:
+Usage with `class`:
 
 ```jsx
-@Radium
 class MyComponent extends React.Component { ... }
+
+MyComponent = Radium(MyComponent);
 ```
 
 Usage with `createClass`:
@@ -100,11 +101,12 @@ module.exports = Radium(MyComponent);
 - Merge arrays of styles passed as the `style` attribute
 - Automatically vendor prefix the `style` object
 
-You can also pass a configuration object to `@Radium`:
+You can also pass a configuration object to `Radium`:
 
 ```jsx
-@Radium({matchMedia: mockMatchMedia})
 class MyComponent extends React.Component { ... }
+
+MyComponent = Radium({matchMedia: mockMatchMedia})(MyComponent);
 
 // or with createClass
 
@@ -113,7 +115,7 @@ module.exports = Radium({matchMedia: mockMatchMedia})(MyComponent);
 ```
 
 You may want to have project-wide Radium settings. Simply create a function that
-wraps Radium, and use it instead of `@Radium`:
+wraps Radium, and use it instead of `Radium`:
 
 ```jsx
 function ConfiguredRadium(component) {
@@ -121,8 +123,9 @@ function ConfiguredRadium(component) {
 }
 
 // Usage
-@ConfiguredRadium
 class MyComponent extends React.Component { ... }
+
+MyComponent = ConfiguredRadium(MyComponent);
 ```
 
 Radium can be called any number of times with a config object, and later configs
@@ -130,8 +133,9 @@ will be merged with and overwrite previous configs. That way, you can still
 override settings on a per-component basis:
 
 ```jsx
-@ConfiguredRadium(config)
 class MySpecialComponent extends React.Component { ... }
+
+MySpecialComponent = ConfiguredRadium(config)(MySpecialComponent);
 ```
 
 Alternatively, if the config value can change every time the component is rendered (userAgent, for example), you can pass configuration to any component wrapped in `Radium` using the `radiumConfig` prop:
@@ -165,7 +169,7 @@ app.get('/app/:width/:height', function(req, res) {
     height: req.params.height,
   });
 
-  // Your application code uses `@ConfiguredRadium` instead of `@Radium`
+  // Your application code uses `ConfiguredRadium` instead of `Radium`
   var html = React.renderToString(<RadiumApp />);
 
   res.end(html);
@@ -197,8 +201,9 @@ module.exports = ConfiguredRadium;
 ```jsx
 var ConfiguredRadium = require('./configured-radium');
 
-@ConfiguredRadium
 class MyComponent extends React.Component { ... }
+
+MyComponent = ConfiguredRadium(MyComponent);
 ```
 
 See [#146](https://github.com/FormidableLabs/radium/pull/146) for more info.
@@ -233,8 +238,9 @@ function ConfiguredRadium(component) {
 }
 
 // Usage
-@ConfiguredRadium
 class MyComponent extends React.Component { ... }
+
+MyComponent = ConfiguredRadium(MyComponent);
 ```
 
 You will typically want to put plugins before the final `checkProps` so that you can still benefit from the checks it provides. If your plugin might produce other pseudo-style blocks, like `@media` consumed by `resolveMediaQueries` or `:hover` consumed by `resolveInteractionStyles`, you would want to have your plugin run before those plugins.
@@ -284,7 +290,6 @@ Create a keyframes animation for use in an inline style. `keyframes` returns an 
 `keyframes` takes an optional second parameter, a `name` to prepend to the animation's name to aid in debugging.
 
 ```jsx
-@Radium
 class Spinner extends React.Component {
   render () {
     return (
@@ -294,6 +299,8 @@ class Spinner extends React.Component {
     );
   }
 }
+
+Spinner = Radium(Spinner);
 
 var pulseKeyframes = Radium.keyframes({
   '0%': {width: '10%'},
