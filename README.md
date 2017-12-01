@@ -49,7 +49,7 @@ For a short technical explanation, see [How does Radium work?](#how-does-radium-
 
 ## Usage
 
-Start by adding the `@Radium` decorator to your component class. Alternatively, wrap `Radium()` around your component, like `module.exports = Radium(Component)`, or `Component = Radium(Component)`, which works with classes, `createClass`, and stateless components (functions that take props and return a ReactElement). Then, write a style object as you normally would with inline styles, and add in styles for interactive states and media queries. Pass the style object to your component via `style={...}` and let Radium do the rest!
+Start by wrapping your component class with `Radium()`, like `module.exports = Radium(Component)`, or `Component = Radium(Component)`, which works with classes, `createClass`, and stateless components (functions that take props and return a ReactElement). Then, write a style object as you normally would with inline styles, and add in styles for interactive states and media queries. Pass the style object to your component via `style={...}` and let Radium do the rest!
 
 ```jsx
 <Button kind="primary">Radium Button</Button>
@@ -60,7 +60,6 @@ var Radium = require('radium');
 var React = require('react');
 var color = require('color');
 
-@Radium
 class Button extends React.Component {
   static propTypes = {
     kind: PropTypes.oneOf(['primary', 'warning']).isRequired
@@ -83,6 +82,8 @@ class Button extends React.Component {
     );
   }
 }
+
+Button = Radium(Button);
 
 // You can create your style objects dynamically or share them for
 // every instance of the component.
