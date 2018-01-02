@@ -86,6 +86,35 @@ const VisitedLink = Radium(() => (
   </a>
 ));
 
+@Radium class HideButton extends React.Component {
+  constructor() {
+    super();
+    this.state = { showButton: true };
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={() => this.setState({ showButton: true })}>Show</button>
+        {this.state.showButton && (
+          <button
+            onClick={() => this.setState({ showButton: false })}
+            style={hideButtonStyle}
+          >
+            Hide
+          </button>
+        )}
+      </div>
+    );
+  }
+}
+
+const hideButtonStyle = {
+  ':hover': {
+    background: 'red'
+  }
+};
+
 class App extends React.Component {
   _remount() {
     this.setState({shouldRenderNull: true});
@@ -181,6 +210,8 @@ class App extends React.Component {
           />
           <span>This content has scoped styles</span>
         </div>
+
+        <HideButton />
       </StyleRoot>
     );
   }
