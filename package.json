@@ -55,7 +55,7 @@
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-1": "^6.22.0",
     "exenv": "^1.2.1",
-    "inline-style-prefixer": "^3.0.8",
+    "inline-style-prefixer": "^4.0.0",
     "prop-types": "^15.5.8",
     "publishr": "^1.0.0",
     "rimraf": "^2.6.1"
