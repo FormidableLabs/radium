@@ -175,6 +175,21 @@ export default function enhanceWithRadium(
       return newContext;
     }
 
+    componentDidUpdate() {
+      const radiumState = this.state._radiumStyleState;
+
+      if (!Object.keys(radiumState).every((key) => this.childKeys[key])) {
+        const trimmedRadiumState = Object.keys(this.childKeys).reduce((acc, key) => {
+          if (radiumState[key]) {
+            acc[key] = radiumState[key];
+          }
+          return acc;
+        }, {});
+
+        this.setState({ _radiumStyleState: trimmedRadiumState });
+      }
+    }
+
     render() {
       const renderedElement = super.render();
       let currentConfig = this.props.radiumConfig ||
@@ -188,7 +203,10 @@ export default function enhanceWithRadium(
         };
       }
 
-      return resolveStyles(this, renderedElement, currentConfig);
+      const { childKeys, element } = resolveStyles(this, renderedElement, currentConfig);
+      this.childKeys = childKeys;
+
+      return element;
     }
   }
 

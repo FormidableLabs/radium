@@ -48,7 +48,8 @@ const _resolveChildren = function(
     children,
     component,
     config,
-    existingKeyMap
+    existingKeyMap,
+    childKeys
   }
 ) {
   if (!children) {
@@ -67,7 +68,8 @@ const _resolveChildren = function(
     return function() {
       const result = children.apply(this, arguments);
       if (React.isValidElement(result)) {
-        return resolveStyles(component, result, config, existingKeyMap, true);
+        const { element } = resolveStyles(component, result, config, existingKeyMap, true, childKeys);
+        return element;
       }
       return result;
     };
@@ -77,12 +79,20 @@ const _resolveChildren = function(
     // If a React Element is an only child, don't wrap it in an array for
     // React.Children.map() for React.Children.only() compatibility.
     const onlyChild = React.Children.only(children);
-    return resolveStyles(component, onlyChild, config, existingKeyMap, true);
+    if (onlyChild && typeof onlyChild.key !== undefined && onlyChild.key !== null) {
+      childKeys[onlyChild.key] = true;
+    }
+    const { element } = resolveStyles(component, onlyChild, config, existingKeyMap, true, childKeys);
+    return element;
   }
 
   return React.Children.map(children, function(child) {
     if (React.isValidElement(child)) {
-      return resolveStyles(component, child, config, existingKeyMap, true);
+      if (child && typeof child.key !== undefined && child.key !== null) {
+        childKeys[child.key] = true;
+      }
+      const { element } = resolveStyles(component, child, config, existingKeyMap, true, childKeys);
+      return element;
     }
 
     return child;
@@ -109,13 +119,14 @@ const _resolveProps = function(
     const propValue = props[prop];
     if (React.isValidElement(propValue)) {
       newProps = {...newProps};
-      newProps[prop] = resolveStyles(
+      const { element } = resolveStyles(
         component,
         propValue,
         config,
         existingKeyMap,
         true
       );
+      newProps[prop] = element;
     }
   });
 
@@ -317,11 +328,11 @@ resolveStyles = function(
   component: any, // ReactComponent, flow+eslint complaining
   renderedElement: any, // ReactElement
   config: Config = DEFAULT_CONFIG,
-  existingKeyMap?: {[key: string]: boolean},
-  shouldCheckBeforeResolve: boolean = false
+  existingKeyMap: {[key: string]: boolean} = {},
+  shouldCheckBeforeResolve: boolean = false,
+  childKeys = {}
 ): any {
   // ReactElement
-  existingKeyMap = existingKeyMap || {};
   if (
     !renderedElement ||
     // Bail if we've already processed this element. This ensures that only the
@@ -333,14 +344,15 @@ resolveStyles = function(
     // then it will take care of resolving its own styles.
     (shouldCheckBeforeResolve && !_shouldResolveStyles(renderedElement))
   ) {
-    return renderedElement;
+    return { childKeys, element: renderedElement };
   }
 
   const newChildren = _resolveChildren({
     children: renderedElement.props.children,
     component,
     config,
-    existingKeyMap
+    existingKeyMap,
+    childKeys
   });
 
   let newProps = _resolveProps({
@@ -365,14 +377,16 @@ resolveStyles = function(
     newChildren === renderedElement.props.children &&
     newProps === renderedElement.props
   ) {
-    return renderedElement;
+    return { childKeys, element: renderedElement };
   }
 
-  return _cloneElement(
+  const element = _cloneElement(
     renderedElement,
     newProps !== renderedElement.props ? newProps : {},
     newChildren
   );
+
+  return { childKeys, element };
 };
 
 // Only for use by tests
