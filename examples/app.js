@@ -96,18 +96,18 @@ const VisitedLink = Radium(() => (
     return (
       <div>
         <button key={0} onClick={() => this.setState({ showButton: true })}>Show</button>
+        {this.state.showButton && (
+          <button
+            key={1}
+            onClick={() => this.setState({ showButton: false })}
+            style={hideButtonStyle.hoverButton}
+          >
+            Hide
+          </button>
+        )}
         <div>
-          {this.state.showButton && (
-            <button
-              key={1}
-              onClick={() => this.setState({ showButton: false })}
-              style={hideButtonStyle.hoverButton}
-            >
-              Hide
-            </button>
-          )}
+          <button key={2} style={hideButtonStyle.focusButton}>Focus</button>
         </div>
-        <button key={2} style={hideButtonStyle.focusButton}>Focus</button>
         <button key={3}>Extra</button>
       </div>
     );
@@ -146,7 +146,6 @@ class App extends React.Component {
 
     return (
       <StyleRoot>
-        {/*
         <VisitedLink />
 
         <p /><HoverMessage />
@@ -223,7 +222,6 @@ class App extends React.Component {
           />
           <span>This content has scoped styles</span>
         </div>
-        */}
 
         <HideButton />
       </StyleRoot>
