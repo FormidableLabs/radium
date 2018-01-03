@@ -6,6 +6,7 @@ import appendImportantToEachValue from './append-important-to-each-value';
 import cssRuleSetToString from './css-rule-set-to-string';
 import getState from './get-state';
 import getStateKey from './get-state-key';
+import getRadiumStyleState from './get-radium-style-state';
 import hash from './hash';
 import {isNestedStyle, mergeStyles} from './merge-styles';
 import Plugins from './plugins/';
@@ -49,7 +50,7 @@ const _resolveChildren = function(
     component,
     config,
     existingKeyMap,
-    childKeys
+    childrenKeys
   }
 ) {
   if (!children) {
@@ -63,12 +64,16 @@ const _resolveChildren = function(
     return children;
   }
 
+
   if (childrenType === 'function') {
     // Wrap the function, resolving styles on the result
     return function() {
       const result = children.apply(this, arguments);
       if (React.isValidElement(result)) {
-        const { element } = resolveStyles(component, result, config, existingKeyMap, true, childKeys);
+        if (result && typeof result.key !== undefined && result.key !== null) {
+          childrenKeys[result.key] = true;
+        }
+        const { element } = resolveStyles(component, result, config, existingKeyMap, true, childrenKeys);
         return element;
       }
       return result;
@@ -80,18 +85,18 @@ const _resolveChildren = function(
     // React.Children.map() for React.Children.only() compatibility.
     const onlyChild = React.Children.only(children);
     if (onlyChild && typeof onlyChild.key !== undefined && onlyChild.key !== null) {
-      childKeys[onlyChild.key] = true;
+      childrenKeys[onlyChild.key] = true;
     }
-    const { element } = resolveStyles(component, onlyChild, config, existingKeyMap, true, childKeys);
+    const { element } = resolveStyles(component, onlyChild, config, existingKeyMap, true, childrenKeys);
     return element;
   }
 
   return React.Children.map(children, function(child) {
     if (React.isValidElement(child)) {
       if (child && typeof child.key !== undefined && child.key !== null) {
-        childKeys[child.key] = true;
+        childrenKeys[child.key] = true;
       }
-      const { element } = resolveStyles(component, child, config, existingKeyMap, true, childKeys);
+      const { element } = resolveStyles(component, child, config, existingKeyMap, true, childrenKeys);
       return element;
     }
 
@@ -192,10 +197,9 @@ const _setStyleState = function(component, key, stateKey, value) {
     return;
   }
 
-  const existing = component._lastRadiumState ||
-  (component.state && component.state._radiumStyleState) || {};
-
+  const existing = getRadiumStyleState(component);
   const state = {_radiumStyleState: {...existing}};
+
   state._radiumStyleState[key] = {...state._radiumStyleState[key]};
   state._radiumStyleState[key][stateKey] = value;
 
@@ -330,7 +334,7 @@ resolveStyles = function(
   config: Config = DEFAULT_CONFIG,
   existingKeyMap: {[key: string]: boolean} = {},
   shouldCheckBeforeResolve: boolean = false,
-  childKeys = {}
+  childrenKeys: {[key: string]: boolean} = {}
 ): any {
   // ReactElement
   if (
@@ -344,7 +348,7 @@ resolveStyles = function(
     // then it will take care of resolving its own styles.
     (shouldCheckBeforeResolve && !_shouldResolveStyles(renderedElement))
   ) {
-    return { childKeys, element: renderedElement };
+    return { childrenKeys, element: renderedElement };
   }
 
   const newChildren = _resolveChildren({
@@ -352,7 +356,7 @@ resolveStyles = function(
     component,
     config,
     existingKeyMap,
-    childKeys
+    childrenKeys
   });
 
   let newProps = _resolveProps({
@@ -377,7 +381,7 @@ resolveStyles = function(
     newChildren === renderedElement.props.children &&
     newProps === renderedElement.props
   ) {
-    return { childKeys, element: renderedElement };
+    return { childrenKeys, element: renderedElement };
   }
 
   const element = _cloneElement(
@@ -386,7 +390,7 @@ resolveStyles = function(
     newChildren
   );
 
-  return { childKeys, element };
+  return { childrenKeys, element };
 };
 
 // Only for use by tests

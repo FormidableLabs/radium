@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import StyleKeeper from './style-keeper.js';
 import resolveStyles from './resolve-styles.js';
+import getRadiumStyleState from './get-radium-style-state.js';
 
 const KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
   'arguments',
@@ -175,21 +176,6 @@ export default function enhanceWithRadium(
       return newContext;
     }
 
-    componentDidUpdate() {
-      const radiumState = this.state._radiumStyleState;
-
-      if (!Object.keys(radiumState).every((key) => this.childKeys[key])) {
-        const trimmedRadiumState = Object.keys(this.childKeys).reduce((acc, key) => {
-          if (radiumState[key]) {
-            acc[key] = radiumState[key];
-          }
-          return acc;
-        }, {});
-
-        this.setState({ _radiumStyleState: trimmedRadiumState });
-      }
-    }
-
     render() {
       const renderedElement = super.render();
       let currentConfig = this.props.radiumConfig ||
@@ -203,10 +189,26 @@ export default function enhanceWithRadium(
         };
       }
 
-      const { childKeys, element } = resolveStyles(this, renderedElement, currentConfig);
-      this.childKeys = childKeys;
+      const { childrenKeys, element } = resolveStyles(this, renderedElement, currentConfig);
+      this.childrenKeys = childrenKeys;
 
       return element;
+    }
+
+    componentDidUpdate() {
+      const radiumStyleState = getRadiumStyleState(this);
+
+      if (!Object.keys(radiumStyleState).every((key) => this.childrenKeys[key])) {
+        const trimmedRadiumState = Object.keys(this.childrenKeys).reduce((acc, key) => {
+          if (radiumStyleState[key]) {
+            acc[key] = radiumStyleState[key];
+          }
+          return acc;
+        }, {});
+
+        this._lastRadiumState = trimmedRadiumState;
+        this.setState({ _radiumStyleState: trimmedRadiumState });
+      }
     }
   }
 
