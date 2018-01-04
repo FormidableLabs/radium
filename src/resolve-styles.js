@@ -37,8 +37,9 @@ let resolveStyles = ((null: any): (
   component: any, // ReactComponent, flow+eslint complaining
   renderedElement: any,
   config: Config,
-  existingKeyMap?: {[key: string]: boolean},
-  shouldCheckBeforeResolve: true
+  existingKeyMap: {[key: string]: boolean},
+  shouldCheckBeforeResolve: boolean,
+  extraStateKeyMap?: {[key: string]: boolean}
 ) => any);
 
 const _shouldResolveStyles = function(component) {
@@ -51,7 +52,7 @@ const _resolveChildren = function(
     component,
     config,
     existingKeyMap,
-    childrenKeys
+    extraStateKeyMap
   }
 ) {
   if (!children) {
@@ -70,13 +71,14 @@ const _resolveChildren = function(
     // Wrap the function, resolving styles on the result
     return function() {
       const result = children.apply(this, arguments);
+
       if (React.isValidElement(result)) {
-        if (result && typeof result.key !== undefined && result.key !== null) {
-          childrenKeys[result.key] = true;
-        }
-        const { element } = resolveStyles(component, result, config, existingKeyMap, true, childrenKeys);
+        const key = getStateKey(result);
+        delete extraStateKeyMap[key]
+        const { element } = resolveStyles(component, result, config, existingKeyMap, true, extraStateKeyMap);
         return element;
       }
+
       return result;
     };
   }
@@ -85,19 +87,17 @@ const _resolveChildren = function(
     // If a React Element is an only child, don't wrap it in an array for
     // React.Children.map() for React.Children.only() compatibility.
     const onlyChild = React.Children.only(children);
-    if (onlyChild && typeof onlyChild.key !== undefined && onlyChild.key !== null) {
-      childrenKeys[onlyChild.key] = true;
-    }
-    const { element } = resolveStyles(component, onlyChild, config, existingKeyMap, true, childrenKeys);
+    const key = getStateKey(onlyChild);
+    delete extraStateKeyMap[key];
+    const { element } = resolveStyles(component, onlyChild, config, existingKeyMap, true, extraStateKeyMap);
     return element;
   }
 
   return React.Children.map(children, function(child) {
     if (React.isValidElement(child)) {
-      if (child && typeof child.key !== undefined && child.key !== null) {
-        childrenKeys[child.key] = true;
-      }
-      const { element } = resolveStyles(component, child, config, existingKeyMap, true, childrenKeys);
+      const key = getStateKey(child);
+      delete extraStateKeyMap[key];
+      const { element } = resolveStyles(component, child, config, existingKeyMap, true, extraStateKeyMap);
       return element;
     }
 
@@ -111,7 +111,8 @@ const _resolveProps = function(
     component,
     config,
     existingKeyMap,
-    props
+    props,
+    extraStateKeyMap
   }
 ) {
   let newProps = props;
@@ -130,7 +131,8 @@ const _resolveProps = function(
         propValue,
         config,
         existingKeyMap,
-        true
+        true,
+        extraStateKeyMap
       );
       newProps[prop] = element;
     }
@@ -333,8 +335,16 @@ resolveStyles = function(
   config: Config = DEFAULT_CONFIG,
   existingKeyMap: {[key: string]: boolean} = {},
   shouldCheckBeforeResolve: boolean = false,
-  childrenKeys: {[key: string]: boolean} = {}
+  extraStateKeyMap?: {[key: string]: boolean}
 ): any {
+  if (!extraStateKeyMap) {
+    const state = getRadiumStyleState(component);
+    extraStateKeyMap = Object.keys(state).reduce((acc, key) => {
+      acc[key] = true;
+      return acc;
+    }, {});
+  }
+
   // ReactElement
   if (
     !renderedElement ||
@@ -347,7 +357,7 @@ resolveStyles = function(
     // then it will take care of resolving its own styles.
     (shouldCheckBeforeResolve && !_shouldResolveStyles(renderedElement))
   ) {
-    return { childrenKeys, element: renderedElement };
+    return { extraStateKeyMap, element: renderedElement };
   }
 
   const newChildren = _resolveChildren({
@@ -355,13 +365,14 @@ resolveStyles = function(
     component,
     config,
     existingKeyMap,
-    childrenKeys
+    extraStateKeyMap
   });
 
   let newProps = _resolveProps({
     component,
     config,
     existingKeyMap,
+    extraStateKeyMap,
     props: renderedElement.props
   });
 
@@ -380,7 +391,7 @@ resolveStyles = function(
     newChildren === renderedElement.props.children &&
     newProps === renderedElement.props
   ) {
-    return { childrenKeys, element: renderedElement };
+    return { extraStateKeyMap, element: renderedElement };
   }
 
   const element = _cloneElement(
@@ -389,7 +400,7 @@ resolveStyles = function(
     newChildren
   );
 
-  return { childrenKeys, element };
+  return { extraStateKeyMap, element };
 };
 
 // Only for use by tests
