@@ -6,6 +6,7 @@ import appendImportantToEachValue from './append-important-to-each-value';
 import cssRuleSetToString from './css-rule-set-to-string';
 import getState from './get-state';
 import getStateKey from './get-state-key';
+import cleanStateKey from './clean-state-key';
 import getRadiumStyleState from './get-radium-style-state';
 import hash from './hash';
 import {isNestedStyle, mergeStyles} from './merge-styles';
@@ -148,10 +149,8 @@ const _buildGetKey = function(
   // We need a unique key to correlate state changes due to user interaction
   // with the rendered element, so we know to apply the proper interactive
   // styles.
-  const originalKey = typeof renderedElement.ref === 'string'
-    ? renderedElement.ref
-    : renderedElement.key;
-  const key = getStateKey(originalKey);
+  const originalKey = getStateKey(renderedElement);
+  const key = cleanStateKey(originalKey);
 
   let alreadyGotKey = false;
   const getKey = function() {
