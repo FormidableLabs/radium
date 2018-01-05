@@ -128,6 +128,8 @@ export default function enhanceWithRadium(
     };
     _radiumMouseUpListener: {remove: () => void};
     _radiumIsMounted: boolean;
+    _lastRadiumState: Object;
+    _extraRadiumStateKeys: any;
 
     constructor() {
       super(...arguments);
@@ -194,14 +196,14 @@ export default function enhanceWithRadium(
         renderedElement,
         currentConfig
       );
-      this.extraStateKeys = Object.keys(extraStateKeyMap);
+      this._extraRadiumStateKeys = Object.keys(extraStateKeyMap);
 
       return element;
     }
 
     componentDidUpdate() {
-      if (this.extraStateKeys > 0) {
-        const trimmedRadiumState = this.extraStateKeys.reduce(
+      if (this._extraRadiumStateKeys.length > 0) {
+        const trimmedRadiumState = this._extraRadiumStateKeys.reduce(
           (state, key) => {
             const {[key]: extraStateKey, ...remainingState} = state;
             return remainingState;

@@ -32,6 +32,11 @@ const DEFAULT_CONFIG = {
 // Gross
 let globalState = {};
 
+type ResolvedStyles = {
+  extraStateKeyMap: {[key: string]: boolean},
+  element: any
+};
+
 // Declare early for recursive helpers.
 let resolveStyles = ((null: any): (
   component: any, // ReactComponent, flow+eslint complaining
@@ -40,7 +45,7 @@ let resolveStyles = ((null: any): (
   existingKeyMap: {[key: string]: boolean},
   shouldCheckBeforeResolve: boolean,
   extraStateKeyMap?: {[key: string]: boolean}
-) => any);
+) => ResolvedStyles);
 
 const _shouldResolveStyles = function(component) {
   return component.type && !component.type._isRadiumEnhanced;
@@ -356,7 +361,7 @@ resolveStyles = function(
   existingKeyMap: {[key: string]: boolean} = {},
   shouldCheckBeforeResolve: boolean = false,
   extraStateKeyMap?: {[key: string]: boolean}
-): any {
+): ResolvedStyles {
   if (!extraStateKeyMap) {
     const state = getRadiumStyleState(component);
     extraStateKeyMap = Object.keys(state).reduce(
