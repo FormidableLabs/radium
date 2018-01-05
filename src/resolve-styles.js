@@ -354,6 +354,7 @@ const _cloneElement = function(renderedElement, newProps, newChildren) {
 // interactions (e.g. mouse over). It also replaces the style prop because it
 // adds in the various interaction styles (e.g. :hover).
 //
+/* eslint-disable max-params */
 resolveStyles = function(
   component: any, // ReactComponent, flow+eslint complaining
   renderedElement: any, // ReactElement
@@ -430,6 +431,7 @@ resolveStyles = function(
 
   return {extraStateKeyMap, element};
 };
+/* eslint-enable max-params */
 
 // Only for use by tests
 let __isTestModeEnabled = false;

@@ -201,6 +201,7 @@ export default function enhanceWithRadium(
       return element;
     }
 
+    /* eslint-disable react/no-did-update-set-state, no-unused-vars */
     componentDidUpdate() {
       if (this._extraRadiumStateKeys.length > 0) {
         const trimmedRadiumState = this._extraRadiumStateKeys.reduce(
@@ -215,6 +216,7 @@ export default function enhanceWithRadium(
         this.setState({_radiumStyleState: trimmedRadiumState});
       }
     }
+    /* eslint-enable react/no-did-update-set-state, no-unused-vars */
   }
 
   // Class inheritance uses Object.create and because of __proto__ issues
