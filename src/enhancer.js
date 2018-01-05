@@ -189,7 +189,11 @@ export default function enhanceWithRadium(
         };
       }
 
-      const { extraStateKeyMap, element } = resolveStyles(this, renderedElement, currentConfig);
+      const {extraStateKeyMap, element} = resolveStyles(
+        this,
+        renderedElement,
+        currentConfig
+      );
       this.extraStateKeys = Object.keys(extraStateKeyMap);
 
       return element;
@@ -197,13 +201,16 @@ export default function enhanceWithRadium(
 
     componentDidUpdate() {
       if (this.extraStateKeys > 0) {
-        const trimmedRadiumState = this.extraStateKeys.reduce((state, key) => {
-          const { [key]: extraStateKey, ...remainingState } = state;
-          return remainingState;
-        }, getRadiumStyleState(this));
+        const trimmedRadiumState = this.extraStateKeys.reduce(
+          (state, key) => {
+            const {[key]: extraStateKey, ...remainingState} = state;
+            return remainingState;
+          },
+          getRadiumStyleState(this)
+        );
 
         this._lastRadiumState = trimmedRadiumState;
-        this.setState({ _radiumStyleState: trimmedRadiumState });
+        this.setState({_radiumStyleState: trimmedRadiumState});
       }
     }
   }

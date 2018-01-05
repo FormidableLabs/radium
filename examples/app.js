@@ -89,22 +89,23 @@ const VisitedLink = Radium(() => (
 @Radium class HideButton extends React.Component {
   constructor() {
     super();
-    this.state = { showButton: true };
+    this.state = {showButton: true};
   }
 
   render() {
     return (
       <div>
-        <button key={0} onClick={() => this.setState({ showButton: true })}>Show</button>
-        {this.state.showButton && (
+        <button key={0} onClick={() => this.setState({showButton: true})}>
+          Show
+        </button>
+        {this.state.showButton &&
           <button
             key={1}
-            onClick={() => this.setState({ showButton: false })}
+            onClick={() => this.setState({showButton: false})}
             style={hideButtonStyle.hoverButton}
           >
             Hide
-          </button>
-        )}
+          </button>}
         <div>
           <button key={2} style={hideButtonStyle.focusButton}>Focus</button>
         </div>

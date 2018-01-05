@@ -66,7 +66,6 @@ const _resolveChildren = function(
     return children;
   }
 
-
   if (childrenType === 'function') {
     // Wrap the function, resolving styles on the result
     return function() {
@@ -74,8 +73,15 @@ const _resolveChildren = function(
 
       if (React.isValidElement(result)) {
         const key = getStateKey(result);
-        delete extraStateKeyMap[key]
-        const { element } = resolveStyles(component, result, config, existingKeyMap, true, extraStateKeyMap);
+        delete extraStateKeyMap[key];
+        const {element} = resolveStyles(
+          component,
+          result,
+          config,
+          existingKeyMap,
+          true,
+          extraStateKeyMap
+        );
         return element;
       }
 
@@ -89,7 +95,14 @@ const _resolveChildren = function(
     const onlyChild = React.Children.only(children);
     const key = getStateKey(onlyChild);
     delete extraStateKeyMap[key];
-    const { element } = resolveStyles(component, onlyChild, config, existingKeyMap, true, extraStateKeyMap);
+    const {element} = resolveStyles(
+      component,
+      onlyChild,
+      config,
+      existingKeyMap,
+      true,
+      extraStateKeyMap
+    );
     return element;
   }
 
@@ -97,7 +110,14 @@ const _resolveChildren = function(
     if (React.isValidElement(child)) {
       const key = getStateKey(child);
       delete extraStateKeyMap[key];
-      const { element } = resolveStyles(component, child, config, existingKeyMap, true, extraStateKeyMap);
+      const {element} = resolveStyles(
+        component,
+        child,
+        config,
+        existingKeyMap,
+        true,
+        extraStateKeyMap
+      );
       return element;
     }
 
@@ -126,7 +146,7 @@ const _resolveProps = function(
     const propValue = props[prop];
     if (React.isValidElement(propValue)) {
       newProps = {...newProps};
-      const { element } = resolveStyles(
+      const {element} = resolveStyles(
         component,
         propValue,
         config,
@@ -339,10 +359,13 @@ resolveStyles = function(
 ): any {
   if (!extraStateKeyMap) {
     const state = getRadiumStyleState(component);
-    extraStateKeyMap = Object.keys(state).reduce((acc, key) => {
-      acc[key] = true;
-      return acc;
-    }, {});
+    extraStateKeyMap = Object.keys(state).reduce(
+      (acc, key) => {
+        acc[key] = true;
+        return acc;
+      },
+      {}
+    );
   }
 
   // ReactElement
@@ -357,7 +380,7 @@ resolveStyles = function(
     // then it will take care of resolving its own styles.
     (shouldCheckBeforeResolve && !_shouldResolveStyles(renderedElement))
   ) {
-    return { extraStateKeyMap, element: renderedElement };
+    return {extraStateKeyMap, element: renderedElement};
   }
 
   const newChildren = _resolveChildren({
@@ -391,7 +414,7 @@ resolveStyles = function(
     newChildren === renderedElement.props.children &&
     newProps === renderedElement.props
   ) {
-    return { extraStateKeyMap, element: renderedElement };
+    return {extraStateKeyMap, element: renderedElement};
   }
 
   const element = _cloneElement(
@@ -400,7 +423,7 @@ resolveStyles = function(
     newChildren
   );
 
-  return { extraStateKeyMap, element };
+  return {extraStateKeyMap, element};
 };
 
 // Only for use by tests
