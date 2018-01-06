@@ -150,6 +150,8 @@ const _resolveProps = function(
 
     const propValue = props[prop];
     if (React.isValidElement(propValue)) {
+      const key = getStateKey(propValue);
+      delete extraStateKeyMap[key];
       newProps = {...newProps};
       const {element} = resolveStyles(
         component,
