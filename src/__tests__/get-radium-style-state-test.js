@@ -1,7 +1,7 @@
 import {Component} from 'react';
 import getRadiumStyleState from 'get-radium-style-state.js';
 
-describe('getRadiumStyleState', function() {
+describe('getRadiumStyleState', () => {
   it('gets the _lastRadiumState if available', () => {
     const state = {someKey: true};
     class Test extends Component {
