@@ -1,12 +1,12 @@
 import React from 'react';
 import getStateKey from 'get-state-key.js';
-import {getRenderOutput, getElement} from 'test-helpers';
+import {getRenderOutput} from 'test-helpers';
 
 describe('getStateKey', () => {
   it('gets the ref if it is a string', () => {
     class Test extends React.Component {
       render() {
-        return <div ref="myRef" />
+        return <div ref="myRef" />;
       }
     }
 
@@ -18,7 +18,7 @@ describe('getStateKey', () => {
   it('gets the key if the ref is not a string', () => {
     class Test extends React.Component {
       render() {
-        return <div ref={(ref) => (this.ref = ref)} key="myKey" />
+        return <div key="myKey" ref={ref => this.ref = ref} />;
       }
     }
 
@@ -30,7 +30,7 @@ describe('getStateKey', () => {
   it('gets the key if there is no ref', () => {
     class Test extends React.Component {
       render() {
-        return <div key="myKey" />
+        return <div key="myKey" />;
       }
     }
 
