@@ -1,0 +1,41 @@
+import React from 'react';
+import getStateKey from 'get-state-key.js';
+import {getRenderOutput, getElement} from 'test-helpers';
+
+describe('getStateKey', function() {
+  it('gets the ref if it is a string', function() {
+    class Test extends React.Component {
+      render() {
+        return <div ref="myRef" />
+      }
+    }
+
+    const output = getRenderOutput(<Test />);
+
+    expect(getStateKey(output)).to.equal('myRef');
+  });
+
+  it('gets the key if the ref is not a string', function() {
+    class Test extends React.Component {
+      render() {
+        return <div ref={(ref) => (this.ref = ref)} key="myKey" />
+      }
+    }
+
+    const output = getRenderOutput(<Test />);
+
+    expect(getStateKey(output)).to.equal('myKey');
+  });
+
+  it('gets the key if there is no ref', function() {
+    class Test extends React.Component {
+      render() {
+        return <div key="myKey" />
+      }
+    }
+
+    const output = getRenderOutput(<Test />);
+
+    expect(getStateKey(output)).to.equal('myKey');
+  });
+});
