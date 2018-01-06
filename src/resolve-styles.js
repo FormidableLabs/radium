@@ -365,11 +365,20 @@ resolveStyles = function(
   shouldCheckBeforeResolve: boolean = false,
   extraStateKeyMap?: {[key: string]: boolean}
 ): ResolvedStyles {
+  // The extraStateKeyMap is for determining which keys should be erased from
+  // the state (i.e. which child components are unmounted and should no longer
+  // have a style state).
   if (!extraStateKeyMap) {
     const state = getRadiumStyleState(component);
     extraStateKeyMap = Object.keys(state).reduce(
       (acc, key) => {
-        acc[key] = true;
+        // 'main' is the auto-generated key when there is only one element with
+        // interactive styles and if a custom key is not assigned. Because of
+        // this, it is impossible to know which child is 'main', so we won't
+        // count this key when generating our extraStateKeyMap.
+        if (key !== 'main') {
+          acc[key] = true;
+        }
         return acc;
       },
       {}
