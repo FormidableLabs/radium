@@ -5,12 +5,12 @@ const resolveStyles = require('inject-loader!resolve-styles.js')({
   exenv: require('__mocks__/exenv.js')
 });
 
-const genComponent = function() {
+const genComponent = function(initialState = {}) {
   return {
     setState: sinon.spy(function(newState) {
       objectAssign(this.state, newState);
     }),
-    state: {},
+    state: initialState,
     _radiumIsMounted: true
   };
 };
@@ -542,6 +542,23 @@ describe('resolveStyles', function() {
           createMultiPseudoTest(pseudoStyles, onHandlers);
         });
       });
+    });
+  });
+
+  describe('when elements are unmounted', () => {
+    it('returns an extraStateKeyMap with keys of unmounted elements', () => {
+      const initialState = {
+        _radiumStyleState: {
+          mountedDiv: {},
+          unmountedDiv: {}
+        }
+      };
+      const component = genComponent(initialState);
+      const renderedElement = <div><div ref="mountedDiv" /></div>;
+
+      const result = resolveStyles(component, renderedElement).extraStateKeyMap;
+
+      expect(result).to.deep.equal({unmountedDiv: true});
     });
   });
 
