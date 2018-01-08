@@ -1,6 +1,6 @@
-const resolveStyles = sinon.spy(require('resolve-styles.js'));
-const Enhancer = require('inject-loader!enhancer.js')({
-  './resolve-styles.js': resolveStyles
+const resolveStyles = sinon.spy(require('resolve-styles'));
+const Enhancer = require('inject-loader!enhancer')({
+  './resolve-styles': resolveStyles
 });
 
 import React, {Component} from 'react';

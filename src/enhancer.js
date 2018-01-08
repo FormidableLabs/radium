@@ -3,8 +3,9 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import StyleKeeper from './style-keeper.js';
-import resolveStyles from './resolve-styles.js';
+import StyleKeeper from './style-keeper';
+import resolveStyles from './resolve-styles';
+import getRadiumStyleState from './get-radium-style-state';
 
 const KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
   'arguments',
@@ -127,6 +128,8 @@ export default function enhanceWithRadium(
     };
     _radiumMouseUpListener: {remove: () => void};
     _radiumIsMounted: boolean;
+    _lastRadiumState: Object;
+    _extraRadiumStateKeys: any;
 
     constructor() {
       super(...arguments);
@@ -188,8 +191,32 @@ export default function enhanceWithRadium(
         };
       }
 
-      return resolveStyles(this, renderedElement, currentConfig);
+      const {extraStateKeyMap, element} = resolveStyles(
+        this,
+        renderedElement,
+        currentConfig
+      );
+      this._extraRadiumStateKeys = Object.keys(extraStateKeyMap);
+
+      return element;
     }
+
+    /* eslint-disable react/no-did-update-set-state, no-unused-vars */
+    componentDidUpdate() {
+      if (this._extraRadiumStateKeys.length > 0) {
+        const trimmedRadiumState = this._extraRadiumStateKeys.reduce(
+          (state, key) => {
+            const {[key]: extraStateKey, ...remainingState} = state;
+            return remainingState;
+          },
+          getRadiumStyleState(this)
+        );
+
+        this._lastRadiumState = trimmedRadiumState;
+        this.setState({_radiumStyleState: trimmedRadiumState});
+      }
+    }
+    /* eslint-enable react/no-did-update-set-state, no-unused-vars */
   }
 
   // Class inheritance uses Object.create and because of __proto__ issues

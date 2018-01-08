@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 
-import Radium from 'index.js';
-import MouseUpListener from 'plugins/mouse-up-listener.js';
+import Radium from 'index';
+import MouseUpListener from 'plugins/mouse-up-listener';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
-import {getRenderOutput, getElement} from 'test-helpers';
+import {getRenderOutput, getElement, getElements} from 'test-helpers';
 
 describe('Radium blackbox tests', () => {
   let sandbox;
@@ -266,6 +266,48 @@ describe('Radium blackbox tests', () => {
     expect(nav.style.color).to.equal('green');
     MouseUpListener.__triggerForTests();
     expect(nav.style.color).to.equal('blue');
+  });
+
+  it('resets state for unmounted components, Issue #524', () => {
+    class TestComponent extends Component {
+      state = {showSpan: true};
+      render() {
+        return (
+          <div>
+            <button onClick={() => this.setState({showSpan: true})} />
+            {this.state.showSpan &&
+              <span
+                key="s"
+                onClick={() => this.setState({showSpan: false})}
+                style={{
+                  color: 'blue',
+                  ':hover': {color: 'red'}
+                }}
+              />}
+          </div>
+        );
+      }
+    }
+    const WrappedTestComponent = Radium(TestComponent);
+
+    const output = TestUtils.renderIntoDocument(<WrappedTestComponent />);
+
+    let spans = getElements(output, 'span');
+    const button = getElement(output, 'button');
+    expect(spans[0].style.color).to.equal('blue');
+
+    TestUtils.Simulate.mouseEnter(spans[0]);
+    expect(spans[0].style.color).to.equal('red');
+
+    TestUtils.Simulate.click(spans[0]);
+    spans = getElements(output, 'span');
+    expect(spans).to.have.length(0);
+
+    TestUtils.Simulate.click(button);
+    spans = getElements(output, 'span');
+    expect(spans).to.have
+      .length(1)
+      .and.to.have.deep.property('[0].style.color', 'blue');
   });
 
   it('resolves styles on multiple elements nested far down, Issue #307', () => {

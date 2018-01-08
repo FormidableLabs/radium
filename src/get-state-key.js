@@ -1,9 +1,9 @@
 /* @flow */
 
-const getStateKey = function(elementKey: ?string): string {
-  return elementKey === null || elementKey === undefined
-    ? 'main'
-    : elementKey.toString();
+const getStateKey = function(renderedElement: any): string {
+  return typeof renderedElement.ref === 'string'
+    ? renderedElement.ref
+    : renderedElement.key;
 };
 
 export default getStateKey;

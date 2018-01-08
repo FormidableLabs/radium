@@ -16,6 +16,13 @@ export function getElement(output, tagName) {
   );
 }
 
+export function getElements(output, tagName) {
+  return TestUtils.scryRenderedDOMComponentsWithTag(
+    output,
+    tagName
+  ).map(component => ReactDOM.findDOMNode(component));
+}
+
 function cleanCSS(css) {
   return css.replace(/\s*\n\s*/g, '').replace(/\s*([{};:,])\s*/g, '$1');
 }
