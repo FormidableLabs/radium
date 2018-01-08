@@ -176,7 +176,8 @@ rules:
 
     brace-style:                   # enforce one true brace style
         [2, "1tbs", { "allowSingleLine": true }]
-    camelcase: 2                   # require camel case names
+    camelcase:                     # require camel case names, except in properties
+        [2, { "properties": "never" }]
     comma-spacing: 2               # enforce spacing before and after comma
     consistent-this: [2, "self"]   # enforces consistent naming when capturing the current execution context
     eol-last: 2                    # enforce newline at the end of file, with no multiple empty lines
