@@ -1,5 +1,9 @@
 # Radium Changelog
 
+## 0.21.0 (January 8, 2018)
+- Automatically clear browser state of elements when unmounting and remounting (#956).
+  - `resolveStyles` returns `{ extraRadiumStateKeys, element }` instead of just `element`.
+
 ## 0.20.1 (January 8, 2018)
 - Fix `v0.20.0` build.
 
