@@ -1,4 +1,4 @@
-import camelCasePropsToDashCase from 'camel-case-props-to-dash-case.js';
+import camelCasePropsToDashCase from 'camel-case-props-to-dash-case';
 
 describe('camelCasePropsToDashCase', function() {
   it('converts to dash case correctly', function() {

@@ -1,5 +1,5 @@
 import React from 'react';
-import getStateKey from 'get-state-key.js';
+import getStateKey from 'get-state-key';
 import {getRenderOutput} from 'test-helpers';
 
 describe('getStateKey', () => {

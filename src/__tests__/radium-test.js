@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
-import Radium from 'index.js';
-import MouseUpListener from 'plugins/mouse-up-listener.js';
+import Radium from 'index';
+import MouseUpListener from 'plugins/mouse-up-listener';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
