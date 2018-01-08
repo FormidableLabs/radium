@@ -1,26 +1,33 @@
-"use strict";
+'use strict';
 
 const React = require('react');
 const renderToString = require('react-dom/server').renderToString;
 
 const Enhancer = require('../lib/enhancer');
-const StyleRoot = require('../lib/components/style-root');
 const createEsClass = require('../lib/test-helpers').createEsClass;
 
 const render = (Component, props) =>
-  renderToString(React.createElement(Component, Object.assign({
-    radiumConfig: { userAgent: 'testy-mctestface' }
-  }, props)));
+  renderToString(
+    React.createElement(
+      Component,
+      Object.assign(
+        {
+          radiumConfig: {userAgent: 'testy-mctestface'}
+        },
+        props
+      )
+    )
+  );
 
 // Full assertion wrapper
-const assertValidEnhancedComponent = (Composed) => {
+const assertValidEnhancedComponent = Composed => {
   const Enhanced = Enhancer(Composed);
   const rendered = render(Enhanced);
 
   expect(render(Composed)).to.not.equal(rendered);
-  expect(rendered)
-    .to.contain('data-radium="true"').and
-    .to.contain('style="background:red;color:white"');
+  expect(rendered).to
+    .contain('data-radium="true"')
+    .and.to.contain('style="background:red;color:white"');
 };
 
 describe('Enhancer', () => {
@@ -28,10 +35,7 @@ describe('Enhancer', () => {
 
   beforeEach(() => {
     testElement = React.createElement('div', {
-      style: [
-        { background: 'red' },
-        { color: 'white' }
-      ]
+      style: [{background: 'red'}, {color: 'white'}]
     });
   });
 
@@ -49,7 +53,7 @@ describe('Enhancer', () => {
   });
 
   it('handles real functions', () => {
-    const Composed = function () {
+    const Composed = function() {
       return testElement;
     };
 
