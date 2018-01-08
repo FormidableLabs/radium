@@ -1,5 +1,8 @@
 # Radium Changelog
 
+## 0.20.0 (January 8, 2018)
+- Upgrade `inline-style-prefixer` to version `^4.0.0`.
+
 ## 0.19.6 (October 5, 2017)
 - Allow native ES classes to be used with the Radium enhancer.
 
