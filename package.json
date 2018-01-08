@@ -1,6 +1,6 @@
 {
   "name": "radium",
-  "version": "0.20.0",
+  "version": "0.20.1",
   "description": "A set of tools to manage inline styles on React elements",
   "main": "lib/index.js",
   "repository": {
