@@ -1,5 +1,5 @@
 import {Component} from 'react';
-import getRadiumStyleState from 'get-radium-style-state.js';
+import getRadiumStyleState from 'get-radium-style-state';
 
 describe('getRadiumStyleState', () => {
   it('gets the _lastRadiumState if available', () => {

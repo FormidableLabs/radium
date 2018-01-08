@@ -1,4 +1,4 @@
-import getState from 'get-state.js';
+import getState from 'get-state';
 
 describe('getState', () => {
   it('successfully gets the state if passed number zero', () => {

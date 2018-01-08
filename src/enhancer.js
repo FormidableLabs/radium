@@ -3,9 +3,9 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import StyleKeeper from './style-keeper.js';
-import resolveStyles from './resolve-styles.js';
-import getRadiumStyleState from './get-radium-style-state.js';
+import StyleKeeper from './style-keeper';
+import resolveStyles from './resolve-styles';
+import getRadiumStyleState from './get-radium-style-state';
 
 const KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
   'arguments',

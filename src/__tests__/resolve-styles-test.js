@@ -1,8 +1,8 @@
 import React from 'react';
-import MouseUpListener from 'plugins/mouse-up-listener.js';
+import MouseUpListener from 'plugins/mouse-up-listener';
 import objectAssign from 'object-assign';
-const resolveStyles = require('inject-loader!resolve-styles.js')({
-  exenv: require('__mocks__/exenv.js')
+const resolveStyles = require('inject-loader!resolve-styles')({
+  exenv: require('__mocks__/exenv')
 });
 
 const genComponent = function(initialState = {}) {

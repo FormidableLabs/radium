@@ -1,4 +1,4 @@
-import cleanStateKey from 'clean-state-key.js';
+import cleanStateKey from 'clean-state-key';
 
 describe('cleanStateKey', () => {
   it('returns the key as a string', () => {
