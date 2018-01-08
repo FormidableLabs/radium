@@ -1,5 +1,8 @@
 # Radium Changelog
 
+## 0.20.1 (January 8, 2018)
+- Fix `v0.20.0` build.
+
 ## 0.20.0 (January 8, 2018)
 - Upgrade `inline-style-prefixer` to version `^4.0.0`.
 
