@@ -269,7 +269,7 @@ describe('Radium blackbox tests', () => {
   });
 
   it('resets state for unmounted components, Issue #524', () => {
-    @Radium class TestComponent extends Component {
+    class TestComponent extends Component {
       state = {showSpan: true};
       render() {
         return (
@@ -288,8 +288,9 @@ describe('Radium blackbox tests', () => {
         );
       }
     }
+    const WrappedTestComponent = Radium(TestComponent);
 
-    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    const output = TestUtils.renderIntoDocument(<WrappedTestComponent />);
 
     let spans = getElements(output, 'span');
     const button = getElement(output, 'button');
@@ -300,12 +301,13 @@ describe('Radium blackbox tests', () => {
 
     TestUtils.Simulate.click(spans[0]);
     spans = getElements(output, 'span');
-    expect(spans.length).to.equal(0);
+    expect(spans).to.have.length(0);
 
     TestUtils.Simulate.click(button);
     spans = getElements(output, 'span');
-    expect(spans.length).equal(1);
-    expect(spans[0].style.color).to.equal('blue');
+    expect(spans).to.have
+      .length(1)
+      .and.to.have.deep.property('[0].style.color', 'blue');
   });
 
   it('resolves styles on multiple elements nested far down, Issue #307', () => {
