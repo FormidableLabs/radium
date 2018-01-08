@@ -86,48 +86,6 @@ const VisitedLink = Radium(() => (
   </a>
 ));
 
-@Radium class HideButton extends React.Component {
-  constructor() {
-    super();
-    this.state = {showButton: true};
-  }
-
-  render() {
-    return (
-      <div>
-        <button key={0} onClick={() => this.setState({showButton: true})}>
-          Show
-        </button>
-        {this.state.showButton &&
-          <button
-            key={1}
-            onClick={() => this.setState({showButton: false})}
-            style={hideButtonStyle.hoverButton}
-          >
-            Hide
-          </button>}
-        <div>
-          <button key={2} style={hideButtonStyle.focusButton}>Focus</button>
-        </div>
-        <button key={3}>Extra</button>
-      </div>
-    );
-  }
-}
-
-const hideButtonStyle = {
-  hoverButton: {
-    ':hover': {
-      background: 'red'
-    }
-  },
-  focusButton: {
-    ':focus': {
-      background: 'blue'
-    }
-  }
-};
-
 class App extends React.Component {
   _remount() {
     this.setState({shouldRenderNull: true});
@@ -223,8 +181,6 @@ class App extends React.Component {
           />
           <span>This content has scoped styles</span>
         </div>
-
-        <HideButton />
       </StyleRoot>
     );
   }
