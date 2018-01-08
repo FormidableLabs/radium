@@ -190,6 +190,6 @@ You may see the name "Constructor" instead of your component name, for example: 
 
 Your transpiler is probably not able to set the `displayName` property of the component correctly, which can happen if you wrap `React.createClass` immediately with `Radium`, e.g. `var Button = Radium(React.createClass({ ... }));`. Instead, wrap your component afterward, ex. `Button = Radium(Button);`,  or when exporting, ex. `module.exports = Radium(Button);`, or set `displayName` manually.
 
-## Why does the browser state of a child component not reset after unmounting and remounting?
+## Why does the browser state of a child element not reset after unmounting and remounting?
 
 If you have an element that takes a browser state (e.g. `:active`, `:hover`, `:focus`), you need to give it a unique `key` prop. There is a case where if you only have a single element in your component that takes an interactive style, you do not need to provide a `key`; however, if you remove the element and show it again, it will maintain it's state, which is usually unexpected behavior. To fix this, simply give it a custom `key` prop.
