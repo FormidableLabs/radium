@@ -148,7 +148,7 @@ Radium will ignore any elements of the array that aren't objects, such as the re
 
 Radium supports styling for three browser states that are targeted with pseudo-selectors in normal CSS: `:hover`, `:focus`, and `:active`.
 
-To add styles for these states, add a special key to your style object with the additional rules:
+To add styles for these states, add a special key to your style object with the additional rules. Additionally, you will need to add a unique `key` prop to the elements that take these styles:
 
 ```jsx
 var styles = {
@@ -180,9 +180,23 @@ var styles = {
     }
   },
 };
+
+class MyComponent extends Component {
+...
+render() {
+  return (
+    <div key="1" style={styles.base}>
+      <div key="2" style={styles.block} />
+    </div>
+  );
+}
+...
+}
+
+export default Radium(MyComponent);
 ```
 
-Radium will merge styles for any active states when your component is rendered.
+Radium will merge styles for any active states when your component is rendered. If you are having trouble with browser states, check out [this section](https://github.com/FormidableLabs/radium/tree/master/docs/faq#why-does-the-browser-state-of-a-child-element-not-reset-after-unmounting-and-remounting) of the FAQ.
 
 ## Media queries
 
