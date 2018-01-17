@@ -19,6 +19,20 @@ describe('Radium blackbox tests', () => {
     sandbox.restore();
   });
 
+  it('returns only one display attribute', () => {
+    @Radium class TestComponent extends Component {
+      render() {
+        return <div style={{display: 'flex'}} />;
+      }
+    }
+
+    const output = getRenderOutput(<TestComponent />);
+
+    expect(output.props.style).to.deep.equal({
+      display: 'flex'
+    });
+  });
+
   it('merges styles', () => {
     @Radium class TestComponent extends Component {
       render() {
