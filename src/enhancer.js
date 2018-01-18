@@ -202,7 +202,11 @@ export default function enhanceWithRadium(
     }
 
     /* eslint-disable react/no-did-update-set-state, no-unused-vars */
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState) {
+      if (super.componentDidUpdate) {
+        super.componentDidUpdate.call(this, prevProps, prevState);
+      }
+
       if (this._extraRadiumStateKeys.length > 0) {
         const trimmedRadiumState = this._extraRadiumStateKeys.reduce(
           (state, key) => {
