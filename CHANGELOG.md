@@ -1,5 +1,8 @@
 # Radium Changelog
 
+## 0.21.1 (January 18, 2018)
+- Call `componentDidUpdate()` inherited method (#957).
+
 ## 0.21.0 (January 8, 2018)
 - Automatically clear browser state of elements when unmounting and remounting (#956).
   - `resolveStyles` returns `{ extraRadiumStateKeys, element }` instead of just `element`.
