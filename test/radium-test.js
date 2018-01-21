@@ -28,12 +28,14 @@ describe('Radium blackbox SSR tests', () => {
       Wrapped = Radium(Composed);
     });
 
+    // Regression test: https://github.com/FormidableLabs/radium/issues/958
     it('handles no user agent', () => {
       const rendered = render(Wrapped);
       expect(rendered).to.contain(
         'style="display:-webkit-box;-moz-box;-ms-flexbox;-webkit-flex;flex"');
     });
 
+    // Regression test: https://github.com/FormidableLabs/radium/issues/958s
     it('handles non-matching user agent', () => {
       const rendered = render(Wrapped, {
         userAgent: 'testy-mctestface'
