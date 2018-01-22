@@ -851,4 +851,56 @@ describe('Radium blackbox tests', () => {
       expect(plugin).to.have.callCount(2);
     });
   });
+
+  describe('inline prefixes', () => {
+    let Component;
+
+    beforeEach(() => {
+      class Composed extends React.Component {
+        render() {
+          return React.createElement('div', {
+            style: {
+              color: 'red',
+              display: 'flex'
+            }
+          });
+        }
+      }
+
+      Component = Composed;
+    });
+
+    // Regression test: https://github.com/FormidableLabs/radium/issues/958
+    it('handles no user agent', () => {
+      const userAgent = '';
+      const Wrapped = Radium({ userAgent })(Component);
+      const output = TestUtils.renderIntoDocument(<Wrapped />);
+      const div = getElement(output, 'div');
+
+      expect(div.style.color).to.equal('red');
+      expect(div.style.display).to.equal('flex');
+    });
+
+    // Regression test: https://github.com/FormidableLabs/radium/issues/958s
+    it('handles non-matching user agent', () => {
+      const userAgent = 'testy-mctestface';
+      const Wrapped = Radium({ userAgent })(Component);
+      const output = TestUtils.renderIntoDocument(<Wrapped />);
+      const div = getElement(output, 'div');
+
+      expect(div.style.color).to.equal('red');
+      expect(div.style.display).to.equal('flex');
+    });
+
+    it('handles matching user agent', () => {
+      const iOSChrome47 = 'Mozilla/5.0 (iPad; CPU OS 8_0_0 like Mac OS X) AppleWebKit/600.1.4 (KHTML, ' +
+        'like Gecko) CriOS/47.0.2526.107 Mobile/12H321 Safari/600.1.4';
+      const Wrapped = Radium({ userAgent: iOSChrome47 })(Component);
+      const output = TestUtils.renderIntoDocument(<Wrapped />);
+      const div = getElement(output, 'div');
+
+      expect(div.style.color).to.equal('red');
+      expect(div.style.display).to.equal('-webkit-flex');
+    });
+  });
 });
