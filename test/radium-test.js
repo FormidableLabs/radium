@@ -32,7 +32,9 @@ describe('Radium blackbox SSR tests', () => {
     it('handles no user agent', () => {
       const rendered = render(Wrapped);
       expect(rendered).to.contain(
-        'style="display:-webkit-box;-moz-box;-ms-flexbox;-webkit-flex;flex"');
+        'style="display:-webkit-box;display:-moz-box;display:-ms-flexbox;' +
+          'display:-webkit-flex;display:flex"'
+      );
     });
 
     // Regression test: https://github.com/FormidableLabs/radium/issues/958s
@@ -41,7 +43,9 @@ describe('Radium blackbox SSR tests', () => {
         userAgent: 'testy-mctestface'
       });
       expect(rendered).to.contain(
-        'style="display:-webkit-box;-moz-box;-ms-flexbox;-webkit-flex;flex"');
+        'style="display:-webkit-box;display:-moz-box;display:-ms-flexbox;' +
+          'display:-webkit-flex;display:flex"'
+      );
     });
 
     it('handles matching user agent', () => {
