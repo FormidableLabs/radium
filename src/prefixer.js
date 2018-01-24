@@ -8,6 +8,8 @@
 import createStaticPrefixer from 'inline-style-prefixer/static/createPrefixer';
 import createDynamicPrefixer
   from 'inline-style-prefixer/dynamic/createPrefixer';
+import ExecutionEnvironment from 'exenv';
+
 import staticData from './prefix-data/static';
 import dynamicData from './prefix-data/dynamic';
 
@@ -79,11 +81,42 @@ export function getPrefixedKeyframes(userAgent?: ?string): string {
   return getPrefixer(userAgent).prefixedKeyframes;
 }
 
-// Returns a new style object with vendor prefixes added to property names
-// and values.
+// Returns a new style object with vendor prefixes added to property names and
+// values.
 export function getPrefixedStyle(style: Object, userAgent?: ?string): Object {
   const styleWithFallbacks = transformValues(style);
   const prefixer = getPrefixer(userAgent);
-  const prefixedStyle = prefixer.prefix(styleWithFallbacks);
+  const prefixedStyle =  prefixer.prefix(styleWithFallbacks);
+
+  // We get prefixed styles back in the form of:
+  // - `display: "flex"` OR
+  // - `display: "-webkit-flex"` OR
+  // - `display: [/* ... */, "-webkit-flex", "flex"]
+  //
+  // The last form is problematic for eventual use in the browser and server
+  // render. More confusingly, we have to do **different** things on the
+  // browser and server (noted inline below).
+  //
+  // https://github.com/FormidableLabs/radium/issues/958
+  if (ExecutionEnvironment.canUseDOM) {
+    // For the **browser**, when faced with multiple values, we just take
+    // the **last** one, which is the original passed in value before
+    // prefixing. This _should_ work, because `inline-style-prefixer` we're
+    // just passing through what would happen without ISP.
+    Object.keys(prefixedStyle).forEach((key) => {
+      const val = prefixedStyle[key];
+      if (Array.isArray(val)) {
+        prefixedStyle[key] = val[val.length - 1].toString();
+      }
+    });
+  }
+
+  // else {
+  //   // For the **server**, we just concatenate things together and convert
+  //   // the style object into a full string like
+  //   // `display:-webkit-flex;display:flex" which is the correct.
+  //   return transformValues(prefixedStyle);
+  // }
+
   return prefixedStyle;
 }

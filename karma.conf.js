@@ -3,11 +3,12 @@ const path = require('path');
 module.exports = function(config) {
   config.set({
     basePath: '',
-    frameworks: ['mocha', 'sinon-chai', 'phantomjs-shim'],
+    frameworks: ['mocha', 'sinon-chai'],
     files: [
-      // Polyfills for PhantomJS in React 16.
-      require.resolve('core-js/es6/map'),
-      require.resolve('core-js/es6/set'),
+      // TODO(RYAN): REMOVE???
+      // // Polyfills for PhantomJS in React 16.
+      // require.resolve('core-js/es6/map'),
+      // require.resolve('core-js/es6/set'),
       'src/__tests__/**/*.js'
     ],
     preprocessors: {
@@ -71,15 +72,14 @@ module.exports = function(config) {
     logLevel: config.LOG_INFO,
     colors: true,
     autoWatch: false,
-    browsers: ['PhantomJS'],
+    browsers: ['ChromeHeadless'],
     reporters: ['mocha', 'coverage'],
     browserNoActivityTimeout: 60000,
     plugins: [
+      'karma-chrome-launcher',
       'karma-coverage',
       'karma-mocha',
       'karma-mocha-reporter',
-      'karma-phantomjs-launcher',
-      'karma-phantomjs-shim',
       'karma-sinon-chai',
       'karma-webpack'
     ],
