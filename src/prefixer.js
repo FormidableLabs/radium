@@ -13,6 +13,8 @@ import ExecutionEnvironment from 'exenv';
 import staticData from './prefix-data/static';
 import dynamicData from './prefix-data/dynamic';
 
+import {camelCaseToDashCase} from './camel-case-props-to-dash-case';
+
 const prefixAll: (style: Object) => Object = createStaticPrefixer(staticData);
 const InlineStylePrefixer = createDynamicPrefixer(dynamicData, prefixAll);
 
@@ -109,14 +111,23 @@ export function getPrefixedStyle(style: Object, userAgent?: ?string): Object {
         prefixedStyle[key] = val[val.length - 1].toString();
       }
     });
+  } else {
+    // For the **server**, we just concatenate things together and convert
+    // the style object values into a hacked-up string of like
+    // `display: "-webkit-flex;display:flex"` that will SSR render correctly
+    // to like `"display:-webkit-flex;display:flex"` but would otherwise be
+    // totally invalid values.
+    Object.keys(prefixedStyle).forEach((key) => {
+      const val = prefixedStyle[key];
+      if (Array.isArray(val)) {
+        // We convert keys to dash-case only for the serialize values and
+        // leave the real key camel-cased so it's as expected to React and other
+        // parts of the processing chain.
+        const camelKey = camelCaseToDashCase(key);
+        prefixedStyle[key] = val.join(`;${camelKey}:`);
+      }
+    });
   }
-
-  // else {
-  //   // For the **server**, we just concatenate things together and convert
-  //   // the style object into a full string like
-  //   // `display:-webkit-flex;display:flex" which is the correct.
-  //   return transformValues(prefixedStyle);
-  // }
 
   return prefixedStyle;
 }

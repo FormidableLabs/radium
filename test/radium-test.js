@@ -20,7 +20,9 @@ describe('Radium blackbox SSR tests', () => {
       class Composed extends React.Component {
         render() {
           return React.createElement('div', {
-            style: {display: 'flex'}
+            style: {
+              display: 'flex'
+            }
           });
         }
       }
