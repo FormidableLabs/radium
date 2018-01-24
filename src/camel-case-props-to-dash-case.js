@@ -6,7 +6,7 @@ const _camelCaseReplacer = function(match, p1, p2) {
   return (p1 || '') + '-' + p2.toLowerCase();
 };
 
-export const camelCaseToDashCase = function(s: String): String {
+export const camelCaseToDashCase = function(s: string): string {
   return s.replace(_camelCaseRegex, _camelCaseReplacer);
 };
 
