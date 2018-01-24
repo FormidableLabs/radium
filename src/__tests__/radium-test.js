@@ -895,12 +895,27 @@ describe('Radium blackbox tests', () => {
     it('handles matching user agent', () => {
       const iOSChrome47 = 'Mozilla/5.0 (iPad; CPU OS 8_0_0 like Mac OS X) AppleWebKit/600.1.4 ' +
         '(KHTML, like Gecko) CriOS/47.0.2526.107 Mobile/12H321 Safari/600.1.4';
+      const webkitFlex = '-webkit-flex';
+
+      // Check if we _can_ even have the expected value. (Can't on IE9).
+      class FlexCanary extends Component {
+        render() {
+          return React.createElement('div', {
+            style: {
+              display: webkitFlex
+            }
+          });
+        }
+      }
+      const canary = TestUtils.renderIntoDocument(<FlexCanary />);
+      const expectedDisplay = getElement(canary, 'div').style.display;
+
       const Wrapped = Radium({userAgent: iOSChrome47})(TestComponent);
       const output = TestUtils.renderIntoDocument(<Wrapped />);
       const div = getElement(output, 'div');
 
       expect(div.style.color).to.equal('red');
-      expect(div.style.display).to.equal('-webkit-flex');
+      expect(div.style.display).to.equal(expectedDisplay);
     });
   });
 });
