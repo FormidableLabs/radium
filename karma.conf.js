@@ -62,7 +62,15 @@ module.exports = function(config) {
     logLevel: config.LOG_INFO,
     colors: true,
     autoWatch: false,
-    browsers: ['ChromeHeadless'],
+    // Run a customized instance of headless chrome for dev + Travis CI.
+    browsers: ['ChromeHeadlessCustom'],
+    customLaunchers: {
+      ChromeHeadlessCustom: {
+        base: 'ChromeHeadless',
+        // --no-sandbox for https://github.com/travis-ci/docs-travis-ci-com/pull/1671/files
+        flags: ['--no-sandbox']
+      }
+    },
     reporters: ['mocha', 'coverage'],
     browserNoActivityTimeout: 60000,
     plugins: [
