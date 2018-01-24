@@ -43,7 +43,7 @@ module.exports = function(config) {
           path.join(__dirname, 'node_modules'),
           path.join(__dirname, 'src')
         ],
-        extensions: ['.js', '.jsx']
+        extensions: ['.js']
       }
     },
     webpackServer: {
