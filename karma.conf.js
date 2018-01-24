@@ -4,8 +4,17 @@ module.exports = function(config) {
   config.set({
     basePath: '',
     frameworks: ['mocha', 'sinon-chai'],
-    files: ['src/__tests__/**/*.js'],
+    files: [
+      // Polyfills for IE9 in React 16.
+      require.resolve('core-js/es6/map'),
+      require.resolve('core-js/es6/set'),
+      'src/__tests__/**/*.js'
+    ],
     preprocessors: {
+      [path.join(
+        path.dirname(require.resolve('core-js/package.json')),
+        'es6/**/*.js' // eslint-disable-line prettier/prettier
+      )]: ['webpack'],
       'src/__tests__/**/*.js': ['webpack']
     },
     webpack: {
