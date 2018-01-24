@@ -853,10 +853,10 @@ describe('Radium blackbox tests', () => {
   });
 
   describe('inline prefixes', () => {
-    let Component;
+    let TestComponent;
 
     beforeEach(() => {
-      class Composed extends React.Component {
+      class Composed extends Component {
         render() {
           return React.createElement('div', {
             style: {
@@ -867,13 +867,13 @@ describe('Radium blackbox tests', () => {
         }
       }
 
-      Component = Composed;
+      TestComponent = Composed;
     });
 
     // Regression test: https://github.com/FormidableLabs/radium/issues/958
     it('handles no user agent', () => {
       const userAgent = '';
-      const Wrapped = Radium({ userAgent })(Component);
+      const Wrapped = Radium({userAgent})(TestComponent);
       const output = TestUtils.renderIntoDocument(<Wrapped />);
       const div = getElement(output, 'div');
 
@@ -884,7 +884,7 @@ describe('Radium blackbox tests', () => {
     // Regression test: https://github.com/FormidableLabs/radium/issues/958s
     it('handles non-matching user agent', () => {
       const userAgent = 'testy-mctestface';
-      const Wrapped = Radium({ userAgent })(Component);
+      const Wrapped = Radium({userAgent})(TestComponent);
       const output = TestUtils.renderIntoDocument(<Wrapped />);
       const div = getElement(output, 'div');
 
@@ -893,9 +893,9 @@ describe('Radium blackbox tests', () => {
     });
 
     it('handles matching user agent', () => {
-      const iOSChrome47 = 'Mozilla/5.0 (iPad; CPU OS 8_0_0 like Mac OS X) AppleWebKit/600.1.4 (KHTML, ' +
-        'like Gecko) CriOS/47.0.2526.107 Mobile/12H321 Safari/600.1.4';
-      const Wrapped = Radium({ userAgent: iOSChrome47 })(Component);
+      const iOSChrome47 = 'Mozilla/5.0 (iPad; CPU OS 8_0_0 like Mac OS X) AppleWebKit/600.1.4 ' +
+        '(KHTML, like Gecko) CriOS/47.0.2526.107 Mobile/12H321 Safari/600.1.4';
+      const Wrapped = Radium({userAgent: iOSChrome47})(TestComponent);
       const output = TestUtils.renderIntoDocument(<Wrapped />);
       const div = getElement(output, 'div');
 

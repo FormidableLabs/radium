@@ -88,7 +88,7 @@ export function getPrefixedKeyframes(userAgent?: ?string): string {
 export function getPrefixedStyle(style: Object, userAgent?: ?string): Object {
   const styleWithFallbacks = transformValues(style);
   const prefixer = getPrefixer(userAgent);
-  const prefixedStyle =  prefixer.prefix(styleWithFallbacks);
+  const prefixedStyle = prefixer.prefix(styleWithFallbacks);
 
   // We get prefixed styles back in the form of:
   // - `display: "flex"` OR
@@ -105,7 +105,7 @@ export function getPrefixedStyle(style: Object, userAgent?: ?string): Object {
     // the **last** one, which is the original passed in value before
     // prefixing. This _should_ work, because `inline-style-prefixer` we're
     // just passing through what would happen without ISP.
-    Object.keys(prefixedStyle).forEach((key) => {
+    Object.keys(prefixedStyle).forEach(key => {
       const val = prefixedStyle[key];
       if (Array.isArray(val)) {
         prefixedStyle[key] = val[val.length - 1].toString();
@@ -117,7 +117,7 @@ export function getPrefixedStyle(style: Object, userAgent?: ?string): Object {
     // `display: "-webkit-flex;display:flex"` that will SSR render correctly
     // to like `"display:-webkit-flex;display:flex"` but would otherwise be
     // totally invalid values.
-    Object.keys(prefixedStyle).forEach((key) => {
+    Object.keys(prefixedStyle).forEach(key => {
       const val = prefixedStyle[key];
       if (Array.isArray(val)) {
         // We convert keys to dash-case only for the serialize values and
