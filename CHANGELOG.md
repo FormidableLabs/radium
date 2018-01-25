@@ -1,5 +1,8 @@
 # Radium Changelog
 
+## 0.21.2 (January 25, 2018)
+- Fix multiple-value prefixed inline styles. (#962, #958, #951)
+
 ## 0.21.1 (January 18, 2018)
 - Call `componentDidUpdate()` inherited method (#957).
 
