@@ -27,6 +27,5 @@ export default function cssRuleSetToString(
   const prefixedRules = getPrefixedStyle(rulesWithPx, userAgent);
   const cssPrefixedRules = camelCasePropsToDashCase(prefixedRules);
   const serializedRules = createMarkupForStyles(cssPrefixedRules);
-
   return selector + '{' + serializedRules + '}';
 }

@@ -1,23 +1,10 @@
 'use strict';
 
 const React = require('react');
-const renderToString = require('react-dom/server').renderToString;
 
 const Enhancer = require('../lib/enhancer');
 const createEsClass = require('../lib/test-helpers').createEsClass;
-
-const render = (Component, props) =>
-  renderToString(
-    React.createElement(
-      Component,
-      Object.assign(
-        {
-          radiumConfig: {userAgent: 'testy-mctestface'}
-        },
-        props
-      )
-    )
-  );
+const render = require('./utils').render;
 
 // Full assertion wrapper
 const assertValidEnhancedComponent = Composed => {

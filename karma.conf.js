@@ -3,9 +3,9 @@ const path = require('path');
 module.exports = function(config) {
   config.set({
     basePath: '',
-    frameworks: ['mocha', 'sinon-chai', 'phantomjs-shim'],
+    frameworks: ['mocha', 'sinon-chai'],
     files: [
-      // Polyfills for PhantomJS in React 16.
+      // Polyfills for IE9 in React 16.
       require.resolve('core-js/es6/map'),
       require.resolve('core-js/es6/set'),
       'src/__tests__/**/*.js'
@@ -50,7 +50,7 @@ module.exports = function(config) {
           path.join(__dirname, 'node_modules'),
           path.join(__dirname, 'src')
         ],
-        extensions: ['.js', '.jsx']
+        extensions: ['.js']
       }
     },
     webpackServer: {
@@ -71,15 +71,22 @@ module.exports = function(config) {
     logLevel: config.LOG_INFO,
     colors: true,
     autoWatch: false,
-    browsers: ['PhantomJS'],
+    // Run a customized instance of headless chrome for dev + Travis CI.
+    browsers: ['ChromeHeadlessCustom'],
+    customLaunchers: {
+      ChromeHeadlessCustom: {
+        base: 'ChromeHeadless',
+        // --no-sandbox for https://github.com/travis-ci/docs-travis-ci-com/pull/1671/files
+        flags: ['--no-sandbox']
+      }
+    },
     reporters: ['mocha', 'coverage'],
     browserNoActivityTimeout: 60000,
     plugins: [
+      'karma-chrome-launcher',
       'karma-coverage',
       'karma-mocha',
       'karma-mocha-reporter',
-      'karma-phantomjs-launcher',
-      'karma-phantomjs-shim',
       'karma-sinon-chai',
       'karma-webpack'
     ],

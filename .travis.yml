@@ -1,9 +1,14 @@
+dist: trusty
+
 language: node_js
+
+addons:
+  chrome: stable
 
 node_js:
   - "4"
   - "6"
-  - "node"
+  - "8"
 
 # Use container-based Travis infrastructure.
 sudo: false
@@ -12,6 +17,8 @@ before_install:
   # GUI for real browsers.
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
+  # Headless chrome
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 
 branches:
   only:
