@@ -46,6 +46,9 @@
     "watch-lib": "npm run build-lib -- --watch"
   },
   "license": "MIT",
+  "engines": {
+    "node": ">=6"
+  },
   "dependencies": {
     "array-find": "^1.0.0",
     "babel-cli": "^6.24.0",
