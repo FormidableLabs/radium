@@ -1,5 +1,7 @@
 const path = require('path');
 
+process.env.BABEL_ENV = 'commonjs';
+
 module.exports = function(config) {
   config.set({
     basePath: '',
