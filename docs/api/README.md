@@ -157,6 +157,11 @@ Allows you to replace the `matchMedia` function that Radium uses. The default is
 
 **Server**
 
+As of TODO_VERSION, when importing `Radium` to a server file, you must amend your import statement with `.default` like so:
+```
+var Radium = require('radium').default;
+``` 
+
 ```jsx
 var ConfiguredRadium = require('./configured-radium');
 var matchMediaMock = require('match-media-mock').create();
@@ -179,7 +184,7 @@ app.get('/app/:width/:height', function(req, res) {
 **ConfiguredRadium.js**
 
 ```jsx
-var Radium = require('radium');
+var Radium = require('radium').default;
 
 var _matchMedia = null;
 
@@ -205,7 +210,7 @@ class MyComponent extends React.Component { ... }
 
 MyComponent = ConfiguredRadium(MyComponent);
 ```
-
+ 
 See [#146](https://github.com/FormidableLabs/radium/pull/146) for more info.
 
 ### config.plugins
