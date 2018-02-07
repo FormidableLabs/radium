@@ -7,6 +7,28 @@
  * the default export, so that the ES5 version is still valid. This plugin
  * will generate an error if any named exports come first.
  *
+ * See: https://blog.tableflip.io/the-difference-between-module-exports-and-exports/
+ *
+ * Our goal:
+ *
+ * ```js
+ * // mod.js
+ * exports = module.exports = function () { return "foo"; };
+ * exports.default = exports;
+ *
+ * exports.foo = "foo";
+ * exports.bar = "bar";
+ * ```
+ *
+ * All of:
+ *
+ * - `require("./mod")()`
+ * - `require("./mod").default()`
+ * - `require("./mod").foo`
+ * - `require("./mod").bar`
+ *
+ * work with this approach.
+ *
  * @param {Object} babel The babel object, yo.
  * @returns {void}
  */
@@ -19,22 +41,24 @@ module.exports = babel => ({
           return;
         }
 
-        let hasExportDefault = false;
+        let exportDefaultPath = null;
         let hasExportNamed = false;
-        const visitedExportDefault = () => {
+        const visitedExportDefault = (p) => {
           // Validation
           if (hasExportNamed) {
             throw new Error('Encountered named exports before default');
           }
-          if (hasExportDefault) {
+          if (exportDefaultPath) {
             throw new Error('Encountered multiple default exports');
           }
-          hasExportDefault = true;
+
+          // Mark state.
+          exportDefaultPath = p;
         };
 
         path.get('body').forEach(p => {
           if (p.isExportDefaultDeclaration()) {
-            visitedExportDefault();
+            visitedExportDefault(p);
           }
 
           if (p.isExportNamedDeclaration()) {
@@ -42,14 +66,14 @@ module.exports = babel => ({
               p.node.specifiers.length === 1 &&
               p.node.specifiers[0].exported.name === 'default'
             ) {
-              visitedExportDefault();
+              visitedExportDefault(p);
             } else {
               hasExportNamed = true;
             }
           }
         });
 
-        if (hasExportDefault) {
+        if (exportDefaultPath) {
           const types = babel.types;
           path.pushContainer('body', [
             types.expressionStatement(
