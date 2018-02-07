@@ -13,16 +13,12 @@
 
 /* eslint-disable no-use-before-define */
 
-const React = require('react');
+import React from 'react';
 
-const CommonStyles = require('./common.styles');
-const Button = require('./components/button');
-const ComputedWell = require('./components/computed-well');
-const Radium = require('../src');
-
-const {Style, StyleRoot} = Radium;
-
-const {resetListStyle, resetBoxModel} = CommonStyles;
+import {resetListStyle, resetBoxModel} from './common.styles';
+import Button from './components/button';
+import ComputedWell from './components/computed-well';
+import Radium, {getState, keyframes, Style, StyleRoot} from '../src';
 
 //
 // Radium with ES6 class syntax
@@ -34,7 +30,7 @@ class HoverMessage extends React.Component {
         <button key="button" style={{display: 'flex', ':hover': {}}}>
           Hover me!
         </button>
-        {Radium.getState(this.state, 'button', ':hover')
+        {getState(this.state, 'button', ':hover')
           ? <span>{' '}Hovering!</span>
           : null}
       </div>
@@ -231,7 +227,7 @@ const tileStyle = {
   }
 };
 
-const pulseAnimation = Radium.keyframes(
+const pulseAnimation = keyframes(
   {
     '0%': {width: '10%'},
     '50%': {width: '50%'},
@@ -256,4 +252,4 @@ const listStyle = {
   margin: 15
 };
 
-module.exports = App;
+export default App;

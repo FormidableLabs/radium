@@ -1,6 +1,5 @@
 {
   "plugins": [
-    "add-module-exports",
     "transform-decorators-legacy"
   ],
   "presets": [
@@ -16,7 +15,6 @@
         "react"
       ],
       "plugins": [
-        "add-module-exports",
         "transform-decorators-legacy"
       ]
     }

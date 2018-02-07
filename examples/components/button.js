@@ -13,9 +13,9 @@
 
 /* eslint-disable no-use-before-define */
 
-const Radium = require('../../src');
-const React = require('react');
-const PropTypes = require('prop-types');
+import React from 'react';
+import PropTypes from 'prop-types';
+import Radium from '../../src';
 
 @Radium class Button extends React.Component {
   render() {
@@ -87,4 +87,4 @@ const styles = {
   }
 };
 
-module.exports = Button;
+export default Button;
