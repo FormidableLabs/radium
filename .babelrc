@@ -1,5 +1,6 @@
 {
   "plugins": [
+    "add-module-exports",
     "transform-decorators-legacy"
   ],
   "presets": [
@@ -10,7 +11,7 @@
   "env": {
     "commonjs": {
       "presets": [
-        ["env"],
+        "env",
         "stage-1",
         "react"
       ],
