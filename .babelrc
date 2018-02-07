@@ -15,6 +15,7 @@
         "react"
       ],
       "plugins": [
+        "add-module-exports",
         "transform-decorators-legacy"
       ]
     }
