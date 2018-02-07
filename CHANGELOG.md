@@ -1,5 +1,12 @@
 # Radium Changelog
 
+## UNRELEASED MAJOR (TODO_DATE)
+### Breaking Changes
+- Radium now exports defaults as `.default`, so for runtimes like Node.js you must now import like: `const Radium = require('radium').default;` instead of the previous `const Radium = require('radium');`. Babelified / client code should not be affected.
+
+### Features
+- Add `es` ESM module export files.
+
 ## 0.21.2 (January 25, 2018)
 - Fix multiple-value prefixed inline styles. (#962, #958, #951)
 
