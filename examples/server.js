@@ -15,7 +15,7 @@ const express = require('express');
 const proxy = require('express-http-proxy');
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
-const App = require('./app').default; // ESM import
+import App from './app'; // Leave ESM import
 const fs = require('fs');
 const path = require('path');
 
