@@ -2,6 +2,8 @@
  * Update the files in `src/prefix-data` to match the `browserList` below. Run
  * this if browser support changes or `inline-style-prefixer` gets fixes for the
  * supported browsers.
+ *
+ * **Note**: Not valid Node code (without std/esm). Use `babel-node` to exec.
  */
 import path from 'path';
 import generateData from 'inline-style-prefixer/generator';

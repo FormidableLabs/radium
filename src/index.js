@@ -17,9 +17,6 @@ Radium.StyleRoot = StyleRoot;
 Radium.getState = getState;
 Radium.keyframes = keyframes;
 
-// ESM re-exports
-export {Plugins, Style, StyleRoot, getState, keyframes};
-
 if (process.env.NODE_ENV !== 'production') {
   Radium.TestMode = {
     clearState: resolveStyles.__clearStateForTests,
@@ -29,3 +26,6 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export default Radium;
+
+// ESM re-exports
+export {Plugins, Style, StyleRoot, getState, keyframes};

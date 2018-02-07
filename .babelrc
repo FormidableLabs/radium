@@ -15,7 +15,7 @@
         "react"
       ],
       "plugins": [
-        "add-module-exports",
+        "./scripts/babel-plugin-radium-add-legacy-module-exports",
         "transform-decorators-legacy"
       ]
     }
