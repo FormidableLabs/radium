@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   cache: true,
-  entry: path.join(__dirname, '/src/index.js'),
+  entry: path.join(__dirname, 'src/index.js'),
   externals: [
     {
       react: {
@@ -14,7 +14,7 @@ module.exports = {
     }
   ],
   output: {
-    path: path.join(__dirname, '/dist'),
+    path: path.join(__dirname, 'dist'),
     filename: 'radium.js',
     library: 'Radium',
     libraryTarget: 'umd'
@@ -23,6 +23,9 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
+        include: [
+            path.join(__dirname, 'src')
+        ],
         loader: 'babel-loader'
       }
     ]
