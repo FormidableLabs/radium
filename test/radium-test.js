@@ -2,7 +2,7 @@
 
 const React = require('react');
 
-const Radium = require('../lib').default; // TODO: Decide if breaking API
+const Radium = require('../lib').default;
 const render = require('./utils').render;
 
 describe('Radium blackbox SSR tests', () => {

@@ -6,7 +6,7 @@ const _camelCaseReplacer = function(match, p1, p2) {
   return (p1 || '') + '-' + p2.toLowerCase();
 };
 
-const camelCaseToDashCase = function(s: string): string {
+export const camelCaseToDashCase = function(s: string): string {
   return s.replace(_camelCaseRegex, _camelCaseReplacer);
 };
 
@@ -29,6 +29,4 @@ const camelCasePropsToDashCase = function(prefixedStyle: Object): Object {
   );
 };
 
-// babel-plugin-radium-add-legacy-module-exports requires default exports first.
 export default camelCasePropsToDashCase;
-export {camelCaseToDashCase};
