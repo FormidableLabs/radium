@@ -49,16 +49,16 @@ For a short technical explanation, see [How does Radium work?](#how-does-radium-
 
 ## Usage
 
-Start by wrapping your component class with `Radium()`, like `module.exports = Radium(Component)`, or `Component = Radium(Component)`, which works with classes, `createClass`, and stateless components (functions that take props and return a ReactElement). Then, write a style object as you normally would with inline styles, and add in styles for interactive states and media queries. Pass the style object to your component via `style={...}` and let Radium do the rest!
+Start by wrapping your component class with `Radium()`, like `export default Radium(Component)`, or `Component = Radium(Component)`, which works with classes, `createClass`, and stateless components (functions that take props and return a ReactElement). Then, write a style object as you normally would with inline styles, and add in styles for interactive states and media queries. Pass the style object to your component via `style={...}` and let Radium do the rest!
 
 ```jsx
 <Button kind="primary">Radium Button</Button>
 ```
 
 ```jsx
-var Radium = require('radium');
-var React = require('react');
-var color = require('color');
+import Radium from 'radium';
+import React from 'react';
+import color from 'color';
 
 class Button extends React.Component {
   static propTypes = {
