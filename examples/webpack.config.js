@@ -19,7 +19,7 @@ module.exports = {
     app: './examples/client.js'
   },
   output: {
-    path: path.join(__dirname, '/dist'),
+    path: path.join(__dirname, 'dist'),
     publicPath: '/',
     filename: '[name].js',
     chunkFilename: '[chunkhash].js'
