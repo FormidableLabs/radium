@@ -1,5 +1,10 @@
 const path = require('path');
 
+// Note: If we switch to ESM version of babelified files, we'll likely need to
+// update from the ancient isparta-loader. Likely we'll switch to:
+// https://github.com/istanbuljs/babel-plugin-istanbul with a `test` BABEL_ENV
+//
+// https://github.com/FormidableLabs/radium/issues/969
 process.env.BABEL_ENV = 'commonjs';
 
 module.exports = function(config) {

@@ -2,7 +2,7 @@
 
 const React = require('react');
 
-const Radium = require('../lib').default;
+const Radium = require('..');
 const render = require('./utils').render;
 
 describe('Radium blackbox SSR tests', () => {

@@ -2,7 +2,10 @@
   "name": "radium",
   "version": "0.21.2",
   "description": "A set of tools to manage inline styles on React elements",
-  "main": "lib/index.js",
+  "main": "index.js",
+  "module": "es/index.js",
+  "jsnext:main": "es/index.js",
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/formidablelabs/radium.git"
@@ -83,7 +86,7 @@
     "express": "^4.15.2",
     "express-http-proxy": "^0.11.0",
     "flow-bin": "^0.53.1",
-    "inject-loader": "^3.0.0-beta4",
+    "inject-loader": "^3.0.1",
     "isparta-loader": "^2.0.0",
     "karma": "^2.0.0",
     "karma-babel-preprocessor": "^6.0.1",
@@ -120,6 +123,5 @@
     "scripts": {
       "postinstall": ""
     }
-  },
-  "sideEffects": false
+  }
 }
