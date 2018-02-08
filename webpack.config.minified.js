@@ -1,11 +1,10 @@
 const webpack = require('webpack');
-const merge = require('lodash.merge');
 const base = require('./webpack.config');
 
-module.exports = merge({}, base, {
-  output: {
+module.exports = Object.assign({}, base, {
+  output: Object.assign({}, base.output, {
     filename: 'radium.min.js'
-  },
+  }),
   plugins: [].concat(base.plugins || [], [
     new webpack.optimize.UglifyJsPlugin({
       compress: {
