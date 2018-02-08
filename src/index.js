@@ -11,6 +11,11 @@ function Radium(ComposedComponent: constructor) {
 }
 
 // Legacy object support.
+//
+// Normally it would be disfavored to attach these to the `Radium` object
+// because it defeats tree-shaking, using instead the ESM exports. But,
+// the `Radium` `Enhancer` uses **all** of these, so there's no extra "cost"
+// to them being explicitly on the `Radium` object.
 Radium.Plugins = Plugins;
 Radium.Style = Style;
 Radium.StyleRoot = StyleRoot;
