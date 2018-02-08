@@ -25,7 +25,7 @@ module.exports = {
     chunkFilename: '[chunkhash].js'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         include: [__dirname, path.resolve(__dirname, '../src')],

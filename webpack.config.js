@@ -17,10 +17,11 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
     filename: 'radium.js',
     library: 'Radium',
-    libraryTarget: 'umd'
+    libraryTarget: 'umd',
+    libraryExport: 'default'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         include: [path.join(__dirname, 'src')],

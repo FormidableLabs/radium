@@ -27,7 +27,7 @@ module.exports = function(config) {
     webpack: {
       cache: true,
       module: {
-        loaders: [
+        rules: [
           {
             test: /\.js$/,
             enforce: 'pre',
