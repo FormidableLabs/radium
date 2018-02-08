@@ -86,7 +86,7 @@
     "express": "^4.15.2",
     "express-http-proxy": "^0.11.0",
     "flow-bin": "^0.53.1",
-    "inject-loader": "^3.0.0-beta4",
+    "inject-loader": "^3.0.1",
     "isparta-loader": "^2.0.0",
     "karma": "^2.0.0",
     "karma-babel-preprocessor": "^6.0.1",

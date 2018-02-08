@@ -1,12 +1,11 @@
 const resolveStyles = sinon.spy(require('resolve-styles'), "default");
 const Enhancer = require('inject-loader!enhancer')({
   './resolve-styles': resolveStyles
-});
+}).default;
 
 import React, {Component} from 'react';
 
-// TODO: REENABLE
-describe.skip('Enhancer', () => {
+describe('Enhancer', () => {
   it('sets up initial state', () => {
     class Composed extends Component {}
     const Enhanced = Enhancer(Composed);
