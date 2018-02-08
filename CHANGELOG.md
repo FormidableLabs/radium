@@ -7,6 +7,9 @@
 ### Features
 - Add `es` ESM module export files.
 
+### Fixes
+- Fix `package.json:scrtips.postinstall` task to correctly work for git-based dependencies.
+
 ## 0.21.2 (January 25, 2018)
 - Fix multiple-value prefixed inline styles. (#962, #958, #951)
 
