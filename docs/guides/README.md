@@ -20,9 +20,6 @@ Radium is a toolset for easily writing React component styles. It resolves brows
 First, require or import Radium at the top of component file:
 
 ```jsx
-var Radium = require('radium');
-
-// or
 import Radium from 'radium';
 
 // If you want to use the <Style /> component you can do
