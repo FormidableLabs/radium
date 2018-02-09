@@ -49,16 +49,16 @@ For a short technical explanation, see [How does Radium work?](#how-does-radium-
 
 ## Usage
 
-Start by wrapping your component class with `Radium()`, like `module.exports = Radium(Component)`, or `Component = Radium(Component)`, which works with classes, `createClass`, and stateless components (functions that take props and return a ReactElement). Then, write a style object as you normally would with inline styles, and add in styles for interactive states and media queries. Pass the style object to your component via `style={...}` and let Radium do the rest!
+Start by wrapping your component class with `Radium()`, like `export default Radium(Component)`, or `Component = Radium(Component)`, which works with classes, `createClass`, and stateless components (functions that take props and return a ReactElement). Then, write a style object as you normally would with inline styles, and add in styles for interactive states and media queries. Pass the style object to your component via `style={...}` and let Radium do the rest!
 
 ```jsx
 <Button kind="primary">Radium Button</Button>
 ```
 
 ```jsx
-var Radium = require('radium');
-var React = require('react');
-var color = require('color');
+import Radium from 'radium';
+import React from 'react';
+import color from 'color';
 
 class Button extends React.Component {
   static propTypes = {
@@ -107,6 +107,43 @@ var styles = {
   }
 };
 ```
+
+## Importing Radium
+
+As of `v0.22.x`, Radium is built as an ECMAScript Modules-first project. We now have a `package.json:module` entry pointing to our library files with `import|export` statements instead of CommonJS `require`s. We still support CommonJS `require`s with a special `package.json:main` entry pointing to root `index.js` to smooth over this transition. The basic takeaways are:
+
+If you are using **ESM** with **webpack** or **`@std/esm`** with **Node.js**, imports like the following work fine without any gotchas:
+
+```js
+import Radium from 'radium';
+import Radium, { Style } from 'radium';
+```
+
+If you are using **CommonJS** with **Node.js** or **webpack@1** requires work like normal:
+
+```js
+const Radium = require('radium');
+const { Style } = require('radium');
+```
+
+If you are using **CommonJS** with **webpack@2+**, however, you must instead add `.default` to the root `Radium` object import:
+
+```js
+const Radium = require('radium').default; // CHANGED: Must add `.default`
+const { Style } = require('radium');      // Works as per normal
+```
+
+If you cannot change the `require` statements directly (say Radium is included from a different library your project depends on) you can manually tweak the Radium import directly in your project's webpack configuration with the following:
+
+```js
+resolve: {
+  alias: {
+    radium: require.resolve("radium/index")
+  }
+}
+```
+
+which will allow `const Radium = require('radium');` to still work. The configuration effectively forces webpack point to the code from `package.json:main` (which points to `/index.js`) instead of what is in `package.json:module`.
 
 ## Examples
 

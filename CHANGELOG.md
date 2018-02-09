@@ -1,5 +1,18 @@
 # Radium Changelog
 
+## UNRELEASED MAJOR (TODO_DATE)
+### Breaking Changes
+- Radium now exports defaults as `.default`, so for runtimes like Node.js for all files in `lib/**`. We have changed `package.json:main` to point to `/index.js` instead of `/lib/index.js` as a convenience wrapper to expose mostly what was there before so behavior of `const Radium = require('radium');` works mostly as it did before. Caveats:
+    - When using webpack2+ to build code with `require('radium')` in it you will need to change that to become `require('radium').default`.
+    - Any imports of a default export from a file in lib like `const Enhancer = require('radium/lib/enhancer');` will need to be changed to `const Enhancer = require('radium/lib/enhancer').default;`.
+    - We have a full examples repository of how imports work in all likely scenarios that should come up. https://github.com/FormidableLabs/radium-experiments-v0.22
+
+### Features
+- Add `es` ESM module export files.
+
+### Fixes
+- Fix `package.json:scrtips.postinstall` task to correctly work for git-based dependencies.
+
 ## 0.21.2 (January 25, 2018)
 - Fix multiple-value prefixed inline styles. (#962, #958, #951)
 

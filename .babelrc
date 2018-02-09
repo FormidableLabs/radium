@@ -1,12 +1,22 @@
 {
   "plugins": [
-    "add-module-exports",
-    "transform-es2015-modules-commonjs",
     "transform-decorators-legacy"
   ],
   "presets": [
-    ["es2015", { "loose": true }],
+    ["env", { "modules": false }],
     "stage-1",
     "react"
-  ]
+  ],
+  "env": {
+    "commonjs": {
+      "presets": [
+        "env",
+        "stage-1",
+        "react"
+      ],
+      "plugins": [
+        "transform-decorators-legacy"
+      ]
+    }
+  }
 }

@@ -20,13 +20,10 @@ Radium is a toolset for easily writing React component styles. It resolves brows
 First, require or import Radium at the top of component file:
 
 ```jsx
-var Radium = require('radium');
-
-// or
-import Radium from 'radium'
+import Radium from 'radium';
 
 // If you want to use the <Style /> component you can do
-import Radium, { Style } from 'radium'
+import Radium, { Style } from 'radium';
 ```
 
 Let's create a fictional `<Button>` component. It will have a set of default styles, will adjust its appearance based on modifiers, and will include hover, focus, and active states.
@@ -49,7 +46,7 @@ Radium is activated by wrapping your component:
 class Button extends React.Component {
   // ...
 }
-module.exports = Radium(Button);
+export default Radium(Button);
 
 // or
 class Button extends React.Component {

@@ -94,7 +94,7 @@ Usage with `createClass`:
 
 ```jsx
 var MyComponent = React.createClass({ ... });
-module.exports = Radium(MyComponent);
+export default Radium(MyComponent);
 ```
 
 `Radium`'s primary job is to apply interactive or media query styles, but even if you are not using any special styles, the higher order component will still:
@@ -156,6 +156,12 @@ Possible configuration values:
 Allows you to replace the `matchMedia` function that Radium uses. The default is `window.matchMedia`, and the primary use case for replacing it is to use media queries on the server. You'll have to send the width and height of the page to the server somehow, and then use a [mock for match media](https://github.com/azazdeaz/match-media-mock) that implements the [`window.matchMedia` API](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia). Your code could look like this:
 
 **Server**
+
+You can require `Radium` on the server / using CommonJS with:
+
+```jsx
+var Radium = require('radium');
+```
 
 ```jsx
 var ConfiguredRadium = require('./configured-radium');
@@ -483,9 +489,8 @@ An object of CSS rules to render. Each key of the rules object is a CSS selector
 ```jsx
 var Radium = require('radium');
 var Style = Radium.Style;
-
 // or
-import Radium, { Style } from 'radium'
+import Radium, { Style } from 'radium';
 
 <Style rules={{
   body: {
@@ -556,7 +561,7 @@ class App extends React.Component {
       </StyleRoot>
     );
   }
-}  
+}
 ```
 
 **Note:** StyleRoot passes the style-keeper (the object where styles are collected) down to other Radium components via context. Because of this, you cannot use keyframes or media queries in *direct children* of the `<StyleRoot>`, e.g.
@@ -585,7 +590,7 @@ class App extends React.Component {
       </StyleRoot>
     );
   }
-}  
+}
 ```
 
 ## TestMode

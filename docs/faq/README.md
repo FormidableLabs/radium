@@ -188,7 +188,7 @@ Make sure it is a real user agent that `inline-style-prefixer` recognizes, or yo
 
 You may see the name "Constructor" instead of your component name, for example: "Warning: Failed propType: Invalid prop `onClick` of type `function` supplied to `Constructor`, expected `string`." or "Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of `Constructor`."
 
-Your transpiler is probably not able to set the `displayName` property of the component correctly, which can happen if you wrap `React.createClass` immediately with `Radium`, e.g. `var Button = Radium(React.createClass({ ... }));`. Instead, wrap your component afterward, ex. `Button = Radium(Button);`,  or when exporting, ex. `module.exports = Radium(Button);`, or set `displayName` manually.
+Your transpiler is probably not able to set the `displayName` property of the component correctly, which can happen if you wrap `React.createClass` immediately with `Radium`, e.g. `var Button = Radium(React.createClass({ ... }));`. Instead, wrap your component afterward, ex. `Button = Radium(Button);`,  or when exporting, ex. `export default Radium(Button);`, or set `displayName` manually.
 
 ## Why does the browser state of a child element not reset after unmounting and remounting?
 

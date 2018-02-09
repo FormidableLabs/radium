@@ -2,7 +2,7 @@
 
 const React = require('react');
 
-const Enhancer = require('../lib/enhancer');
+const Enhancer = require('../lib/enhancer').default;
 const createEsClass = require('../lib/test-helpers').createEsClass;
 const render = require('./utils').render;
 

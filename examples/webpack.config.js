@@ -19,15 +19,16 @@ module.exports = {
     app: './examples/client.js'
   },
   output: {
-    path: path.join(__dirname, '/dist'),
+    path: path.join(__dirname, 'dist'),
     publicPath: '/',
     filename: '[name].js',
     chunkFilename: '[chunkhash].js'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
+        include: [__dirname, path.resolve(__dirname, '../src')],
         loader: 'babel-loader'
       }
     ]
