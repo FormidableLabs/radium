@@ -110,7 +110,7 @@ var styles = {
 
 ## Importing Radium
 
-As of `v0.22.x`, Radium is built as an ECMAScript Modules-first project. We now have `package.json:module` entry pointing to our library files with `import|export` statements instead of CommonJS `require`s. We still support CommonJS `require`'s with a special `package.json:main` entry pointing to root `index.js` to smooth over this transition. The basic takeaways are:
+As of `v0.22.x`, Radium is built as an ECMAScript Modules-first project. We now have a `package.json:module` entry pointing to our library files with `import|export` statements instead of CommonJS `require`s. We still support CommonJS `require`'s with a special `package.json:main` entry pointing to root `index.js` to smooth over this transition. The basic takeaways are:
 
 If you are using **ESM** with **webpack** or **`@std/esm`** with **Node.js**, imports like the following work fine without any gotchas:
 
