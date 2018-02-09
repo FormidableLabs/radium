@@ -119,19 +119,31 @@ import Radium from 'radium';
 import Radium, { Style } from 'radium';
 ```
 
-If you are using **CommonJS** with **Node.js**, requires work like normal:
+If you are using **CommonJS** with **Node.js** or **webpack@1** requires work like normal:
 
 ```js
 const Radium = require('radium');
 const { Style } = require('radium');
 ```
 
-If you are using **CommonJS** with **webpack**, however, you must instead add `.default` to the root `Radium` object import:
+If you are using **CommonJS** with **webpack@2+**, however, you must instead add `.default` to the root `Radium` object import:
 
 ```js
 const Radium = require('radium').default; // CHANGED: Must add `.default`
 const { Style } = require('radium');      // Works as per normal
 ```
+
+If you cannot change the `require` statements directly (say Radium is included from a different library your project depends on) you can manual tweak the Radium import directly in your project's webpack configuration with the following:
+
+```js
+resolve: {
+  alias: {
+    radium: require.resolve("radium/index")
+  }
+}
+```
+
+This effectively forces webpack manually point to the code from `package.json:main` (which points to `/index.js`) instead of what is in `package.json:module`.
 
 ## Examples
 
