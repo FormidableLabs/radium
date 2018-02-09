@@ -11,9 +11,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const Radium = require('../../src/index');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Radium from '../../src';
 
 class ComputedWell extends React.Component {
   getInitialState() {
@@ -49,4 +49,4 @@ class ComputedWell extends React.Component {
   }
 }
 
-module.exports = Radium(ComputedWell);
+export default Radium(ComputedWell);

@@ -11,13 +11,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import express from 'express';
-import proxy from 'express-http-proxy';
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
-import App from './app';
-import fs from 'fs';
-import path from 'path';
+const express = require('express');
+const proxy = require('express-http-proxy');
+const React = require('react');
+const ReactDOMServer = require('react-dom/server');
+import App from './app'; // Leave ESM import
+const fs = require('fs');
+const path = require('path');
 
 const indexHTML = fs
   .readFileSync(path.resolve(__dirname, 'index.html'))

@@ -3,7 +3,7 @@ import MouseUpListener from 'plugins/mouse-up-listener';
 import objectAssign from 'object-assign';
 const resolveStyles = require('inject-loader!resolve-styles')({
   exenv: require('__mocks__/exenv')
-});
+}).default;
 
 const genComponent = function(initialState = {}) {
   return {

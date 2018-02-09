@@ -2,7 +2,10 @@
   "name": "radium",
   "version": "0.21.2",
   "description": "A set of tools to manage inline styles on React elements",
-  "main": "lib/index.js",
+  "main": "index.js",
+  "module": "es/index.js",
+  "jsnext:main": "es/index.js",
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/formidablelabs/radium.git"
@@ -19,16 +22,22 @@
     "postversion": "publishr postversion -V",
     "postpublish": "publishr postpublish -V",
     "version-dry-run": "publishr dry-run -V",
-    "build-lib": "babel src/ -d lib/ --ignore \"/__tests__/,/__mocks__/\"",
-    "build-dist": "webpack && webpack --config=webpack.config.minified.js",
+    "build": "npm run clean && builder concurrent --buffer build-lib build-dist build-es",
+    "build-babel": "babel src --ignore \"/__tests__/,/__mocks__/\"",
+    "build-lib": "builder run --env \"{\\\"BABEL_ENV\\\":\\\"commonjs\\\"}\" build-babel -- -d lib",
+    "build-dist-dev": "webpack",
+    "build-dist-prod": "webpack --config=webpack.config.minified.js",
+    "build-dist": "builder concurrent --buffer build-dist-dev build-dist-prod",
     "build-examples": "webpack --config examples/webpack.config.js",
-    "build": "rimraf lib dist && npm run build-lib && npm run build-dist",
-    "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples/",
+    "build-es": "builder run build-babel -- -d es",
+    "clean": "rimraf lib es dist",
+    "examples": "webpack-dev-server --config examples/webpack.config.js --no-info --content-base examples",
+    "examples-server": "babel-node examples/server.js",
     "flow": "flow check",
     "eslint": "eslint .",
     "fixlint": "npm run eslint -- --fix",
-    "lint": "npm run eslint && npm run flow",
-    "start": "babel-node examples/server.js",
+    "lint": "builder concurrent --buffer eslint flow",
+    "start": "builder run --env \"{\\\"BABEL_ENV\\\":\\\"commonjs\\\"}\" examples-server",
     "test-node": "mocha \"test/**/*-test.js\"",
     "test-node-dev": "mocha --watch \"test/**/*-test.js\"",
     "test-frontend": "karma start",
@@ -38,38 +47,36 @@
     "test": "npm run test-node && npm run test-frontend",
     "test-coverage": "npm run test-node && npm run test-frontend-coverage",
     "test-ie": "npm run test-node && npm run test-frontend-ie",
-    "test-dev": "concurrently --kill-others \"npm run test-node-dev\" \"npm run test-frontend-dev\"",
-    "universal": "concurrently --kill-others \"npm start\" \"npm run examples\"",
+    "test-dev": "builder concurrent test-node-dev test-frontend-dev",
+    "universal": "builder concurrent start examples",
     "update-prefix-data": "babel-node scripts/update-prefix-data.js && eslint --fix src/prefix-data",
     "watch-lib": "npm run build-lib -- --watch"
   },
   "license": "MIT",
   "dependencies": {
-    "array-find": "^1.0.0",
     "babel-cli": "^6.24.0",
     "babel-core": "^6.24.0",
-    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-loader": "^7.1.2",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.24.0",
-    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-1": "^6.22.0",
+    "builder": "^3.2.3",
     "exenv": "^1.2.1",
     "inline-style-prefixer": "^4.0.0",
     "prop-types": "^15.5.8",
     "publishr": "^1.0.0",
-    "rimraf": "^2.6.1"
+    "rimraf": "^2.6.1",
+    "webpack": "^3.10.0"
   },
   "peerDependencies": {
     "react": "^15.3.0 || ^16.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
-    "babel-loader": "^6.4.0",
     "caniuse-api": "^2.0.0",
     "chai": "^3.5.0",
     "color": "^1.0.3",
-    "concurrently": "^3.4.0",
     "core-js": "^2.5.3",
     "coveralls": "^2.12.0",
     "eslint": "^3.17.1",
@@ -79,7 +86,7 @@
     "express": "^4.15.2",
     "express-http-proxy": "^0.11.0",
     "flow-bin": "^0.53.1",
-    "inject-loader": "^3.0.0-beta4",
+    "inject-loader": "^3.0.1",
     "isparta-loader": "^2.0.0",
     "karma": "^2.0.0",
     "karma-babel-preprocessor": "^6.0.1",
@@ -90,7 +97,6 @@
     "karma-mocha-reporter": "^2.2.2",
     "karma-sinon-chai": "^1.2.4",
     "karma-webpack": "^2.0.3",
-    "lodash.merge": "^4.6.0",
     "mocha": "^3.2.0",
     "node-libs-browser": "^2.0.0",
     "nodemon": "^1.11.0",
@@ -101,14 +107,15 @@
     "react-test-renderer": "^16.0.0",
     "sinon": "^1.17.7",
     "sinon-chai": "^2.8.0",
-    "webpack": "^2.2.1",
-    "webpack-dev-server": "^2.4.2"
+    "webpack-dev-server": "^2.11.1"
   },
   "publishr": {
     "dependencies": [
       "^babel-",
+      "^builder$",
       "^publishr$",
-      "^rimraf$"
+      "^rimraf$",
+      "^webpack"
     ],
     "files": {
       ".npmignore": ".npmignore.publishr"
@@ -116,6 +123,5 @@
     "scripts": {
       "postinstall": ""
     }
-  },
-  "sideEffects": false
+  }
 }
