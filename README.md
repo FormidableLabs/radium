@@ -110,7 +110,7 @@ var styles = {
 
 ## Importing Radium
 
-As of `v0.22.x`, Radium is built as an ECMAScript Modules-first project. We now have a `package.json:module` entry pointing to our library files with `import|export` statements instead of CommonJS `require`s. We still support CommonJS `require`'s with a special `package.json:main` entry pointing to root `index.js` to smooth over this transition. The basic takeaways are:
+As of `v0.22.x`, Radium is built as an ECMAScript Modules-first project. We now have a `package.json:module` entry pointing to our library files with `import|export` statements instead of CommonJS `require`s. We still support CommonJS `require`s with a special `package.json:main` entry pointing to root `index.js` to smooth over this transition. The basic takeaways are:
 
 If you are using **ESM** with **webpack** or **`@std/esm`** with **Node.js**, imports like the following work fine without any gotchas:
 
@@ -133,7 +133,7 @@ const Radium = require('radium').default; // CHANGED: Must add `.default`
 const { Style } = require('radium');      // Works as per normal
 ```
 
-If you cannot change the `require` statements directly (say Radium is included from a different library your project depends on) you can manual tweak the Radium import directly in your project's webpack configuration with the following:
+If you cannot change the `require` statements directly (say Radium is included from a different library your project depends on) you can manually tweak the Radium import directly in your project's webpack configuration with the following:
 
 ```js
 resolve: {
@@ -143,7 +143,7 @@ resolve: {
 }
 ```
 
-This effectively forces webpack manually point to the code from `package.json:main` (which points to `/index.js`) instead of what is in `package.json:module`.
+which will allow `const Radium = require('radium');` to still work. The configuration effectively forces webpack point to the code from `package.json:main` (which points to `/index.js`) instead of what is in `package.json:module`.
 
 ## Examples
 
