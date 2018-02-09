@@ -133,7 +133,7 @@ const Radium = require('radium').default; // CHANGED: Must add `.default`
 const { Style } = require('radium');      // Works as per normal
 ```
 
-If you cannot change the `require` statements directly (say Radium is included from a different library your project depends on) you can manually tweak the Radium import directly in your project's webpack configuration with the following:
+If you cannot change the `require` statements directly (say Radium is included from a different library your project depends on) you can manually tweak the Radium import in your project's webpack configuration with the following:
 
 ```js
 resolve: {
@@ -143,7 +143,7 @@ resolve: {
 }
 ```
 
-which will allow `const Radium = require('radium');` to still work. The configuration effectively forces webpack point to the code from `package.json:main` (which points to `/index.js`) instead of what is in `package.json:module`.
+which will allow `const Radium = require('radium');` to still work. The configuration effectively forces webpack to point to code from `package.json:main` (which points to `/index.js`) instead of what is in `package.json:module`.
 
 ## Examples
 
