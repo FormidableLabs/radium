@@ -1,6 +1,6 @@
 # Radium Changelog
 
-## Unreleased
+## 0.22.1 (March 1, 2018)
 - Fix `keyframes` bug from prefixed inline styles. (#973)
 
 ## 0.22.0 (February 9, 2018)
