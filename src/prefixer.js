@@ -110,7 +110,10 @@ function getPrefixer(
     }
   }
 
-  if (!_cachedPrefixer || actualUserAgent !== _lastUserAgent) {
+  if (
+    process.env.NODE_ENV === 'test' ||
+    (!_cachedPrefixer || actualUserAgent !== _lastUserAgent)
+  ) {
     if (actualUserAgent === 'all') {
       _cachedPrefixer = {
         prefix: prefixAll,
@@ -121,11 +124,12 @@ function getPrefixer(
     }
     _lastUserAgent = actualUserAgent;
   }
+
   return _cachedPrefixer;
 }
 
 export function getPrefixedKeyframes(userAgent?: ?string): string {
-  return getPrefixer(userAgent).prefixedKeyframes;
+  return getPrefixer(userAgent).prefixedKeyframes || 'keyframes';
 }
 
 // Returns a new style object with vendor prefixes added to property names and

@@ -1,5 +1,8 @@
 # Radium Changelog
 
+## Unreleased
+- Fix `keyframes` bug from prefixed inline styles. (#973)
+
 ## 0.22.0 (February 9, 2018)
 ### Breaking Changes
 - Radium now exports defaults as `.default`, so for runtimes like Node.js for all files in `lib/**`. We have changed `package.json:main` to point to `/index.js` instead of `/lib/index.js` as a convenience wrapper to expose mostly what was there before so behavior of `const Radium = require('radium');` works mostly as it did before. Caveats:
