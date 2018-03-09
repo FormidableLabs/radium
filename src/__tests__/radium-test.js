@@ -730,6 +730,32 @@ describe('Radium blackbox tests', () => {
     expect(div.style.color).to.equal('red');
   });
 
+  // Regression test: https://github.com/FormidableLabs/radium/issues/738
+  it.only('works with arrow-based render methods in components', () => {
+    class TestComponent extends Component {
+      render = () => {
+        return (
+          <div style={{color: 'blue', ':hover': {color: 'red'}}}>
+            {this.props.children}
+          </div>
+        );
+      }
+    }
+
+    TestComponent = Radium(TestComponent);
+    const output = TestUtils.renderIntoDocument(
+      <TestComponent>hello world</TestComponent>
+    );
+    const div = getElement(output, 'div');
+
+    expect(div.style.color).to.equal('blue');
+    expect(div.innerText).to.equal('hello world');
+
+    TestUtils.SimulateNative.mouseOver(div);
+
+    expect(div.style.color).to.equal('red');
+  });
+
   it('works fine if passing null, undefined, or false in style', () => {
     const TestComponent = Radium(() => (
       <div style={{background: undefined, border: false, color: null}} />
