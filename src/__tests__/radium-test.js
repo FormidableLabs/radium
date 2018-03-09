@@ -731,7 +731,7 @@ describe('Radium blackbox tests', () => {
   });
 
   // Regression test: https://github.com/FormidableLabs/radium/issues/738
-  it('works with arrow-based render methods in components', () => {
+  it.only('works with arrow-based render methods in components', () => {
     class TestComponent extends Component {
       render = () => {
         return (
@@ -746,6 +746,9 @@ describe('Radium blackbox tests', () => {
     const output = TestUtils.renderIntoDocument(
       <TestComponent>hello world</TestComponent>
     );
+    // TOOD HERE -- Render is wrong
+    console.log("TOOD HERE RENDERED", output);
+
     const div = getElement(output, 'div');
 
     expect(div.style.color).to.equal('blue');

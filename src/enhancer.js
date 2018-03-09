@@ -1,6 +1,6 @@
 /* @flow */
 
-import {Component} from 'react';
+import {Component, PureComponent} from 'react';
 import PropTypes from 'prop-types';
 
 import StyleKeeper from './style-keeper';
@@ -30,19 +30,14 @@ function copyProperties(source, target) {
 }
 
 // Handle scenarios of:
-// - Inherit from `React.Component` in any fasion
+// - Inherit from `React.Component` in any fashion
 //   See: https://github.com/FormidableLabs/radium/issues/738
 // - There's an explicit `render` field defined
 function isStateless(component: Function): boolean {
-  // This is essentially what babel does for _setting_ prototypes.
-  const proto = Object.getPrototypeOf
-    ? Object.getPrototypeOf(component)
-    : component.__proto_;
+  const proto = component.prototype || {};
 
-  return !(component instanceof Component) &&
-    proto !== Component &&
-    !component.render &&
-    !(component.prototype || {}).render;
+  return !component.isReactComponent && !proto.isReactComponent &&
+    !component.render && !proto.render;
 }
 
 // Check if value is a real ES class in Native / Node code.
