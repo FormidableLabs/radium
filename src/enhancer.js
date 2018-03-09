@@ -158,9 +158,10 @@ export default function enhanceWithRadium(
       // and rewriting.
       // See: https://github.com/FormidableLabs/radium/issues/738
       RADIUM_METHODS.forEach(name => {
-        const thisDescriptor = Object.getOwnPropertyDescriptor(this, name);
-        const thisMethod = (thisDescriptor || {}).value;
-        const radiumProtoMethod = RADIUM_PROTO[name];
+        const thisDesc = Object.getOwnPropertyDescriptor(this, name);
+        const thisMethod = (thisDesc || {}).value;
+        const radiumDesc = Object.getOwnPropertyDescriptor(RADIUM_PROTO, name)
+        const radiumProtoMethod = radiumDesc.value;
         const superProtoMethod = ComposedComponent.prototype[name];
 
         // Start looking when:
@@ -171,12 +172,10 @@ export default function enhanceWithRadium(
           thisMethod && !superProtoMethod && thisMethod !== radiumProtoMethod
         ) {
           // Transfer dynamic render component to Component prototype (copy).
-          Object.defineProperty(ComposedComponent.prototype, name, {
-            value: thisMethod
-          });
+          Object.defineProperty(ComposedComponent.prototype, name, thisDesc);
 
-          // Recode property descriptor.
-          Object.defineProperty(this, name, {value: radiumProtoMethod});
+          // Recode property descriptor to radium prototype -- doubling up.
+          Object.defineProperty(this, name, radiumDesc);
         }
       });
     }
