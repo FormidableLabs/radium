@@ -739,7 +739,7 @@ describe('Radium blackbox tests', () => {
             {this.props.children}
           </div>
         );
-      }
+      };
     }
 
     TestComponent = Radium(TestComponent);
@@ -757,11 +757,11 @@ describe('Radium blackbox tests', () => {
   });
 
   // Regression test: https://github.com/FormidableLabs/radium/issues/738
-  it.only('works with arrow-based render methods in components with complex inheritence', () => {
+  it('works with arrow-based render methods in components with complex inheritence', () => {
     class First extends Component {}
     class Second extends First {}
     class TestComponent extends Second {
-      render() {
+      render = () => {
         return (
           <div style={{color: 'blue', ':hover': {color: 'red'}}}>
             {this.props.children}
