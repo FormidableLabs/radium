@@ -29,6 +29,9 @@ function copyProperties(source, target) {
   });
 }
 
+// Handle scenarios of:
+// - Inherit from `React.Component` in any fasion
+// - There's an explicit `render` field defined
 function isStateless(component: Function): boolean {
   return !component.render &&
     !(component.prototype && component.prototype.render);
