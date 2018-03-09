@@ -1,6 +1,6 @@
 /* @flow */
 
-import {Component, PureComponent} from 'react';
+import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import StyleKeeper from './style-keeper';
@@ -16,6 +16,9 @@ const KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
   'prototype',
   'type'
 ];
+
+let RADIUM_PROTO: Object;
+let RADIUM_METHODS;
 
 function copyProperties(source, target) {
   Object.getOwnPropertyNames(source).forEach(key => {
@@ -36,8 +39,10 @@ function copyProperties(source, target) {
 function isStateless(component: Function): boolean {
   const proto = component.prototype || {};
 
-  return !component.isReactComponent && !proto.isReactComponent &&
-    !component.render && !proto.render;
+  return !component.isReactComponent &&
+    !proto.isReactComponent &&
+    !component.render &&
+    !proto.render;
 }
 
 // Check if value is a real ES class in Native / Node code.
@@ -124,6 +129,11 @@ export default function enhanceWithRadium(
     ComposedComponent.displayName = component.displayName || component.name;
   }
 
+  // Shallow copy composed if still original (we may mutate later).
+  if (ComposedComponent === component) {
+    ComposedComponent = class extends ComposedComponent {};
+  }
+
   class RadiumEnhancer extends ComposedComponent {
     static _isRadiumEnhanced = true;
 
@@ -143,6 +153,32 @@ export default function enhanceWithRadium(
       this.state = this.state || {};
       this.state._radiumStyleState = {};
       this._radiumIsMounted = true;
+
+      // Handle es7 arrow functions on React class method names by detecting
+      // and rewriting.
+      // See: https://github.com/FormidableLabs/radium/issues/738
+      RADIUM_METHODS.forEach(name => {
+        const thisDescriptor = Object.getOwnPropertyDescriptor(this, name);
+        const thisMethod = (thisDescriptor || {}).value;
+        const radiumProtoMethod = RADIUM_PROTO[name];
+        const superProtoMethod = ComposedComponent.prototype[name];
+
+        // Start looking when:
+        // 1. have an instance method
+        // 2. the super class prototype doesn't have it
+        // 3. it's not the radium class prorotype's either
+        if (
+          thisMethod && !superProtoMethod && thisMethod !== radiumProtoMethod
+        ) {
+          // Transfer dynamic render component to Component prototype (copy).
+          Object.defineProperty(ComposedComponent.prototype, name, {
+            value: thisMethod
+          });
+
+          // Recode property descriptor.
+          Object.defineProperty(this, name, {value: radiumProtoMethod});
+        }
+      });
     }
 
     componentWillUnmount() {
@@ -185,10 +221,6 @@ export default function enhanceWithRadium(
     }
 
     render() {
-      // TODO HERE -- PROBLEM: Radium enhancer `render` not called because
-      // arrow function overwrites in constructor.
-      console.log("super.render", super.render);
-
       const renderedElement = super.render();
       let currentConfig = this.props.radiumConfig ||
         this.context._radiumConfig ||
@@ -232,6 +264,12 @@ export default function enhanceWithRadium(
     }
     /* eslint-enable react/no-did-update-set-state, no-unused-vars */
   }
+
+  // Lazy infer the method names of the Enhancer.
+  RADIUM_PROTO = RadiumEnhancer.prototype;
+  RADIUM_METHODS = Object.getOwnPropertyNames(RadiumEnhancer.prototype).filter(
+    n => n !== 'constructor' && typeof RADIUM_PROTO[n] === 'function'
+  );
 
   // Class inheritance uses Object.create and because of __proto__ issues
   // with IE <10 any static properties of the superclass aren't inherited and

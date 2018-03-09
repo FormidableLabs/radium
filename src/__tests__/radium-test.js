@@ -731,7 +731,7 @@ describe('Radium blackbox tests', () => {
   });
 
   // Regression test: https://github.com/FormidableLabs/radium/issues/738
-  it.only('works with arrow-based render methods in components', () => {
+  it('works with arrow-based render methods in components', () => {
     class TestComponent extends Component {
       render = () => {
         return (
@@ -767,7 +767,7 @@ describe('Radium blackbox tests', () => {
             {this.props.children}
           </div>
         );
-      }
+      };
     }
 
     TestComponent = Radium(TestComponent);
