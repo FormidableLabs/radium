@@ -746,9 +746,6 @@ describe('Radium blackbox tests', () => {
     const output = TestUtils.renderIntoDocument(
       <TestComponent>hello world</TestComponent>
     );
-    // TOOD HERE -- Render is wrong
-    console.log("TOOD HERE RENDERED", output);
-
     const div = getElement(output, 'div');
 
     expect(div.style.color).to.equal('blue');

@@ -185,6 +185,10 @@ export default function enhanceWithRadium(
     }
 
     render() {
+      // TODO HERE -- PROBLEM: Radium enhancer `render` not called because
+      // arrow function overwrites in constructor.
+      console.log("super.render", super.render);
+
       const renderedElement = super.render();
       let currentConfig = this.props.radiumConfig ||
         this.context._radiumConfig ||
