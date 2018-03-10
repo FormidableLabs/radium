@@ -274,7 +274,7 @@ export default function enhanceWithRadium(
 
   // Lazy infer the method names of the Enhancer.
   RADIUM_PROTO = RadiumEnhancer.prototype;
-  RADIUM_METHODS = Object.getOwnPropertyNames(RadiumEnhancer.prototype).filter(
+  RADIUM_METHODS = Object.getOwnPropertyNames(RADIUM_PROTO).filter(
     n => n !== 'constructor' && typeof RADIUM_PROTO[n] === 'function'
   );
 
