@@ -161,19 +161,23 @@ export default function enhanceWithRadium(
       // (Using a copy of the class).
       // See: https://github.com/FormidableLabs/radium/issues/738
       RADIUM_METHODS.forEach(name => {
-        const thisDesc = Object.getOwnPropertyDescriptor(this, name);
+        const thisDesc = Object.getOwnPropertyDescriptor(self, name);
         const thisMethod = (thisDesc || {}).value;
+
+        // Only care if have instance method.
+        if (!thisMethod) {
+          return;
+        }
+
         const radiumDesc = Object.getOwnPropertyDescriptor(RADIUM_PROTO, name);
         const radiumProtoMethod = radiumDesc.value;
         const superProtoMethod = ComposedComponent.prototype[name];
 
-        // Start looking when:
+        // Allow transfer when:
         // 1. have an instance method
         // 2. the super class prototype doesn't have any method
         // 3. it is not already the radium prototype's
-        if (
-          thisMethod && !superProtoMethod && thisMethod !== radiumProtoMethod
-        ) {
+        if (!superProtoMethod && thisMethod !== radiumProtoMethod) {
           // Transfer dynamic render component to Component prototype (copy).
           Object.defineProperty(ComposedComponent.prototype, name, thisDesc);
 
