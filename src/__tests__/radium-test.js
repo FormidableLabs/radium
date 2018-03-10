@@ -743,12 +743,10 @@ describe('Radium blackbox tests', () => {
     }
 
     const Wrapped = Radium(TestComponent);
-    const output = TestUtils.renderIntoDocument(
-      <Wrapped>hello world</Wrapped>
-    );
+    const output = TestUtils.renderIntoDocument(<Wrapped>hello world</Wrapped>);
 
     // Check prototype is not mutated.
-    expect(TestComponent.prototype).to.not.have.property("render");
+    expect(TestComponent.prototype).to.not.have.property('render');
 
     const div = getElement(output, 'div');
 
@@ -775,14 +773,12 @@ describe('Radium blackbox tests', () => {
     }
 
     const Wrapped = Radium(TestComponent);
-    const output = TestUtils.renderIntoDocument(
-      <Wrapped>hello world</Wrapped>
-    );
+    const output = TestUtils.renderIntoDocument(<Wrapped>hello world</Wrapped>);
 
     // Check prototypes are not mutated.
-    expect(First.prototype).to.not.have.property("render");
-    expect(Second.prototype).to.not.have.property("render");
-    expect(TestComponent.prototype).to.not.have.property("render");
+    expect(First.prototype).to.not.have.property('render');
+    expect(Second.prototype).to.not.have.property('render');
+    expect(TestComponent.prototype).to.not.have.property('render');
 
     const div = getElement(output, 'div');
 

@@ -1,5 +1,8 @@
 # Radium Changelog
 
+## Unreleased
+- Support ES7 arrow functions for React class methods. (#738)
+
 ## 0.22.1 (March 1, 2018)
 - Fix `keyframes` bug from prefixed inline styles. (#973)
 
