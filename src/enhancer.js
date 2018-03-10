@@ -154,28 +154,32 @@ export default function enhanceWithRadium(
       this.state._radiumStyleState = {};
       this._radiumIsMounted = true;
 
+      const self: Object = this;
+
       // Handle es7 arrow functions on React class method names by detecting
-      // and rewriting.
+      // and transfering the instance method to original class prototype.
+      // (Using a copy of the class).
       // See: https://github.com/FormidableLabs/radium/issues/738
       RADIUM_METHODS.forEach(name => {
         const thisDesc = Object.getOwnPropertyDescriptor(this, name);
         const thisMethod = (thisDesc || {}).value;
-        const radiumDesc = Object.getOwnPropertyDescriptor(RADIUM_PROTO, name)
+        const radiumDesc = Object.getOwnPropertyDescriptor(RADIUM_PROTO, name);
         const radiumProtoMethod = radiumDesc.value;
         const superProtoMethod = ComposedComponent.prototype[name];
 
         // Start looking when:
         // 1. have an instance method
-        // 2. the super class prototype doesn't have it
-        // 3. it's not the radium class prorotype's either
+        // 2. the super class prototype doesn't have any method
+        // 3. it is not already the radium prototype's
         if (
           thisMethod && !superProtoMethod && thisMethod !== radiumProtoMethod
         ) {
           // Transfer dynamic render component to Component prototype (copy).
           Object.defineProperty(ComposedComponent.prototype, name, thisDesc);
 
-          // Recode property descriptor to radium prototype -- doubling up.
-          Object.defineProperty(this, name, radiumDesc);
+          // Remove instance property, leaving us to have a contrived
+          // inheritance chain of (1) radium, (2) superclass.
+          delete self[name];
         }
       });
     }
