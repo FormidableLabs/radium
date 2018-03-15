@@ -1,6 +1,6 @@
 # Radium Changelog
 
-## Unreleased
+## 0.23.0 (March 15, 2018)
 - Support ES7 arrow functions for React class methods. (#738)
 
 ## 0.22.1 (March 1, 2018)
@@ -17,7 +17,7 @@
 - Add `es` ESM module export files.
 
 ### Fixes
-- Fix `package.json:scrtips.postinstall` task to correctly work for git-based dependencies.
+- Fix `package.json:scripts.postinstall` task to correctly work for git-based dependencies.
 
 ## 0.21.2 (January 25, 2018)
 - Fix multiple-value prefixed inline styles. (#962, #958, #951)
