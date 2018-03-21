@@ -791,7 +791,7 @@ describe('Radium blackbox tests', () => {
   });
 
   // Regression test: https://github.com/FormidableLabs/radium/issues/950
-  it.only('works with array children', () => {
+  it('works with array children', () => {
     class TestComponent extends Component {
       render = () => {
         return [

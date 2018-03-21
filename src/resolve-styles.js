@@ -385,6 +385,15 @@ resolveStyles = function(
     );
   }
 
+  // TODO HERE
+  // renderedElement can be an array, not a single element.
+  //
+  // https://github.com/FormidableLabs/radium/issues/950
+  //
+  if (Array.isArray(renderedElement) && !renderedElement.props) {
+    console.log("TODO HERE -- ARRAY WITHOUT PROPS");
+  }
+
   // ReactElement
   if (
     !renderedElement ||
@@ -398,10 +407,6 @@ resolveStyles = function(
     (shouldCheckBeforeResolve && !_shouldResolveStyles(renderedElement))
   ) {
     return {extraStateKeyMap, element: renderedElement};
-  }
-
-  if (!renderedElement.props) {
-    console.log("TODO HERE -- NO PROPS, LIKELY ARRAY");
   }
 
   const children = renderedElement.props.children;
