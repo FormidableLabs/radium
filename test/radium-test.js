@@ -124,4 +124,33 @@ describe('Radium blackbox SSR tests', () => {
       );
     });
   });
+
+  describe('render scenarios', () => {
+
+    // Regression test: https://github.com/FormidableLabs/radium/issues/950
+    it.only('handles rendered child array', () => {
+      class Composed extends React.Component {
+        render() {
+          return [
+            React.createElement('div', {
+              style: {
+                color: 'blue'
+              }
+            }),
+            React.createElement('div', {
+              style: {
+                color: 'red'
+              }
+            })
+          ];
+        }
+      }
+
+      const rendered = render(Radium(Composed));
+      expect(rendered).to.contain(
+        '<div style="color:blue" data-radium="true"></div>' +
+        '<div style="color:red" data-radium="true"></div>'
+      );
+    });
+  });
 });
