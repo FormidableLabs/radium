@@ -400,8 +400,14 @@ resolveStyles = function(
     return {extraStateKeyMap, element: renderedElement};
   }
 
+  if (!renderedElement.props) {
+    console.log("TODO HERE -- NO PROPS, LIKELY ARRAY");
+  }
+
+  const children = renderedElement.props.children;
+
   const newChildren = _resolveChildren({
-    children: renderedElement.props.children,
+    children,
     component,
     config,
     existingKeyMap,
@@ -425,10 +431,10 @@ resolveStyles = function(
   });
 
   // If nothing changed, don't bother cloning the element. Might be a bit
-  // wasteful, as we add the sentinal to stop double-processing when we clone.
+  // wasteful, as we add the sentinel to stop double-processing when we clone.
   // Assume benign double-processing is better than unneeded cloning.
   if (
-    newChildren === renderedElement.props.children &&
+    newChildren === children &&
     newProps === renderedElement.props
   ) {
     return {extraStateKeyMap, element: renderedElement};
