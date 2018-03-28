@@ -795,11 +795,11 @@ describe('Radium blackbox tests', () => {
     class TestComponent extends Component {
       render = () => {
         return [
-          <div style={{color: 'blue', ':hover': {color: 'red'}}}>
+          <div key="key0" style={{color: 'blue', ':hover': {color: 'red'}}}>
             {this.props.children}
           </div>,
-          <div style={{color: 'yellow', ':hover': {color: 'green'}}}>
-            {"two"}
+          <div key="key1" style={{color: 'yellow', ':hover': {color: 'green'}}}>
+            two
           </div>
         ];
       };
@@ -811,6 +811,7 @@ describe('Radium blackbox tests', () => {
     const divs = getElements(output, 'div');
 
     expect(divs[0].style.color).to.equal('blue');
+    expect(divs[0].getAttribute('data-radium')).to.equal('true');
     expect(divs[0].innerText).to.equal('hello world');
     TestUtils.SimulateNative.mouseOver(divs[0]);
     expect(divs[0].style.color).to.equal('red');
@@ -864,7 +865,6 @@ describe('Radium blackbox tests', () => {
       </ContextGivingWrapper>
     );
     const div = getElement(output, 'div');
-
     expect(div.style.color).to.equal('blue');
     expect(div.innerText).to.equal('hello world');
 

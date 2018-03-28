@@ -133,11 +133,13 @@ describe('Radium blackbox SSR tests', () => {
         render() {
           return [
             React.createElement('div', {
+              key: 0,
               style: {
                 color: 'blue'
               }
             }),
             React.createElement('div', {
+              key: 1,
               style: {
                 color: 'red'
               }
