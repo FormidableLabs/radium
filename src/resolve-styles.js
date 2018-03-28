@@ -385,11 +385,6 @@ resolveStyles = function(
     );
   }
 
-  // TODO HERE
-  // renderedElement can be an array, not a single element.
-  //
-  // https://github.com/FormidableLabs/radium/issues/950
-  //
   if (Array.isArray(renderedElement) && !renderedElement.props) {
     const elements = renderedElement.map(element => {
       // element is in-use, so remove from the extraStateKeyMap
