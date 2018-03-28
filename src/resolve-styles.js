@@ -388,8 +388,10 @@ resolveStyles = function(
   if (Array.isArray(renderedElement) && !renderedElement.props) {
     const elements = renderedElement.map(element => {
       // element is in-use, so remove from the extraStateKeyMap
-      const key = getStateKey(element);
-      delete extraStateKeyMap[key];
+      if (extraStateKeyMap) {
+        const key = getStateKey(element);
+        delete extraStateKeyMap[key];
+      }
 
       // this element is an array of elements,
       // so return an array of elements with resolved styles
