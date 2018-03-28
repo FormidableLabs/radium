@@ -391,7 +391,28 @@ resolveStyles = function(
   // https://github.com/FormidableLabs/radium/issues/950
   //
   if (Array.isArray(renderedElement) && !renderedElement.props) {
-    console.log("TODO HERE -- ARRAY WITHOUT PROPS");
+    const elements = renderedElement.map(
+      (element) => {
+        // element is in-use, so remove from the extraStateKeyMap
+        const key = getStateKey(element);
+        delete extraStateKeyMap[key];
+
+        // this element is an array of elements,
+        // so return an array of elements with resolved styles
+        return resolveStyles(
+          component,
+          element,
+          config,
+          existingKeyMap,
+          shouldCheckBeforeResolve,
+          extraStateKeyMap
+        ).element;
+      }
+    );
+    return {
+      extraStateKeyMap,
+      element: elements
+    };
   }
 
   // ReactElement
