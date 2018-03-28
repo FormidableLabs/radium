@@ -391,24 +391,22 @@ resolveStyles = function(
   // https://github.com/FormidableLabs/radium/issues/950
   //
   if (Array.isArray(renderedElement) && !renderedElement.props) {
-    const elements = renderedElement.map(
-      (element) => {
-        // element is in-use, so remove from the extraStateKeyMap
-        const key = getStateKey(element);
-        delete extraStateKeyMap[key];
+    const elements = renderedElement.map(element => {
+      // element is in-use, so remove from the extraStateKeyMap
+      const key = getStateKey(element);
+      delete extraStateKeyMap[key];
 
-        // this element is an array of elements,
-        // so return an array of elements with resolved styles
-        return resolveStyles(
-          component,
-          element,
-          config,
-          existingKeyMap,
-          shouldCheckBeforeResolve,
-          extraStateKeyMap
-        ).element;
-      }
-    );
+      // this element is an array of elements,
+      // so return an array of elements with resolved styles
+      return resolveStyles(
+        component,
+        element,
+        config,
+        existingKeyMap,
+        shouldCheckBeforeResolve,
+        extraStateKeyMap
+      ).element;
+    });
     return {
       extraStateKeyMap,
       element: elements
@@ -459,10 +457,7 @@ resolveStyles = function(
   // If nothing changed, don't bother cloning the element. Might be a bit
   // wasteful, as we add the sentinel to stop double-processing when we clone.
   // Assume benign double-processing is better than unneeded cloning.
-  if (
-    newChildren === children &&
-    newProps === renderedElement.props
-  ) {
+  if (newChildren === children && newProps === renderedElement.props) {
     return {extraStateKeyMap, element: renderedElement};
   }
 
