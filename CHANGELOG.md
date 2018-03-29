@@ -1,5 +1,8 @@
 # Radium Changelog
 
+## Unreleased
+- Fix `render` methods that return array of children. (#950)
+
 ## 0.23.0 (March 15, 2018)
 - Support ES7 arrow functions for React class methods. (#738)
 
