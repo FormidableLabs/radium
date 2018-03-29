@@ -1,7 +1,8 @@
 # Radium Changelog
 
-## Unreleased
-- Fix `render` methods that return array of children. (#950)
+## 0.24.0 (March 29, 2018)
+- Fix `render` methods that return array of children or `React.Fragment`. (#950)
+- Upgrade tests to React 16.2 (for `Fragment` support)
 
 ## 0.23.0 (March 15, 2018)
 - Support ES7 arrow functions for React class methods. (#738)
