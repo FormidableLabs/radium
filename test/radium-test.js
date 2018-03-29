@@ -153,5 +153,34 @@ describe('Radium blackbox SSR tests', () => {
           '<div style="color:red" data-radium="true"></div>'
       );
     });
+
+    it('handles rendered Fragments', () => {
+      class Composed extends React.Component {
+        render() {
+          return React.createElement(React.Fragment, {
+            children: [
+              React.createElement('div', {
+                key: 0,
+                style: {
+                  color: 'blue'
+                }
+              }),
+              React.createElement('div', {
+                key: 1,
+                style: {
+                  color: 'red'
+                }
+              })
+            ]
+          });
+        }
+      }
+
+      const rendered = render(Radium(Composed));
+      expect(rendered).to.contain(
+        '<div style="color:blue" data-radium="true"></div>' +
+          '<div style="color:red" data-radium="true"></div>'
+      );
+    });
   });
 });

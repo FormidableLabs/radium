@@ -822,6 +822,42 @@ describe('Radium blackbox tests', () => {
     expect(divs[1].style.color).to.equal('green');
   });
 
+  it('works with Fragments', () => {
+    class TestComponent extends Component {
+      render = () => {
+        return (
+          <React.Fragment>
+            <div key="key0" style={{color: 'blue', ':hover': {color: 'red'}}}>
+              {this.props.children}
+            </div>
+            <div
+              key="key1"
+              style={{color: 'yellow', ':hover': {color: 'green'}}}
+            >
+              two
+            </div>
+          </React.Fragment>
+        );
+      };
+    }
+
+    const Wrapped = Radium(TestComponent);
+    const output = TestUtils.renderIntoDocument(<Wrapped>hello world</Wrapped>);
+
+    const divs = getElements(output, 'div');
+
+    expect(divs[0].style.color).to.equal('blue');
+    expect(divs[0].getAttribute('data-radium')).to.equal('true');
+    expect(divs[0].innerText).to.equal('hello world');
+    TestUtils.SimulateNative.mouseOver(divs[0]);
+    expect(divs[0].style.color).to.equal('red');
+
+    expect(divs[1].style.color).to.equal('yellow');
+    expect(divs[1].innerText).to.equal('two');
+    TestUtils.SimulateNative.mouseOver(divs[1]);
+    expect(divs[1].style.color).to.equal('green');
+  });
+
   it('works fine if passing null, undefined, or false in style', () => {
     const TestComponent = Radium(() => (
       <div style={{background: undefined, border: false, color: null}} />
