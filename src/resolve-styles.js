@@ -385,6 +385,31 @@ resolveStyles = function(
     );
   }
 
+  if (Array.isArray(renderedElement) && !renderedElement.props) {
+    const elements = renderedElement.map(element => {
+      // element is in-use, so remove from the extraStateKeyMap
+      if (extraStateKeyMap) {
+        const key = getStateKey(element);
+        delete extraStateKeyMap[key];
+      }
+
+      // this element is an array of elements,
+      // so return an array of elements with resolved styles
+      return resolveStyles(
+        component,
+        element,
+        config,
+        existingKeyMap,
+        shouldCheckBeforeResolve,
+        extraStateKeyMap
+      ).element;
+    });
+    return {
+      extraStateKeyMap,
+      element: elements
+    };
+  }
+
   // ReactElement
   if (
     !renderedElement ||
@@ -400,8 +425,10 @@ resolveStyles = function(
     return {extraStateKeyMap, element: renderedElement};
   }
 
+  const children = renderedElement.props.children;
+
   const newChildren = _resolveChildren({
-    children: renderedElement.props.children,
+    children,
     component,
     config,
     existingKeyMap,
@@ -425,12 +452,9 @@ resolveStyles = function(
   });
 
   // If nothing changed, don't bother cloning the element. Might be a bit
-  // wasteful, as we add the sentinal to stop double-processing when we clone.
+  // wasteful, as we add the sentinel to stop double-processing when we clone.
   // Assume benign double-processing is better than unneeded cloning.
-  if (
-    newChildren === renderedElement.props.children &&
-    newProps === renderedElement.props
-  ) {
+  if (newChildren === children && newProps === renderedElement.props) {
     return {extraStateKeyMap, element: renderedElement};
   }
 
