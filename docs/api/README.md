@@ -527,7 +527,7 @@ A string that any included selectors in `rules` will be appended to. Use to scop
 ```jsx
 <div className="TestClass">
   <Style
-  scopeSelector=".TestClass"
+    scopeSelector=".TestClass"
     rules={{
       h1: {
         fontSize: '2em'
