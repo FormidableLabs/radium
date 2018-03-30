@@ -455,7 +455,7 @@ Without the `<Style>` component, it is prohibitively difficult to write a `<styl
 
 If you include a `scopeSelector`, you can include CSS rules that should apply to that selector as well as any nested selectors. For example, the following
 
-```
+```jsx
 <Style
   scopeSelector=".scoping-class"
   rules={{
@@ -469,13 +469,13 @@ If you include a `scopeSelector`, you can include CSS rules that should apply to
 
 will return:
 
-```
+```html
 <style>
 .scoping-class {
   color: 'blue';
 }
 .scoping-class span {
-  font-family: 'Lucida Console, Monaco, monospace'
+  font-family: 'Lucida Console, Monaco, monospace';
 }
 </style>
 ```
