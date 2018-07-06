@@ -22,7 +22,7 @@ export default class StyleSheet extends PureComponent<{}, {css: string}> {
     this._subscription = this.context._radiumStyleKeeper.subscribe(
       this._onChange
     );
-    this._onChange();
+    setTimeout(this._onChange, 0);
   }
 
   componentWillUnmount() {
@@ -40,12 +40,9 @@ export default class StyleSheet extends PureComponent<{}, {css: string}> {
   }
 
   _onChange = () => {
-    setTimeout(
-      () => {
-        this._isMounted && this.setState(this._getCSSState());
-      },
-      0
-    );
+    if (this._isMounted) {
+      this.setState(this._getCSSState());
+    }
   };
 
   render(): Node {
