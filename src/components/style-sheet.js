@@ -1,54 +1,64 @@
 /* @flow */
 
-import React, {PureComponent} from 'react';
-import type {Node} from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import StyleKeeper from '../style-keeper';
 
-export default class StyleSheet extends PureComponent<{}, {css: string}> {
+export default class StyleSheet extends Component<{}> {
   static contextTypes = {
     _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
   };
 
   constructor() {
     super(...arguments);
-
-    this.state = this._getCSSState();
+    this._css = this.context._radiumStyleKeeper.getCSS();
   }
 
   componentDidMount() {
-    this._isMounted = true;
     this._subscription = this.context._radiumStyleKeeper.subscribe(
       this._onChange
     );
     this._onChange();
   }
 
+  shouldComponentUpdate() {
+    return false;
+  }
+
   componentWillUnmount() {
-    this._isMounted = false;
     if (this._subscription) {
       this._subscription.remove();
     }
   }
 
-  _isMounted: ?boolean;
   _subscription: ?{remove: () => void};
-
-  _getCSSState(): {css: string} {
-    return {css: this.context._radiumStyleKeeper.getCSS()};
-  }
+  _root: ?HTMLElement;
+  _css: string;
 
   _onChange = () => {
-    setTimeout(
-      () => {
-        this._isMounted && this.setState(this._getCSSState());
-      },
-      0
-    );
+    const nextCSS = this.context._radiumStyleKeeper.getCSS();
+
+    if (nextCSS !== this._css) {
+      if (this._root) {
+        this._root.innerHTML = nextCSS;
+      } else {
+        throw new Error(
+          'No root style object found, even after StyleSheet mount.'
+        );
+      }
+      this._css = nextCSS;
+    }
   };
 
-  render(): Node {
-    return <style dangerouslySetInnerHTML={{__html: this.state.css}} />;
+  render() {
+    return (
+      <style
+        dangerouslySetInnerHTML={{__html: this._css}}
+        ref={c => {
+          this._root = c;
+        }}
+      />
+    );
   }
 }
