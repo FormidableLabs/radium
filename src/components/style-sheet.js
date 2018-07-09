@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import StyleKeeper from '../style-keeper';
 
-export default class StyleSheet extends Component {
+export default class StyleSheet extends Component<{}> {
   static contextTypes = {
     _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
   };
@@ -33,23 +33,31 @@ export default class StyleSheet extends Component {
   }
 
   _subscription: ?{remove: () => void};
-  _root: HTMLElement;
+  _root: ?HTMLElement;
   _css: string;
 
   _onChange = () => {
     const nextCSS = this.context._radiumStyleKeeper.getCSS();
 
     if (nextCSS !== this._css) {
-      this._root.innerHTML = nextCSS;
+      if (this._root) {
+        this._root.innerHTML = nextCSS;
+      } else {
+        throw new Error(
+          'No root style object found, even after StyleSheet mount.'
+        );
+      }
       this._css = nextCSS;
     }
   };
 
-  render(): React.Element<any> {
+  render() {
     return (
       <style
         dangerouslySetInnerHTML={{__html: this._css}}
-        ref={c => { this._root = c; }}
+        ref={c => {
+          this._root = c;
+        }}
       />
     );
   }
