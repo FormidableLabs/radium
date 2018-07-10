@@ -1,5 +1,8 @@
 # Radium Changelog
 
+## 0.24.1 (July 9, 2018)
+- Make `<StyleSheet>` manually update `<style>` tag DOM, fixing media queries on component level flickering. (#626, #950)
+
 ## 0.24.0 (March 29, 2018)
 - Fix `render` methods that return array of children or `React.Fragment`. (#950)
 - Upgrade tests to React 16.2 (for `Fragment` support)
