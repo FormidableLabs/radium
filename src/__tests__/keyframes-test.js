@@ -108,7 +108,7 @@ describe('keyframes', () => {
         from: {left: '-1000px'},
         to: {left: 0},
       },
-      'SlideFromLeft',
+      'SlideFromLeft'
     );
     const animation2 = keyframes(
       {
@@ -191,7 +191,7 @@ describe('keyframes', () => {
         from: {left: -1000},
         to: {left: 10},
       },
-      'SlideFromLeft',
+      'SlideFromLeft'
     );
     const animation2 = keyframes(
       {
@@ -284,7 +284,7 @@ describe('keyframes', () => {
         from: {left: '-1000px'},
         to: {left: 0},
       },
-      'SlideFromLeft',
+      'SlideFromLeft'
     );
     const animation2 = keyframes(
       {
