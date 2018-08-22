@@ -9,12 +9,14 @@ export default function keyframesPlugin(
   const newStyle = Object.keys(style).reduce(
     (newStyleInProgress, key) => {
       let value = style[key];
+      const isKeyframeArray = Array.isArray(value);
+      
       if (
         key === 'animationName' &&
         value &&
-        (value.__radiumKeyframes || Array.isArray(value))
+        (value.__radiumKeyframes || isKeyframeArray)
       ) {
-        if (Array.isArray(value)) {
+        if (isKeyframeArray) {
           value = value
             .map(v => {
               const keyframesValue = (v: Keyframes);
