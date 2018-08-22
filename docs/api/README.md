@@ -327,6 +327,54 @@ var styles = {
 };
 ```
 
+Multiple keyframe animations can be chained together by passing an array of `keyframes` objects
+as the value of the `animationName` property. These keyframe animations timing and iteration count
+can be managed with [traditional css rules for keyframe animations](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations)
+
+```jsx
+@Radium
+class Spinner extends React.Component {
+  render () {
+    return (
+      <div>
+        <div style={styles.inner} />
+      </div>
+    );
+  }
+}
+
+const pulseAnimation = Radium.keyframes(
+  {
+    '0%': {width: '10%'},
+    '50%': {width: '50%'},
+    '100%': {width: '10%'},
+  },
+  'pulse',
+);
+
+const blendAnimation = Radium.keyframes(
+  {
+    '0%': {background: 'red'},
+    '25%': {background: 'yellow'},
+    '50%': {background: 'green'},
+    '75%': {background: 'blue'},
+    '100%': {background: 'red'},
+  },
+  'blend',
+);
+
+const styles = {
+  inner: {
+    animationName: [pulseAnimation, blendAnimation],
+    animationDuration: '2.5s, 8s',
+    animationIterationCount: 'infinite, infinite',
+    animationTimingFunction: 'linear, cubic-bezier(0.1, 0.7, 1.0, 0.1)',
+    height: '4px',
+    margin: '0 auto',
+  },
+};
+```
+
 ## Plugins
 
 ### Built-in Plugins
