@@ -13,12 +13,16 @@
 
 /* eslint-disable no-use-before-define */
 
-import React from 'react';
+const React = require('react');
 
-import {resetListStyle, resetBoxModel} from './common.styles';
-import Button from './components/button';
-import ComputedWell from './components/computed-well';
-import Radium, {getState, keyframes, Style, StyleRoot} from '../src';
+const CommonStyles = require('./common.styles');
+const Button = require('./components/button.jsx');
+const ComputedWell = require('./components/computed-well.jsx');
+const Radium = require('../src');
+
+const {Style, StyleRoot} = Radium;
+
+const {resetListStyle, resetBoxModel} = CommonStyles;
 
 //
 // Radium with ES6 class syntax
@@ -30,7 +34,7 @@ class HoverMessage extends React.Component {
         <button key="button" style={{display: 'flex', ':hover': {}}}>
           Hover me!
         </button>
-        {getState(this.state, 'button', ':hover')
+        {Radium.getState(this.state, 'button', ':hover')
           ? <span>{' '}Hovering!</span>
           : null}
       </div>
@@ -59,7 +63,7 @@ HoverMessage = Radium(HoverMessage);
   }
 }
 
-class Spinner extends React.Component {
+let Spinner = React.createClass({
   render() {
     return (
       <div>
@@ -68,26 +72,25 @@ class Spinner extends React.Component {
         />
       </div>
     );
-  }
-}
-
+  },
+});
 Spinner = Radium(Spinner);
 
-class MultiSpinner extends React.Component {
+
+let MultiSpinner = React.createClass({
   render() {
     return (
       <div>
         <div
           style={[
             multiAnimationStyles.inner,
-            {'@media print': {height: '10px'}}
+            {'@media print': {height: '10px'}},
           ]}
         />
       </div>
     );
-  }
-}
-
+  },
+});
 MultiSpinner = Radium(MultiSpinner);
 
 const VisitedLink = Radium(() => (
@@ -99,19 +102,19 @@ const VisitedLink = Radium(() => (
   </a>
 ));
 
-class App extends React.Component {
-  _remount() {
+let App = React.createClass({
+  _remount: function() {
     this.setState({shouldRenderNull: true});
 
     setTimeout(
       function() {
         this.setState({shouldRenderNull: false});
       }.bind(this),
-      100
+      100,
     );
-  }
+  },
 
-  render() {
+  render: function() {
     if (this.state && this.state.shouldRenderNull) {
       return null;
     }
@@ -128,8 +131,7 @@ class App extends React.Component {
 
         <p /><MultiSpinner />
 
-        <p />
-        <Button onClick={this._remount.bind(this)}>Unmount and remount</Button>
+        <p /><Button onClick={this._remount}>Unmount and remount</Button>
 
         <p /><Button>Button</Button>
 
@@ -139,7 +141,7 @@ class App extends React.Component {
         <Button
           style={{
             fontSize: '1.5em',
-            borderRadius: 3
+            borderRadius: 3,
           }}
         >
           Button
@@ -162,23 +164,23 @@ class App extends React.Component {
           rules={{
             body: {
               margin: 0,
-              fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
+              fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
             },
             mediaQueries: {
               '(max-width: 600px)': {
                 body: {
-                  background: 'gray'
-                }
+                  background: 'gray',
+                },
               },
               '(max-width: 500px)': {
                 body: {
-                  background: 'blue'
+                  background: 'blue',
                 },
                 'p, h1': {
-                  color: 'white'
-                }
-              }
-            }
+                  color: 'white',
+                },
+              },
+            },
           }}
         />
 
@@ -188,9 +190,9 @@ class App extends React.Component {
           <Style
             rules={{
               span: {
-                fontFamily: 'Lucida Console, Monaco, monospace'
+                fontFamily: 'Lucida Console, Monaco, monospace',
               },
-              color: 'blue'
+              color: 'blue',
             }}
             scopeSelector=".scoping-class"
           />
@@ -198,9 +200,8 @@ class App extends React.Component {
         </div>
       </StyleRoot>
     );
-  }
-}
-
+  },
+});
 App = Radium(App);
 
 const squareStyles = {
@@ -209,26 +210,26 @@ const squareStyles = {
     border: 'solid 1px white',
     float: 'left',
     height: 100,
-    width: 100
+    width: 100,
   },
   one: {
     ':hover': {
-      background: 'blue'
-    }
+      background: 'blue',
+    },
   },
   two: {
     ':hover': {
-      background: 'red'
-    }
+      background: 'red',
+    },
   },
   three: {
     ':hover': {
-      background: 'yellow'
+      background: 'yellow',
     },
     ':disabled': {
-      background: 'red'
-    }
-  }
+      background: 'red',
+    },
+  },
 };
 
 const tileStyle = {
@@ -242,28 +243,17 @@ const tileStyle = {
   cursor: 'pointer',
 
   ':hover': {
-    background: '#999'
-  }
+    background: '#999',
+  },
 };
 
-const pulseAnimation = keyframes(
+const pulseAnimation = Radium.keyframes(
   {
     '0%': {width: '10%'},
     '50%': {width: '50%'},
-    '100%': {width: '10%'}
+    '100%': {width: '10%'},
   },
-  'pulse'
-);
-
-const blendAnimation = Radium.keyframes(
-  {
-    '0%': {background: 'red'},
-    '25%': {background: 'yellow'},
-    '50%': {background: 'green'},
-    '75%': {background: 'blue'},
-    '100%': {background: 'red'}
-  },
-  'blend'
+  'pulse',
 );
 
 const spinnerStyles = {
@@ -272,25 +262,14 @@ const spinnerStyles = {
     animationName: pulseAnimation,
     background: 'blue',
     height: '4px',
-    margin: '0 auto'
-  }
-};
-
-const multiAnimationStyles = {
-  inner: {
-    animationName: [pulseAnimation, blendAnimation],
-    animationDuration: '2.5s, 8s',
-    animationIterationCount: 'infinite, infinite',
-    animationTimingFunction: 'linear, cubic-bezier(0.1, 0.7, 1.0, 0.1)',
-    height: '4px',
-    margin: '0 auto'
-  }
+    margin: '0 auto',
+  },
 };
 
 const listStyle = {
   ...resetListStyle,
   ...resetBoxModel,
-  margin: 15
+  margin: 15,
 };
 
-export default App;
+module.exports = App;
