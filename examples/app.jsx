@@ -81,7 +81,10 @@ let MultiSpinner = React.createClass({
     return (
       <div>
         <div
-          style={[multiAnimationStyles.inner, {'@media print': {height: '10px'}}]}
+          style={[
+            multiAnimationStyles.inner,
+            {'@media print': {height: '10px'}},
+          ]}
         />
       </div>
     );
