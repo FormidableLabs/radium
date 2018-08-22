@@ -16,7 +16,7 @@ function createMarkupForStyles(style: Object): string {
 export default function cssRuleSetToString(
   selector: string,
   rules: Object,
-  userAgent: ?string,
+  userAgent: ?string
 ): string {
   if (!rules) {
     return '';
@@ -27,6 +27,5 @@ export default function cssRuleSetToString(
   const prefixedRules = getPrefixedStyle(rulesWithPx, userAgent);
   const cssPrefixedRules = camelCasePropsToDashCase(prefixedRules);
   const serializedRules = createMarkupForStyles(cssPrefixedRules);
-
   return selector + '{' + serializedRules + '}';
 }

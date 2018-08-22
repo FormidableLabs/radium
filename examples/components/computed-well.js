@@ -11,42 +11,42 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const Radium = require('../../src/index');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Radium from '../../src';
 
-const ComputedWell = React.createClass({
-  getInitialState: function() {
+class ComputedWell extends React.Component {
+  getInitialState() {
     return {
-      dynamicBg: '#000',
+      dynamicBg: '#000'
     };
-  },
+  }
 
-  getStyles: function() {
+  getStyles() {
     return {
       padding: '1em',
       borderRadius: 5,
-      background: this.state.dynamicBg,
+      background: this.state.dynamicBg
     };
-  },
+  }
 
-  handleSubmit: function(ev) {
+  handleSubmit(ev) {
     ev.preventDefault();
 
     this.setState({
-      dynamicBg: ReactDOM.findDOMNode(this.refs.input).value,
+      dynamicBg: ReactDOM.findDOMNode(this.refs.input).value
     });
-  },
+  }
 
-  render: function() {
+  render() {
     return (
-      <form onSubmit={this.handleSubmit} style={this.getStyles()}>
+      <form onSubmit={this.handleSubmit.bind(this)} style={this.getStyles()}>
         <input placeholder="black" ref="input" type="text" />
 
         <button>Change Background Color</button>
       </form>
     );
-  },
-});
+  }
+}
 
-module.exports = Radium(ComputedWell);
+export default Radium(ComputedWell);

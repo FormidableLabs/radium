@@ -1,7 +1,7 @@
-const resolveStyles = sinon.spy(require('resolve-styles.js'));
-const Enhancer = require('inject-loader!enhancer.js')({
-  './resolve-styles.js': resolveStyles,
-});
+const resolveStyles = sinon.spy(require('resolve-styles'), 'default');
+const Enhancer = require('inject-loader!enhancer')({
+  './resolve-styles': resolveStyles
+}).default;
 
 import React, {Component} from 'react';
 
@@ -123,7 +123,7 @@ describe('Enhancer', () => {
     const mediaQueryListenersByQuery = {
       '(min-width: 1000px)': {remove: sinon.spy()},
       '(max-width: 600px)': {remove: sinon.spy()},
-      '(min-resolution: 2dppx)': {remove: sinon.spy()},
+      '(min-resolution: 2dppx)': {remove: sinon.spy()}
     };
     class Composed extends Component {
       constructor() {
@@ -159,19 +159,18 @@ describe('Enhancer', () => {
   });
 
   it('copies methods across to top level prototype', () => {
-    const Composed = React.createClass({
-      getStyles: function() {
+    class Composed extends React.Component {
+      getStyles() {
         return [{color: 'black'}];
-      },
-
-      render: function() {
+      }
+      render() {
         return (
           <div style={this.getStyles()}>
             Hello World!
           </div>
         );
-      },
-    });
+      }
+    }
 
     const Enhanced = Enhancer(Composed);
 

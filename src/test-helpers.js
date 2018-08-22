@@ -1,17 +1,26 @@
 import Color from 'color';
+import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import TestUtils from 'react-addons-test-utils';
+import ShallowRenderer from 'react-test-renderer/shallow';
+import TestUtils from 'react-dom/test-utils';
 
 export function getRenderOutput(element) {
-  const renderer = TestUtils.createRenderer();
+  const renderer = new ShallowRenderer();
   renderer.render(element);
   return renderer.getRenderOutput();
 }
 
 export function getElement(output, tagName) {
   return ReactDOM.findDOMNode(
-    TestUtils.findRenderedDOMComponentWithTag(output, tagName),
+    TestUtils.findRenderedDOMComponentWithTag(output, tagName)
   );
+}
+
+export function getElements(output, tagName) {
+  return TestUtils.scryRenderedDOMComponentsWithTag(
+    output,
+    tagName
+  ).map(component => ReactDOM.findDOMNode(component));
 }
 
 function cleanCSS(css) {
@@ -28,4 +37,14 @@ export function expectCSS(styleElement, css) {
 
 export function expectColor(actual, expected) {
   expect(Color(actual).hex()).to.equal(Color(expected).hex());
+}
+
+export function createEsClass(renderFn) {
+  class Composed extends Component {
+    render() {
+      return renderFn() || <div />;
+    }
+  }
+
+  return Composed;
 }

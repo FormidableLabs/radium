@@ -1,14 +1,24 @@
 /* eslint-disable react/prop-types */
 
-import Radium from 'index.js';
-import MouseUpListener from 'plugins/mouse-up-listener.js';
+import Radium from 'index';
+import MouseUpListener from 'plugins/mouse-up-listener';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import TestUtils from 'react-addons-test-utils';
-import {getRenderOutput, getElement} from 'test-helpers';
+import TestUtils from 'react-dom/test-utils';
+import {getRenderOutput, getElement, getElements} from 'test-helpers';
 
 describe('Radium blackbox tests', () => {
+  let sandbox;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
   it('merges styles', () => {
     @Radium class TestComponent extends Component {
       render() {
@@ -20,7 +30,7 @@ describe('Radium blackbox tests', () => {
 
     expect(output.props.style).to.deep.equal({
       color: 'blue',
-      background: 'red',
+      background: 'red'
     });
   });
 
@@ -31,7 +41,7 @@ describe('Radium blackbox tests', () => {
           <div
             style={[
               [{color: 'blue'}, [{height: '2px', padding: '9px'}]],
-              {background: 'red'},
+              {background: 'red'}
             ]}
           />
         );
@@ -44,7 +54,7 @@ describe('Radium blackbox tests', () => {
       color: 'blue',
       background: 'red',
       height: '2px',
-      padding: '9px',
+      padding: '9px'
     });
   });
 
@@ -65,7 +75,7 @@ describe('Radium blackbox tests', () => {
 
     expect(output.props.header.props.style).to.deep.equal({
       color: 'blue',
-      background: 'red',
+      background: 'red'
     });
   });
 
@@ -84,7 +94,7 @@ describe('Radium blackbox tests', () => {
               <div
                 style={[
                   {color: 'blue'},
-                  {background: 'red', ':active': {color: 'green'}},
+                  {background: 'red', ':active': {color: 'green'}}
                 ]}
               />
             }
@@ -120,7 +130,7 @@ describe('Radium blackbox tests', () => {
               <div
                 style={[
                   {color: 'blue'},
-                  {background: 'red', ':active': {color: 'green'}},
+                  {background: 'red', ':active': {color: 'green'}}
                 ]}
               >
                 {arg}
@@ -152,7 +162,7 @@ describe('Radium blackbox tests', () => {
             style={{
               background: 'red',
               color: 'blue',
-              ':hover': {color: 'green'},
+              ':hover': {color: 'green'}
             }}
           />
         );
@@ -179,7 +189,7 @@ describe('Radium blackbox tests', () => {
             style={{
               background: 'red',
               color: 'blue',
-              ':active': {color: 'green'},
+              ':active': {color: 'green'}
             }}
           />
         );
@@ -208,7 +218,7 @@ describe('Radium blackbox tests', () => {
               style={{
                 background: 'red',
                 color: 'blue',
-                ':active': {color: 'green'},
+                ':active': {color: 'green'}
               }}
             />
             <button
@@ -216,7 +226,7 @@ describe('Radium blackbox tests', () => {
               style={{
                 background: 'red',
                 color: 'blue',
-                ':active': {color: 'green'},
+                ':active': {color: 'green'}
               }}
             />
             <nav
@@ -224,7 +234,7 @@ describe('Radium blackbox tests', () => {
               style={{
                 background: 'red',
                 color: 'blue',
-                ':active': {color: 'green'},
+                ':active': {color: 'green'}
               }}
             />
           </div>
@@ -258,6 +268,48 @@ describe('Radium blackbox tests', () => {
     expect(nav.style.color).to.equal('blue');
   });
 
+  it('resets state for unmounted components, Issue #524', () => {
+    class TestComponent extends Component {
+      state = {showSpan: true};
+      render() {
+        return (
+          <div>
+            <button onClick={() => this.setState({showSpan: true})} />
+            {this.state.showSpan &&
+              <span
+                key="s"
+                onClick={() => this.setState({showSpan: false})}
+                style={{
+                  color: 'blue',
+                  ':hover': {color: 'red'}
+                }}
+              />}
+          </div>
+        );
+      }
+    }
+    const WrappedTestComponent = Radium(TestComponent);
+
+    const output = TestUtils.renderIntoDocument(<WrappedTestComponent />);
+
+    let spans = getElements(output, 'span');
+    const button = getElement(output, 'button');
+    expect(spans[0].style.color).to.equal('blue');
+
+    TestUtils.Simulate.mouseEnter(spans[0]);
+    expect(spans[0].style.color).to.equal('red');
+
+    TestUtils.Simulate.click(spans[0]);
+    spans = getElements(output, 'span');
+    expect(spans).to.have.length(0);
+
+    TestUtils.Simulate.click(button);
+    spans = getElements(output, 'span');
+    expect(spans).to.have
+      .length(1)
+      .and.to.have.deep.property('[0].style.color', 'blue');
+  });
+
   it('resolves styles on multiple elements nested far down, Issue #307', () => {
     @Radium class TestComponent extends Component {
       render() {
@@ -269,14 +321,14 @@ describe('Radium blackbox tests', () => {
                   key="header"
                   style={{
                     color: 'yellow',
-                    ':hover': {color: 'blue'},
+                    ':hover': {color: 'blue'}
                   }}
                 />
                 <footer
                   key="footer"
                   style={{
                     color: 'green',
-                    ':hover': {color: 'red'},
+                    ':hover': {color: 'red'}
                   }}
                 />
               </section>
@@ -337,7 +389,7 @@ describe('Radium blackbox tests', () => {
         return (
           <div
             style={{
-              background: {toString: () => 'red'},
+              background: {toString: () => 'red'}
             }}
           />
         );
@@ -355,19 +407,19 @@ describe('Radium blackbox tests', () => {
       return {
         matches: true,
         addListener: function() {},
-        removeListener: function() {},
+        removeListener: function() {}
       };
     };
 
     @Radium({
-      matchMedia: truthyMatchMedia,
+      matchMedia: truthyMatchMedia
     })
     class TestComponent extends Component {
       render() {
         return (
           <div
             style={{
-              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}}
             }}
           />
         );
@@ -388,7 +440,7 @@ describe('Radium blackbox tests', () => {
         return (
           <div
             style={{
-              height: ['100%', '100vh'],
+              height: ['100%', '100vh']
             }}
           />
         );
@@ -408,7 +460,7 @@ describe('Radium blackbox tests', () => {
             style={{
               background: 'red',
               color: 'blue',
-              ':active': {color: 'green'},
+              ':active': {color: 'green'}
             }}
           />
         );
@@ -447,9 +499,9 @@ describe('Radium blackbox tests', () => {
       <TestComponent>
         {{
           nav: <nav>nav</nav>,
-          main: <main>main</main>,
+          main: <main>main</main>
         }}
-      </TestComponent>,
+      </TestComponent>
     );
 
     const nav = getElement(output, 'nav');
@@ -474,7 +526,7 @@ describe('Radium blackbox tests', () => {
     const output = TestUtils.renderIntoDocument(
       <TestComponent>
         {[<nav key="nav">nav</nav>, <main key="main">main</main>]}
-      </TestComponent>,
+      </TestComponent>
     );
 
     const nav = getElement(output, 'nav');
@@ -616,7 +668,7 @@ describe('Radium blackbox tests', () => {
       }
 
       const output = TestUtils.renderIntoDocument(
-        <TestComponent radiumConfig={{plugins: [makeItRedPlugin]}} />,
+        <TestComponent radiumConfig={{plugins: [makeItRedPlugin]}} />
       );
       const div = getElement(output, 'div');
 
@@ -626,8 +678,8 @@ describe('Radium blackbox tests', () => {
 
   /* eslint-disable no-console */
   it("doesn't try to setState if not mounted", () => {
-    sinon.stub(console, 'error');
-    sinon.stub(console, 'warn');
+    sandbox.stub(console, 'error');
+    sandbox.stub(console, 'warn');
 
     let setStateCaptured;
     const plugin = function({setState}) {
@@ -649,9 +701,6 @@ describe('Radium blackbox tests', () => {
 
     expect(console.error).not.to.have.been.called;
     expect(console.warn).not.to.have.been.called;
-
-    console.error.restore();
-    console.warn.restore();
   });
   /* eslint-enable no-console */
 
@@ -669,7 +718,7 @@ describe('Radium blackbox tests', () => {
     MyStatelessComponent = Radium(MyStatelessComponent);
 
     const output = TestUtils.renderIntoDocument(
-      <MyStatelessComponent>hello world</MyStatelessComponent>,
+      <MyStatelessComponent>hello world</MyStatelessComponent>
     );
     const div = getElement(output, 'div');
 
@@ -679,6 +728,134 @@ describe('Radium blackbox tests', () => {
     TestUtils.SimulateNative.mouseOver(div);
 
     expect(div.style.color).to.equal('red');
+  });
+
+  // Regression test: https://github.com/FormidableLabs/radium/issues/738
+  it('works with arrow-based render methods in components', () => {
+    class TestComponent extends Component {
+      render = () => {
+        return (
+          <div style={{color: 'blue', ':hover': {color: 'red'}}}>
+            {this.props.children}
+          </div>
+        );
+      };
+    }
+
+    const Wrapped = Radium(TestComponent);
+    const output = TestUtils.renderIntoDocument(<Wrapped>hello world</Wrapped>);
+
+    // Check prototype is not mutated.
+    expect(TestComponent.prototype).to.not.have.property('render');
+
+    const div = getElement(output, 'div');
+
+    expect(div.style.color).to.equal('blue');
+    expect(div.innerText).to.equal('hello world');
+
+    TestUtils.SimulateNative.mouseOver(div);
+
+    expect(div.style.color).to.equal('red');
+  });
+
+  // Regression test: https://github.com/FormidableLabs/radium/issues/738
+  it('works with arrow-based render methods in components with complex inheritence', () => {
+    class First extends Component {}
+    class Second extends First {}
+    class TestComponent extends Second {
+      render = () => {
+        return (
+          <div style={{color: 'blue', ':hover': {color: 'red'}}}>
+            {this.props.children}
+          </div>
+        );
+      };
+    }
+
+    const Wrapped = Radium(TestComponent);
+    const output = TestUtils.renderIntoDocument(<Wrapped>hello world</Wrapped>);
+
+    // Check prototypes are not mutated.
+    expect(First.prototype).to.not.have.property('render');
+    expect(Second.prototype).to.not.have.property('render');
+    expect(TestComponent.prototype).to.not.have.property('render');
+
+    const div = getElement(output, 'div');
+
+    expect(div.style.color).to.equal('blue');
+    expect(div.innerText).to.equal('hello world');
+
+    TestUtils.SimulateNative.mouseOver(div);
+
+    expect(div.style.color).to.equal('red');
+  });
+
+  // Regression test: https://github.com/FormidableLabs/radium/issues/950
+  it('works with array children', () => {
+    class TestComponent extends Component {
+      render = () => {
+        return [
+          <div key="key0" style={{color: 'blue', ':hover': {color: 'red'}}}>
+            {this.props.children}
+          </div>,
+          <div key="key1" style={{color: 'yellow', ':hover': {color: 'green'}}}>
+            two
+          </div>
+        ];
+      };
+    }
+
+    const Wrapped = Radium(TestComponent);
+    const output = TestUtils.renderIntoDocument(<Wrapped>hello world</Wrapped>);
+
+    const divs = getElements(output, 'div');
+
+    expect(divs[0].style.color).to.equal('blue');
+    expect(divs[0].getAttribute('data-radium')).to.equal('true');
+    expect(divs[0].innerText).to.equal('hello world');
+    TestUtils.SimulateNative.mouseOver(divs[0]);
+    expect(divs[0].style.color).to.equal('red');
+
+    expect(divs[1].style.color).to.equal('yellow');
+    expect(divs[1].innerText).to.equal('two');
+    TestUtils.SimulateNative.mouseOver(divs[1]);
+    expect(divs[1].style.color).to.equal('green');
+  });
+
+  it('works with Fragments', () => {
+    class TestComponent extends Component {
+      render = () => {
+        return (
+          <React.Fragment>
+            <div key="key0" style={{color: 'blue', ':hover': {color: 'red'}}}>
+              {this.props.children}
+            </div>
+            <div
+              key="key1"
+              style={{color: 'yellow', ':hover': {color: 'green'}}}
+            >
+              two
+            </div>
+          </React.Fragment>
+        );
+      };
+    }
+
+    const Wrapped = Radium(TestComponent);
+    const output = TestUtils.renderIntoDocument(<Wrapped>hello world</Wrapped>);
+
+    const divs = getElements(output, 'div');
+
+    expect(divs[0].style.color).to.equal('blue');
+    expect(divs[0].getAttribute('data-radium')).to.equal('true');
+    expect(divs[0].innerText).to.equal('hello world');
+    TestUtils.SimulateNative.mouseOver(divs[0]);
+    expect(divs[0].style.color).to.equal('red');
+
+    expect(divs[1].style.color).to.equal('yellow');
+    expect(divs[1].innerText).to.equal('two');
+    TestUtils.SimulateNative.mouseOver(divs[1]);
+    expect(divs[1].style.color).to.equal('green');
   });
 
   it('works fine if passing null, undefined, or false in style', () => {
@@ -700,14 +877,14 @@ describe('Radium blackbox tests', () => {
       </div>
     );
     MyStatelessComponent.contextTypes = {
-      hoverColor: PropTypes.string,
+      hoverColor: PropTypes.string
     };
     MyStatelessComponent = Radium(MyStatelessComponent);
 
     class ContextGivingWrapper extends Component {
       getChildContext() {
         return {
-          hoverColor: 'green',
+          hoverColor: 'green'
         };
       }
       render() {
@@ -715,16 +892,15 @@ describe('Radium blackbox tests', () => {
       }
     }
     ContextGivingWrapper.childContextTypes = {
-      hoverColor: PropTypes.string,
+      hoverColor: PropTypes.string
     };
 
     const output = TestUtils.renderIntoDocument(
       <ContextGivingWrapper>
         <MyStatelessComponent>hello world</MyStatelessComponent>
-      </ContextGivingWrapper>,
+      </ContextGivingWrapper>
     );
     const div = getElement(output, 'div');
-
     expect(div.style.color).to.equal('blue');
     expect(div.innerText).to.equal('hello world');
 
@@ -745,8 +921,8 @@ describe('Radium blackbox tests', () => {
 
   /* eslint-disable no-console */
   it('replaces style propType with array or object', () => {
-    sinon.stub(console, 'error');
-    sinon.stub(console, 'warn');
+    sandbox.stub(console, 'error');
+    sandbox.stub(console, 'warn');
 
     class TestComponent extends Component {
       render() {
@@ -760,9 +936,6 @@ describe('Radium blackbox tests', () => {
 
     expect(console.error).not.to.have.been.called;
     expect(console.warn).not.to.have.been.called;
-
-    console.error.restore();
-    console.warn.restore();
   });
   /* eslint-enable no-console */
 
@@ -777,7 +950,7 @@ describe('Radium blackbox tests', () => {
       }
 
       TestUtils.renderIntoDocument(
-        <TestComponent radiumConfig={{plugins: [plugin]}} />,
+        <TestComponent radiumConfig={{plugins: [plugin]}} />
       );
 
       expect(plugin).to.have.been.called;
@@ -799,10 +972,77 @@ describe('Radium blackbox tests', () => {
       }
 
       TestUtils.renderIntoDocument(
-        <ParentComponent radiumConfig={{plugins: [plugin]}} />,
+        <ParentComponent radiumConfig={{plugins: [plugin]}} />
       );
 
       expect(plugin).to.have.callCount(2);
+    });
+  });
+
+  describe('inline prefixes', () => {
+    let TestComponent;
+
+    beforeEach(() => {
+      class Composed extends Component {
+        render() {
+          return React.createElement('div', {
+            style: {
+              color: 'red',
+              display: 'flex'
+            }
+          });
+        }
+      }
+
+      TestComponent = Composed;
+    });
+
+    // Regression test: https://github.com/FormidableLabs/radium/issues/958
+    it('handles no user agent', () => {
+      const userAgent = '';
+      const Wrapped = Radium({userAgent})(TestComponent);
+      const output = TestUtils.renderIntoDocument(<Wrapped />);
+      const div = getElement(output, 'div');
+
+      expect(div.style.color).to.equal('red');
+      expect(div.style.display).to.equal('flex');
+    });
+
+    // Regression test: https://github.com/FormidableLabs/radium/issues/958s
+    it('handles non-matching user agent', () => {
+      const userAgent = 'testy-mctestface';
+      const Wrapped = Radium({userAgent})(TestComponent);
+      const output = TestUtils.renderIntoDocument(<Wrapped />);
+      const div = getElement(output, 'div');
+
+      expect(div.style.color).to.equal('red');
+      expect(div.style.display).to.equal('flex');
+    });
+
+    it('handles matching user agent', () => {
+      const iOSChrome47 = 'Mozilla/5.0 (iPad; CPU OS 8_0_0 like Mac OS X) AppleWebKit/600.1.4 ' +
+        '(KHTML, like Gecko) CriOS/47.0.2526.107 Mobile/12H321 Safari/600.1.4';
+      const webkitFlex = '-webkit-flex';
+
+      // Check if we _can_ even have the expected value. (Can't on IE9).
+      class FlexCanary extends Component {
+        render() {
+          return React.createElement('div', {
+            style: {
+              display: webkitFlex
+            }
+          });
+        }
+      }
+      const canary = TestUtils.renderIntoDocument(<FlexCanary />);
+      const expectedDisplay = getElement(canary, 'div').style.display;
+
+      const Wrapped = Radium({userAgent: iOSChrome47})(TestComponent);
+      const output = TestUtils.renderIntoDocument(<Wrapped />);
+      const div = getElement(output, 'div');
+
+      expect(div.style.color).to.equal('red');
+      expect(div.style.display).to.equal(expectedDisplay);
     });
   });
 });

@@ -1,31 +1,32 @@
-var path = require('path');
-var webpack = require('webpack');
+const path = require('path');
 
 module.exports = {
   cache: true,
-  entry: path.join(__dirname, '/src/index.js'),
+  entry: path.join(__dirname, 'src/index.js'),
   externals: [
     {
-      "react": {
-        root: "React",
-        commonjs2: "react",
-        commonjs: "react",
-        amd: "react"
+      react: {
+        root: 'React',
+        commonjs2: 'react',
+        commonjs: 'react',
+        amd: 'react'
       }
     }
   ],
   output: {
-    path: path.join(__dirname, '/dist'),
+    path: path.join(__dirname, 'dist'),
     filename: 'radium.js',
     library: 'Radium',
-    libraryTarget: 'umd'
+    libraryTarget: 'umd',
+    libraryExport: 'default'
   },
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.js$/,
+        include: [path.join(__dirname, 'src')],
         loader: 'babel-loader'
       }
     ]
   }
-}
+};

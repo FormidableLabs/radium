@@ -3,7 +3,7 @@
 import Radium, {StyleRoot, keyframes} from 'index';
 import {expectCSS, getElement} from 'test-helpers';
 import React, {Component} from 'react';
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 
 const CHROME_14_USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.1 ' +
   '(KHTML, like Gecko) Chrome/14.0.812.0 Safari/535.1';
@@ -32,7 +32,7 @@ describe('keyframes', () => {
         from {left: 0;}
         to {left: 100px;}
       }
-    `,
+    `
     );
   });
 
@@ -72,9 +72,9 @@ describe('keyframes', () => {
     const animation = keyframes(
       {
         from: {left: '-1000px'},
-        to: {left: 0},
+        to: {left: 0}
       },
-      'SlideFromLeft',
+      'SlideFromLeft'
     );
 
     class TestComponent extends Component {
@@ -98,7 +98,7 @@ describe('keyframes', () => {
           left: 0;
         }
       }
-    `,
+    `
     );
   });
 
@@ -155,9 +155,9 @@ describe('keyframes', () => {
     const animation = keyframes(
       {
         from: {left: -1000},
-        to: {left: 10},
+        to: {left: 10}
       },
-      'SlideFromLeft',
+      'SlideFromLeft'
     );
 
     class TestComponent extends Component {
@@ -181,7 +181,7 @@ describe('keyframes', () => {
           left: 10px;
         }
       }
-    `,
+    `
     );
   });
 
@@ -238,9 +238,9 @@ describe('keyframes', () => {
     const animation = keyframes(
       {
         from: {left: '-1000px'},
-        to: {left: 0},
+        to: {left: 0}
       },
-      'SlideFromLeft',
+      'SlideFromLeft'
     );
 
     @Radium class ChildComponent extends Component {
@@ -274,7 +274,7 @@ describe('keyframes', () => {
           left: 0;
         }
       }
-    `,
+    `
     );
   });
 

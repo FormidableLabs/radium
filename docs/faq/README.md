@@ -8,6 +8,7 @@
 - [Why doesn't Radium work on react-router's Link, or react-bootstrap's Button, or SomeOtherComponent?](#why-doesnt-radium-work-on-react-routers-link-or-react-bootstraps-button-or-someothercomponent)
 - [How can I get rid of `userAgent` warnings in tests?](#how-can-i-get-rid-of-useragent-warnings-in-tests)
 - [Why do React warnings have the wrong component name?](#why-do-react-warnings-have-the-wrong-component-name)
+- [Why does the browser state of a child element not reset after unmounting and remounting?](#why-does-the-browser-state-of-a-child-element-not-reset-after-unmounting-and-remounting)
 
 ## How do I use pseudo-selectors like `:checked`, `:last`, `:before`, or `:after`?
 
@@ -50,7 +51,6 @@ var droids = [
   'Probe Droid'
 ];
 
-@Radium
 class DroidList extends React.Component {
   render() {
     return (
@@ -76,6 +76,8 @@ class DroidList extends React.Component {
     );
   }
 }
+
+DroidList = Radium(DroidList);
 ```
 
 Instead of `:before` and `:after`, add extra elements when rendering your HTML.
@@ -107,7 +109,6 @@ The example from the main Readme (using regular CSS syntax)
 ```jsx
 import styler from 'react-styling/flat'
 
-@Radium
 class Button extends React.Component {
   static propTypes = {
     kind: PropTypes.oneOf(['primary', 'warning']).isRequired
@@ -121,6 +122,8 @@ class Button extends React.Component {
     )
   }
 }
+
+Button = Radium(Button);
 
 const style = styler`
   .button {
@@ -183,6 +186,10 @@ Make sure it is a real user agent that `inline-style-prefixer` recognizes, or yo
 
 ## Why do React warnings have the wrong component name?
 
-You may see the name "Constructor" instead of your component name, for example: "Warning: Failed propType: Invalid prop `onClick` of type `function` supplied to `Constructor`, expected `string`." or "Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of `Constructor`." 
+You may see the name "Constructor" instead of your component name, for example: "Warning: Failed propType: Invalid prop `onClick` of type `function` supplied to `Constructor`, expected `string`." or "Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of `Constructor`."
 
-Your transpiler is probably not able to set the `displayName` property of the component correctly, which can happen if you wrap `React.createClass` immediately with `Radium`, e.g. `var Button = Radium(React.createClass({ ... }));`. Instead, wrap your component afterward, ex. `Button = Radium(Button);`,  or when exporting, ex. `module.exports = Radium(Button);`, or set `displayName` manually.
+Your transpiler is probably not able to set the `displayName` property of the component correctly, which can happen if you wrap `React.createClass` immediately with `Radium`, e.g. `var Button = Radium(React.createClass({ ... }));`. Instead, wrap your component afterward, ex. `Button = Radium(Button);`,  or when exporting, ex. `export default Radium(Button);`, or set `displayName` manually.
+
+## Why does the browser state of a child element not reset after unmounting and remounting?
+
+If you have an element that takes a browser state (e.g. `:active`, `:hover`, `:focus`), you need to give it a unique `key` prop. There is a case where if you only have a single element in your component that takes an interactive style, you do not need to provide a `key`; however, if you remove the element and show it again, it will maintain it's state, which is usually unexpected behavior. To fix this, simply give it a custom `key` prop.

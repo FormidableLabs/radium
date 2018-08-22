@@ -3,8 +3,9 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import StyleKeeper from './style-keeper.js';
-import resolveStyles from './resolve-styles.js';
+import StyleKeeper from './style-keeper';
+import resolveStyles from './resolve-styles';
+import getRadiumStyleState from './get-radium-style-state';
 
 const KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
   'arguments',
@@ -13,8 +14,11 @@ const KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
   'length',
   'name',
   'prototype',
-  'type',
+  'type'
 ];
+
+let RADIUM_PROTO: Object;
+let RADIUM_METHODS;
 
 function copyProperties(source, target) {
   Object.getOwnPropertyNames(source).forEach(key => {
@@ -28,14 +32,55 @@ function copyProperties(source, target) {
   });
 }
 
+// Handle scenarios of:
+// - Inherit from `React.Component` in any fashion
+//   See: https://github.com/FormidableLabs/radium/issues/738
+// - There's an explicit `render` field defined
 function isStateless(component: Function): boolean {
-  return !component.render &&
-    !(component.prototype && component.prototype.render);
+  const proto = component.prototype || {};
+
+  return !component.isReactComponent &&
+    !proto.isReactComponent &&
+    !component.render &&
+    !proto.render;
+}
+
+// Check if value is a real ES class in Native / Node code.
+// See: https://stackoverflow.com/a/30760236
+function isNativeClass(component: Function): boolean {
+  return typeof component === 'function' &&
+    /^\s*class\s+/.test(component.toString());
+}
+
+// Manually apply babel-ish class inheritance.
+function inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError(
+      `Super expression must either be null or a function, not ${typeof superClass}`
+    );
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+
+  if (superClass) {
+    if (Object.setPrototypeOf) {
+      Object.setPrototypeOf(subClass, superClass);
+    } else {
+      subClass.__proto__ = superClass; // eslint-disable-line no-proto
+    }
+  }
 }
 
 export default function enhanceWithRadium(
   configOrComposedComponent: Class<any> | constructor | Function | Object,
-  config?: Object = {},
+  config?: Object = {}
 ): constructor {
   if (typeof configOrComposedComponent !== 'function') {
     const newConfig = {...config, ...configOrComposedComponent};
@@ -47,16 +92,46 @@ export default function enhanceWithRadium(
   const component: Function = configOrComposedComponent;
   let ComposedComponent: constructor = component;
 
+  // Handle Native ES classes.
+  if (isNativeClass(ComposedComponent)) {
+    // Manually approximate babel's class transpilation, but _with_ a real `new` call.
+    ComposedComponent = (function(OrigComponent): constructor {
+      function NewComponent() {
+        // Ordinarily, babel would produce something like:
+        //
+        // ```
+        // return _possibleConstructorReturn(this, OrigComponent.apply(this, arguments));
+        // ```
+        //
+        // Instead, we just call `new` directly without the `_possibleConstructorReturn` wrapper.
+        const source = new OrigComponent(...arguments);
+
+        // Then we manually update context with properties.
+        copyProperties(source, this);
+
+        return this;
+      }
+
+      inherits(NewComponent, OrigComponent);
+
+      return NewComponent;
+    })(ComposedComponent);
+  }
+
   // Handle stateless components
   if (isStateless(ComposedComponent)) {
-    ComposedComponent = class extends Component {
-      state: Object;
-
+    ComposedComponent = class extends Component<any, Object> {
       render() {
         return component(this.props, this.context);
       }
     };
+
     ComposedComponent.displayName = component.displayName || component.name;
+  }
+
+  // Shallow copy composed if still original (we may mutate later).
+  if (ComposedComponent === component) {
+    ComposedComponent = class extends ComposedComponent {};
   }
 
   class RadiumEnhancer extends ComposedComponent {
@@ -65,10 +140,12 @@ export default function enhanceWithRadium(
     state: Object;
 
     _radiumMediaQueryListenersByQuery: {
-      [query: string]: {remove: () => void},
+      [query: string]: {remove: () => void}
     };
     _radiumMouseUpListener: {remove: () => void};
     _radiumIsMounted: boolean;
+    _lastRadiumState: Object;
+    _extraRadiumStateKeys: any;
 
     constructor() {
       super(...arguments);
@@ -76,6 +153,39 @@ export default function enhanceWithRadium(
       this.state = this.state || {};
       this.state._radiumStyleState = {};
       this._radiumIsMounted = true;
+
+      const self: Object = this;
+
+      // Handle es7 arrow functions on React class method names by detecting
+      // and transfering the instance method to original class prototype.
+      // (Using a copy of the class).
+      // See: https://github.com/FormidableLabs/radium/issues/738
+      RADIUM_METHODS.forEach(name => {
+        const thisDesc = Object.getOwnPropertyDescriptor(self, name);
+        const thisMethod = (thisDesc || {}).value;
+
+        // Only care if have instance method.
+        if (!thisMethod) {
+          return;
+        }
+
+        const radiumDesc = Object.getOwnPropertyDescriptor(RADIUM_PROTO, name);
+        const radiumProtoMethod = radiumDesc.value;
+        const superProtoMethod = ComposedComponent.prototype[name];
+
+        // Allow transfer when:
+        // 1. have an instance method
+        // 2. the super class prototype doesn't have any method
+        // 3. it is not already the radium prototype's
+        if (!superProtoMethod && thisMethod !== radiumProtoMethod) {
+          // Transfer dynamic render component to Component prototype (copy).
+          Object.defineProperty(ComposedComponent.prototype, name, thisDesc);
+
+          // Remove instance property, leaving us to have a contrived
+          // inheritance chain of (1) radium, (2) superclass.
+          delete self[name];
+        }
+      });
     }
 
     componentWillUnmount() {
@@ -94,7 +204,7 @@ export default function enhanceWithRadium(
           function(query) {
             this._radiumMediaQueryListenersByQuery[query].remove();
           },
-          this,
+          this
         );
       }
     }
@@ -126,13 +236,47 @@ export default function enhanceWithRadium(
       if (config && currentConfig !== config) {
         currentConfig = {
           ...config,
-          ...currentConfig,
+          ...currentConfig
         };
       }
 
-      return resolveStyles(this, renderedElement, currentConfig);
+      const {extraStateKeyMap, element} = resolveStyles(
+        this,
+        renderedElement,
+        currentConfig
+      );
+      this._extraRadiumStateKeys = Object.keys(extraStateKeyMap);
+
+      return element;
     }
+
+    /* eslint-disable react/no-did-update-set-state, no-unused-vars */
+    componentDidUpdate(prevProps, prevState) {
+      if (super.componentDidUpdate) {
+        super.componentDidUpdate.call(this, prevProps, prevState);
+      }
+
+      if (this._extraRadiumStateKeys.length > 0) {
+        const trimmedRadiumState = this._extraRadiumStateKeys.reduce(
+          (state, key) => {
+            const {[key]: extraStateKey, ...remainingState} = state;
+            return remainingState;
+          },
+          getRadiumStyleState(this)
+        );
+
+        this._lastRadiumState = trimmedRadiumState;
+        this.setState({_radiumStyleState: trimmedRadiumState});
+      }
+    }
+    /* eslint-enable react/no-did-update-set-state, no-unused-vars */
   }
+
+  // Lazy infer the method names of the Enhancer.
+  RADIUM_PROTO = RadiumEnhancer.prototype;
+  RADIUM_METHODS = Object.getOwnPropertyNames(RADIUM_PROTO).filter(
+    n => n !== 'constructor' && typeof RADIUM_PROTO[n] === 'function'
+  );
 
   // Class inheritance uses Object.create and because of __proto__ issues
   // with IE <10 any static properties of the superclass aren't inherited and
@@ -150,7 +294,7 @@ export default function enhanceWithRadium(
   if (RadiumEnhancer.propTypes && RadiumEnhancer.propTypes.style) {
     RadiumEnhancer.propTypes = {
       ...RadiumEnhancer.propTypes,
-      style: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+      style: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
     };
   }
 
@@ -161,13 +305,13 @@ export default function enhanceWithRadium(
   RadiumEnhancer.contextTypes = {
     ...RadiumEnhancer.contextTypes,
     _radiumConfig: PropTypes.object,
-    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper),
+    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
   };
 
   RadiumEnhancer.childContextTypes = {
     ...RadiumEnhancer.childContextTypes,
     _radiumConfig: PropTypes.object,
-    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper),
+    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
   };
 
   return RadiumEnhancer;

@@ -20,13 +20,10 @@ Radium is a toolset for easily writing React component styles. It resolves brows
 First, require or import Radium at the top of component file:
 
 ```jsx
-var Radium = require('radium');
-
-// or
-import Radium from 'radium'
+import Radium from 'radium';
 
 // If you want to use the <Style /> component you can do
-import Radium, { Style } from 'radium'
+import Radium, { Style } from 'radium';
 ```
 
 Let's create a fictional `<Button>` component. It will have a set of default styles, will adjust its appearance based on modifiers, and will include hover, focus, and active states.
@@ -43,20 +40,13 @@ class Button extends React.Component {
 }
 ```
 
-Radium is activated by using a decorator or wrapping your component:
+Radium is activated by wrapping your component:
 
 ```jsx
-// For ES6 and ES7
-@Radium
 class Button extends React.Component {
   // ...
 }
-
-// or
-class Button extends React.Component {
-  // ...
-}
-module.exports = Radium(Button);
+export default Radium(Button);
 
 // or
 class Button extends React.Component {
@@ -65,7 +55,7 @@ class Button extends React.Component {
 Button = Radium(Button);
 ```
 
-Radium resolves nested style objects into a flat object that can be applied directly to a React element. If you're not familiar with handling inline styles in React, see the React guide to the subject [here](http://facebook.github.io/react/tips/inline-styles.html). A basic style object looks like this:
+Radium resolves nested style objects into a flat object that can be applied directly to a React element. If you're not familiar with handling inline styles in React, see the React guide to the subject [here](https://reactjs.org/docs/dom-elements.html#style). A basic style object looks like this:
 
 ```jsx
 var baseStyles = {
@@ -155,7 +145,7 @@ Radium will ignore any elements of the array that aren't objects, such as the re
 
 Radium supports styling for three browser states that are targeted with pseudo-selectors in normal CSS: `:hover`, `:focus`, and `:active`.
 
-To add styles for these states, add a special key to your style object with the additional rules:
+To add styles for these states, add a special key to your style object with the additional rules. Additionally, you will need to add a unique `key` prop to the elements that take these styles:
 
 ```jsx
 var styles = {
@@ -187,9 +177,23 @@ var styles = {
     }
   },
 };
+
+class MyComponent extends Component {
+...
+render() {
+  return (
+    <div key="1" style={styles.base}>
+      <div key="2" style={styles.block} />
+    </div>
+  );
+}
+...
+}
+
+export default Radium(MyComponent);
 ```
 
-Radium will merge styles for any active states when your component is rendered.
+Radium will merge styles for any active states when your component is rendered. If you are having trouble with browser states, check out [this section](https://github.com/FormidableLabs/radium/tree/master/docs/faq#why-does-the-browser-state-of-a-child-element-not-reset-after-unmounting-and-remounting) of the FAQ.
 
 ## Media queries
 

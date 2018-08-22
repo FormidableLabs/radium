@@ -1,13 +1,13 @@
 /* @flow */
 
-import getStateKey from './get-state-key';
+import cleanStateKey from './clean-state-key';
 
 const getState = function(
   state: {_radiumStyleState: {[key: string]: {[value: string]: boolean}}},
   elementKey: string,
-  value: string,
+  value: string
 ): any {
-  const key = getStateKey(elementKey);
+  const key = cleanStateKey(elementKey);
 
   return !!state &&
     !!state._radiumStyleState &&

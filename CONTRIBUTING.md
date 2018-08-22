@@ -12,9 +12,25 @@ You will find all building blocks that make up Radium in the [`src`](src) folder
 
 ### Testing
 
-You will find tests for each module inside [`src/__tests__`](src/__tests__). Whenever making any changes, ensure that all existing tests pass by running `npm run test`. You can also have [`Karma`](http://karma-runner.github.io/) running in the background and run your tests every time you make a change by doing `npm run test-dev`.
+For ease, we've wrapped up all our individual test commands into:
+
+```sh
+$ npm run build-lib OR watch-lib  # One time / watched src file build
+$ npm run test                    # Single pass of all tests.
+$ npm run test-dev                # Watch test file changes and rerun tests automatically.
+```
+
+#### Frontend
+
+You will find tests for each module inside [`src/__tests__`](src/__tests__). Whenever making any changes, ensure that all existing tests pass by running `npm run test-frontend`. You can also have [`Karma`](http://karma-runner.github.io/) running in the background and run your tests every time you make a change by doing `npm run test-dev-frontend`.
 
 If you are adding a new feature or some extra functionality, you should also make sure to accompany those changes with appropriate tests.
+
+#### Backend
+
+We have a small number of tests for SSR/Node.js usage in [`test`](test). Whenever making any relevant changes, ensure that all existing tests pass by running `npm run test-node`. You will need to have a babel watch running if you are changing source files since these tests rely on built files in `lib/`, which you can do easily with `npm run watch-lib` in a separate terminal.
+
+To get watched test files automagically updated and run, use `npm run test-node-dev`.
 
 ### Linting
 
@@ -35,15 +51,14 @@ Please note that if you use `npm run test-dev` as above, Karma will use port `80
 
 Thanks for taking the time to help us make Radium even better! Before you go ahead and submit a PR, make sure that you have done the following:
 - Run the tests (you did add tests, right?) using `npm run test-dev`.
-- Run lint using `npm run lint`
-- Run flow using `flow`
+- Run lint and flow using `npm run lint`
 
 ## Releasing a new version to NPM (only for project administrators):
 
 1. Update `CHANGELOG.md`, following format for previous versions
 2. Commit as "Changelog for version 0.XX.Y"
-3. Run `npm version patch` (or `minor`, `major` as appropriate) to update `package.json` and add a tag
-4. Run `npm publish` to run tests and lint, build the `lib` ands `dist` directories, and publish to NPM if all is well
+3. Run `npm version patch` (or `minor`, `major` as appropriate) to run tests and lint, build the `lib` ands `dist` directories, , then update `package.json` and add a git tag.
+4. Run `npm publish` and publish to NPM if all is well.
 5. Run `git push && git push --tags`
 
 ## Contributor Covenant Code of Conduct

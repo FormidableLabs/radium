@@ -1,5 +1,64 @@
 # Radium Changelog
 
+## 0.24.1 (July 9, 2018)
+- Make `<StyleSheet>` manually update `<style>` tag DOM, fixing media queries on component level flickering. (#626, #950)
+
+## 0.24.0 (March 29, 2018)
+- Fix `render` methods that return array of children or `React.Fragment`. (#950)
+- Upgrade tests to React 16.2 (for `Fragment` support)
+
+## 0.23.0 (March 15, 2018)
+- Support ES7 arrow functions for React class methods. (#738)
+
+## 0.22.1 (March 1, 2018)
+- Fix `keyframes` bug from prefixed inline styles. (#973)
+
+## 0.22.0 (February 9, 2018)
+### Breaking Changes
+- Radium now exports defaults as `.default`, so for runtimes like Node.js for all files in `lib/**`. We have changed `package.json:main` to point to `/index.js` instead of `/lib/index.js` as a convenience wrapper to expose mostly what was there before so behavior of `const Radium = require('radium');` works mostly as it did before. Caveats:
+    - When using webpack2+ to build code with `require('radium')` in it you will need to change that to become `require('radium').default`.
+    - Any imports of a default export from a file in lib like `const Enhancer = require('radium/lib/enhancer');` will need to be changed to `const Enhancer = require('radium/lib/enhancer').default;`.
+    - We have a full examples repository of how imports work in all likely scenarios that should come up. https://github.com/FormidableLabs/radium-experiments-v0.22
+
+### Features
+- Add `es` ESM module export files.
+
+### Fixes
+- Fix `package.json:scripts.postinstall` task to correctly work for git-based dependencies.
+
+## 0.21.2 (January 25, 2018)
+- Fix multiple-value prefixed inline styles. (#962, #958, #951)
+
+## 0.21.1 (January 18, 2018)
+- Call `componentDidUpdate()` inherited method (#957).
+
+## 0.21.0 (January 8, 2018)
+- Automatically clear browser state of elements when unmounting and remounting (#956).
+  - `resolveStyles` returns `{ extraRadiumStateKeys, element }` instead of just `element`.
+
+## 0.20.1 (January 8, 2018)
+- Fix `v0.20.0` build.
+
+## 0.20.0 (January 8, 2018)
+- Upgrade `inline-style-prefixer` to version `^4.0.0`.
+
+## 0.19.6 (October 5, 2017)
+- Allow native ES classes to be used with the Radium enhancer.
+
+## 0.19.5 (October 5, 2017)
+- Enable React 16 in `peerDependencies` and update tests to React 16.
+
+## 0.19.4 (July 21, 2017)
+- Remove `.babelrc` from published npm registry package.
+
+## 0.19.3 (July 20, 2017)
+- Remove `publishr` from prod `dependencies` in npm registry package.
+
+## 0.19.2 (July 20, 2017)
+- Switch to `publishr` workflow. (#894, #731, #900)
+- Remove `rimraf` from prod `dependencies` in npm registry package.
+- Remove `postinstall` from `scripts` in npm registry package. (#794)
+
 ## 0.19.1 (May 17, 2017)
 
 ### Bug Fixes

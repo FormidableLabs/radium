@@ -23,6 +23,8 @@
     "karma.conf.js",
     "lib",
     "src",
+    "es",
+    "scripts",
     "node_modules",
     "package.json",
     "webpack.config.js",

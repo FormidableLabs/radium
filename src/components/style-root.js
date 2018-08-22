@@ -1,11 +1,13 @@
 /* @flow */
 
 import React, {PureComponent} from 'react';
+import type {Node} from 'react';
 import PropTypes from 'prop-types';
 
 import Enhancer from '../enhancer';
 import StyleKeeper from '../style-keeper';
 import StyleSheet from './style-sheet';
+import type {Config} from '../config';
 
 function _getStyleKeeper(instance): StyleKeeper {
   if (!instance._radiumStyleKeeper) {
@@ -19,7 +21,12 @@ function _getStyleKeeper(instance): StyleKeeper {
   return instance._radiumStyleKeeper;
 }
 
-class StyleRoot extends PureComponent {
+type StyleRootProps = {
+  radiumConfig: Config,
+  children: Node
+};
+
+class StyleRoot extends PureComponent<StyleRootProps> {
   constructor() {
     super(...arguments);
 
@@ -49,11 +56,11 @@ class StyleRoot extends PureComponent {
 
 StyleRoot.contextTypes = {
   _radiumConfig: PropTypes.object,
-  _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper),
+  _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
 };
 
 StyleRoot.childContextTypes = {
-  _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper),
+  _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
 };
 
 StyleRoot = Enhancer(StyleRoot);

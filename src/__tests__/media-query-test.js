@@ -3,20 +3,36 @@
 import Radium, {StyleRoot} from 'index';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
+import ShallowRenderer from 'react-test-renderer/shallow';
 import {
   expectColor,
   expectCSS,
   getRenderOutput,
-  getElement,
+  getElement
 } from 'test-helpers';
 
+// Win on at least ie9 _can't_ sinon.stub() window.onerror like normal.
+// So, we monkeypatch directly like savages.
+const origWindowOnerror = window.onerror;
+
 describe('Media query tests', () => {
+  let sandbox;
+  let errorSpy;
+
   beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    errorSpy = sinon.spy();
+    window.addEventListener('error', errorSpy);
+
     Radium.TestMode.clearState();
   });
 
   afterEach(() => {
+    sandbox.restore();
+    window.removeEventListener('error', errorSpy);
+    window.onerror = origWindowOnerror;
+
     Radium.TestMode.disable();
   });
 
@@ -30,7 +46,7 @@ describe('Media query tests', () => {
         return (
           <div
             style={{
-              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}}
             }}
           />
         );
@@ -53,14 +69,14 @@ describe('Media query tests', () => {
         return (
           <div
             style={{
-              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}}
             }}
           />
         );
       }
     }
 
-    const renderer = TestUtils.createRenderer();
+    const renderer = new ShallowRenderer();
     renderer.render(<TestComponent />);
     renderer.render(<TestComponent />);
 
@@ -80,13 +96,13 @@ describe('Media query tests', () => {
             <div
               key="first"
               style={{
-                '@media (max-width: 400px)': {':hover': {color: 'blue'}},
+                '@media (max-width: 400px)': {':hover': {color: 'blue'}}
               }}
             />
             <div
               key="second"
               style={{
-                '@media (max-width: 400px)': {':hover': {color: 'blue'}},
+                '@media (max-width: 400px)': {':hover': {color: 'blue'}}
               }}
             />
           </div>
@@ -105,7 +121,7 @@ describe('Media query tests', () => {
       return {
         matches: true,
         addListener: () => {},
-        removeListener: () => {},
+        removeListener: () => {}
       };
     };
 
@@ -115,7 +131,7 @@ describe('Media query tests', () => {
         return (
           <div
             style={{
-              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}}
             }}
           />
         );
@@ -134,7 +150,7 @@ describe('Media query tests', () => {
       return {
         matches: true,
         addListener: () => {},
-        removeListener: () => {},
+        removeListener: () => {}
       };
     };
 
@@ -147,10 +163,10 @@ describe('Media query tests', () => {
               {':hover': {background: 'green', color: 'green'}},
               {
                 '@media (max-width: 400px)': {
-                  ':hover': {background: 'yellow'},
-                },
+                  ':hover': {background: 'yellow'}
+                }
               },
-              {'@media (max-width: 400px)': {':hover': {color: 'white'}}},
+              {'@media (max-width: 400px)': {':hover': {color: 'white'}}}
             ]}
           />
         );
@@ -177,7 +193,7 @@ describe('Media query tests', () => {
         return (
           <div
             style={{
-              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}}
             }}
           />
         );
@@ -208,7 +224,7 @@ describe('Media query tests', () => {
         return (
           <div
             style={{
-              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}}
             }}
           />
         );
@@ -225,7 +241,7 @@ describe('Media query tests', () => {
   it('renders top level print styles as CSS', () => {
     const matchMedia = sinon.spy(() => ({
       addListener: () => {},
-      matches: true,
+      matches: true
     }));
 
     const ChildComponent = Radium(() => (
@@ -252,14 +268,14 @@ describe('Media query tests', () => {
           color:black !important;
         }
       }
-    `,
+    `
     );
   });
 
   it("doesn't error on unmount", () => {
     const matchMedia = () => ({
       addListener: () => {},
-      matches: true,
+      matches: true
     });
 
     const ChildComponent = Radium(() => (
@@ -283,11 +299,11 @@ describe('Media query tests', () => {
         style={[
           {
             '@media (min-width: 10px)': {background: 'green'},
-            '@media (min-width: 20px)': {color: 'blue'},
+            '@media (min-width: 20px)': {color: 'blue'}
           },
           {
-            '@media (min-width: 10px)': {color: 'white'},
-          },
+            '@media (min-width: 10px)': {color: 'white'}
+          }
         ]}
       />
     ));
@@ -340,10 +356,49 @@ describe('Media query tests', () => {
   });
 
   it('throws without StyleRoot', () => {
-    const TestComponent = Radium(() => (
+    const ChildComponent = Radium(() => (
       <span style={{'@media (min-width: 10px)': {background: 'green'}}} />
     ));
-    expect(() => TestUtils.renderIntoDocument(<TestComponent />)).to.throw();
+
+    class ErrorBoundary extends React.Component {
+      componentDidCatch() {}
+      render() {
+        return this.props.children;
+      }
+    }
+
+    const TestComponent = Radium(() => (
+      <ErrorBoundary>
+        <ChildComponent />
+      </ErrorBoundary>
+    ));
+
+    // React 16 - need to handle exceptions globally.
+    // In DEV (aka our tests), need to silence global error handlers and such.
+    // https://github.com/facebook/react/issues/10474#issuecomment-322909303
+    window.onerror = sinon.spy();
+    sandbox.stub(console, 'error');
+    const catchSpy = sandbox.spy(ErrorBoundary.prototype, 'componentDidCatch');
+
+    TestUtils.renderIntoDocument(<TestComponent />);
+
+    // Check that the global error handler caught error.
+    expect(window.onerror).to.have.callCount(1);
+    const errMsg = window.onerror.getCall(0).args[0].toString();
+    expect(errMsg).to.contain('StyleRoot');
+
+    // Should also haven't hit the event listener.
+    expect(errorSpy).to.have.callCount(1);
+
+    // **Warning - Brittle Asserts**: React 16
+    //
+    // The call signature is `componentDidCatch(error, info)`, but for some reason
+    // we only get called with `(undefined, { componentStack: STUFF })` just accept
+    // it until we understand more.
+    expect(catchSpy).to.have.callCount(1);
+    expect(catchSpy.getCall(0).args[1]).to.have
+      .property('componentStack')
+      .that.contains('Component');
   });
 
   it("doesn't throw without StyleRoot when in test mode", () => {
@@ -357,17 +412,16 @@ describe('Media query tests', () => {
       TestUtils.renderIntoDocument(<TestComponent />)).not.to.throw();
   });
 
-  /* eslint-disable no-console */
   it("doesn't try to setState if not mounted", () => {
-    sinon.stub(console, 'error');
-    sinon.stub(console, 'warn');
+    sandbox.stub(console, 'error');
+    sandbox.stub(console, 'warn');
 
     const addListener = sinon.spy();
     const mockMatchMedia = function() {
       return {
         matches: true,
         addListener: addListener,
-        removeListener() {},
+        removeListener() {}
       };
     };
 
@@ -377,7 +431,7 @@ describe('Media query tests', () => {
         return (
           <div
             style={{
-              '@media (min-width: 600px)': {':hover': {color: 'blue'}},
+              '@media (min-width: 600px)': {':hover': {color: 'blue'}}
             }}
           />
         );
@@ -393,11 +447,7 @@ describe('Media query tests', () => {
     const listener = addListener.lastCall.args[0];
     listener(mockMatchMedia);
 
-    expect(console.error).not.to.have.been.called;
-    expect(console.warn).not.to.have.been.called;
-
-    console.error.restore();
-    console.warn.restore();
+    expect(console.error).not.to.have.been.called; // eslint-disable-line no-console
+    expect(console.warn).not.to.have.been.called; // eslint-disable-line no-console
   });
-  /* eslint-enable no-console */
 });

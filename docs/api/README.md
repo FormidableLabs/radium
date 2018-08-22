@@ -82,29 +82,31 @@ var styles = {
 - Process the `style` attribute after `render()`
 - Clean up any resources when the component unmounts
 
-Usage with `class` and ES7 decorators:
+Usage with `class`:
 
 ```jsx
-@Radium
 class MyComponent extends React.Component { ... }
+
+MyComponent = Radium(MyComponent);
 ```
 
 Usage with `createClass`:
 
 ```jsx
 var MyComponent = React.createClass({ ... });
-module.exports = Radium(MyComponent);
+export default Radium(MyComponent);
 ```
 
 `Radium`'s primary job is to apply interactive or media query styles, but even if you are not using any special styles, the higher order component will still:
 - Merge arrays of styles passed as the `style` attribute
 - Automatically vendor prefix the `style` object
 
-You can also pass a configuration object to `@Radium`:
+You can also pass a configuration object to `Radium`:
 
 ```jsx
-@Radium({matchMedia: mockMatchMedia})
 class MyComponent extends React.Component { ... }
+
+MyComponent = Radium({matchMedia: mockMatchMedia})(MyComponent);
 
 // or with createClass
 
@@ -113,7 +115,7 @@ module.exports = Radium({matchMedia: mockMatchMedia})(MyComponent);
 ```
 
 You may want to have project-wide Radium settings. Simply create a function that
-wraps Radium, and use it instead of `@Radium`:
+wraps Radium, and use it instead of `Radium`:
 
 ```jsx
 function ConfiguredRadium(component) {
@@ -121,8 +123,9 @@ function ConfiguredRadium(component) {
 }
 
 // Usage
-@ConfiguredRadium
 class MyComponent extends React.Component { ... }
+
+MyComponent = ConfiguredRadium(MyComponent);
 ```
 
 Radium can be called any number of times with a config object, and later configs
@@ -130,8 +133,9 @@ will be merged with and overwrite previous configs. That way, you can still
 override settings on a per-component basis:
 
 ```jsx
-@ConfiguredRadium(config)
 class MySpecialComponent extends React.Component { ... }
+
+MySpecialComponent = ConfiguredRadium(config)(MySpecialComponent);
 ```
 
 Alternatively, if the config value can change every time the component is rendered (userAgent, for example), you can pass configuration to any component wrapped in `Radium` using the `radiumConfig` prop:
@@ -153,6 +157,12 @@ Allows you to replace the `matchMedia` function that Radium uses. The default is
 
 **Server**
 
+You can require `Radium` on the server / using CommonJS with:
+
+```jsx
+var Radium = require('radium');
+```
+
 ```jsx
 var ConfiguredRadium = require('./configured-radium');
 var matchMediaMock = require('match-media-mock').create();
@@ -165,7 +175,7 @@ app.get('/app/:width/:height', function(req, res) {
     height: req.params.height,
   });
 
-  // Your application code uses `@ConfiguredRadium` instead of `@Radium`
+  // Your application code uses `ConfiguredRadium` instead of `Radium`
   var html = React.renderToString(<RadiumApp />);
 
   res.end(html);
@@ -197,8 +207,9 @@ module.exports = ConfiguredRadium;
 ```jsx
 var ConfiguredRadium = require('./configured-radium');
 
-@ConfiguredRadium
 class MyComponent extends React.Component { ... }
+
+MyComponent = ConfiguredRadium(MyComponent);
 ```
 
 See [#146](https://github.com/FormidableLabs/radium/pull/146) for more info.
@@ -233,8 +244,9 @@ function ConfiguredRadium(component) {
 }
 
 // Usage
-@ConfiguredRadium
 class MyComponent extends React.Component { ... }
+
+MyComponent = ConfiguredRadium(MyComponent);
 ```
 
 You will typically want to put plugins before the final `checkProps` so that you can still benefit from the checks it provides. If your plugin might produce other pseudo-style blocks, like `@media` consumed by `resolveMediaQueries` or `:hover` consumed by `resolveInteractionStyles`, you would want to have your plugin run before those plugins.
@@ -284,7 +296,6 @@ Create a keyframes animation for use in an inline style. `keyframes` returns an 
 `keyframes` takes an optional second parameter, a `name` to prepend to the animation's name to aid in debugging.
 
 ```jsx
-@Radium
 class Spinner extends React.Component {
   render () {
     return (
@@ -294,6 +305,8 @@ class Spinner extends React.Component {
     );
   }
 }
+
+Spinner = Radium(Spinner);
 
 var pulseKeyframes = Radium.keyframes({
   '0%': {width: '10%'},
@@ -490,7 +503,7 @@ Without the `<Style>` component, it is prohibitively difficult to write a `<styl
 
 If you include a `scopeSelector`, you can include CSS rules that should apply to that selector as well as any nested selectors. For example, the following
 
-```
+```jsx
 <Style
   scopeSelector=".scoping-class"
   rules={{
@@ -504,13 +517,13 @@ If you include a `scopeSelector`, you can include CSS rules that should apply to
 
 will return:
 
-```
+```html
 <style>
 .scoping-class {
   color: 'blue';
 }
 .scoping-class span {
-  font-family: 'Lucida Console, Monaco, monospace'
+  font-family: 'Lucida Console, Monaco, monospace';
 }
 </style>
 ```
@@ -524,9 +537,8 @@ An object of CSS rules to render. Each key of the rules object is a CSS selector
 ```jsx
 var Radium = require('radium');
 var Style = Radium.Style;
-
 // or
-import Radium, { Style } from 'radium'
+import Radium, { Style } from 'radium';
 
 <Style rules={{
   body: {
@@ -563,7 +575,7 @@ A string that any included selectors in `rules` will be appended to. Use to scop
 ```jsx
 <div className="TestClass">
   <Style
-  scopeSelector=".TestClass"
+    scopeSelector=".TestClass"
     rules={{
       h1: {
         fontSize: '2em'
@@ -597,7 +609,7 @@ class App extends React.Component {
       </StyleRoot>
     );
   }
-}  
+}
 ```
 
 **Note:** StyleRoot passes the style-keeper (the object where styles are collected) down to other Radium components via context. Because of this, you cannot use keyframes or media queries in *direct children* of the `<StyleRoot>`, e.g.
@@ -626,7 +638,7 @@ class App extends React.Component {
       </StyleRoot>
     );
   }
-}  
+}
 ```
 
 ## TestMode

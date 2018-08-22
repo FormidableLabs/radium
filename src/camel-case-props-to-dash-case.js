@@ -6,7 +6,7 @@ const _camelCaseReplacer = function(match, p1, p2) {
   return (p1 || '') + '-' + p2.toLowerCase();
 };
 
-const _camelCaseToDashCase = function(s) {
+export const camelCaseToDashCase = function(s: string): string {
   return s.replace(_camelCaseRegex, _camelCaseReplacer);
 };
 
@@ -15,7 +15,7 @@ const camelCasePropsToDashCase = function(prefixedStyle: Object): Object {
   // translate the keys to dash case for rendering to CSS.
   return Object.keys(prefixedStyle).reduce(
     (result, key) => {
-      let dashCaseKey = _camelCaseToDashCase(key);
+      let dashCaseKey = camelCaseToDashCase(key);
 
       // Fix IE vendor prefix
       if (/^ms-/.test(dashCaseKey)) {
@@ -25,7 +25,7 @@ const camelCasePropsToDashCase = function(prefixedStyle: Object): Object {
       result[dashCaseKey] = prefixedStyle[key];
       return result;
     },
-    {},
+    {}
   );
 };
 
