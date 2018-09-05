@@ -52,32 +52,6 @@ function isNativeClass(component: Function): boolean {
     /^\s*class\s+/.test(component.toString());
 }
 
-// Manually apply babel-ish class inheritance.
-function inherits(subClass, superClass) {
-  if (typeof superClass !== 'function' && superClass !== null) {
-    throw new TypeError(
-      `Super expression must either be null or a function, not ${typeof superClass}`
-    );
-  }
-
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    }
-  });
-
-  if (superClass) {
-    if (Object.setPrototypeOf) {
-      Object.setPrototypeOf(subClass, superClass);
-    } else {
-      subClass.__proto__ = superClass; // eslint-disable-line no-proto
-    }
-  }
-}
-
 export default function enhanceWithRadium(
   configOrComposedComponent: Class<any> | constructor | Function | Object,
   config?: Object = {}
@@ -92,27 +66,26 @@ export default function enhanceWithRadium(
   const component: Function = configOrComposedComponent;
   let ComposedComponent: constructor = component;
 
-  // Handle Native ES classes.
+  // Radium is transpiled in npm, so it isn't really using es6 classes at
+  // runtime.  However, the user of Radium might be.  In this case we have
+  // to maintain forward compatibility with native es classes.
   if (isNativeClass(ComposedComponent)) {
-    // Manually approximate babel's class transpilation, but _with_ a real `new` call.
     ComposedComponent = (function(OrigComponent): constructor {
       function NewComponent() {
-        // Ordinarily, babel would produce something like:
-        //
-        // ```
-        // return _possibleConstructorReturn(this, OrigComponent.apply(this, arguments));
-        // ```
-        //
-        // Instead, we just call `new` directly without the `_possibleConstructorReturn` wrapper.
-        const source = new OrigComponent(...arguments);
+        // Use Reflect.construct to simulate 'new'
+        const obj = Reflect.construct(
+          OrigComponent,
+          arguments,
+          this.constructor
+        );
 
-        // Then we manually update context with properties.
-        copyProperties(source, this);
-
-        return this;
+        return obj;
       }
 
-      inherits(NewComponent, OrigComponent);
+      // $FlowFixMe
+      Reflect.setPrototypeOf(NewComponent.prototype, OrigComponent.prototype);
+      // $FlowFixMe
+      Reflect.setPrototypeOf(NewComponent, OrigComponent);
 
       return NewComponent;
     })(ComposedComponent);

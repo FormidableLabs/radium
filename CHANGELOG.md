@@ -1,5 +1,9 @@
 # Radium Changelog
 
+## Unreleased
+- Use `Reflect` to construct es native classes in a way that preserves the value of `this` used in 
+  the constructor. (#999, #1001)
+
 ## 0.24.1 (July 9, 2018)
 - Make `<StyleSheet>` manually update `<style>` tag DOM, fixing media queries on component level flickering. (#626, #950)
 
