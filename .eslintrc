@@ -19,6 +19,7 @@ globals:
     expect: true
     sinon: true
     ReactElement: true
+    Reflect: true
 
 rules:
 

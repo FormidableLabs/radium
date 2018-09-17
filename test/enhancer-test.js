@@ -64,4 +64,66 @@ describe('Enhancer', () => {
 
     assertValidEnhancedComponent(Composed);
   });
+
+  it('handles native ES classes with bound methods', () => {
+    class TestComponent extends React.Component {
+      constructor() {
+        super(...arguments);
+        this.checkProp = this.checkProp.bind(this);
+        this.checkState = this.checkState.bind(this);
+        this.state = {v: 1};
+      }
+
+      componentWillReceiveProps() {
+        this.setState(state => ({v: state.v + 1}));
+      }
+
+      checkProp() {
+        return this.props.flag;
+      }
+
+      checkState() {
+        return this.state.v;
+      }
+
+      touchState() {
+        this.state.v += 1;
+      }
+
+      render() {
+        return React.createElement('p', {}, [
+          String(this.props.flag),
+          ' == ',
+          String(this.checkProp()),
+          ', ',
+          String(this.state.v),
+          ' == ',
+          String(this.checkState())
+        ]);
+      }
+    }
+
+    const cleanup = require('jsdom-global')();
+    try {
+      const Enhanced = Enhancer(TestComponent);
+      const elt = React.createElement(Enhanced, {flag: true});
+      const {configure, mount} = require('enzyme');
+      const Adapter = require('enzyme-adapter-react-16');
+      configure({adapter: new Adapter()});
+      const wrapper = mount(elt);
+      expect(wrapper.html()).is.equal(
+        '<p data-radium="true">true == true, 1 == 1</p>'
+      );
+      wrapper.setProps({flag: false});
+      expect(wrapper.html()).is.equal(
+        '<p data-radium="true">false == false, 2 == 2</p>'
+      );
+      wrapper.setProps({flag: true});
+      expect(wrapper.html()).is.equal(
+        '<p data-radium="true">true == true, 3 == 3</p>'
+      );
+    } finally {
+      cleanup();
+    }
+  }).timeout(10000);
 });
