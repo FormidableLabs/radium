@@ -1,8 +1,9 @@
 # Radium Changelog
 
-## Unreleased
+## 0.25.0 (September 16, 2018)
 - Use `Reflect` to construct es native classes in a way that preserves the value of `this` used in 
   the constructor. (#999, #1001)
+- Handle multiple animationName props (#909)
 
 ## 0.24.1 (July 9, 2018)
 - Make `<StyleSheet>` manually update `<style>` tag DOM, fixing media queries on component level flickering. (#626, #950)

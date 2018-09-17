@@ -145,6 +145,8 @@ resolve: {
 
 which will allow `const Radium = require('radium');` to still work. The configuration effectively forces webpack to point to code from `package.json:main` (which points to `/index.js`) instead of what is in `package.json:module`.
 
+*Note:* Radium uses `Reflect` which is not supported in IE11. You will need to bring in a polyfill like [CoreJs](https://github.com/zloirock/core-js#ecmascript-reflect) in order to support <IE11.
+
 ## Examples
 
 To see the universal examples:
