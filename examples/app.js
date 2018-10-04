@@ -290,7 +290,10 @@ const multiAnimationStyles = {
 const listStyle = {
   ...resetListStyle,
   ...resetBoxModel,
-  margin: 15
+  marginTop: 15,
+  marginBottom: 15,
+  marginLeft: 15,
+  marginRight: 15,
 };
 
 export default App;
