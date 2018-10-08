@@ -258,7 +258,7 @@ function createComposedFromStatelessFunc(
   return ComposedComponent;
 }
 
-function createComposedFromEsm(ComposedComponent: constructor) {
+function createComposedFromNativeClass(ComposedComponent: constructor) {
   ComposedComponent = (function(OrigComponent): constructor {
     function NewComponent() {
       // Use Reflect.construct to simulate 'new'
@@ -289,7 +289,7 @@ export default function enhanceWithRadium(
   // runtime.  However, the user of Radium might be.  In this case we have
   // to maintain forward compatibility with native es classes.
   if (isNativeClass(ComposedComponent)) {
-    ComposedComponent = createComposedFromEsm(ComposedComponent);
+    ComposedComponent = createComposedFromNativeClass(ComposedComponent);
   }
 
   // Handle stateless components
