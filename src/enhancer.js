@@ -52,61 +52,40 @@ function isNativeClass(component: Function): boolean {
     /^\s*class\s+/.test(component.toString());
 }
 
-export default function enhanceWithRadium(
-  configOrComposedComponent: Class<any> | constructor | Function | Object,
-  config?: Object = {}
-): constructor {
-  if (typeof configOrComposedComponent !== 'function') {
-    const newConfig = {...config, ...configOrComposedComponent};
-    return function(configOrComponent) {
-      return enhanceWithRadium(configOrComponent, newConfig);
-    };
-  }
+// Handle es7 arrow functions on React class method names by detecting
+// and transfering the instance method to original class prototype.
+// (Using a copy of the class).
+// See: https://github.com/FormidableLabs/radium/issues/738
+function copyArrowFuncs(enhancedSelf: Object, ComposedComponent: constructor) {
+  RADIUM_METHODS.forEach(name => {
+    const thisDesc = Object.getOwnPropertyDescriptor(enhancedSelf, name);
+    const thisMethod = (thisDesc || {}).value;
+    // Only care if have instance method.
+    if (!thisMethod) {
+      return;
+    }
+    const radiumDesc = Object.getOwnPropertyDescriptor(RADIUM_PROTO, name);
+    const radiumProtoMethod = (radiumDesc || {}).value;
+    const superProtoMethod = ComposedComponent.prototype[name];
+    // Allow transfer when:
+    // 1. have an instance method
+    // 2. the super class prototype doesn't have any method
+    // 3. it is not already the radium prototype's
+    if (!superProtoMethod && thisMethod !== radiumProtoMethod) {
+      // Transfer dynamic render component to Component prototype (copy).
+      Object.defineProperty(ComposedComponent.prototype, name, thisDesc);
+      // Remove instance property, leaving us to have a contrived
+      // inheritance chain of (1) radium, (2) superclass.
+      delete enhancedSelf[name];
+    }
+  });
+}
 
-  const component: Function = configOrComposedComponent;
-  let ComposedComponent: constructor = component;
-
-  // Radium is transpiled in npm, so it isn't really using es6 classes at
-  // runtime.  However, the user of Radium might be.  In this case we have
-  // to maintain forward compatibility with native es classes.
-  if (isNativeClass(ComposedComponent)) {
-    ComposedComponent = (function(OrigComponent): constructor {
-      function NewComponent() {
-        // Use Reflect.construct to simulate 'new'
-        const obj = Reflect.construct(
-          OrigComponent,
-          arguments,
-          this.constructor
-        );
-
-        return obj;
-      }
-
-      // $FlowFixMe
-      Reflect.setPrototypeOf(NewComponent.prototype, OrigComponent.prototype);
-      // $FlowFixMe
-      Reflect.setPrototypeOf(NewComponent, OrigComponent);
-
-      return NewComponent;
-    })(ComposedComponent);
-  }
-
-  // Handle stateless components
-  if (isStateless(ComposedComponent)) {
-    ComposedComponent = class extends Component<any, Object> {
-      render() {
-        return component(this.props, this.context);
-      }
-    };
-
-    ComposedComponent.displayName = component.displayName || component.name;
-  }
-
-  // Shallow copy composed if still original (we may mutate later).
-  if (ComposedComponent === component) {
-    ComposedComponent = class extends ComposedComponent {};
-  }
-
+function createEnhancedComponent(
+  origComponent: Function,
+  ComposedComponent: constructor,
+  config?: Object
+) {
   class RadiumEnhancer extends ComposedComponent {
     static _isRadiumEnhanced = true;
 
@@ -129,36 +108,8 @@ export default function enhanceWithRadium(
 
       const self: Object = this;
 
-      // Handle es7 arrow functions on React class method names by detecting
-      // and transfering the instance method to original class prototype.
-      // (Using a copy of the class).
-      // See: https://github.com/FormidableLabs/radium/issues/738
-      RADIUM_METHODS.forEach(name => {
-        const thisDesc = Object.getOwnPropertyDescriptor(self, name);
-        const thisMethod = (thisDesc || {}).value;
-
-        // Only care if have instance method.
-        if (!thisMethod) {
-          return;
-        }
-
-        const radiumDesc = Object.getOwnPropertyDescriptor(RADIUM_PROTO, name);
-        const radiumProtoMethod = radiumDesc.value;
-        const superProtoMethod = ComposedComponent.prototype[name];
-
-        // Allow transfer when:
-        // 1. have an instance method
-        // 2. the super class prototype doesn't have any method
-        // 3. it is not already the radium prototype's
-        if (!superProtoMethod && thisMethod !== radiumProtoMethod) {
-          // Transfer dynamic render component to Component prototype (copy).
-          Object.defineProperty(ComposedComponent.prototype, name, thisDesc);
-
-          // Remove instance property, leaving us to have a contrived
-          // inheritance chain of (1) radium, (2) superclass.
-          delete self[name];
-        }
-      });
+      // Handle es7 arrow functions on React class method
+      copyArrowFuncs(self, ComposedComponent);
     }
 
     componentWillUnmount() {
@@ -191,7 +142,7 @@ export default function enhanceWithRadium(
         return superChildContext;
       }
 
-      const newContext = {...superChildContext};
+      const newContext: Object = {...superChildContext};
 
       if (this.props.radiumConfig) {
         newContext._radiumConfig = this.props.radiumConfig;
@@ -213,6 +164,7 @@ export default function enhanceWithRadium(
         };
       }
 
+      // do the style and interaction work
       const {extraStateKeyMap, element} = resolveStyles(
         this,
         renderedElement,
@@ -255,7 +207,7 @@ export default function enhanceWithRadium(
   // with IE <10 any static properties of the superclass aren't inherited and
   // so need to be manually populated.
   // See http://babeljs.io/docs/advanced/caveats/#classes-10-and-below-
-  copyProperties(component, RadiumEnhancer);
+  copyProperties(origComponent, RadiumEnhancer);
 
   if (process.env.NODE_ENV !== 'production') {
     // This also fixes React Hot Loader by exposing the original components top
@@ -264,6 +216,7 @@ export default function enhanceWithRadium(
     copyProperties(ComposedComponent.prototype, RadiumEnhancer.prototype);
   }
 
+  // add Radium propTypes to enhanced component's propTypes
   if (RadiumEnhancer.propTypes && RadiumEnhancer.propTypes.style) {
     RadiumEnhancer.propTypes = {
       ...RadiumEnhancer.propTypes,
@@ -271,10 +224,12 @@ export default function enhanceWithRadium(
     };
   }
 
-  RadiumEnhancer.displayName = component.displayName ||
-    component.name ||
+  // copy display name to enhanced component
+  RadiumEnhancer.displayName = origComponent.displayName ||
+    origComponent.name ||
     'Component';
 
+  // handle context
   RadiumEnhancer.contextTypes = {
     ...RadiumEnhancer.contextTypes,
     _radiumConfig: PropTypes.object,
@@ -288,4 +243,77 @@ export default function enhanceWithRadium(
   };
 
   return RadiumEnhancer;
+}
+
+function createComposedFromStatelessFunc(
+  ComposedComponent: constructor,
+  component: Function
+) {
+  ComposedComponent = class extends Component<any, Object> {
+    render() {
+      return component(this.props, this.context);
+    }
+  };
+  ComposedComponent.displayName = component.displayName || component.name;
+  return ComposedComponent;
+}
+
+function createComposedFromEsm(ComposedComponent: constructor) {
+  ComposedComponent = (function(OrigComponent): constructor {
+    function NewComponent() {
+      // Use Reflect.construct to simulate 'new'
+      const obj = Reflect.construct(OrigComponent, arguments, this.constructor);
+      return obj;
+    }
+    // $FlowFixMe
+    Reflect.setPrototypeOf(NewComponent.prototype, OrigComponent.prototype);
+    // $FlowFixMe
+    Reflect.setPrototypeOf(NewComponent, OrigComponent);
+    return NewComponent;
+  })(ComposedComponent);
+  return ComposedComponent;
+}
+
+export default function enhanceWithRadium(
+  configOrComposedComponent: Class<any> | constructor | Function | Object,
+  config?: Object = {}
+): constructor {
+  if (typeof configOrComposedComponent !== 'function') {
+    return createFactoryFromConfig(config, configOrComposedComponent);
+  }
+
+  const origComponent: Function = configOrComposedComponent;
+  let ComposedComponent: constructor = origComponent;
+
+  // Radium is transpiled in npm, so it isn't really using es6 classes at
+  // runtime.  However, the user of Radium might be.  In this case we have
+  // to maintain forward compatibility with native es classes.
+  if (isNativeClass(ComposedComponent)) {
+    ComposedComponent = createComposedFromEsm(ComposedComponent);
+  }
+
+  // Handle stateless components
+  if (isStateless(ComposedComponent)) {
+    ComposedComponent = createComposedFromStatelessFunc(
+      ComposedComponent,
+      origComponent
+    );
+  }
+
+  // Shallow copy composed if still original (we may mutate later).
+  if (ComposedComponent === origComponent) {
+    ComposedComponent = class extends ComposedComponent {};
+  }
+
+  return createEnhancedComponent(origComponent, ComposedComponent, config);
+}
+
+function createFactoryFromConfig(
+  config: Object,
+  configOrComposedComponent: Object
+) {
+  const newConfig = {...config, ...configOrComposedComponent};
+  return function(configOrComponent) {
+    return enhanceWithRadium(configOrComponent, newConfig);
+  };
 }
