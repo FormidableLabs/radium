@@ -135,3 +135,46 @@ available at [http://contributor-covenant.org/version/1/4][version]
 
 [homepage]: http://contributor-covenant.org
 [version]: http://contributor-covenant.org/version/1/4/
+[version]: http://contributor-covenant.org/version/1/4/
+
+### Architecture
+
+#### Enhancer HOC (enhancer.js)
+
+- Component is wrapped by `Radium` which runs it through `enhancer.js::enhanceWithRadium()`.
+- A composed component is created
+  - ES modules - `Reflect` is used to create enhanced component from prototype of original component
+  - Stateless components - a simple wrapper component is created which calls the original component
+  - Everything else - enhanced component is created by shallow copying the original component
+- An enhanced component is created
+  - static `_isRadiumEnhanced = true` property is added
+  - `_radiumStyleState = {}` is added to component state
+  - In render, `resolveStyles.js:resolveStyles` is called on the original rendered elements before they are returned. (see resolveStyles section)
+  - in componentDidUpdate, unused state keys are removed if necessary
+  - in componentWillUnmount, mouse and media query listeners are removed
+
+#### Style Resolver `resolveStyles.js::resolveStyles`
+
+- Called on the original rendered elements before they are returned. It iterates over the elements and children, rewriting props to add event handlers required to capture user interactions (e.g. mouse over). It also replaces the style prop because it adds in the various interaction styles (e.g. :hover).
+- extraStateKeyMap is created by determining which state fields are no longer needed [?]
+- If the rendered elements are an array, they are recursively mapped over with resolveStyles
+- New children are resolved
+  - Recurse into children and call `resolveStyles` on each one
+- New props are resolved
+  - Recurse through props and call `resolveStyles` on any React components in props. Otherwise return props as-is
+- Plugins are run ONLY on simple ReactDOM elements that have a style prop
+  - plugins are called with the component, its props and a bunch of helper functions
+  - if the props were changed/added by any plugin, then return those
+  - see plugins section for more
+- If anything changed, clone the element and return that. Otherwise just return the element.
+
+#### Plugins
+
+- _merge-styles-array-plugin_ - If the component styles are an array, it deeply merges them. Otherwise, it returns them unmodified.
+- _check-props-plugin_ - Recursively checks props and warns (in dev mode) if shorthand and longhand are mixed.
+- _resolve-media-queries-plugin_ - Handles media query style entries (like '@media (...)': { ... }), applying them only when the appropriate media query is hit
+- _resolve-interaction-styles-plugin_ - Handles `:hover`, `:active` and `:focus` styles by adding/wrapping mouse event listeners with functions that update radium's state.
+- _keyframes-plugin_ - Handles keyframe styles
+- _visited-plugin_ - Handles `:visited` styles
+- _remove-nested-styles-plugin_ - Recursively flattens nested styles into a flat object
+- _prefix-plugin_ - Uses browser detection and a mapping to add vendor prefixes to CSS properties and values as needed
