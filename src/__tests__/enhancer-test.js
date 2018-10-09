@@ -164,11 +164,7 @@ describe('Enhancer', () => {
         return [{color: 'black'}];
       }
       render() {
-        return (
-          <div style={this.getStyles()}>
-            Hello World!
-          </div>
-        );
+        return <div style={this.getStyles()}>Hello World!</div>;
       }
     }
 

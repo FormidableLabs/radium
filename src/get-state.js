@@ -9,10 +9,12 @@ const getState = function(
 ): any {
   const key = cleanStateKey(elementKey);
 
-  return !!state &&
+  return (
+    !!state &&
     !!state._radiumStyleState &&
     !!state._radiumStyleState[key] &&
-    state._radiumStyleState[key][value];
+    state._radiumStyleState[key][value]
+  );
 };
 
 export default getState;

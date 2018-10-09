@@ -17,7 +17,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Radium from '../../src';
 
-@Radium class Button extends React.Component {
+@Radium
+class Button extends React.Component {
   render() {
     return (
       <button

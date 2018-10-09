@@ -396,8 +396,8 @@ describe('Media query tests', () => {
     // we only get called with `(undefined, { componentStack: STUFF })` just accept
     // it until we understand more.
     expect(catchSpy).to.have.callCount(1);
-    expect(catchSpy.getCall(0).args[1]).to.have
-      .property('componentStack')
+    expect(catchSpy.getCall(0).args[1])
+      .to.have.property('componentStack')
       .that.contains('Component');
   });
 
@@ -409,7 +409,8 @@ describe('Media query tests', () => {
       </div>
     ));
     expect(() =>
-      TestUtils.renderIntoDocument(<TestComponent />)).not.to.throw();
+      TestUtils.renderIntoDocument(<TestComponent />)
+    ).not.to.throw();
   });
 
   it("doesn't try to setState if not mounted", () => {

@@ -40,8 +40,7 @@ export default function appendPxIfNeeded(
   propertyName: string,
   value: any
 ): string {
-  const needsPxSuffix = !isUnitlessNumber[propertyName] &&
-    typeof value === 'number' &&
-    value !== 0;
+  const needsPxSuffix =
+    !isUnitlessNumber[propertyName] && typeof value === 'number' && value !== 0;
   return needsPxSuffix ? value + 'px' : value;
 }

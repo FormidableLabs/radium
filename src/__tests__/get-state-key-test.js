@@ -18,7 +18,7 @@ describe('getStateKey', () => {
   it('gets the key if the ref is not a string', () => {
     class Test extends React.Component {
       render() {
-        return <div key="myKey" ref={ref => this.ref = ref} />;
+        return <div key="myKey" ref={ref => (this.ref = ref)} />;
       }
     }
 

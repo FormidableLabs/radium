@@ -512,7 +512,8 @@ describe('resolveStyles', () => {
       ]);
 
       const createMultiPseudoTest = function(pseudoStyles, onHandlers) {
-        const name = 'applies pseudo styles in the defined order: ' +
+        const name =
+          'applies pseudo styles in the defined order: ' +
           pseudoStyles.map(pseudo => pseudo.name).join(', ') +
           ' when handlers called in order: ' +
           onHandlers.join(', ');
@@ -554,7 +555,11 @@ describe('resolveStyles', () => {
         }
       };
       const component = genComponent(initialState);
-      const renderedElement = <div><div ref="mountedDiv" /></div>;
+      const renderedElement = (
+        <div>
+          <div ref="mountedDiv" />
+        </div>
+      );
 
       const result = resolveStyles(component, renderedElement).extraStateKeyMap;
 
@@ -565,7 +570,11 @@ describe('resolveStyles', () => {
   describe('React.Children.only', () => {
     it("doesn't break React.Children.only", () => {
       const component = genComponent();
-      const renderedElement = <div><span /></div>;
+      const renderedElement = (
+        <div>
+          <span />
+        </div>
+      );
 
       const result = resolveStyles(component, renderedElement).element;
 

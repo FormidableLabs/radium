@@ -11,8 +11,8 @@ import type {Config} from '../config';
 
 function _getStyleKeeper(instance): StyleKeeper {
   if (!instance._radiumStyleKeeper) {
-    const userAgent = (instance.props.radiumConfig &&
-      instance.props.radiumConfig.userAgent) ||
+    const userAgent =
+      (instance.props.radiumConfig && instance.props.radiumConfig.userAgent) ||
       (instance.context._radiumConfig &&
         instance.context._radiumConfig.userAgent);
     instance._radiumStyleKeeper = new StyleKeeper(userAgent);
