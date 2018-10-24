@@ -18,6 +18,7 @@ test_script:
   # Run tests
   - yarn run build
   - yarn run test-ie
+  
 
 # Don't actually build.
 build: off
