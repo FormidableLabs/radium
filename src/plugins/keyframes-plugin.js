@@ -13,27 +13,24 @@ export default function keyframesPlugin(
     return animationName;
   };
 
-  const newStyle = Object.keys(style).reduce(
-    (newStyleInProgress, key) => {
-      let value = style[key];
-      const isKeyframeArray = Array.isArray(value);
+  const newStyle = Object.keys(style).reduce((newStyleInProgress, key) => {
+    let value = style[key];
+    const isKeyframeArray = Array.isArray(value);
 
-      if (
-        key === 'animationName' &&
-        value &&
-        (value.__radiumKeyframes || isKeyframeArray)
-      ) {
-        if (isKeyframeArray) {
-          value = value.map(processKeyframeStyle).join(', ');
-        } else {
-          value = processKeyframeStyle(value);
-        }
+    if (
+      key === 'animationName' &&
+      value &&
+      (value.__radiumKeyframes || isKeyframeArray)
+    ) {
+      if (isKeyframeArray) {
+        value = value.map(processKeyframeStyle).join(', ');
+      } else {
+        value = processKeyframeStyle(value);
       }
+    }
 
-      newStyleInProgress[key] = value;
-      return newStyleInProgress;
-    },
-    {}
-  );
+    newStyleInProgress[key] = value;
+    return newStyleInProgress;
+  }, {});
   return {style: newStyle};
 }

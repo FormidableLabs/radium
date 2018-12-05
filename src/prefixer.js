@@ -6,8 +6,7 @@
  */
 
 import createStaticPrefixer from 'inline-style-prefixer/static/createPrefixer';
-import createDynamicPrefixer
-  from 'inline-style-prefixer/dynamic/createPrefixer';
+import createDynamicPrefixer from 'inline-style-prefixer/dynamic/createPrefixer';
 import ExecutionEnvironment from 'exenv';
 
 import staticData from './prefix-data/static';
@@ -19,24 +18,21 @@ const prefixAll: (style: Object) => Object = createStaticPrefixer(staticData);
 const InlineStylePrefixer = createDynamicPrefixer(dynamicData, prefixAll);
 
 function transformValues(style) {
-  return Object.keys(style).reduce(
-    (newStyle, key) => {
-      let value = style[key];
-      if (Array.isArray(value)) {
-        value = value.join(';' + key + ':');
-      } else if (
-        value &&
-        typeof value === 'object' &&
-        typeof value.toString === 'function'
-      ) {
-        value = value.toString();
-      }
+  return Object.keys(style).reduce((newStyle, key) => {
+    let value = style[key];
+    if (Array.isArray(value)) {
+      value = value.join(';' + key + ':');
+    } else if (
+      value &&
+      typeof value === 'object' &&
+      typeof value.toString === 'function'
+    ) {
+      value = value.toString();
+    }
 
-      newStyle[key] = value;
-      return newStyle;
-    },
-    {}
-  );
+    newStyle[key] = value;
+    return newStyle;
+  }, {});
 }
 
 // Flatten prefixed values that are arrays to strings.
@@ -52,36 +48,33 @@ function transformValues(style) {
 //
 // https://github.com/FormidableLabs/radium/issues/958
 function flattenStyleValues(style) {
-  return Object.keys(style).reduce(
-    (newStyle, key) => {
-      let val = style[key];
-      if (Array.isArray(val)) {
-        if (ExecutionEnvironment.canUseDOM) {
-          // For the **browser**, when faced with multiple values, we just take
-          // the **last** one, which is the original passed in value before
-          // prefixing. This _should_ work, because `inline-style-prefixer`
-          // we're just passing through what would happen without ISP.
+  return Object.keys(style).reduce((newStyle, key) => {
+    let val = style[key];
+    if (Array.isArray(val)) {
+      if (ExecutionEnvironment.canUseDOM) {
+        // For the **browser**, when faced with multiple values, we just take
+        // the **last** one, which is the original passed in value before
+        // prefixing. This _should_ work, because `inline-style-prefixer`
+        // we're just passing through what would happen without ISP.
 
-          val = val[val.length - 1].toString();
-        } else {
-          // For the **server**, we just concatenate things together and convert
-          // the style object values into a hacked-up string of like `display:
-          // "-webkit-flex;display:flex"` that will SSR render correctly to like
-          // `"display:-webkit-flex;display:flex"` but would otherwise be
-          // totally invalid values.
+        val = val[val.length - 1].toString();
+      } else {
+        // For the **server**, we just concatenate things together and convert
+        // the style object values into a hacked-up string of like `display:
+        // "-webkit-flex;display:flex"` that will SSR render correctly to like
+        // `"display:-webkit-flex;display:flex"` but would otherwise be
+        // totally invalid values.
 
-          // We convert keys to dash-case only for the serialize values and
-          // leave the real key camel-cased so it's as expected to React and
-          // other parts of the processing chain.
-          val = val.join(`;${camelCaseToDashCase(key)}:`);
-        }
+        // We convert keys to dash-case only for the serialize values and
+        // leave the real key camel-cased so it's as expected to React and
+        // other parts of the processing chain.
+        val = val.join(`;${camelCaseToDashCase(key)}:`);
       }
+    }
 
-      newStyle[key] = val;
-      return newStyle;
-    },
-    {}
-  );
+    newStyle[key] = val;
+    return newStyle;
+  }, {});
 }
 
 let _hasWarnedAboutUserAgent = false;
@@ -94,8 +87,8 @@ function getPrefixer(
   +prefix: (style: Object) => Object,
   prefixedKeyframes: string
 } {
-  const actualUserAgent = userAgent ||
-    (global && global.navigator && global.navigator.userAgent);
+  const actualUserAgent =
+    userAgent || (global && global.navigator && global.navigator.userAgent);
 
   if (process.env.NODE_ENV !== 'production') {
     if (!actualUserAgent && !_hasWarnedAboutUserAgent) {

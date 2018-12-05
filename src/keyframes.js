@@ -19,12 +19,13 @@ export default function keyframes(
       const keyframesPrefixed = getPrefixedKeyframes(userAgent);
       const rules = Object.keys(keyframeRules)
         .map(percentage =>
-          cssRuleSetToString(percentage, keyframeRules[percentage], userAgent))
+          cssRuleSetToString(percentage, keyframeRules[percentage], userAgent)
+        )
         .join('\n');
-      const animationName = (name ? name + '-' : '') +
-        'radium-animation-' +
-        hash(rules);
-      const css = '@' +
+      const animationName =
+        (name ? name + '-' : '') + 'radium-animation-' + hash(rules);
+      const css =
+        '@' +
         keyframesPrefixed +
         ' ' +
         animationName +

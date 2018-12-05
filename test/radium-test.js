@@ -52,7 +52,8 @@ describe('Radium blackbox SSR tests', () => {
 
     it('handles matching user agent', () => {
       const rendered = render(Wrapped, {
-        userAgent: 'Mozilla/5.0 (iPad; CPU OS 8_0_0 like Mac OS X) AppleWebKit/600.1.4' +
+        userAgent:
+          'Mozilla/5.0 (iPad; CPU OS 8_0_0 like Mac OS X) AppleWebKit/600.1.4' +
           ' (KHTML, like Gecko) CriOS/47.0.2526.107 Mobile/12H321 Safari/600.1.4'
       });
       expect(rendered).to.contain('style="display:-webkit-flex"');
@@ -115,7 +116,8 @@ describe('Radium blackbox SSR tests', () => {
     it('handles matching user agent', () => {
       const rendered = render(
         getComponent({
-          userAgent: 'Mozilla/5.0 (iPad; CPU OS 8_0_0 like Mac OS X) AppleWebKit/600.1.4' +
+          userAgent:
+            'Mozilla/5.0 (iPad; CPU OS 8_0_0 like Mac OS X) AppleWebKit/600.1.4' +
             ' (KHTML, like Gecko) CriOS/47.0.2526.107 Mobile/12H321 Safari/600.1.4'
         })
       );

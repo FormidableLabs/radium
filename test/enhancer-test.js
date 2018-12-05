@@ -12,8 +12,8 @@ const assertValidEnhancedComponent = Composed => {
   const rendered = render(Enhanced);
 
   expect(render(Composed)).to.not.equal(rendered);
-  expect(rendered).to
-    .contain('data-radium="true"')
+  expect(rendered)
+    .to.contain('data-radium="true"')
     .and.to.contain('style="background:red;color:white"');
 };
 

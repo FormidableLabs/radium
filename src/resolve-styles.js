@@ -51,15 +51,13 @@ const _shouldResolveStyles = function(component) {
   return component.type && !component.type._isRadiumEnhanced;
 };
 
-const _resolveChildren = function(
-  {
-    children,
-    component,
-    config,
-    existingKeyMap,
-    extraStateKeyMap
-  }
-) {
+const _resolveChildren = function({
+  children,
+  component,
+  config,
+  existingKeyMap,
+  extraStateKeyMap
+}) {
   if (!children) {
     return children;
   }
@@ -131,15 +129,13 @@ const _resolveChildren = function(
 };
 
 // Recurse over props, just like children
-const _resolveProps = function(
-  {
-    component,
-    config,
-    existingKeyMap,
-    props,
-    extraStateKeyMap
-  }
-) {
+const _resolveProps = function({
+  component,
+  config,
+  existingKeyMap,
+  props,
+  extraStateKeyMap
+}) {
   let newProps = props;
 
   Object.keys(props).forEach(prop => {
@@ -168,13 +164,11 @@ const _resolveProps = function(
   return newProps;
 };
 
-const _buildGetKey = function(
-  {
-    componentName,
-    existingKeyMap,
-    renderedElement
-  }
-) {
+const _buildGetKey = function({
+  componentName,
+  existingKeyMap,
+  renderedElement
+}) {
   // We need a unique key to correlate state changes due to user interaction
   // with the rendered element, so we know to apply the proper interactive
   // styles.
@@ -194,7 +188,8 @@ const _buildGetKey = function(
       if (typeof renderedElement.type === 'string') {
         elementName = renderedElement.type;
       } else if (renderedElement.type.constructor) {
-        elementName = renderedElement.type.constructor.displayName ||
+        elementName =
+          renderedElement.type.constructor.displayName ||
           renderedElement.type.constructor.name;
       }
 
@@ -235,15 +230,13 @@ const _setStyleState = function(component, key, stateKey, value) {
   component.setState(state);
 };
 
-const _runPlugins = function(
-  {
-    component,
-    config,
-    existingKeyMap,
-    props,
-    renderedElement
-  }
-) {
+const _runPlugins = function({
+  component,
+  config,
+  existingKeyMap,
+  props,
+  renderedElement
+}) {
   // Don't run plugins if renderedElement is not a simple ReactDOMElement or has
   // no style.
   if (
@@ -258,8 +251,8 @@ const _runPlugins = function(
 
   const plugins = config.plugins || DEFAULT_CONFIG.plugins;
 
-  const componentName = component.constructor.displayName ||
-    component.constructor.name;
+  const componentName =
+    component.constructor.displayName || component.constructor.name;
   const getKey = _buildGetKey({
     renderedElement,
     existingKeyMap,
@@ -273,8 +266,8 @@ const _runPlugins = function(
     _setStyleState(component, elementKey || getKey(), stateKey, value);
 
   const addCSS = css => {
-    const styleKeeper = component._radiumStyleKeeper ||
-      component.context._radiumStyleKeeper;
+    const styleKeeper =
+      component._radiumStyleKeeper || component.context._radiumStyleKeeper;
     if (!styleKeeper) {
       if (__isTestModeEnabled) {
         return {remove() {}};
@@ -295,29 +288,31 @@ const _runPlugins = function(
   let newStyle = props.style;
 
   plugins.forEach(plugin => {
-    const result = plugin({
-      ExecutionEnvironment,
-      addCSS,
-      appendImportantToEachValue,
-      componentName,
-      config,
-      cssRuleSetToString,
-      getComponentField,
-      getGlobalState,
-      getState: componentGetState,
-      hash,
-      mergeStyles,
-      props: newProps,
-      setState,
-      isNestedStyle,
-      style: newStyle
-    }) || {};
+    const result =
+      plugin({
+        ExecutionEnvironment,
+        addCSS,
+        appendImportantToEachValue,
+        componentName,
+        config,
+        cssRuleSetToString,
+        getComponentField,
+        getGlobalState,
+        getState: componentGetState,
+        hash,
+        mergeStyles,
+        props: newProps,
+        setState,
+        isNestedStyle,
+        style: newStyle
+      }) || {};
 
     newStyle = result.style || newStyle;
 
-    newProps = result.props && Object.keys(result.props).length
-      ? {...newProps, ...result.props}
-      : newProps;
+    newProps =
+      result.props && Object.keys(result.props).length
+        ? {...newProps, ...result.props}
+        : newProps;
 
     const newComponentFields = result.componentFields || {};
     Object.keys(newComponentFields).forEach(fieldName => {
@@ -370,19 +365,16 @@ resolveStyles = function(
   // have a style state).
   if (!extraStateKeyMap) {
     const state = getRadiumStyleState(component);
-    extraStateKeyMap = Object.keys(state).reduce(
-      (acc, key) => {
-        // 'main' is the auto-generated key when there is only one element with
-        // interactive styles and if a custom key is not assigned. Because of
-        // this, it is impossible to know which child is 'main', so we won't
-        // count this key when generating our extraStateKeyMap.
-        if (key !== 'main') {
-          acc[key] = true;
-        }
-        return acc;
-      },
-      {}
-    );
+    extraStateKeyMap = Object.keys(state).reduce((acc, key) => {
+      // 'main' is the auto-generated key when there is only one element with
+      // interactive styles and if a custom key is not assigned. Because of
+      // this, it is impossible to know which child is 'main', so we won't
+      // count this key when generating our extraStateKeyMap.
+      if (key !== 'main') {
+        acc[key] = true;
+      }
+      return acc;
+    }, {});
   }
 
   if (Array.isArray(renderedElement) && !renderedElement.props) {

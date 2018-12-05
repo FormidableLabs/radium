@@ -39,17 +39,20 @@ function copyProperties(source, target) {
 function isStateless(component: Function): boolean {
   const proto = component.prototype || {};
 
-  return !component.isReactComponent &&
+  return (
+    !component.isReactComponent &&
     !proto.isReactComponent &&
     !component.render &&
-    !proto.render;
+    !proto.render
+  );
 }
 
 // Check if value is a real ES class in Native / Node code.
 // See: https://stackoverflow.com/a/30760236
 function isNativeClass(component: Function): boolean {
-  return typeof component === 'function' &&
-    /^\s*class\s+/.test(component.toString());
+  return (
+    typeof component === 'function' && /^\s*class\s+/.test(component.toString())
+  );
 }
 
 // Handle es7 arrow functions on React class method names by detecting
@@ -124,12 +127,12 @@ function createEnhancedComponent(
       }
 
       if (this._radiumMediaQueryListenersByQuery) {
-        Object.keys(this._radiumMediaQueryListenersByQuery).forEach(
-          function(query) {
-            this._radiumMediaQueryListenersByQuery[query].remove();
-          },
-          this
-        );
+        Object.keys(this._radiumMediaQueryListenersByQuery).forEach(function(
+          query
+        ) {
+          this._radiumMediaQueryListenersByQuery[query].remove();
+        },
+        this);
       }
     }
 
@@ -153,9 +156,8 @@ function createEnhancedComponent(
 
     render() {
       const renderedElement = super.render();
-      let currentConfig = this.props.radiumConfig ||
-        this.context._radiumConfig ||
-        config;
+      let currentConfig =
+        this.props.radiumConfig || this.context._radiumConfig || config;
 
       if (config && currentConfig !== config) {
         currentConfig = {
@@ -225,9 +227,8 @@ function createEnhancedComponent(
   }
 
   // copy display name to enhanced component
-  RadiumEnhancer.displayName = origComponent.displayName ||
-    origComponent.name ||
-    'Component';
+  RadiumEnhancer.displayName =
+    origComponent.displayName || origComponent.name || 'Component';
 
   // handle context
   RadiumEnhancer.contextTypes = {

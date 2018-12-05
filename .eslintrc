@@ -276,6 +276,7 @@ rules:
       "error",
       {
         "bracketSpacing": false,
-        "singleQuote": true
+        "singleQuote": true,
+        "parser": "babylon"
       }
     ]

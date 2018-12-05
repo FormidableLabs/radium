@@ -1,16 +1,14 @@
 declare class InlineStylePrefixer {
-  static prefixAll: typeof prefixAll,
+  static prefixAll: typeof prefixAll;
 
-  prefixedKeyframes: string,
+  prefixedKeyframes: string;
 
-  constructor(
-    config: {
-      keepUnprefixed?: boolean,
-      userAgent?: ?string
-    }
-  ): void,
+  constructor(config: {
+    keepUnprefixed?: boolean,
+    userAgent?: ?string
+  }): void;
 
-  prefix(style: Object): Object
+  prefix(style: Object): Object;
 }
 
 declare function prefixAll(style: Object): Object;

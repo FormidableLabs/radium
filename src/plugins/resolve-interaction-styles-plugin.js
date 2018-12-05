@@ -5,9 +5,11 @@ import type {PluginConfig, PluginResult} from './index';
 import MouseUpListener from './mouse-up-listener';
 
 const _isInteractiveStyleField = function(styleFieldName) {
-  return styleFieldName === ':hover' ||
+  return (
+    styleFieldName === ':hover' ||
     styleFieldName === ':active' ||
-    styleFieldName === ':focus';
+    styleFieldName === ':focus'
+  );
 };
 
 const resolveInteractionStyles = function(config: PluginConfig): PluginResult {
@@ -88,13 +90,13 @@ const resolveInteractionStyles = function(config: PluginConfig): PluginResult {
   ) {
     newComponentFields._radiumMouseUpListener = MouseUpListener.subscribe(
       () => {
-        Object.keys(
-          getComponentField('state')._radiumStyleState
-        ).forEach(key => {
-          if (getState(':active', key) === 'viamousedown') {
-            setState(':active', false, key);
+        Object.keys(getComponentField('state')._radiumStyleState).forEach(
+          key => {
+            if (getState(':active', key) === 'viamousedown') {
+              setState(':active', false, key);
+            }
           }
-        });
+        );
       }
     );
   }
@@ -109,15 +111,12 @@ const resolveInteractionStyles = function(config: PluginConfig): PluginResult {
   let newStyle = mergeStyles([style].concat(interactionStyles));
 
   // Remove interactive styles
-  newStyle = Object.keys(newStyle).reduce(
-    (styleWithoutInteractions, name) => {
-      if (!_isInteractiveStyleField(name) && name !== ':disabled') {
-        styleWithoutInteractions[name] = newStyle[name];
-      }
-      return styleWithoutInteractions;
-    },
-    {}
-  );
+  newStyle = Object.keys(newStyle).reduce((styleWithoutInteractions, name) => {
+    if (!_isInteractiveStyleField(name) && name !== ':disabled') {
+      styleWithoutInteractions[name] = newStyle[name];
+    }
+    return styleWithoutInteractions;
+  }, {});
 
   return {
     componentFields: newComponentFields,

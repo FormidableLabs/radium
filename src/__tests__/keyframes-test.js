@@ -5,7 +5,8 @@ import {expectCSS, getElement} from 'test-helpers';
 import React, {Component} from 'react';
 import TestUtils from 'react-dom/test-utils';
 
-const CHROME_14_USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.1 ' +
+const CHROME_14_USER_AGENT =
+  'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.1 ' +
   '(KHTML, like Gecko) Chrome/14.0.812.0 Safari/535.1';
 
 describe('keyframes', () => {
@@ -243,13 +244,15 @@ describe('keyframes', () => {
       'SlideFromLeft'
     );
 
-    @Radium class ChildComponent extends Component {
+    @Radium
+    class ChildComponent extends Component {
       render() {
         return <div style={{animationName: animation}} />;
       }
     }
 
-    @Radium class TestComponent extends Component {
+    @Radium
+    class TestComponent extends Component {
       render() {
         return (
           <StyleRoot>
@@ -294,13 +297,15 @@ describe('keyframes', () => {
       'SlideFromTop'
     );
 
-    @Radium class ChildComponent extends Component {
+    @Radium
+    class ChildComponent extends Component {
       render() {
         return <div style={{animationName: [animation, animation2]}} />;
       }
     }
 
-    @Radium class TestComponent extends Component {
+    @Radium
+    class TestComponent extends Component {
       render() {
         return (
           <StyleRoot>
