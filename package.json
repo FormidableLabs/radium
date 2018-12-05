@@ -105,7 +105,7 @@
     "node-libs-browser": "^2.0.0",
     "nodemon": "^1.11.0",
     "object-assign": "^4.1.1",
-    "prettier": "^0.22.0",
+    "prettier": "^1.15.3",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-test-renderer": "^16.2.0",

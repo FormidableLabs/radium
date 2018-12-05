@@ -30,9 +30,9 @@ class HoverMessage extends React.Component {
         <button key="button" style={{display: 'flex', ':hover': {}}}>
           Hover me!
         </button>
-        {getState(this.state, 'button', ':hover')
-          ? <span>{' '}Hovering!</span>
-          : null}
+        {getState(this.state, 'button', ':hover') ? (
+          <span> Hovering!</span>
+        ) : null}
       </div>
     );
   }
@@ -42,7 +42,8 @@ HoverMessage = Radium(HoverMessage);
 //
 // Radium with ES7 decorator
 //
-@Radium class TwoSquares extends React.Component {
+@Radium
+class TwoSquares extends React.Component {
   render() {
     return (
       <div>
@@ -120,20 +121,26 @@ class App extends React.Component {
       <StyleRoot>
         <VisitedLink />
 
-        <p /><HoverMessage />
+        <p />
+        <HoverMessage />
 
-        <p /><TwoSquares />
+        <p />
+        <TwoSquares />
 
-        <p /><Spinner />
+        <p />
+        <Spinner />
 
-        <p /><MultiSpinner />
+        <p />
+        <MultiSpinner />
 
         <p />
         <Button onClick={this._remount.bind(this)}>Unmount and remount</Button>
 
-        <p /><Button>Button</Button>
+        <p />
+        <Button>Button</Button>
 
-        <p /><Button color="red">Button</Button>
+        <p />
+        <Button color="red">Button</Button>
 
         <p />
         <Button

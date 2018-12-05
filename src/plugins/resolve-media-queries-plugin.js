@@ -6,10 +6,11 @@ import type {PluginConfig, PluginResult} from './index';
 let _windowMatchMedia;
 function _getWindowMatchMedia(ExecutionEnvironment) {
   if (_windowMatchMedia === undefined) {
-    _windowMatchMedia = (!!ExecutionEnvironment.canUseDOM &&
-      !!window &&
-      !!window.matchMedia &&
-      (mediaQueryString => window.matchMedia(mediaQueryString))) ||
+    _windowMatchMedia =
+      (!!ExecutionEnvironment.canUseDOM &&
+        !!window &&
+        !!window.matchMedia &&
+        (mediaQueryString => window.matchMedia(mediaQueryString))) ||
       null;
   }
   return _windowMatchMedia;
@@ -19,75 +20,69 @@ function _filterObject(
   obj: Object,
   predicate: (value: any, key: string) => boolean
 ): Object {
-  return Object.keys(obj).filter(key => predicate(obj[key], key)).reduce((
-    result,
-    key
-  ) => {
-    result[key] = obj[key];
-    return result;
-  }, {});
+  return Object.keys(obj)
+    .filter(key => predicate(obj[key], key))
+    .reduce((result, key) => {
+      result[key] = obj[key];
+      return result;
+    }, {});
 }
 
 function _removeMediaQueries(style) {
-  return Object.keys(style).reduce(
-    (styleWithoutMedia, key) => {
-      if (key.indexOf('@media') !== 0) {
-        styleWithoutMedia[key] = style[key];
-      }
-      return styleWithoutMedia;
-    },
-    {}
-  );
+  return Object.keys(style).reduce((styleWithoutMedia, key) => {
+    if (key.indexOf('@media') !== 0) {
+      styleWithoutMedia[key] = style[key];
+    }
+    return styleWithoutMedia;
+  }, {});
 }
 
-function _topLevelRulesToCSS(
-  {
-    addCSS,
-    appendImportantToEachValue,
-    cssRuleSetToString,
-    hash,
-    isNestedStyle,
-    style,
-    userAgent
-  }
-) {
+function _topLevelRulesToCSS({
+  addCSS,
+  appendImportantToEachValue,
+  cssRuleSetToString,
+  hash,
+  isNestedStyle,
+  style,
+  userAgent
+}) {
   let className = '';
-  Object.keys(style).filter(name => name.indexOf('@media') === 0).map(query => {
-    const topLevelRules = appendImportantToEachValue(
-      _filterObject(style[query], value => !isNestedStyle(value))
-    );
+  Object.keys(style)
+    .filter(name => name.indexOf('@media') === 0)
+    .map(query => {
+      const topLevelRules = appendImportantToEachValue(
+        _filterObject(style[query], value => !isNestedStyle(value))
+      );
 
-    if (!Object.keys(topLevelRules).length) {
-      return;
-    }
+      if (!Object.keys(topLevelRules).length) {
+        return;
+      }
 
-    const ruleCSS = cssRuleSetToString('', topLevelRules, userAgent);
+      const ruleCSS = cssRuleSetToString('', topLevelRules, userAgent);
 
-    // CSS classes cannot start with a number
-    const mediaQueryClassName = 'rmq-' + hash(query + ruleCSS);
-    const css = query + '{ .' + mediaQueryClassName + ruleCSS + '}';
+      // CSS classes cannot start with a number
+      const mediaQueryClassName = 'rmq-' + hash(query + ruleCSS);
+      const css = query + '{ .' + mediaQueryClassName + ruleCSS + '}';
 
-    addCSS(css);
+      addCSS(css);
 
-    className += (className ? ' ' : '') + mediaQueryClassName;
-  });
+      className += (className ? ' ' : '') + mediaQueryClassName;
+    });
   return className;
 }
 
-function _subscribeToMediaQuery(
-  {
-    listener,
-    listenersByQuery,
-    matchMedia,
-    mediaQueryListsByQuery,
-    query
-  }
-) {
+function _subscribeToMediaQuery({
+  listener,
+  listenersByQuery,
+  matchMedia,
+  mediaQueryListsByQuery,
+  query
+}) {
   query = query.replace('@media ', '');
 
   let mql = mediaQueryListsByQuery[query];
   if (!mql && matchMedia) {
-    mediaQueryListsByQuery[query] = (mql = matchMedia(query));
+    mediaQueryListsByQuery[query] = mql = matchMedia(query);
   }
 
   if (!listenersByQuery || !listenersByQuery[query]) {
@@ -102,23 +97,21 @@ function _subscribeToMediaQuery(
   return mql;
 }
 
-export default function resolveMediaQueries(
-  {
-    ExecutionEnvironment,
-    addCSS,
-    appendImportantToEachValue,
-    config,
-    cssRuleSetToString,
-    getComponentField,
-    getGlobalState,
-    hash,
-    isNestedStyle,
-    mergeStyles,
-    props,
-    setState,
-    style
-  }: PluginConfig
-): PluginResult {
+export default function resolveMediaQueries({
+  ExecutionEnvironment,
+  addCSS,
+  appendImportantToEachValue,
+  config,
+  cssRuleSetToString,
+  getComponentField,
+  getGlobalState,
+  hash,
+  isNestedStyle,
+  mergeStyles,
+  props,
+  setState,
+  style
+}: PluginConfig): PluginResult {
   // eslint-disable-line no-shadow
   let newStyle = _removeMediaQueries(style);
   const mediaQueryClassNames = _topLevelRulesToCSS({
@@ -133,13 +126,13 @@ export default function resolveMediaQueries(
 
   const newProps = mediaQueryClassNames
     ? {
-        className: mediaQueryClassNames +
-          (props.className ? ' ' + props.className : '')
+        className:
+          mediaQueryClassNames + (props.className ? ' ' + props.className : '')
       }
     : null;
 
-  const matchMedia: ?MatchMediaType = config.matchMedia ||
-    _getWindowMatchMedia(ExecutionEnvironment);
+  const matchMedia: ?MatchMediaType =
+    config.matchMedia || _getWindowMatchMedia(ExecutionEnvironment);
 
   if (!matchMedia) {
     return {
@@ -153,26 +146,28 @@ export default function resolveMediaQueries(
   };
   const mediaQueryListsByQuery = getGlobalState('mediaQueryListsByQuery') || {};
 
-  Object.keys(style).filter(name => name.indexOf('@media') === 0).map(query => {
-    const nestedRules = _filterObject(style[query], isNestedStyle);
+  Object.keys(style)
+    .filter(name => name.indexOf('@media') === 0)
+    .map(query => {
+      const nestedRules = _filterObject(style[query], isNestedStyle);
 
-    if (!Object.keys(nestedRules).length) {
-      return;
-    }
+      if (!Object.keys(nestedRules).length) {
+        return;
+      }
 
-    const mql = _subscribeToMediaQuery({
-      listener: () => setState(query, mql.matches, '_all'),
-      listenersByQuery,
-      matchMedia,
-      mediaQueryListsByQuery,
-      query
+      const mql = _subscribeToMediaQuery({
+        listener: () => setState(query, mql.matches, '_all'),
+        listenersByQuery,
+        matchMedia,
+        mediaQueryListsByQuery,
+        query
+      });
+
+      // Apply media query states
+      if (mql.matches) {
+        newStyle = mergeStyles([newStyle, nestedRules]);
+      }
     });
-
-    // Apply media query states
-    if (mql.matches) {
-      newStyle = mergeStyles([newStyle, nestedRules]);
-    }
-  });
 
   return {
     componentFields: {

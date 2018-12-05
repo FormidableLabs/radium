@@ -23,7 +23,8 @@ export default function cssRuleSetToString(
   }
 
   const rulesWithPx = mapObject(rules, (value, key) =>
-    appendPxIfNeeded(key, value));
+    appendPxIfNeeded(key, value)
+  );
   const prefixedRules = getPrefixedStyle(rulesWithPx, userAgent);
   const cssPrefixedRules = camelCasePropsToDashCase(prefixedRules);
   const serializedRules = createMarkupForStyles(cssPrefixedRules);

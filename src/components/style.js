@@ -29,62 +29,55 @@ class Style extends PureComponent<StyleProps> {
   };
 
   _buildStyles(styles: Object): string {
-    const userAgent = (this.props.radiumConfig &&
-      this.props.radiumConfig.userAgent) ||
+    const userAgent =
+      (this.props.radiumConfig && this.props.radiumConfig.userAgent) ||
       (this.context &&
         this.context._radiumConfig &&
         this.context._radiumConfig.userAgent);
 
     const {scopeSelector} = this.props;
-    const rootRules = Object.keys(styles).reduce(
-      (accumulator, selector) => {
-        if (typeof styles[selector] !== 'object') {
-          accumulator[selector] = styles[selector];
-        }
+    const rootRules = Object.keys(styles).reduce((accumulator, selector) => {
+      if (typeof styles[selector] !== 'object') {
+        accumulator[selector] = styles[selector];
+      }
 
-        return accumulator;
-      },
-      {}
-    );
+      return accumulator;
+    }, {});
     const rootStyles = Object.keys(rootRules).length
       ? cssRuleSetToString(scopeSelector || '', rootRules, userAgent)
       : '';
 
-    return rootStyles +
-      Object.keys(styles).reduce(
-        (accumulator, selector) => {
-          const rules = styles[selector];
+    return (
+      rootStyles +
+      Object.keys(styles).reduce((accumulator, selector) => {
+        const rules = styles[selector];
 
-          if (selector === 'mediaQueries') {
-            accumulator += this._buildMediaQueryString(rules);
-          } else if (typeof styles[selector] === 'object') {
-            const completeSelector = scopeSelector
-              ? selector
-                  .split(',')
-                  .map(part => scopeSelector + ' ' + part.trim())
-                  .join(',')
-              : selector;
+        if (selector === 'mediaQueries') {
+          accumulator += this._buildMediaQueryString(rules);
+        } else if (typeof styles[selector] === 'object') {
+          const completeSelector = scopeSelector
+            ? selector
+                .split(',')
+                .map(part => scopeSelector + ' ' + part.trim())
+                .join(',')
+            : selector;
 
-            accumulator += cssRuleSetToString(
-              completeSelector,
-              rules,
-              userAgent
-            );
-          }
+          accumulator += cssRuleSetToString(completeSelector, rules, userAgent);
+        }
 
-          return accumulator;
-        },
-        ''
-      );
+        return accumulator;
+      }, '')
+    );
   }
 
-  _buildMediaQueryString(
-    stylesByMediaQuery: {[mediaQuery: string]: Object}
-  ): string {
+  _buildMediaQueryString(stylesByMediaQuery: {
+    [mediaQuery: string]: Object
+  }): string {
     let mediaQueryString = '';
 
     Object.keys(stylesByMediaQuery).forEach(query => {
-      mediaQueryString += '@media ' +
+      mediaQueryString +=
+        '@media ' +
         query +
         '{' +
         this._buildStyles(stylesByMediaQuery[query]) +
