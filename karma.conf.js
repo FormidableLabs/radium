@@ -1,10 +1,5 @@
 const path = require('path');
 
-// Note: If we switch to ESM version of babelified files, we'll likely need to
-// update from the ancient isparta-loader. Likely we'll switch to:
-// https://github.com/istanbuljs/babel-plugin-istanbul with a `test` BABEL_ENV
-//
-// https://github.com/FormidableLabs/radium/issues/969
 process.env.BABEL_ENV = 'commonjs';
 
 module.exports = function(config) {
@@ -31,19 +26,7 @@ module.exports = function(config) {
           {
             test: /\.js$/,
             enforce: 'pre',
-            include: path.resolve('src/__tests__/'),
-            loader: 'babel-loader'
-          },
-          {
-            test: /\.js$/,
             include: path.resolve('src/'),
-            enforce: 'pre',
-            exclude: /(__tests__|__mocks__)/,
-            loader: 'isparta-loader?babel-loader'
-          },
-          {
-            test: /\.js$/,
-            exclude: [/node_modules/],
             loader: 'babel-loader'
           },
           {
@@ -87,19 +70,15 @@ module.exports = function(config) {
         flags: ['--no-sandbox']
       }
     },
-    reporters: ['mocha', 'coverage'],
+    reporters: ['mocha'],
     browserNoActivityTimeout: 60000,
     plugins: [
       'karma-chrome-launcher',
-      'karma-coverage',
       'karma-mocha',
       'karma-mocha-reporter',
       'karma-sinon-chai',
       'karma-webpack'
     ],
-    coverageReporter: {
-      type: 'text'
-    },
     browserConsoleLogOptions: {
       level: 'log',
       format: '%b %T: %m',
