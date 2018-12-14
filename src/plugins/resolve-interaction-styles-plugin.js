@@ -32,16 +32,19 @@ const resolveInteractionStyles = function(config: PluginConfig): PluginResult {
     // This code, and the very similar ones below, could be abstracted a bit
     // more, but it hurts readability IMO.
     const existingOnMouseEnter = props.onMouseEnter;
-    newProps.onMouseEnter = function(e) {
+    window.onMouseEnterRadium = function(e) {
       existingOnMouseEnter && existingOnMouseEnter(e);
       setState(':hover', true);
     };
 
     const existingOnMouseLeave = props.onMouseLeave;
-    newProps.onMouseLeave = function(e) {
+    windwo.onMouseLeaveRadium = function(e) {
       existingOnMouseLeave && existingOnMouseLeave(e);
       setState(':hover', false);
     };
+
+    newProps.onMouseEnter = `onMouseEnterRadium()`;
+    newProps.onMouseLeave = `onMouseLeaveRadium()`;
   }
 
   if (style[':active']) {
