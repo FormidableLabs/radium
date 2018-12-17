@@ -1,5 +1,16 @@
 # Radium Changelog
 
+## 0.25.1 (December 16, 2018)
+#### Bug Fixes
+- Pass `snapshot` argument to `componentDidUpdate (#1013)
+
+#### Infra/Tooling
+- Fix console warnings when running examples (#1002)
+- Upgrade karma to 3.0 (#1003)
+- Refactor enhancer for readability (#1004)
+- Replace Isparta with Istanbul (#1011)
+- Prettier (#1012)
+
 ## 0.25.0 (September 16, 2018)
 - Use `Reflect` to construct es native classes in a way that preserves the value of `this` used in 
   the constructor. (#999, #1001)
