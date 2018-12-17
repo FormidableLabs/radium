@@ -34,7 +34,7 @@ To get watched test files automagically updated and run, use `npm run test-node-
 
 ### Linting
 
-Before commiting any changes, be sure to do `npm run lint`; this will lint all relevant files using [ESLint](http://eslint.org/) and report on any changes that you need to make. You can also run `npm run fixlint` to fix most common lint errors automatically.
+Before committing any changes, be sure to do `npm run lint`; this will lint all relevant files using [ESLint](http://eslint.org/) and report on any changes that you need to make. You can also run `npm run fixlint` to fix most common lint errors automatically.
 
 ### Flow
 
@@ -50,6 +50,7 @@ Please note that if you use `npm run test-dev` as above, Karma will use port `80
 ### Before submitting a PR...
 
 Thanks for taking the time to help us make Radium even better! Before you go ahead and submit a PR, make sure that you have done the following:
+
 - Run the tests (you did add tests, right?) using `npm run test-dev`.
 - Run lint and flow using `npm run lint`
 
@@ -57,7 +58,7 @@ Thanks for taking the time to help us make Radium even better! Before you go ahe
 
 1. Update `CHANGELOG.md`, following format for previous versions
 2. Commit as "Changelog for version 0.XX.Y"
-3. Run `npm version patch` (or `minor`, `major` as appropriate) to run tests and lint, build the `lib` ands `dist` directories, , then update `package.json` and add a git tag.
+3. Run `npm version patch` (or `minor`, `major` as appropriate) to run tests, lint, build the `lib` and `dist` directories, update `package.json`, and add a git tag.
 4. Run `npm publish` and publish to NPM if all is well.
 5. Run `git push && git push --tags`
 
@@ -77,21 +78,21 @@ orientation.
 Examples of behavior that contributes to creating a positive environment
 include:
 
-* Using welcoming and inclusive language
-* Being respectful of differing viewpoints and experiences
-* Gracefully accepting constructive criticism
-* Focusing on what is best for the community
-* Showing empathy towards other community members
+- Using welcoming and inclusive language
+- Being respectful of differing viewpoints and experiences
+- Gracefully accepting constructive criticism
+- Focusing on what is best for the community
+- Showing empathy towards other community members
 
 Examples of unacceptable behavior by participants include:
 
-* The use of sexualized language or imagery and unwelcome sexual attention or
-advances
-* Trolling, insulting/derogatory comments, and personal or political attacks
-* Public or private harassment
-* Publishing others' private information, such as a physical or electronic
+- The use of sexualized language or imagery and unwelcome sexual attention or
+  advances
+- Trolling, insulting/derogatory comments, and personal or political attacks
+- Public or private harassment
+- Publishing others' private information, such as a physical or electronic
   address, without explicit permission
-* Other conduct which could reasonably be considered inappropriate in a
+- Other conduct which could reasonably be considered inappropriate in a
   professional setting
 
 ### Our Responsibilities
