@@ -178,9 +178,9 @@ function createEnhancedComponent(
     }
 
     /* eslint-disable react/no-did-update-set-state, no-unused-vars */
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
       if (super.componentDidUpdate) {
-        super.componentDidUpdate.call(this, prevProps, prevState);
+        super.componentDidUpdate.call(this, prevProps, prevState, snapshot);
       }
 
       if (this._extraRadiumStateKeys.length > 0) {

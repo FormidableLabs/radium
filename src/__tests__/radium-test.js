@@ -276,6 +276,36 @@ describe('Radium blackbox tests', () => {
     expect(nav.style.color).to.equal('blue');
   });
 
+  it('passes snapshot to the componentDidUpdate of the component, Issue #985', () => {
+    const SNAPSHOT = 'SNAPSHOT';
+
+    class SnapshotComp extends Component {
+      componentDidMount() {
+        this.forceUpdate();
+      }
+
+      componentDidUpdate(props, state, snapshot) {
+        expect(snapshot).to.equal(SNAPSHOT);
+      }
+
+      getSnapshotBeforeUpdate() {
+        return SNAPSHOT;
+      }
+
+      render() {
+        return null;
+      }
+    }
+
+    sinon.spy(SnapshotComp.prototype, 'componentDidUpdate');
+
+    const TestComponent = Radium(SnapshotComp);
+
+    TestUtils.renderIntoDocument(<TestComponent />);
+
+    expect(SnapshotComp.prototype.componentDidUpdate).to.have.been.calledOnce;
+  });
+
   it('resets state for unmounted components, Issue #524', () => {
     class TestComponent extends Component {
       state = {showSpan: true};
