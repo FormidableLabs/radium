@@ -45,7 +45,7 @@ const getStyleID = style => {
     styleIDMap.set(key, `${++styleIndex}`);
   }
 
-  return styleIDMap.get(key);
+  return styleIDMap.get(key) || '';
 };
 
 function _topLevelRulesToCSS({
