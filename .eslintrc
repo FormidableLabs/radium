@@ -7,6 +7,7 @@ ecmaFeatures:
 plugins: ["react", "flow-vars", "prettier"]
 
 env:
+    es6: true
     browser: true
     node: true
     amd: false

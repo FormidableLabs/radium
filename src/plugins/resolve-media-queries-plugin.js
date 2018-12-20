@@ -37,6 +37,17 @@ function _removeMediaQueries(style) {
   }, {});
 }
 
+const styleIDMap = new Map();
+let styleIndex = 0;
+const getStyleID = style => {
+  const key = style;
+  if (!styleIDMap.has(key)) {
+    styleIDMap.set(key, `${++styleIndex}`);
+  }
+
+  return styleIDMap.get(key);
+};
+
 function _topLevelRulesToCSS({
   addCSS,
   appendImportantToEachValue,
@@ -47,6 +58,7 @@ function _topLevelRulesToCSS({
   userAgent
 }) {
   let className = '';
+  const styleID = getStyleID(style);
   Object.keys(style)
     .filter(name => name.indexOf('@media') === 0)
     .map(query => {
@@ -61,7 +73,13 @@ function _topLevelRulesToCSS({
       const ruleCSS = cssRuleSetToString('', topLevelRules, userAgent);
 
       // CSS classes cannot start with a number
-      const mediaQueryClassName = 'rmq-' + hash(query + ruleCSS);
+      // We are using a style ID to ensure every query results in an entry in
+      // the style sheet (prevents collisions). This is because the ordering of
+      // each media query is important due to the cascade. Even otherwise
+      // completely identical query + rulesets should not be deduped because it
+      // would alter the user defined order.
+      const mediaQueryClassName =
+        'rmq-' + styleID + '-' + hash(query + ruleCSS);
       const css = query + '{ .' + mediaQueryClassName + ruleCSS + '}';
 
       addCSS(css);
@@ -98,6 +116,7 @@ function _subscribeToMediaQuery({
 }
 
 export default function resolveMediaQueries({
+  styleID,
   ExecutionEnvironment,
   addCSS,
   appendImportantToEachValue,
