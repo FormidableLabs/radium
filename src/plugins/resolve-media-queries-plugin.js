@@ -116,7 +116,6 @@ function _subscribeToMediaQuery({
 }
 
 export default function resolveMediaQueries({
-  styleID,
   ExecutionEnvironment,
   addCSS,
   appendImportantToEachValue,
