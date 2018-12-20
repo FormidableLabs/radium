@@ -37,7 +37,7 @@ function _removeMediaQueries(style) {
   }, {});
 }
 
-const styleIDMap = new Map();
+const styleIDMap = new WeakMap();
 let styleIndex = 0;
 const getStyleID = style => {
   const key = style;
