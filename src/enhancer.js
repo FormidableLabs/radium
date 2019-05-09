@@ -183,7 +183,7 @@ function createEnhancedComponent(
         super.componentDidUpdate.call(this, prevProps, prevState, snapshot);
       }
 
-      if (this._extraRadiumStateKeys.length > 0) {
+      if (this._extraRadiumStateKeys && this._extraRadiumStateKeys.length > 0) {
         const trimmedRadiumState = this._extraRadiumStateKeys.reduce(
           (state, key) => {
             const {[key]: extraStateKey, ...remainingState} = state;
