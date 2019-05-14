@@ -4,6 +4,8 @@
 [![NPM Package][npm_img]][npm_site]
 [![Dependency Status][david_img]][david_site]
 ![gzipped size][size_img]
+[![Maintenance Status][maintenance-image]](#maintenance-status)
+
 
 # Radium
 
@@ -182,6 +184,11 @@ You can find a list of other tools, components, and frameworks to help you build
 
 Please see [CONTRIBUTING](https://github.com/FormidableLabs/radium/blob/master/CONTRIBUTING.md)
 
+## Maintenance Status
+
+**Stable:** Formidable is not planning to develop any new features for this project. We are still responding to bug reports and security concerns. We are still welcoming PRs for this project, but PRs that include new features should be small and easy to integrate and should not include breaking changes.
+
+
 [trav_img]: https://api.travis-ci.org/FormidableLabs/radium.svg
 [trav_site]: https://travis-ci.org/FormidableLabs/radium
 [cov_img]: https://img.shields.io/coveralls/FormidableLabs/radium.svg
@@ -196,3 +203,4 @@ Please see [CONTRIBUTING](https://github.com/FormidableLabs/radium/blob/master/C
 [docs_faq]: https://github.com/FormidableLabs/radium/tree/master/docs/faq
 [appveyor_img]: https://ci.appveyor.com/api/projects/status/github/formidablelabs/radium?branch=master&svg=true
 [appveyor_site]: https://ci.appveyor.com/project/ryan-roemer/radium
+[maintenance-image]: https://img.shields.io/badge/maintenance-stable-blue.svg
