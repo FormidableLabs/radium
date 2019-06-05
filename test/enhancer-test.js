@@ -26,13 +26,6 @@ describe('Enhancer', () => {
     });
   });
 
-  it('sets up initial state', () => {
-    const Enhanced = Enhancer(React.Component);
-    const instance = new Enhanced();
-
-    expect(instance.state).to.deep.equal({_radiumStyleState: {}});
-  });
-
   it('handles arrow functions', () => {
     const Composed = () => testElement;
 
@@ -126,4 +119,15 @@ describe('Enhancer', () => {
       cleanup();
     }
   }).timeout(10000);
+
+  it('works with hooks', () => {
+    const Composed = function() {
+      // eslint-disable-next-line no-unused-vars
+      const [counter, setCount] = React.useState(0);
+
+      return testElement;
+    };
+
+    assertValidEnhancedComponent(Composed);
+  });
 });

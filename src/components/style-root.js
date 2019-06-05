@@ -1,24 +1,23 @@
 /* @flow */
 
-import React, {PureComponent} from 'react';
+import React, {useContext, useRef} from 'react';
 import type {Node} from 'react';
-import PropTypes from 'prop-types';
 
 import Enhancer from '../enhancer';
 import StyleKeeper from '../style-keeper';
 import StyleSheet from './style-sheet';
 import type {Config} from '../config';
+import {StyleKeeperContext, RadiumConfigContext} from '../context';
 
-function _getStyleKeeper(instance): StyleKeeper {
-  if (!instance._radiumStyleKeeper) {
-    const userAgent =
-      (instance.props.radiumConfig && instance.props.radiumConfig.userAgent) ||
-      (instance.context._radiumConfig &&
-        instance.context._radiumConfig.userAgent);
-    instance._radiumStyleKeeper = new StyleKeeper(userAgent);
-  }
+function getStyleKeeper(
+  configProp: Config,
+  configContext?: Config
+): StyleKeeper {
+  const userAgent =
+    (configProp && configProp.userAgent) ||
+    (configContext && configContext.userAgent);
 
-  return instance._radiumStyleKeeper;
+  return new StyleKeeper(userAgent);
 }
 
 type StyleRootProps = {
@@ -26,43 +25,29 @@ type StyleRootProps = {
   children: Node
 };
 
-class StyleRoot extends PureComponent<StyleRootProps> {
-  constructor() {
-    super(...arguments);
+const StyleRootInner = Enhancer(({children, ...otherProps}: StyleRootProps) => (
+  <div {...otherProps}>
+    {children}
+    <StyleSheet />
+  </div>
+));
 
-    _getStyleKeeper(this);
-  }
+const StyleRoot = (props: StyleRootProps) => {
+  /* eslint-disable no-unused-vars */
+  // Pass down all props except config to the rendered div.
+  /* eslint-enable no-unused-vars */
+  const {radiumConfig} = props;
 
-  getChildContext() {
-    return {_radiumStyleKeeper: _getStyleKeeper(this)};
-  }
+  const configContext = useContext(RadiumConfigContext);
+  const styleKeeper = useRef<StyleKeeper>(
+    getStyleKeeper(radiumConfig, configContext)
+  );
 
-  _radiumStyleKeeper: StyleKeeper;
-
-  render() {
-    /* eslint-disable no-unused-vars */
-    // Pass down all props except config to the rendered div.
-    const {radiumConfig, ...otherProps} = this.props;
-    /* eslint-enable no-unused-vars */
-
-    return (
-      <div {...otherProps}>
-        {this.props.children}
-        <StyleSheet />
-      </div>
-    );
-  }
-}
-
-StyleRoot.contextTypes = {
-  _radiumConfig: PropTypes.object,
-  _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
+  return (
+    <StyleKeeperContext.Provider value={styleKeeper.current}>
+      <StyleRootInner {...props} />
+    </StyleKeeperContext.Provider>
+  );
 };
-
-StyleRoot.childContextTypes = {
-  _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
-};
-
-StyleRoot = Enhancer(StyleRoot);
 
 export default StyleRoot;

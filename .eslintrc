@@ -1,13 +1,17 @@
 parser: "babel-eslint"
 
 parserOptions:
-  ecmaVersion: 6
+  ecmaVersion: 2018
   sourceType: "module"
   ecmaFeatures:
     jsx: true
-    modules: true
 
-plugins: ["react", "flowtype", "prettier"]
+plugins: ["react", "flowtype", "prettier", "react-hooks"]
+
+settings:
+  react:
+    pragma: "React"
+    version: "detect"
 
 env:
     browser: true
@@ -283,3 +287,12 @@ rules:
         "parser": "babylon"
       }
     ]
+
+
+    ###########################################################################
+    #                                                                         #
+    #   React Hooks                                                           #
+    #                                                                         #
+    ###########################################################################
+    react-hooks/rules-of-hooks: 2
+    react-hooks/exhaustive-deps: 2

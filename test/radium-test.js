@@ -6,13 +6,6 @@ const Radium = require('..');
 const render = require('./utils').render;
 
 describe('Radium blackbox SSR tests', () => {
-  it('sets up initial state', () => {
-    const Enhanced = Radium(React.Component);
-    const instance = new Enhanced();
-
-    expect(instance.state).to.deep.equal({_radiumStyleState: {}});
-  });
-
   describe('inline prefixes', () => {
     let Wrapped;
 

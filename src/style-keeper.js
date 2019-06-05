@@ -1,11 +1,11 @@
 /* @flow */
 
 export default class StyleKeeper {
-  _userAgent: string;
+  _userAgent: string | typeof undefined;
   _listeners: Array<() => void>;
   _cssSet: {[id: string]: boolean};
 
-  constructor(userAgent: string) {
+  constructor(userAgent?: string) {
     this._userAgent = userAgent;
     this._listeners = [];
     this._cssSet = {};

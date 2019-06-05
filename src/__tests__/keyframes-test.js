@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import Radium, {StyleRoot, keyframes} from 'index';
-import {expectCSS, getElement} from 'test-helpers';
+import {expectCSS, getElement, renderFcIntoDocument} from 'test-helpers';
 import React, {Component} from 'react';
 import TestUtils from 'react-dom/test-utils';
 
@@ -251,7 +251,6 @@ describe('keyframes', () => {
       }
     }
 
-    @Radium
     class TestComponent extends Component {
       render() {
         return (
@@ -315,7 +314,7 @@ describe('keyframes', () => {
       }
     }
 
-    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    const output = renderFcIntoDocument(<TestComponent />);
 
     const style = getElement(output, 'style');
 

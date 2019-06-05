@@ -1,11 +1,19 @@
 /* @flow */
 
-import {Component} from 'react';
+import React, {
+  useState,
+  useContext,
+  useRef,
+  useEffect,
+  forwardRef
+} from 'react';
 import PropTypes from 'prop-types';
+import hoistStatics from 'hoist-non-react-statics';
 
-import StyleKeeper from './style-keeper';
-import resolveStyles from './resolve-styles';
+import resolveStyles, {type EnhancerApi} from './resolve-styles';
 import getRadiumStyleState from './get-radium-style-state';
+import {RadiumConfigContext, withRadiumContexts} from './context';
+import {StyleKeeperContext} from './context';
 
 const KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
   'arguments',
@@ -27,7 +35,7 @@ function copyProperties(source, target) {
       !target.hasOwnProperty(key)
     ) {
       const descriptor = Object.getOwnPropertyDescriptor(source, key);
-      Object.defineProperty(target, key, descriptor);
+      descriptor && Object.defineProperty(target, key, descriptor);
     }
   });
 }
@@ -76,7 +84,8 @@ function copyArrowFuncs(enhancedSelf: Object, ComposedComponent: constructor) {
     // 3. it is not already the radium prototype's
     if (!superProtoMethod && thisMethod !== radiumProtoMethod) {
       // Transfer dynamic render component to Component prototype (copy).
-      Object.defineProperty(ComposedComponent.prototype, name, thisDesc);
+      thisDesc &&
+        Object.defineProperty(ComposedComponent.prototype, name, thisDesc);
       // Remove instance property, leaving us to have a contrived
       // inheritance chain of (1) radium, (2) superclass.
       delete enhancedSelf[name];
@@ -84,7 +93,92 @@ function copyArrowFuncs(enhancedSelf: Object, ComposedComponent: constructor) {
   });
 }
 
-function createEnhancedComponent(
+function cleanUpEnhancer(enhancer: EnhancerApi) {
+  const {_radiumMouseUpListener, _radiumMediaQueryListenersByQuery} = enhancer;
+
+  enhancer._radiumIsMounted = false;
+
+  if (_radiumMouseUpListener) {
+    _radiumMouseUpListener.remove();
+  }
+
+  if (_radiumMediaQueryListenersByQuery) {
+    Object.keys(_radiumMediaQueryListenersByQuery).forEach(query => {
+      _radiumMediaQueryListenersByQuery[query].remove();
+    }, enhancer);
+  }
+}
+
+function createEnhancedFunctionComponent(
+  origComponent: Function,
+  config?: Object
+) {
+  const RadiumEnhancer = React.forwardRef((props, ref) => {
+    const {radiumConfig, ...otherProps} = props;
+    const radiumConfigContext = useContext(RadiumConfigContext);
+    const styleKeeperContext = useContext(StyleKeeperContext);
+    const [state, setState] = useState({});
+
+    const enhancerApi = useRef<EnhancerApi>({
+      state,
+      setState,
+      _radiumMediaQueryListenersByQuery: undefined,
+      _radiumMouseUpListener: undefined,
+      _radiumIsMounted: true,
+      _lastRadiumState: undefined,
+      _extraRadiumStateKeys: undefined,
+      _radiumStyleKeeper: styleKeeperContext
+    }).current;
+
+    // result of useRef is never recreated and is designed to be mutable
+    // we need to make sure the latest state is attached to it
+    enhancerApi.state = state;
+
+    useEffect(
+      () => {
+        return () => {
+          cleanUpEnhancer(enhancerApi);
+        };
+      },
+      [enhancerApi]
+    );
+
+    const renderedElement = origComponent(otherProps, ref);
+
+    let currentConfig = radiumConfig || radiumConfigContext || config;
+
+    if (config && currentConfig !== config) {
+      currentConfig = {
+        ...config,
+        ...currentConfig
+      };
+    }
+
+    const {extraStateKeyMap, element} = resolveStyles(
+      enhancerApi,
+      renderedElement,
+      currentConfig
+    );
+    enhancerApi._extraRadiumStateKeys = Object.keys(extraStateKeyMap);
+
+    if (radiumConfig) {
+      return (
+        <RadiumConfigContext.Provider value={radiumConfig}>
+          {element}
+        </RadiumConfigContext.Provider>
+      );
+    }
+
+    return element;
+  });
+
+  (RadiumEnhancer: Object)._isRadiumEnhanced = true;
+  (RadiumEnhancer: Object).defaultProps = origComponent.defaultProps;
+
+  return hoistStatics(RadiumEnhancer, origComponent);
+}
+
+function createEnhancedClassComponent(
   origComponent: Function,
   ComposedComponent: constructor,
   config?: Object
@@ -92,12 +186,20 @@ function createEnhancedComponent(
   class RadiumEnhancer extends ComposedComponent {
     static _isRadiumEnhanced = true;
 
+    // need to attempt to assign to this.state in case
+    // super component is setting state on construction,
+    // otherwise class properties reinitialize to undefined
     state: Object = this.state || {};
 
+    _radiumStyleKeeper = this.props.styleKeeperContext;
+
+    // need to assign the following methods to this.xxx as
+    // tests attempt to set this on the original component
     _radiumMediaQueryListenersByQuery: {
       [query: string]: {remove: () => void}
-    } = this._radiumMediaQueryListenersByQuery;
-    _radiumMouseUpListener: {remove: () => void} = this._radiumMouseUpListener;
+    } | void = this._radiumMediaQueryListenersByQuery;
+    _radiumMouseUpListener: {remove: () => void} | void = this
+      ._radiumMouseUpListener;
     _radiumIsMounted: boolean = true;
     _lastRadiumState: Object;
     _extraRadiumStateKeys: any;
@@ -110,68 +212,6 @@ function createEnhancedComponent(
 
       // Handle es7 arrow functions on React class method
       copyArrowFuncs(self, ComposedComponent);
-    }
-
-    componentWillUnmount() {
-      if (super.componentWillUnmount) {
-        super.componentWillUnmount();
-      }
-
-      this._radiumIsMounted = false;
-
-      if (this._radiumMouseUpListener) {
-        this._radiumMouseUpListener.remove();
-      }
-
-      if (this._radiumMediaQueryListenersByQuery) {
-        Object.keys(this._radiumMediaQueryListenersByQuery).forEach(function(
-          query
-        ) {
-          this._radiumMediaQueryListenersByQuery[query].remove();
-        },
-        this);
-      }
-    }
-
-    getChildContext() {
-      const superChildContext = super.getChildContext
-        ? super.getChildContext()
-        : {};
-
-      if (!this.props.radiumConfig) {
-        return superChildContext;
-      }
-
-      const newContext: Object = {...superChildContext};
-
-      if (this.props.radiumConfig) {
-        newContext._radiumConfig = this.props.radiumConfig;
-      }
-
-      return newContext;
-    }
-
-    render() {
-      const renderedElement = super.render();
-      let currentConfig =
-        this.props.radiumConfig || this.context._radiumConfig || config;
-
-      if (config && currentConfig !== config) {
-        currentConfig = {
-          ...config,
-          ...currentConfig
-        };
-      }
-
-      // do the style and interaction work
-      const {extraStateKeyMap, element} = resolveStyles(
-        this,
-        renderedElement,
-        currentConfig
-      );
-      this._extraRadiumStateKeys = Object.keys(extraStateKeyMap);
-
-      return element;
     }
 
     /* eslint-disable react/no-did-update-set-state, no-unused-vars */
@@ -194,6 +234,45 @@ function createEnhancedComponent(
       }
     }
     /* eslint-enable react/no-did-update-set-state, no-unused-vars */
+
+    componentWillUnmount() {
+      if (super.componentWillUnmount) {
+        super.componentWillUnmount();
+      }
+
+      cleanUpEnhancer(this);
+    }
+
+    render() {
+      const renderedElement = super.render();
+      let currentConfig =
+        this.props.radiumConfig || this.props.radiumConfigContext || config;
+
+      if (config && currentConfig !== config) {
+        currentConfig = {
+          ...config,
+          ...currentConfig
+        };
+      }
+
+      // do the style and interaction work
+      const {extraStateKeyMap, element} = resolveStyles(
+        this,
+        renderedElement,
+        currentConfig
+      );
+      this._extraRadiumStateKeys = Object.keys(extraStateKeyMap);
+
+      if (this.props.radiumConfig) {
+        return (
+          <RadiumConfigContext.Provider value={this.props.radiumConfig}>
+            {element}
+          </RadiumConfigContext.Provider>
+        );
+      }
+
+      return element;
+    }
   }
 
   // Lazy infer the method names of the Enhancer.
@@ -227,33 +306,7 @@ function createEnhancedComponent(
   RadiumEnhancer.displayName =
     origComponent.displayName || origComponent.name || 'Component';
 
-  // handle context
-  RadiumEnhancer.contextTypes = {
-    ...RadiumEnhancer.contextTypes,
-    _radiumConfig: PropTypes.object,
-    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
-  };
-
-  RadiumEnhancer.childContextTypes = {
-    ...RadiumEnhancer.childContextTypes,
-    _radiumConfig: PropTypes.object,
-    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
-  };
-
-  return RadiumEnhancer;
-}
-
-function createComposedFromStatelessFunc(
-  ComposedComponent: constructor,
-  component: Function
-) {
-  ComposedComponent = class extends Component<any, Object> {
-    render() {
-      return component(this.props, this.context);
-    }
-  };
-  ComposedComponent.displayName = component.displayName || component.name;
-  return ComposedComponent;
+  return withRadiumContexts(RadiumEnhancer);
 }
 
 function createComposedFromNativeClass(ComposedComponent: constructor) {
@@ -272,15 +325,33 @@ function createComposedFromNativeClass(ComposedComponent: constructor) {
   return ComposedComponent;
 }
 
+const ReactForwardRefSymbol = (forwardRef(() => null): any).$$typeof;
+
 export default function enhanceWithRadium(
   configOrComposedComponent: Class<any> | constructor | Function | Object,
   config?: Object = {}
 ): constructor {
+  if (
+    ReactForwardRefSymbol &&
+    configOrComposedComponent.$$typeof === ReactForwardRefSymbol
+  ) {
+    return createEnhancedFunctionComponent(
+      configOrComposedComponent.render,
+      config
+    );
+  }
+
   if (typeof configOrComposedComponent !== 'function') {
     return createFactoryFromConfig(config, configOrComposedComponent);
   }
 
   const origComponent: Function = configOrComposedComponent;
+
+  // Handle stateless components
+  if (isStateless(origComponent)) {
+    return createEnhancedFunctionComponent(origComponent, config);
+  }
+
   let ComposedComponent: constructor = origComponent;
 
   // Radium is transpiled in npm, so it isn't really using es6 classes at
@@ -290,20 +361,12 @@ export default function enhanceWithRadium(
     ComposedComponent = createComposedFromNativeClass(ComposedComponent);
   }
 
-  // Handle stateless components
-  if (isStateless(ComposedComponent)) {
-    ComposedComponent = createComposedFromStatelessFunc(
-      ComposedComponent,
-      origComponent
-    );
-  }
-
   // Shallow copy composed if still original (we may mutate later).
   if (ComposedComponent === origComponent) {
     ComposedComponent = class extends ComposedComponent {};
   }
 
-  return createEnhancedComponent(origComponent, ComposedComponent, config);
+  return createEnhancedClassComponent(origComponent, ComposedComponent, config);
 }
 
 function createFactoryFromConfig(

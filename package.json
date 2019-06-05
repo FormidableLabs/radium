@@ -65,6 +65,7 @@
     "babel-loader": "^8.0.0",
     "builder": "^3.2.3",
     "exenv": "^1.2.1",
+    "hoist-non-react-statics": "3.3.0",
     "inline-style-prefixer": "^4.0.0",
     "prop-types": "^15.5.8",
     "publishr": "^1.0.0",
@@ -72,7 +73,7 @@
     "webpack": "^3.10.0"
   },
   "peerDependencies": {
-    "react": "^15.3.0 || ^16.0.0"
+    "react": "^16.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
@@ -85,15 +86,16 @@
     "color": "^1.0.3",
     "core-js": "^2.5.3",
     "coveralls": "^2.12.0",
-    "enzyme": "^3.5.1",
-    "enzyme-adapter-react-16": "^1.4.0",
-    "eslint": "^3.17.1",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "eslint": "^5.16.0",
     "eslint-plugin-flowtype": "3.9.1",
-    "eslint-plugin-prettier": "^2.0.1",
-    "eslint-plugin-react": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.13.0",
+    "eslint-plugin-react-hooks": "1.6.0",
     "express": "^4.15.2",
     "express-http-proxy": "^0.11.0",
-    "flow-bin": "^0.53.1",
+    "flow-bin": "^0.100.0",
     "inject-loader": "^3.0.1",
     "jsdom": "^12.0.0",
     "jsdom-global": "^3.0.2",
@@ -111,9 +113,9 @@
     "nodemon": "^1.11.0",
     "object-assign": "^4.1.1",
     "prettier": "^1.15.3",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
-    "react-test-renderer": "^16.6.3",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
+    "react-test-renderer": "^16.8.3",
     "sinon": "^1.17.7",
     "sinon-chai": "^2.8.0",
     "webpack-dev-server": "^2.11.1"

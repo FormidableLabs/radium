@@ -2,13 +2,14 @@
 
 import cssRuleSetToString from '../css-rule-set-to-string';
 
-import React, {PureComponent} from 'react';
-import type {Node} from 'react';
+import React, {type Node, PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import type {Config} from '../config';
+import {withRadiumContexts} from '../context';
 
 type StyleProps = {
   radiumConfig: Config,
+  radiumConfigContext?: Config,
   rules: {},
   scopeSelector: string
 };
@@ -20,10 +21,6 @@ class Style extends PureComponent<StyleProps> {
     scopeSelector: PropTypes.string
   };
 
-  static contextTypes = {
-    _radiumConfig: PropTypes.object
-  };
-
   static defaultProps: {scopeSelector: string} = {
     scopeSelector: ''
   };
@@ -31,9 +28,8 @@ class Style extends PureComponent<StyleProps> {
   _buildStyles(styles: Object): string {
     const userAgent =
       (this.props.radiumConfig && this.props.radiumConfig.userAgent) ||
-      (this.context &&
-        this.context._radiumConfig &&
-        this.context._radiumConfig.userAgent);
+      (this.props.radiumConfigContext &&
+        this.props.radiumConfigContext.userAgent);
 
     const {scopeSelector} = this.props;
     const rootRules = Object.keys(styles).reduce((accumulator, selector) => {
@@ -98,4 +94,4 @@ class Style extends PureComponent<StyleProps> {
   }
 }
 
-export default Style;
+export default withRadiumContexts(Style);
