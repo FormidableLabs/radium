@@ -32,6 +32,9 @@ const DEFAULT_CONFIG = {
 // Gross
 let globalState = {};
 
+// Only for use by tests
+let __isTestModeEnabled = false;
+
 type ResolvedStyles = {
   extraStateKeyMap: {[key: string]: boolean},
   element: any
@@ -461,7 +464,6 @@ resolveStyles = function(
 /* eslint-enable max-params */
 
 // Only for use by tests
-let __isTestModeEnabled = false;
 if (process.env.NODE_ENV !== 'production') {
   resolveStyles.__clearStateForTests = function() {
     globalState = {};

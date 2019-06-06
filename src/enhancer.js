@@ -92,22 +92,19 @@ function createEnhancedComponent(
   class RadiumEnhancer extends ComposedComponent {
     static _isRadiumEnhanced = true;
 
-    state: Object;
+    state: Object = this.state || {};
 
     _radiumMediaQueryListenersByQuery: {
       [query: string]: {remove: () => void}
-    };
-    _radiumMouseUpListener: {remove: () => void};
-    _radiumIsMounted: boolean;
+    } = this._radiumMediaQueryListenersByQuery;
+    _radiumMouseUpListener: {remove: () => void} = this._radiumMouseUpListener;
+    _radiumIsMounted: boolean = true;
     _lastRadiumState: Object;
     _extraRadiumStateKeys: any;
 
     constructor() {
       super(...arguments);
-
-      this.state = this.state || {};
       this.state._radiumStyleState = {};
-      this._radiumIsMounted = true;
 
       const self: Object = this;
 

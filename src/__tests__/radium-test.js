@@ -284,12 +284,12 @@ describe('Radium blackbox tests', () => {
         this.forceUpdate();
       }
 
-      componentDidUpdate(props, state, snapshot) {
-        expect(snapshot).to.equal(SNAPSHOT);
-      }
-
       getSnapshotBeforeUpdate() {
         return SNAPSHOT;
+      }
+
+      componentDidUpdate(props, state, snapshot) {
+        expect(snapshot).to.equal(SNAPSHOT);
       }
 
       render() {
