@@ -30,10 +30,8 @@ describe('Radium blackbox tests', () => {
     const output = renderFcIntoDocument(<TestComponent />);
     const div = getElement(output, 'div');
 
-    expect({...div.style}).to.include({
-      color: 'blue',
-      background: 'red'
-    });
+    expect(div.style.color).to.equal('blue');
+    expect(div.style.background).to.equal('red');
   });
 
   it('merges nested styles', () => {
@@ -54,12 +52,10 @@ describe('Radium blackbox tests', () => {
     const output = renderFcIntoDocument(<TestComponent />);
     const div = getElement(output, 'div');
 
-    expect({...div.style}).to.include({
-      color: 'blue',
-      background: 'red',
-      height: '2px',
-      padding: '9px'
-    });
+    expect(div.style.color).to.equal('blue');
+    expect(div.style.background).to.equal('red');
+    expect(div.style.height).to.equal('2px');
+    expect(div.style.padding).to.equal('9px');
   });
 
   it('merges nested styles in function components', () => {
@@ -75,12 +71,10 @@ describe('Radium blackbox tests', () => {
     const output = renderFcIntoDocument(<TestComponent />);
     const div = getElement(output, 'div');
 
-    expect({...div.style}).to.include({
-      color: 'blue',
-      background: 'red',
-      height: '2px',
-      padding: '9px'
-    });
+    expect(div.style.color).to.equal('blue');
+    expect(div.style.background).to.equal('red');
+    expect(div.style.height).to.equal('2px');
+    expect(div.style.padding).to.equal('9px');
   });
 
   it('merges nested styles and forwards ref in function components with forwardRef', () => {
@@ -101,12 +95,10 @@ describe('Radium blackbox tests', () => {
     const div = getElement(output, 'div');
 
     expect(testRef.current).to.equal(div);
-    expect({...div.style}).to.include({
-      color: 'blue',
-      background: 'red',
-      height: '2px',
-      padding: '9px'
-    });
+    expect(div.style.color).to.equal('blue');
+    expect(div.style.background).to.equal('red');
+    expect(div.style.height).to.equal('2px');
+    expect(div.style.padding).to.equal('9px');
   });
 
   it('resolves styles on props', () => {
@@ -130,10 +122,8 @@ describe('Radium blackbox tests', () => {
     const output = renderFcIntoDocument(<TestComponent />);
     const div = getElement(output, 'div');
 
-    expect({...div.style}).to.include({
-      color: 'blue',
-      background: 'red'
-    });
+    expect(div.style.color).to.equal('blue');
+    expect(div.style.background).to.equal('red');
   });
 
   it('resolves styles on props', () => {
@@ -447,13 +437,13 @@ describe('Radium blackbox tests', () => {
     expect(footer.style.color).to.equal('red');
   });
 
-  it('resolves styles if an element has element children and spreads props', () => {
+  it('resolves styles if an element has element children', () => {
     @Radium
     class Inner extends Component {
       static propTypes = {children: PropTypes.node};
       render() {
         return (
-          <div {...this.props} style={[{color: 'blue'}, {background: 'red'}]}>
+          <div style={[{color: 'blue'}, {background: 'red'}]}>
             {this.props.children}
           </div>
         );
@@ -995,7 +985,7 @@ describe('Radium blackbox tests', () => {
 
     class TestComponent extends Component {
       render() {
-        return <div {...this.props} />;
+        return <div style={this.props.style} />;
       }
     }
     TestComponent.propTypes = {style: PropTypes.object};
