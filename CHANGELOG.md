@@ -1,10 +1,21 @@
 # Radium Changelog
 
-## 0.25.1 (December 16, 2018)
+## 0.25.2 (June 7, 2019)
+
 #### Bug Fixes
+
+- Bump handlebars from 4.0.6 to 4.1.2 (#1026)
+- Fixed bug with undefined \_extraRadiumStateKeys (#1025)
+- Update unitless CSS property list and licensing (#1020)
+
+## 0.25.1 (December 16, 2018)
+
+#### Bug Fixes
+
 - Pass `snapshot` argument to `componentDidUpdate (#1013)
 
 #### Infra/Tooling
+
 - Fix console warnings when running examples (#1002)
 - Upgrade karma to 3.0 (#1003)
 - Refactor enhancer for readability (#1004)
@@ -12,65 +23,84 @@
 - Prettier (#1012)
 
 ## 0.25.0 (September 16, 2018)
-- Use `Reflect` to construct es native classes in a way that preserves the value of `this` used in 
+
+- Use `Reflect` to construct es native classes in a way that preserves the value of `this` used in
   the constructor. (#999, #1001)
 - Handle multiple animationName props (#909)
 
 ## 0.24.1 (July 9, 2018)
+
 - Make `<StyleSheet>` manually update `<style>` tag DOM, fixing media queries on component level flickering. (#626, #950)
 
 ## 0.24.0 (March 29, 2018)
+
 - Fix `render` methods that return array of children or `React.Fragment`. (#950)
 - Upgrade tests to React 16.2 (for `Fragment` support)
 
 ## 0.23.0 (March 15, 2018)
+
 - Support ES7 arrow functions for React class methods. (#738)
 
 ## 0.22.1 (March 1, 2018)
+
 - Fix `keyframes` bug from prefixed inline styles. (#973)
 
 ## 0.22.0 (February 9, 2018)
+
 ### Breaking Changes
+
 - Radium now exports defaults as `.default`, so for runtimes like Node.js for all files in `lib/**`. We have changed `package.json:main` to point to `/index.js` instead of `/lib/index.js` as a convenience wrapper to expose mostly what was there before so behavior of `const Radium = require('radium');` works mostly as it did before. Caveats:
-    - When using webpack2+ to build code with `require('radium')` in it you will need to change that to become `require('radium').default`.
-    - Any imports of a default export from a file in lib like `const Enhancer = require('radium/lib/enhancer');` will need to be changed to `const Enhancer = require('radium/lib/enhancer').default;`.
-    - We have a full examples repository of how imports work in all likely scenarios that should come up. https://github.com/FormidableLabs/radium-experiments-v0.22
+  - When using webpack2+ to build code with `require('radium')` in it you will need to change that to become `require('radium').default`.
+  - Any imports of a default export from a file in lib like `const Enhancer = require('radium/lib/enhancer');` will need to be changed to `const Enhancer = require('radium/lib/enhancer').default;`.
+  - We have a full examples repository of how imports work in all likely scenarios that should come up. https://github.com/FormidableLabs/radium-experiments-v0.22
 
 ### Features
+
 - Add `es` ESM module export files.
 
 ### Fixes
+
 - Fix `package.json:scripts.postinstall` task to correctly work for git-based dependencies.
 
 ## 0.21.2 (January 25, 2018)
+
 - Fix multiple-value prefixed inline styles. (#962, #958, #951)
 
 ## 0.21.1 (January 18, 2018)
+
 - Call `componentDidUpdate()` inherited method (#957).
 
 ## 0.21.0 (January 8, 2018)
+
 - Automatically clear browser state of elements when unmounting and remounting (#956).
   - `resolveStyles` returns `{ extraRadiumStateKeys, element }` instead of just `element`.
 
 ## 0.20.1 (January 8, 2018)
+
 - Fix `v0.20.0` build.
 
 ## 0.20.0 (January 8, 2018)
+
 - Upgrade `inline-style-prefixer` to version `^4.0.0`.
 
 ## 0.19.6 (October 5, 2017)
+
 - Allow native ES classes to be used with the Radium enhancer.
 
 ## 0.19.5 (October 5, 2017)
+
 - Enable React 16 in `peerDependencies` and update tests to React 16.
 
 ## 0.19.4 (July 21, 2017)
+
 - Remove `.babelrc` from published npm registry package.
 
 ## 0.19.3 (July 20, 2017)
+
 - Remove `publishr` from prod `dependencies` in npm registry package.
 
 ## 0.19.2 (July 20, 2017)
+
 - Switch to `publishr` workflow. (#894, #731, #900)
 - Remove `rimraf` from prod `dependencies` in npm registry package.
 - Remove `postinstall` from `scripts` in npm registry package. (#794)
@@ -78,21 +108,25 @@
 ## 0.19.1 (May 17, 2017)
 
 ### Bug Fixes
+
 - Makes `prop-types` a `dependencies` instead of a `peerDependencies` in `package.json` per the `prop-types` [integration guide](https://github.com/facebook/prop-types#how-to-depend-on-this-package).
 
 ## 0.19.0 (May 15, 2017)
 
 ### Improvements
+
 - Unreverts PropTypes-related diff, which is now a minor version instead of a patch
 
 ## 0.18.4 (May 15, 2017)
 
 ### Bug Fixes
+
 - Reverts PropTypes-related diff, which should have been a minor version instead of a patch
 
 ## 0.18.3 (May 15, 2017)
 
 ### Improvements
+
 - Update dependencies
 - Update deprecated React syntax in examples
 - Use React "prop-types" package
@@ -100,6 +134,7 @@
 ## 0.18.2 (March 15, 2017)
 
 ### Improvements
+
 - Update `inline-style-prefixer` to v2.0.5 (#880).
 - Use `React.PureComponent` to avoid unnecessary rendering (#868).
 - Update all dependencies
@@ -107,77 +142,96 @@
 ## 0.18.1 (July 19, 2016)
 
 ### Bug Fixes
+
 - Fix unused props warning when passing `radiumConfig` to `StyleRoot` (#787).
 
 ## 0.18.0 (July 15, 2016)
 
 ### Breaking Changes
+
 - Revert `content` auto-quoting in `Style` component (#783).
 
 ### Bug Fixes
+
 - Silence React 15.2 unused props deprecation warning (#782).
 
 ## 0.17.2 (July 12, 2016)
 
 ### Bug Fixes
+
 - Fix `content` values in `Style` component (#719).
 - Improve stateless component check to work with native arrow functions (#771).
 
 ### Improvements
+
 - Add support for `:disabled` pseudo-class (#689).
 - Add plugin to remove nested style objects and prevent `[Object object]` from rendering in the DOM (#703).
 
 ## 0.17.1 (March 30, 2016)
 
 ### Bug Fixes
+
 - Remove babel modules accidentally published as dependencies.
 
 ### Improvements
+
 - Add support for `scopeSelector` without nested selectors in `Style` component.
 
 ## 0.17.0 (March 24, 2016)
 
 ### Bug Fixes
+
 - Upgrade `inline-style-prefixer` to version `1.0.3` with a fix for `display` values being removed in IE10.
 
 ### Improvements
+
 - Add `TestMode` for controlling internal Radium state and behavior during tests.
 
 ### Breaking Changes
+
 - `inline-style-prefixer` has updated vendor prefixes, removing some outdated prefixes like `-moz-transform`.
 
 ## 0.16.6 (February 9, 2016)
 
 ### Bug Fixes
+
 - The `lib/` directory did not get built property in 0.16.6. `lib/` now contains all changes from 0.16.5.
 
 ## 0.16.5 (January 27, 2016)
 
 ### Bug Fixes
+
 - Don't merge media query styles, fixes #550
 - Don't add className if empty, fixes #539
 
 ### Improvements
+
 - Passing `'all'` as the `userAgent` will add all prefixes, useful for caching server-rendered pages, thanks @oliviertassinari (this applies to inline styles and style rendered as CSS, but does not yet include adding all the prefixed versions of `keyframes`)
 - Add support for `:visited` styles:
+
 ```jsx
 const url = 'https://github.com/formidablelabs/radium';
-const VisitedLink = Radium(() =>
-  <a href={url} style={{color: 'gray', ':visited': {color: 'black'}}}>{url}</a>
-);
+const VisitedLink = Radium(() => (
+  <a href={url} style={{color: 'gray', ':visited': {color: 'black'}}}>
+    {url}
+  </a>
+));
 ```
 
 ## 0.16.4 (January 23, 2016)
 
 ### Bug Fixes
-- Add `px` suffix if needed *before* prefixing, since the list in `appendPxIfNeeded` does not include prefixed variants
+
+- Add `px` suffix if needed _before_ prefixing, since the list in `appendPxIfNeeded` does not include prefixed variants
 - Radium now calls `toString` on values itself, instead of relying on `inline-style-prefixer` or React to do so (they don't)
 
 ### Improvements
+
 - Much lighter `npm install radium` by removing `babel` & co from `dependencies` before publishing
 - Radium now ignores children or props that are themselves Radium enhanced components, for a nice perf gain. Thanks @spacenick
 
 ## 0.16.3 (January 21, 2016)
+
 - Published under the `test` tag, so not installable via npm latest
 - Forgot to add `-test` to the version
 - See changelog for 0.16.4 instead
@@ -185,8 +239,9 @@ const VisitedLink = Radium(() =>
 ## 0.16.2 (January 8, 2016)
 
 ### Bug Fixes
+
 - `<StyleSheet/> Component:`
-  - Bind the private method _onChange to the class instance
+  - Bind the private method \_onChange to the class instance
   - Wrap setState in setTimeout and keep track of isMounted, #500
   - Remove duplicate declaration of componentWillUnmount and move `this._isMounted = true` inside `componentDidMount`
 - Clear up docs around StyleRoot props, clear up issues in #496
@@ -196,23 +251,28 @@ const VisitedLink = Radium(() =>
 ## 0.16.1 (January 5, 2016)
 
 ### Bug Fixes
+
 - `<StyleRoot>` no longer throws an error on unmount
 
 ## 0.16.0 (January 5, 2016)
 
 ### New Features
+
 - Server-side rendering for media queries and keyframes!
 
 ### Breaking Changes
+
 - To use keyframes and media queries, you must wrap your components in the `<StyleRoot>` component, typically in `<App>`: https://github.com/FormidableLabs/radium/tree/master/docs/api#styleroot-component
 - The result of Radium.keyframes is the animation name, and should be assigned to the `animationName` prop: https://github.com/FormidableLabs/radium/tree/master/docs/api#keyframes
 - printStyles have been removed, in favor of '@media print' media queries, which are now rendered as CSS so they work correctly: https://github.com/FormidableLabs/radium/tree/master/docs/guides#media-queries
 
 ### Bug Fixes
+
 - Don't add extra media query listeners
 - Append px to numeric values on properties that don't accept unitless values
 
 ### Improvements
+
 - Upgrade `inline-style-prefixer` to version 0.6.2 (Edge support)
 - Better error on duplicate keys
 - Upgrade to Babel 6
@@ -335,7 +395,7 @@ const VisitedLink = Radium(() =>
 
 ### Bug Fixes
 
-- Fix bug with _radiumDidResolveStyles that was breaking in React 0.14.0-beta2
+- Fix bug with \_radiumDidResolveStyles that was breaking in React 0.14.0-beta2
 - Un-prefix values before checking isUnitlessNumber, #305, thanks @AnSavvides
 - Prevent errors from getters that do not have setters as static props of React components, #306, thanks @rolandpoulter
 

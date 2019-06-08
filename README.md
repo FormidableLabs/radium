@@ -6,17 +6,24 @@
 ![gzipped size][size_img]
 [![Maintenance Status][maintenance-image]](#maintenance-status)
 
-
 # Radium
 
-```
-npm install radium
+```sh
+yarn add radium
+# or
+npm install --save radium
 ```
 
 Radium is a set of tools to manage inline styles on React elements. It gives you powerful styling capabilities without CSS.
 
 _Inspired by_ <a href="https://speakerdeck.com/vjeux/react-css-in-js">React: CSS in JS</a>
 by <a href="https://twitter.com/Vjeux">vjeux</a>.
+
+## Maintenance Status
+
+**Stable:** Formidable is not planning to develop any new features for this project. We are still responding to bug reports and security concerns. We are still welcoming PRs for this project, but PRs that include new features should be small and easy to integrate and should not include breaking changes.
+
+For more about what this means for Radium, view our announcement [here](https://formidable.com/blog/2019/radium-maintenance/).
 
 ## Overview
 
@@ -36,12 +43,12 @@ For a short technical explanation, see [How does Radium work?](#how-does-radium-
 
 ## Features
 
-* Conceptually simple extension of normal inline styles
-* Browser state styles to support `:hover`, `:focus`, and `:active`
-* Media queries
-* Automatic vendor prefixing
-* Keyframes animation helper
-* ES6 class and `createClass` support
+- Conceptually simple extension of normal inline styles
+- Browser state styles to support `:hover`, `:focus`, and `:active`
+- Media queries
+- Automatic vendor prefixing
+- Keyframes animation helper
+- ES6 class and `createClass` support
 
 ## Docs
 
@@ -74,11 +81,7 @@ class Button extends React.Component {
     // all just JavaScript, you can use whatever logic you want to decide which
     // styles are applied (props, state, context, etc).
     return (
-      <button
-        style={[
-          styles.base,
-          styles[this.props.kind]
-        ]}>
+      <button style={[styles.base, styles[this.props.kind]]}>
         {this.props.children}
       </button>
     );
@@ -96,7 +99,9 @@ var styles = {
     // Adding interactive state couldn't be easier! Add a special key to your
     // style object (:hover, :focus, :active, or @media) with the additional rules.
     ':hover': {
-      background: color('#0074d9').lighten(0.2).hexString()
+      background: color('#0074d9')
+        .lighten(0.2)
+        .hexString()
     }
   },
 
@@ -118,21 +123,21 @@ If you are using **ESM** with **webpack** or **`@std/esm`** with **Node.js**, im
 
 ```js
 import Radium from 'radium';
-import Radium, { Style } from 'radium';
+import Radium, {Style} from 'radium';
 ```
 
 If you are using **CommonJS** with **Node.js** or **webpack@1** requires work like normal:
 
 ```js
 const Radium = require('radium');
-const { Style } = require('radium');
+const {Style} = require('radium');
 ```
 
 If you are using **CommonJS** with **webpack@2+**, however, you must instead add `.default` to the root `Radium` object import:
 
 ```js
 const Radium = require('radium').default; // CHANGED: Must add `.default`
-const { Style } = require('radium');      // Works as per normal
+const {Style} = require('radium'); // Works as per normal
 ```
 
 If you cannot change the `require` statements directly (say Radium is included from a different library your project depends on) you can manually tweak the Radium import in your project's webpack configuration with the following:
@@ -140,14 +145,14 @@ If you cannot change the `require` statements directly (say Radium is included f
 ```js
 resolve: {
   alias: {
-    radium: require.resolve("radium/index")
+    radium: require.resolve('radium/index');
   }
 }
 ```
 
 which will allow `const Radium = require('radium');` to still work. The configuration effectively forces webpack to point to code from `package.json:main` (which points to `/index.js`) instead of what is in `package.json:module`.
 
-*Note:* Radium uses `Reflect` which is not supported in IE11. You will need to bring in a polyfill like [CoreJs](https://github.com/zloirock/core-js#ecmascript-reflect) in order to support <IE11.
+_Note:_ Radium uses `Reflect` which is not supported in IE11. You will need to bring in a polyfill like [CoreJs](https://github.com/zloirock/core-js#ecmascript-reflect) in order to support <IE11.
 
 ## Examples
 
@@ -183,11 +188,6 @@ You can find a list of other tools, components, and frameworks to help you build
 ## Contributing
 
 Please see [CONTRIBUTING](https://github.com/FormidableLabs/radium/blob/master/CONTRIBUTING.md)
-
-## Maintenance Status
-
-**Stable:** Formidable is not planning to develop any new features for this project. We are still responding to bug reports and security concerns. We are still welcoming PRs for this project, but PRs that include new features should be small and easy to integrate and should not include breaking changes.
-
 
 [trav_img]: https://api.travis-ci.org/FormidableLabs/radium.svg
 [trav_site]: https://travis-ci.org/FormidableLabs/radium
