@@ -60,6 +60,7 @@
     "@babel/plugin-proposal-decorators": "^7.0.0",
     "@babel/plugin-transform-destructuring": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
+    "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.0",
     "builder": "^3.2.3",
@@ -75,9 +76,7 @@
     "react": "^16.8.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
     "@babel/node": "^7.0.0",
-    "@babel/preset-flow": "^7.0.0",
     "babel-eslint": "^10.0.1",
     "babel-plugin-istanbul": "^5.1.0",
     "caniuse-api": "^2.0.0",
