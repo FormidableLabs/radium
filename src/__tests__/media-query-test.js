@@ -382,9 +382,9 @@ describe('Media query tests', () => {
       </ErrorBoundary>
     );
 
-    // // React 16 - need to handle exceptions globally.
-    // // In DEV (aka our tests), need to silence global error handlers and such.
-    // // https://github.com/facebook/react/issues/10474#issuecomment-322909303
+    // React 16 - need to handle exceptions globally.
+    // In DEV (aka our tests), need to silence global error handlers and such.
+    // https://github.com/facebook/react/issues/10474#issuecomment-322909303
     window.onerror = sinon.stub();
     sandbox.stub(console, 'error');
 
