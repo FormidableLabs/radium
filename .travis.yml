@@ -6,9 +6,9 @@ addons:
   chrome: stable
 
 node_js:
-  - "6"
   - "8"
   - "10"
+  - "12"
 
 # Use container-based Travis infrastructure.
 sudo: false

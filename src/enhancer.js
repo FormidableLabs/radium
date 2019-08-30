@@ -93,6 +93,25 @@ function copyArrowFuncs(enhancedSelf: Object, ComposedComponent: constructor) {
   });
 }
 
+function trimRadiumState(enhancer: EnhancerApi) {
+  if (
+    enhancer._extraRadiumStateKeys &&
+    enhancer._extraRadiumStateKeys.length > 0
+  ) {
+    const trimmedRadiumState = enhancer._extraRadiumStateKeys.reduce(
+      (state, key) => {
+        // eslint-disable-next-line no-unused-vars
+        const {[key]: extraStateKey, ...remainingState} = state;
+        return remainingState;
+      },
+      getRadiumStyleState(enhancer)
+    );
+
+    enhancer._lastRadiumState = trimmedRadiumState;
+    enhancer.setState({_radiumStyleState: trimmedRadiumState});
+  }
+}
+
 function cleanUpEnhancer(enhancer: EnhancerApi) {
   const {_radiumMouseUpListener, _radiumMediaQueryListenersByQuery} = enhancer;
 
@@ -141,6 +160,17 @@ function createEnhancedFunctionComponent(
         };
       },
       [enhancerApi]
+    );
+
+    const hasExtraStateKeys =
+      enhancerApi._extraRadiumStateKeys &&
+      enhancerApi._extraRadiumStateKeys.length > 0;
+
+    useEffect(
+      () => {
+        trimRadiumState(enhancerApi);
+      },
+      [hasExtraStateKeys, enhancerApi]
     );
 
     const renderedElement = origComponent(otherProps, ref);
@@ -214,26 +244,13 @@ function createEnhancedClassComponent(
       copyArrowFuncs(self, ComposedComponent);
     }
 
-    /* eslint-disable react/no-did-update-set-state, no-unused-vars */
     componentDidUpdate(prevProps, prevState, snapshot) {
       if (super.componentDidUpdate) {
         super.componentDidUpdate.call(this, prevProps, prevState, snapshot);
       }
 
-      if (this._extraRadiumStateKeys && this._extraRadiumStateKeys.length > 0) {
-        const trimmedRadiumState = this._extraRadiumStateKeys.reduce(
-          (state, key) => {
-            const {[key]: extraStateKey, ...remainingState} = state;
-            return remainingState;
-          },
-          getRadiumStyleState(this)
-        );
-
-        this._lastRadiumState = trimmedRadiumState;
-        this.setState({_radiumStyleState: trimmedRadiumState});
-      }
+      trimRadiumState(this);
     }
-    /* eslint-enable react/no-did-update-set-state, no-unused-vars */
 
     componentWillUnmount() {
       if (super.componentWillUnmount) {
