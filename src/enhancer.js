@@ -14,6 +14,7 @@ import resolveStyles, {type EnhancerApi} from './resolve-styles';
 import getRadiumStyleState from './get-radium-style-state';
 import {RadiumConfigContext, withRadiumContexts} from './context';
 import {StyleKeeperContext} from './context';
+import type {Config} from './config';
 
 const KEYS_TO_IGNORE_WHEN_COPYING_PROPERTIES = [
   'arguments',
@@ -128,6 +129,47 @@ function cleanUpEnhancer(enhancer: EnhancerApi) {
   }
 }
 
+function resolveConfig(
+  propConfig?: Config,
+  contextConfig?: Config,
+  hocConfig?: Config
+) {
+  let config = propConfig || contextConfig || hocConfig;
+
+  if (hocConfig && config !== hocConfig) {
+    config = {
+      ...hocConfig,
+      ...config
+    };
+  }
+
+  return config;
+}
+
+function renderRadiumComponent(
+  enhancer: EnhancerApi,
+  renderedElement: any,
+  resolvedConfig?: Config,
+  propConfig?: Config
+) {
+  const {extraStateKeyMap, element} = resolveStyles(
+    enhancer,
+    renderedElement,
+    resolvedConfig
+  );
+  enhancer._extraRadiumStateKeys = Object.keys(extraStateKeyMap);
+
+  if (propConfig) {
+    return (
+      <RadiumConfigContext.Provider value={propConfig}>
+        {element}
+      </RadiumConfigContext.Provider>
+    );
+  }
+
+  return element;
+}
+
 function createEnhancedFunctionComponent(
   origComponent: Function,
   config?: Object
@@ -175,31 +217,18 @@ function createEnhancedFunctionComponent(
 
     const renderedElement = origComponent(otherProps, ref);
 
-    let currentConfig = radiumConfig || radiumConfigContext || config;
+    const currentConfig = resolveConfig(
+      radiumConfig,
+      radiumConfigContext,
+      config
+    );
 
-    if (config && currentConfig !== config) {
-      currentConfig = {
-        ...config,
-        ...currentConfig
-      };
-    }
-
-    const {extraStateKeyMap, element} = resolveStyles(
+    return renderRadiumComponent(
       enhancerApi,
       renderedElement,
-      currentConfig
+      currentConfig,
+      radiumConfig
     );
-    enhancerApi._extraRadiumStateKeys = Object.keys(extraStateKeyMap);
-
-    if (radiumConfig) {
-      return (
-        <RadiumConfigContext.Provider value={radiumConfig}>
-          {element}
-        </RadiumConfigContext.Provider>
-      );
-    }
-
-    return element;
   });
 
   (RadiumEnhancer: Object)._isRadiumEnhanced = true;
@@ -262,33 +291,19 @@ function createEnhancedClassComponent(
 
     render() {
       const renderedElement = super.render();
-      let currentConfig =
-        this.props.radiumConfig || this.props.radiumConfigContext || config;
 
-      if (config && currentConfig !== config) {
-        currentConfig = {
-          ...config,
-          ...currentConfig
-        };
-      }
+      const currentConfig = resolveConfig(
+        this.props.radiumConfig,
+        this.props.radiumConfigContext,
+        config
+      );
 
-      // do the style and interaction work
-      const {extraStateKeyMap, element} = resolveStyles(
+      return renderRadiumComponent(
         this,
         renderedElement,
-        currentConfig
+        currentConfig,
+        this.props.radiumConfig
       );
-      this._extraRadiumStateKeys = Object.keys(extraStateKeyMap);
-
-      if (this.props.radiumConfig) {
-        return (
-          <RadiumConfigContext.Provider value={this.props.radiumConfig}>
-            {element}
-          </RadiumConfigContext.Provider>
-        );
-      }
-
-      return element;
     }
   }
 
