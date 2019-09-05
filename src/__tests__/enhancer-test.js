@@ -1,3 +1,4 @@
+const {getElement, renderFcIntoDocument} = require('test-helpers');
 const resolveStyles = sinon.spy(require('resolve-styles'), 'default');
 const Enhancer = require('inject-loader!enhancer')({
   './resolve-styles': resolveStyles
@@ -7,27 +8,38 @@ import React, {Component} from 'react';
 
 describe('Enhancer', () => {
   it('sets up initial state', () => {
-    class Composed extends Component {}
+    class Composed extends Component {
+      render() {
+        return <div />;
+      }
+    }
     const Enhanced = Enhancer(Composed);
 
-    const instance = new Enhanced();
+    const ref = React.createRef();
+    renderFcIntoDocument(<Enhanced ref={ref} />);
 
-    expect(instance.state).to.deep.equal({_radiumStyleState: {}});
+    expect(ref.current.state).to.deep.equal({_radiumStyleState: {}});
   });
 
   it('merges with existing state', () => {
     class Composed extends Component {
-      constructor() {
-        super();
+      constructor(props) {
+        super(props);
         this.state = {foo: 'bar'};
       }
-      render() {}
+      render() {
+        return <div />;
+      }
     }
     const Enhanced = Enhancer(Composed);
 
-    const instance = new Enhanced();
+    const ref = React.createRef();
+    renderFcIntoDocument(<Enhanced ref={ref} />);
 
-    expect(instance.state).to.deep.equal({foo: 'bar', _radiumStyleState: {}});
+    expect(ref.current.state).to.deep.equal({
+      foo: 'bar',
+      _radiumStyleState: {}
+    });
   });
 
   it('receives the given props', () => {
@@ -35,13 +47,15 @@ describe('Enhancer', () => {
       constructor(props) {
         super(props);
       }
-      render() {}
+      render() {
+        return <div />;
+      }
     }
     const Enhanced = Enhancer(Composed);
 
-    const instance = new Enhanced({foo: 'bar'});
+    const output = renderFcIntoDocument(<Enhanced foo="bar" />);
 
-    expect(instance.props).to.deep.equal({foo: 'bar'});
+    expect(output.props.children.props).to.deep.equal({foo: 'bar'});
   });
 
   it('calls existing render function, then resolveStyles', () => {
@@ -54,8 +68,7 @@ describe('Enhancer', () => {
     }
     const Enhanced = Enhancer(Composed);
 
-    const instance = new Enhanced({}, {});
-    instance.render();
+    renderFcIntoDocument(<Enhanced />);
 
     expect(renderMock).to.have.been.called;
     expect(resolveStyles).to.have.been.called;
@@ -64,26 +77,35 @@ describe('Enhancer', () => {
   it('calls existing constructor only once', () => {
     const constructorMock = sinon.spy();
     class Composed extends Component {
-      constructor() {
-        super();
+      constructor(props) {
+        super(props);
         constructorMock();
       }
-      render() {}
+      render() {
+        return <div />;
+      }
     }
     const Enhanced = Enhancer(Composed);
 
-    new Enhanced(); // eslint-disable-line no-new
+    renderFcIntoDocument(<Enhanced />);
 
     expect(constructorMock).to.have.been.calledOnce;
   });
 
   it('uses the existing displayName', () => {
-    class Composed extends Component {}
+    class Composed extends Component {
+      render() {
+        return <div />;
+      }
+    }
     Composed.displayName = 'Composed';
 
     const Enhanced = Enhancer(Composed);
 
-    expect(Enhanced.displayName).to.equal(Composed.displayName);
+    const ref = React.createRef();
+    renderFcIntoDocument(<Enhanced ref={ref} />);
+
+    expect(ref.current.constructor.displayName).to.equal(Composed.displayName);
   });
 
   it('calls existing componentWillUnmount function', () => {
@@ -92,12 +114,15 @@ describe('Enhancer', () => {
       componentWillUnmount() {
         existingComponentWillUnmount();
       }
-      render() {}
+      render() {
+        return <div />;
+      }
     }
     const Enhanced = Enhancer(Composed);
 
-    const instance = new Enhanced();
-    instance.componentWillUnmount();
+    const ref = React.createRef();
+    renderFcIntoDocument(<Enhanced ref={ref} />);
+    ref.current.componentWillUnmount();
 
     expect(existingComponentWillUnmount).to.have.been.called;
   });
@@ -105,16 +130,19 @@ describe('Enhancer', () => {
   it('removes mouse up listener on componentWillUnmount', () => {
     const removeMouseUpListener = sinon.spy();
     class Composed extends Component {
-      constructor() {
-        super();
+      constructor(props) {
+        super(props);
         this._radiumMouseUpListener = {remove: removeMouseUpListener};
       }
-      render() {}
+      render() {
+        return <div />;
+      }
     }
     const Enhanced = Enhancer(Composed);
 
-    const instance = new Enhanced();
-    instance.componentWillUnmount();
+    const ref = React.createRef();
+    renderFcIntoDocument(<Enhanced ref={ref} />);
+    ref.current.componentWillUnmount();
 
     expect(removeMouseUpListener).to.have.been.called;
   });
@@ -126,16 +154,19 @@ describe('Enhancer', () => {
       '(min-resolution: 2dppx)': {remove: sinon.spy()}
     };
     class Composed extends Component {
-      constructor() {
-        super();
+      constructor(props) {
+        super(props);
         this._radiumMediaQueryListenersByQuery = mediaQueryListenersByQuery;
       }
-      render() {}
+      render() {
+        return <div />;
+      }
     }
     const Enhanced = Enhancer(Composed);
 
-    const instance = new Enhanced();
-    instance.componentWillUnmount();
+    const ref = React.createRef();
+    renderFcIntoDocument(<Enhanced ref={ref} />);
+    ref.current.componentWillUnmount();
 
     Object.keys(mediaQueryListenersByQuery).forEach(key => {
       expect(mediaQueryListenersByQuery[key].remove).to.have.been.called;
@@ -150,12 +181,27 @@ describe('Enhancer', () => {
       render() {}
     }
 
-    Composed.defaultProps = {foo: 'bar'};
+    Composed.foo = 'bar';
 
     const Enhanced = Enhancer(Composed);
 
-    expect(Enhanced.defaultProps).to.deep.equal({foo: 'bar'});
+    expect(Enhanced.foo).to.equal('bar');
     expect(Enhanced.staticMethod()).to.deep.equal({bar: 'foo'});
+  });
+
+  it('works with defaultProps', () => {
+    class Composed extends Component {
+      static defaultProps = {foo: 'bar'};
+
+      render() {
+        return <div>{this.props.foo}</div>;
+      }
+    }
+
+    const Enhanced = Enhancer(Composed);
+    const output = renderFcIntoDocument(<Enhanced />);
+
+    expect(getElement(output, 'div').textContent).to.equal('bar');
   });
 
   it('copies methods across to top level prototype', () => {

@@ -2,8 +2,7 @@
 
 import Radium, {StyleRoot} from 'index';
 import React from 'react';
-import TestUtils from 'react-dom/test-utils';
-import {getElement} from 'test-helpers';
+import {getElement, renderFcIntoDocument} from 'test-helpers';
 
 describe('removeNestedStyles plugin tests', () => {
   it('removes nested style objects', () => {
@@ -17,7 +16,7 @@ describe('removeNestedStyles plugin tests', () => {
       </StyleRoot>
     ));
 
-    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    const output = renderFcIntoDocument(<TestComponent />);
     const span = getElement(output, 'span');
     expect(span.style.foo).to.not.exist;
   });
@@ -35,7 +34,7 @@ describe('removeNestedStyles plugin tests', () => {
       </StyleRoot>
     ));
 
-    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    const output = renderFcIntoDocument(<TestComponent />);
     const span = getElement(output, 'span');
     expect(span.style.foo).to.equal('bar');
   });

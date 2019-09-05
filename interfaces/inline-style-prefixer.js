@@ -21,13 +21,13 @@ declare function createDynamicPrefixer(
 ): typeof InlineStylePrefixer;
 
 declare module 'inline-style-prefixer' {
-  declare var exports: typeof InlineStylePrefixer;
+  declare module.exports: typeof InlineStylePrefixer;
 }
 
 declare module 'inline-style-prefixer/static/createPrefixer' {
-  declare var exports: typeof createStaticPrefixer;
+  declare module.exports: typeof createStaticPrefixer;
 }
 
 declare module 'inline-style-prefixer/dynamic/createPrefixer' {
-  declare var exports: typeof createDynamicPrefixer;
+  declare module.exports: typeof createDynamicPrefixer;
 }

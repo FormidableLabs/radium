@@ -1,22 +1,56 @@
 {
   "plugins": [
-    "transform-decorators-legacy"
+    "@babel/plugin-transform-destructuring",
+    [
+      "@babel/plugin-proposal-decorators",
+      {
+        "legacy": true
+      }
+    ],
+    [
+      "@babel/plugin-proposal-class-properties",
+      {
+        "loose": true,
+      },
+    ],
   ],
   "presets": [
-    ["env", { "modules": false }],
-    "stage-1",
-    "react"
+    [
+      "@babel/preset-env",
+      {
+        "modules": false
+      }
+    ],
+    "@babel/preset-flow",
+    "@babel/preset-react"
   ],
   "env": {
     "commonjs": {
-      "presets": [
-        "env",
-        "stage-1",
-        "react"
-      ],
       "plugins": [
-        "transform-decorators-legacy"
-      ]
+        "@babel/plugin-transform-destructuring",
+        [
+          "@babel/plugin-proposal-decorators",
+          {
+            "legacy": true
+          }
+        ],
+        [
+          "@babel/plugin-proposal-class-properties",
+          {
+            "loose": true,
+          },
+        ],
+      ],
+      "presets": [
+        [
+          "@babel/preset-env",
+          {
+            "modules": "commonjs"
+          }
+        ],
+        "@babel/preset-flow",
+        "@babel/preset-react"
+      ],
     }
   }
 }

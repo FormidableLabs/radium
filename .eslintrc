@@ -1,10 +1,17 @@
 parser: "babel-eslint"
 
-ecmaFeatures:
-  jsx: true
-  modules: true
+parserOptions:
+  ecmaVersion: 2018
+  sourceType: "module"
+  ecmaFeatures:
+    jsx: true
 
-plugins: ["react", "flow-vars", "prettier"]
+plugins: ["react", "flowtype", "prettier", "react-hooks"]
+
+settings:
+  react:
+    pragma: "React"
+    version: "detect"
 
 env:
     browser: true
@@ -137,20 +144,20 @@ rules:
     #                                                                         #
     ###########################################################################
 
-    no-catch-shadow: 2             # disallow the catch clause parameter name being the same as a
-                                   #    variable in the outer scope
-    no-delete-var: 2               # disallow deletion of variables
-    no-label-var: 2                # disallow labels that share a name with a variable
-    no-shadow: 2                   # disallow declaration of variables already declared in the
-                                   #    outer scope
-    no-shadow-restricted-names: 2  # disallow shadowing of names such as arguments
-    no-undef: 2                    # disallow use of undeclared variables unless mentioned in a
-                                   #    /*global */ block
-    no-undef-init: 2               # disallow use of undefined when initializing variables
-    no-undefined: 0                # disallow use of undefined variable
-    no-unused-vars: 2              # disallow declaration of variables that are not used in
-                                   #    the code
-    no-use-before-define: 2        # disallow use of variables before they are defined
+    no-catch-shadow: 2                                 # disallow the catch clause parameter name being the same as a
+                                                       #    variable in the outer scope
+    no-delete-var: 2                                   # disallow deletion of variables
+    no-label-var: 2                                    # disallow labels that share a name with a variable
+    no-shadow: 2                                       # disallow declaration of variables already declared in the
+                                                       #    outer scope
+    no-shadow-restricted-names: 2                      # disallow shadowing of names such as arguments
+    no-undef: 2                                        # disallow use of undeclared variables unless mentioned in a
+                                                       #    /*global */ block
+    no-undef-init: 2                                   # disallow use of undefined when initializing variables
+    no-undefined: 0                                    # disallow use of undefined variable
+    no-unused-vars: 2                                  # disallow declaration of variables that are not used in
+                                                       #    the code
+    no-use-before-define: [2, { "functions": false }]  # disallow use of variables before they are defined
     no-var: 2
 
     ###########################################################################
@@ -260,11 +267,11 @@ rules:
 
     ###########################################################################
     #                                                                         #
-    #   Flow vars                                                             #
+    #   Flowtype                                                             #
     #                                                                         #
     ###########################################################################
-    flow-vars/define-flow-type: 2
-    flow-vars/use-flow-type: 2
+    flowtype/define-flow-type: 2
+    flowtype/use-flow-type: 2
 
 
     ###########################################################################
@@ -280,3 +287,12 @@ rules:
         "parser": "babylon"
       }
     ]
+
+
+    ###########################################################################
+    #                                                                         #
+    #   React Hooks                                                           #
+    #                                                                         #
+    ###########################################################################
+    react-hooks/rules-of-hooks: 2
+    react-hooks/exhaustive-deps: 2

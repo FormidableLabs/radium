@@ -1,24 +1,27 @@
 /* @flow */
 
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 
 import StyleKeeper from '../style-keeper';
+import {withRadiumContexts, type WithRadiumContextsProps} from '../context';
 
-export default class StyleSheet extends Component<{}> {
-  static contextTypes = {
-    _radiumStyleKeeper: PropTypes.instanceOf(StyleKeeper)
-  };
+class StyleSheet extends Component<WithRadiumContextsProps> {
+  // eslint-disable-next-line react/sort-comp
+  styleKeeper: StyleKeeper;
 
   constructor() {
     super(...arguments);
-    this._css = this.context._radiumStyleKeeper.getCSS();
+
+    if (!this.props.styleKeeperContext) {
+      throw new Error('StyleRoot is required to use StyleSheet');
+    }
+
+    this.styleKeeper = this.props.styleKeeperContext;
+    this._css = this.styleKeeper.getCSS();
   }
 
   componentDidMount() {
-    this._subscription = this.context._radiumStyleKeeper.subscribe(
-      this._onChange
-    );
+    this._subscription = this.styleKeeper.subscribe(this._onChange);
     this._onChange();
   }
 
@@ -37,7 +40,7 @@ export default class StyleSheet extends Component<{}> {
   _css: string;
 
   _onChange = () => {
-    const nextCSS = this.context._radiumStyleKeeper.getCSS();
+    const nextCSS = this.styleKeeper.getCSS();
 
     if (nextCSS !== this._css) {
       if (this._root) {
@@ -62,3 +65,5 @@ export default class StyleSheet extends Component<{}> {
     );
   }
 }
+
+export default withRadiumContexts(StyleSheet);

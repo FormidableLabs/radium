@@ -17,6 +17,7 @@
 .*/node_modules/watchify/.*
 .*/node_modules/webpack-dev-server/.*
 .*/node_modules/webpack/.*
+.*/node_modules/hoist-non-react-statics/.*
 
 [include]
 src

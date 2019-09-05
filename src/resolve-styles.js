@@ -14,6 +14,7 @@ import Plugins from './plugins/';
 
 import ExecutionEnvironment from 'exenv';
 import React from 'react';
+import StyleKeeper from './style-keeper';
 
 const DEFAULT_CONFIG = {
   plugins: [
@@ -31,6 +32,22 @@ const DEFAULT_CONFIG = {
 
 // Gross
 let globalState = {};
+
+// Only for use by tests
+let __isTestModeEnabled = false;
+
+export type EnhancerApi = {
+  state: Object,
+  setState: Function,
+  _radiumMediaQueryListenersByQuery?: {
+    [query: string]: {remove: () => void}
+  },
+  _radiumMouseUpListener?: {remove: () => void},
+  _radiumIsMounted: boolean,
+  _lastRadiumState: Object,
+  _extraRadiumStateKeys: any,
+  _radiumStyleKeeper?: StyleKeeper
+};
 
 type ResolvedStyles = {
   extraStateKeyMap: {[key: string]: boolean},
@@ -266,8 +283,7 @@ const _runPlugins = function({
     _setStyleState(component, elementKey || getKey(), stateKey, value);
 
   const addCSS = css => {
-    const styleKeeper =
-      component._radiumStyleKeeper || component.context._radiumStyleKeeper;
+    const styleKeeper = component._radiumStyleKeeper;
     if (!styleKeeper) {
       if (__isTestModeEnabled) {
         return {remove() {}};
@@ -353,7 +369,7 @@ const _cloneElement = function(renderedElement, newProps, newChildren) {
 //
 /* eslint-disable max-params */
 resolveStyles = function(
-  component: any, // ReactComponent, flow+eslint complaining
+  component: EnhancerApi,
   renderedElement: any, // ReactElement
   config: Config = DEFAULT_CONFIG,
   existingKeyMap: {[key: string]: boolean} = {},
@@ -416,7 +432,6 @@ resolveStyles = function(
   ) {
     return {extraStateKeyMap, element: renderedElement};
   }
-
   const children = renderedElement.props.children;
 
   const newChildren = _resolveChildren({
@@ -461,7 +476,6 @@ resolveStyles = function(
 /* eslint-enable max-params */
 
 // Only for use by tests
-let __isTestModeEnabled = false;
 if (process.env.NODE_ENV !== 'production') {
   resolveStyles.__clearStateForTests = function() {
     globalState = {};

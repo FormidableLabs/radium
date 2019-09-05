@@ -3,7 +3,7 @@ module.exports = function(config) {
   config.set({
     webpack: {
       module: {
-        rules: config.webpack.module.rules.concat([
+        rules: config.webpack.module.rules.slice(1).concat([
           {
             test: /\.js$/,
             exclude: [/node_modules/],

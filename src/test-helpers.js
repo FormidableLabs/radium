@@ -10,6 +10,16 @@ export function getRenderOutput(element) {
   return renderer.getRenderOutput();
 }
 
+class Wrapper extends Component {
+  render() {
+    return this.props.children;
+  }
+}
+
+export function renderFcIntoDocument(element) {
+  return TestUtils.renderIntoDocument(<Wrapper>{element}</Wrapper>);
+}
+
 export function getElement(output, tagName) {
   return ReactDOM.findDOMNode(
     TestUtils.findRenderedDOMComponentWithTag(output, tagName)

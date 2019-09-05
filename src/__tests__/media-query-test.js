@@ -4,12 +4,11 @@ import Radium, {StyleRoot} from 'index';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
-import ShallowRenderer from 'react-test-renderer/shallow';
 import {
   expectColor,
   expectCSS,
-  getRenderOutput,
-  getElement
+  getElement,
+  renderFcIntoDocument
 } from 'test-helpers';
 
 // Win on at least ie9 _can't_ sinon.stub() window.onerror like normal.
@@ -53,7 +52,7 @@ describe('Media query tests', () => {
       }
     }
 
-    getRenderOutput(<TestComponent />);
+    renderFcIntoDocument(<TestComponent />);
 
     expect(matchMedia.lastCall.args[0]).to.equal('(min-width: 600px)');
     expect(addListener.lastCall.args[0]).to.be.a('function');
@@ -63,9 +62,13 @@ describe('Media query tests', () => {
     const addListener = sinon.spy();
     const matchMedia = sinon.spy(() => ({addListener}));
 
+    let renders = 0;
+
     @Radium({matchMedia})
     class TestComponent extends Component {
       render() {
+        renders++;
+
         return (
           <div
             style={{
@@ -76,10 +79,11 @@ describe('Media query tests', () => {
       }
     }
 
-    const renderer = new ShallowRenderer();
-    renderer.render(<TestComponent />);
-    renderer.render(<TestComponent />);
+    const node = document.createElement('div');
+    ReactDOM.render(<TestComponent />, node);
+    ReactDOM.render(<TestComponent />, node);
 
+    expect(renders).to.equal(2);
     expect(matchMedia).to.have.been.calledOnce;
     expect(addListener).to.have.been.calledOnce;
   });
@@ -110,7 +114,7 @@ describe('Media query tests', () => {
       }
     }
 
-    getRenderOutput(<TestComponent />);
+    renderFcIntoDocument(<TestComponent />);
 
     expect(matchMedia).to.have.been.calledOnce;
     expect(addListener).to.have.been.calledOnce;
@@ -138,7 +142,7 @@ describe('Media query tests', () => {
       }
     }
 
-    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    const output = renderFcIntoDocument(<TestComponent />);
     const div = getElement(output, 'div');
     TestUtils.SimulateNative.mouseOver(div);
 
@@ -173,7 +177,7 @@ describe('Media query tests', () => {
       }
     }
 
-    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    const output = renderFcIntoDocument(<TestComponent />);
     const div = getElement(output, 'div');
     TestUtils.SimulateNative.mouseOver(div);
 
@@ -201,7 +205,7 @@ describe('Media query tests', () => {
     }
 
     // First, render with matching media query and verify the hover color
-    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    const output = renderFcIntoDocument(<TestComponent />);
     const div = getElement(output, 'div');
     TestUtils.SimulateNative.mouseOver(div);
 
@@ -231,7 +235,7 @@ describe('Media query tests', () => {
       }
     }
 
-    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    const output = renderFcIntoDocument(<TestComponent />);
     ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(output).parentNode);
 
     expect(mql.addListener).to.have.been.calledOnce;
@@ -254,7 +258,7 @@ describe('Media query tests', () => {
       </StyleRoot>
     ));
 
-    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    const output = renderFcIntoDocument(<TestComponent />);
 
     const span = getElement(output, 'span');
     expect(span.className).to.not.be.empty;
@@ -288,7 +292,7 @@ describe('Media query tests', () => {
       </StyleRoot>
     ));
 
-    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    const output = renderFcIntoDocument(<TestComponent />);
     ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(output).parentNode);
   });
 
@@ -332,7 +336,7 @@ describe('Media query tests', () => {
       </StyleRoot>
     ));
 
-    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    const output = renderFcIntoDocument(<TestComponent />);
 
     const span = getElement(output, 'span');
     expect(span.className).to.be.empty;
@@ -349,7 +353,7 @@ describe('Media query tests', () => {
       </StyleRoot>
     ));
 
-    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    const output = renderFcIntoDocument(<TestComponent />);
 
     const span = getElement(output, 'span');
     expect(span.className).to.contain(' original');
@@ -360,45 +364,35 @@ describe('Media query tests', () => {
       <span style={{'@media (min-width: 10px)': {background: 'green'}}} />
     ));
 
+    let error;
+
     class ErrorBoundary extends React.Component {
-      componentDidCatch() {}
+      componentDidCatch(e) {
+        error = e;
+      }
+
       render() {
         return this.props.children;
       }
     }
 
-    const TestComponent = Radium(() => (
+    const TestComponent = () => (
       <ErrorBoundary>
         <ChildComponent />
       </ErrorBoundary>
-    ));
+    );
 
     // React 16 - need to handle exceptions globally.
     // In DEV (aka our tests), need to silence global error handlers and such.
     // https://github.com/facebook/react/issues/10474#issuecomment-322909303
-    window.onerror = sinon.spy();
+    window.onerror = sinon.stub();
     sandbox.stub(console, 'error');
-    const catchSpy = sandbox.spy(ErrorBoundary.prototype, 'componentDidCatch');
 
-    TestUtils.renderIntoDocument(<TestComponent />);
+    renderFcIntoDocument(<TestComponent />);
 
-    // Check that the global error handler caught error.
-    expect(window.onerror).to.have.callCount(1);
-    const errMsg = window.onerror.getCall(0).args[0].toString();
-    expect(errMsg).to.contain('StyleRoot');
-
-    // Should also haven't hit the event listener.
-    expect(errorSpy).to.have.callCount(1);
-
-    // **Warning - Brittle Asserts**: React 16
-    //
-    // The call signature is `componentDidCatch(error, info)`, but for some reason
-    // we only get called with `(undefined, { componentStack: STUFF })` just accept
-    // it until we understand more.
-    expect(catchSpy).to.have.callCount(1);
-    expect(catchSpy.getCall(0).args[1])
-      .to.have.property('componentStack')
-      .that.contains('Component');
+    expect(error.message).to.contain(
+      'please wrap your application in the StyleRoot component'
+    );
   });
 
   it("doesn't throw without StyleRoot when in test mode", () => {
@@ -408,9 +402,7 @@ describe('Media query tests', () => {
         <span style={{'@media (min-width: 10px)': {background: 'green'}}} />
       </div>
     ));
-    expect(() =>
-      TestUtils.renderIntoDocument(<TestComponent />)
-    ).not.to.throw();
+    expect(() => renderFcIntoDocument(<TestComponent />)).not.to.throw();
   });
 
   it("doesn't try to setState if not mounted", () => {
@@ -439,7 +431,7 @@ describe('Media query tests', () => {
       }
     }
 
-    const output = TestUtils.renderIntoDocument(<TestComponent />);
+    const output = renderFcIntoDocument(<TestComponent />);
 
     expect(addListener).to.have.been.called;
 
