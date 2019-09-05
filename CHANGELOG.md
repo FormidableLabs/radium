@@ -1,5 +1,15 @@
 # Radium Changelog
 
+## 0.26.0 (September 5, 2019)
+
+#### Bug Fixes
+
+- Add hook and forwardRef support (#1027)
+
+#### Breaking Changes
+
+- Radium now requires React@16.8.0+ (#1027)
+
 ## 0.25.2 (June 7, 2019)
 
 #### Bug Fixes
