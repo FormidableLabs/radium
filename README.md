@@ -189,8 +189,8 @@ You can find a list of other tools, components, and frameworks to help you build
 
 Please see [CONTRIBUTING](https://github.com/FormidableLabs/radium/blob/master/CONTRIBUTING.md)
 
-[trav_img]: https://api.travis-ci.org/FormidableLabs/radium.svg
-[trav_site]: https://travis-ci.org/FormidableLabs/radium
+[trav_img]: https://api.travis-ci.com/FormidableLabs/radium.svg
+[trav_site]: https://travis-ci.com/FormidableLabs/radium
 [cov_img]: https://img.shields.io/coveralls/FormidableLabs/radium.svg
 [cov_site]: https://coveralls.io/r/FormidableLabs/radium
 [npm_img]: https://img.shields.io/npm/v/radium.svg
