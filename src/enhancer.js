@@ -178,7 +178,7 @@ function createEnhancedFunctionComponent(
     const {radiumConfig, ...otherProps} = props;
     const radiumConfigContext = useContext(RadiumConfigContext);
     const styleKeeperContext = useContext(StyleKeeperContext);
-    const [state, setState] = useState({});
+    const [state, setState] = useState({_radiumStyleState: {}});
 
     const enhancerApi = useRef<EnhancerApi>({
       state,
