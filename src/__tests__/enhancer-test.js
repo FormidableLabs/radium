@@ -21,6 +21,24 @@ describe('Enhancer', () => {
     expect(ref.current.state).to.deep.equal({_radiumStyleState: {}});
   });
 
+  it('sets up initial state on a function component', () => {
+    // using plugin API to get state as state hooks keep things pretty private
+    // so we cannot just dive into the component instance like with the class example
+    const dummyPlugin = sinon.spy();
+    const Composed = props => <div {...props} />;
+    const Enhanced = Enhancer(Composed, {
+      plugins: [dummyPlugin]
+    });
+
+    renderFcIntoDocument(<Enhanced style={{color: 'red'}} />);
+
+    const pluginApi = dummyPlugin.getCall(0).args[0];
+
+    expect(pluginApi.getComponentField('state')).to.deep.equal({
+      _radiumStyleState: {}
+    });
+  });
+
   it('merges with existing state', () => {
     class Composed extends Component {
       constructor(props) {
