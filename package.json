@@ -8,10 +8,10 @@
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/formidablelabs/radium.git"
+    "url": "https://github.com/instacart/radium.git"
   },
-  "homepage": "https://github.com/formidablelabs/radium",
-  "bugs": "https://github.com/formidablelabs/radium/issues",
+  "homepage": "https://github.com/instacart/radium",
+  "bugs": "https://github.com/instacart/radium/issues",
   "directories": {
     "example": "examples"
   },
