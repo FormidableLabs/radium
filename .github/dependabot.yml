@@ -8,7 +8,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-    interval: "daily"
+      interval: "daily"
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
