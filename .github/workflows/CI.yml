@@ -6,7 +6,6 @@ on:
 
 jobs:
   test:
-    name: Publish to Github Package Registry
     runs-on: ubuntu-latest
     strategy:
       matrix:
