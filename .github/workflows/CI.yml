@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  test:
+    name: Publish to Github Package Registry
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 10
+          - 12
+          - 14
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2.1.1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn install
+      - run: yarn run build-examples
+      - run: yarn run lint
+      - run: yarn run build
+      - run: yarn run test-coverage
+      - name: Upload to coveralls
+        run: cat coverage/lcov.info | yarn run coveralls || echo "Coveralls upload failed"
