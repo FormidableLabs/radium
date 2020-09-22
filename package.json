@@ -78,7 +78,7 @@
   "devDependencies": {
     "@babel/node": "^7.0.0",
     "babel-eslint": "^10.0.1",
-    "babel-plugin-istanbul": "^5.1.0",
+    "babel-plugin-istanbul": "^6.0.0",
     "caniuse-api": "^2.0.0",
     "chai": "^3.5.0",
     "color": "^1.0.3",
