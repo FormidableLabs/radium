@@ -379,10 +379,10 @@ export default function enhanceWithRadium(
     ReactMemoSymbol &&
     configOrComposedComponent.$$typeof === ReactMemoSymbol
   ) {
-    return createEnhancedFunctionComponent(
-      configOrComposedComponent.type,
-      config
+    const EnhancedComponent = memo(
+      createEnhancedFunctionComponent(configOrComposedComponent.type, config)
     );
+    return hoistStatics(EnhancedComponent, configOrComposedComponent);
   }
 
   if (typeof configOrComposedComponent !== 'function') {
