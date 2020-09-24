@@ -5,6 +5,7 @@ import React, {
   useContext,
   useRef,
   useEffect,
+  memo,
   forwardRef
 } from 'react';
 import PropTypes from 'prop-types';
@@ -358,6 +359,7 @@ function createComposedFromNativeClass(ComposedComponent: constructor) {
 }
 
 const ReactForwardRefSymbol = (forwardRef(() => null): any).$$typeof;
+const ReactMemoSymbol = (memo(() => null): any).$$typeof;
 
 export default function enhanceWithRadium(
   configOrComposedComponent: Class<any> | constructor | Function | Object,
@@ -371,6 +373,16 @@ export default function enhanceWithRadium(
       configOrComposedComponent.render,
       config
     );
+  }
+
+  if (
+    ReactMemoSymbol &&
+    configOrComposedComponent.$$typeof === ReactMemoSymbol
+  ) {
+    const EnhancedComponent = memo(
+      createEnhancedFunctionComponent(configOrComposedComponent.type, config)
+    );
+    return hoistStatics(EnhancedComponent, configOrComposedComponent);
   }
 
   if (typeof configOrComposedComponent !== 'function') {

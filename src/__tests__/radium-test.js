@@ -77,6 +77,27 @@ describe('Radium blackbox tests', () => {
     expect(div.style.padding).to.equal('9px');
   });
 
+  it('merges nested styles in memo components', () => {
+    const TestComponent = Radium(
+      React.memo(() => (
+        <div
+          style={[
+            [{color: 'blue'}, [{height: '2px', padding: '9px'}]],
+            {background: 'red'}
+          ]}
+        />
+      ))
+    );
+
+    const output = renderFcIntoDocument(<TestComponent />);
+    const div = getElement(output, 'div');
+
+    expect(div.style.color).to.equal('blue');
+    expect(div.style.background).to.equal('red');
+    expect(div.style.height).to.equal('2px');
+    expect(div.style.padding).to.equal('9px');
+  });
+
   it('merges nested styles and forwards ref in function components with forwardRef', () => {
     const TestComponent = Radium(
       React.forwardRef((props, ref) => (
