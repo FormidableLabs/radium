@@ -235,6 +235,10 @@ function createEnhancedFunctionComponent(
   (RadiumEnhancer: Object)._isRadiumEnhanced = true;
   (RadiumEnhancer: Object).defaultProps = origComponent.defaultProps;
 
+  // copy display name to enhanced component
+  (RadiumEnhancer: Object).displayName =
+    origComponent.displayName || origComponent.name || 'Component';
+
   return hoistStatics(RadiumEnhancer, origComponent);
 }
 
