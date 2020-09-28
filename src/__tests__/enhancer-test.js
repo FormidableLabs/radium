@@ -238,4 +238,26 @@ describe('Enhancer', () => {
       expect(Enhanced.prototype.hasOwnProperty(key)).to.equal(true);
     });
   });
+
+  it('works with memo components', () => {
+    function HelloWorld() {
+      <div>Hello World</div>;
+    }
+    const MemoComponent = React.memo(HelloWorld);
+    const Enhanced = Enhancer(MemoComponent);
+
+    expect(Enhanced.$$typeof).to.equal((React.memo(() => null): any).$$typeof);
+  });
+
+  it('keeps the displayName for memo components', () => {
+    function HelloWorld() {
+      <div>Hello World</div>;
+    }
+    const MemoComponent = React.memo(HelloWorld);
+    MemoComponent.displayName = 'Foo(HelloWorld)';
+
+    const Enhanced = Enhancer(MemoComponent);
+
+    expect(Enhanced.displayName).to.equal('Foo(HelloWorld)');
+  });
 });

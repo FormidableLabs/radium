@@ -42,6 +42,21 @@ function copyProperties(source, target) {
   });
 }
 
+const ReactForwardRefSymbol = (forwardRef(() => null): any).$$typeof;
+const ReactMemoSymbol = (memo(() => null): any).$$typeof;
+
+function isForwardRef(
+  component: Class<any> | constructor | Function | Object
+): boolean {
+  return ReactForwardRefSymbol && component.$$typeof === ReactForwardRefSymbol;
+}
+
+function isMemo(
+  component: Class<any> | constructor | Function | Object
+): boolean {
+  return ReactMemoSymbol && component.$$typeof === ReactMemoSymbol;
+}
+
 // Handle scenarios of:
 // - Inherit from `React.Component` in any fashion
 //   See: https://github.com/FormidableLabs/radium/issues/738
@@ -172,10 +187,18 @@ function renderRadiumComponent(
 }
 
 function createEnhancedFunctionComponent(
-  origComponent: Function,
+  origComponent: Function | Object,
   config?: Object
 ) {
-  const RadiumEnhancer = React.forwardRef((props, ref) => {
+  let renderMethod = origComponent;
+
+  if (isForwardRef(origComponent)) {
+    renderMethod = origComponent.render;
+  } else if (isMemo(origComponent)) {
+    renderMethod = origComponent.type;
+  }
+
+  let RadiumEnhancer = React.forwardRef((props, ref) => {
     const {radiumConfig, ...otherProps} = props;
     const radiumConfigContext = useContext(RadiumConfigContext);
     const styleKeeperContext = useContext(StyleKeeperContext);
@@ -216,7 +239,7 @@ function createEnhancedFunctionComponent(
       [hasExtraStateKeys, enhancerApi]
     );
 
-    const renderedElement = origComponent(otherProps, ref);
+    const renderedElement = renderMethod(otherProps, ref);
 
     const currentConfig = resolveConfig(
       radiumConfig,
@@ -234,6 +257,10 @@ function createEnhancedFunctionComponent(
 
   (RadiumEnhancer: Object)._isRadiumEnhanced = true;
   (RadiumEnhancer: Object).defaultProps = origComponent.defaultProps;
+
+  if (isMemo(origComponent)) {
+    RadiumEnhancer = memo(RadiumEnhancer);
+  }
 
   // copy display name to enhanced component
   (RadiumEnhancer: Object).displayName =
@@ -362,31 +389,15 @@ function createComposedFromNativeClass(ComposedComponent: constructor) {
   return ComposedComponent;
 }
 
-const ReactForwardRefSymbol = (forwardRef(() => null): any).$$typeof;
-const ReactMemoSymbol = (memo(() => null): any).$$typeof;
-
 export default function enhanceWithRadium(
   configOrComposedComponent: Class<any> | constructor | Function | Object,
   config?: Object = {}
 ): constructor {
   if (
-    ReactForwardRefSymbol &&
-    configOrComposedComponent.$$typeof === ReactForwardRefSymbol
+    isForwardRef(configOrComposedComponent) ||
+    isMemo(configOrComposedComponent)
   ) {
-    return createEnhancedFunctionComponent(
-      configOrComposedComponent.render,
-      config
-    );
-  }
-
-  if (
-    ReactMemoSymbol &&
-    configOrComposedComponent.$$typeof === ReactMemoSymbol
-  ) {
-    const EnhancedComponent = memo(
-      createEnhancedFunctionComponent(configOrComposedComponent.type, config)
-    );
-    return hoistStatics(EnhancedComponent, configOrComposedComponent);
+    return createEnhancedFunctionComponent(configOrComposedComponent, config);
   }
 
   if (typeof configOrComposedComponent !== 'function') {
