@@ -1,6 +1,6 @@
 {
   "name": "@instacart/radium",
-  "version": "0.26.4",
+  "version": "0.26.5",
   "description": "A set of tools to manage inline styles on React elements",
   "main": "index.js",
   "module": "es/index.js",
