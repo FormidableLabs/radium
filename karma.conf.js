@@ -20,12 +20,12 @@ module.exports = function(config) {
       'src/__tests__/**/*.js': ['webpack']
     },
     webpack: {
-      cache: true,
+      mode: 'development',
+      cache: false,
       module: {
         rules: [
           {
             test: /\.js$/,
-            enforce: 'pre',
             include: path.resolve('src/'),
             loader: 'babel-loader'
           },

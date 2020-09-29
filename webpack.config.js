@@ -1,8 +1,12 @@
 const path = require('path');
 
 module.exports = {
+  mode: 'production',
   cache: true,
   entry: path.join(__dirname, 'src/index.js'),
+  optimization: {
+    minimize: false
+  },
   externals: [
     {
       react: {
