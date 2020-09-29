@@ -14,6 +14,7 @@
 var path = require('path'); // eslint-disable-line no-var
 
 module.exports = {
+  mode: 'production',
   cache: true,
   entry: {
     app: './examples/client.js'
