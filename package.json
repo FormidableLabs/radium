@@ -98,7 +98,7 @@
     "inject-loader": "^3.0.1",
     "jsdom": "^12.0.0",
     "jsdom-global": "^3.0.2",
-    "karma": "^5.2.3",
+    "karma": "^4.4.1",
     "karma-babel-preprocessor": "^8.0.1",
     "karma-chrome-launcher": "^3.1.0",
     "karma-coverage": "^1.1.1",
