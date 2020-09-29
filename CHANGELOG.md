@@ -1,5 +1,24 @@
 # Radium Changelog
 
+## 0.26.1 (September 29, 2020)
+
+#### Dependency Upgrades
+
+- Bump handlebars from 4.1.2 to 4.5.3 (#1035)
+- Bump elliptic from 6.4.0 to 6.5.3 (#1045)
+- Bump eslint-utils from 1.3.1 to 1.4.3 (#1039)
+- Bump tree-kill from 1.2.0 to 1.2.2 (#1046)
+- Bump websocket-extensions from 0.1.1 to 0.1.4 (#1044)
+- Bump fstream from 1.0.11 to 1.0.12 (#1038)
+- Bump sshpk from 1.11.0 to 1.16.1 (#1037)
+- Bump webpack-dev-server from 2.11.1 to 3.1.11 (#1036)
+- Bump is-my-json-valid from 2.16.0 to 2.20.5 (#1048)
+- Bump http-proxy from 1.16.2 to 1.18.1 (#1047)
+
+#### Bug Fixes
+
+- Fix initial enhancer state for fn components (#1041)
+
 ## 0.26.0 (September 5, 2019)
 
 #### Bug Fixes
