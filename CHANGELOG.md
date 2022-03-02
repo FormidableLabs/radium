@@ -1,5 +1,9 @@
 # Radium Changelog
 
+## 0.26.2
+
+- Update `peerDependencies` for React to include 17.
+
 ## 0.26.1 (September 29, 2020)
 
 #### Dependency Upgrades
