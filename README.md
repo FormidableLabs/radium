@@ -21,9 +21,7 @@ by <a href="https://twitter.com/Vjeux">vjeux</a>.
 
 ## Maintenance Status
 
-**Stable:** Formidable is not planning to develop any new features for this project. We are still responding to bug reports and security concerns. We are still welcoming PRs for this project, but PRs that include new features should be small and easy to integrate and should not include breaking changes.
-
-For more about what this means for Radium, view our announcement [here](https://formidable.com/blog/2019/radium-maintenance/).
+**Archived:** This project is no longer maintained by Formidable. We are no longer responding to issues or pull requests unless they relate to security concerns. We encourage interested developers to fork this project and make it their own!
 
 ## Overview
 
