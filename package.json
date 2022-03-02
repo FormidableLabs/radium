@@ -73,7 +73,7 @@
     "webpack": "^3.10.0"
   },
   "peerDependencies": {
-    "react": "^16.8.0"
+    "react": "^16.8.0 || ^17.0.0"
   },
   "devDependencies": {
     "@babel/node": "^7.0.0",
