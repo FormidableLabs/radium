@@ -1,10 +1,10 @@
+[![Maintenance Status][maintenance-image]](#maintenance-status)
 [![Travis Status][trav_img]][trav_site]
 [![AppVeyor Status][appveyor_img]][appveyor_site]
 [![Coverage Status][cov_img]][cov_site]
 [![NPM Package][npm_img]][npm_site]
 [![Dependency Status][david_img]][david_site]
 ![gzipped size][size_img]
-[![Maintenance Status][maintenance-image]](#maintenance-status)
 
 # Radium
 
@@ -201,4 +201,4 @@ Please see [CONTRIBUTING](https://github.com/FormidableLabs/radium/blob/master/C
 [docs_faq]: https://github.com/FormidableLabs/radium/tree/master/docs/faq
 [appveyor_img]: https://ci.appveyor.com/api/projects/status/github/formidablelabs/radium?branch=master&svg=true
 [appveyor_site]: https://ci.appveyor.com/project/ryan-roemer/radium
-[maintenance-image]: https://img.shields.io/badge/maintenance-stable-blue.svg
+[maintenance-image]: https://img.shields.io/badge/maintenance-archived-red.svg
